@@ -101,7 +101,7 @@ export function Dashboard() {
         <Title order={1}>Dashboard</Title>
         <Grid>
           {[1, 2, 3, 4].map((i) => (
-            <Grid.Col key={i} span={{ base: 12, md: 6, lg: 3 }}>
+            <Grid.Col key={i} span={{ base: 12, sm: 6, md: 6, lg: 3 }}>
               <Skeleton height={120} />
             </Grid.Col>
           ))}
@@ -112,16 +112,18 @@ export function Dashboard() {
 
   return (
     <Stack>
-      <Group justify="space-between" align="center">
+      {/* Mobile-friendly header */}
+      <Stack gap="sm">
         <Title order={1}>Dashboard</Title>
-        <Group>
+        <Group justify="flex-end" wrap="wrap" gap="xs">
           {patients.length === 0 && (
             <Button 
               variant="filled" 
               color="blue"
-              leftSection={<IconDatabase size="1rem" />}
+              leftSection={<IconDatabase size="0.9rem" />}
               onClick={handleInsertSampleData}
               loading={loadingSampleData}
+              size="sm"
             >
               Dodaj przykładowe dane
             </Button>
@@ -130,18 +132,20 @@ export function Dashboard() {
             <Button 
               variant="outline" 
               color="red"
-              leftSection={<IconTrash size="1rem" />}
+              leftSection={<IconTrash size="0.9rem" />}
               onClick={handleClearData}
               loading={clearingData}
+              size="sm"
             >
               Wyczyść dane
             </Button>
           )}
         </Group>
-      </Group>
+      </Stack>
       
+      {/* Stats Grid - Improved responsive */}
       <Grid>
-        <Grid.Col span={{ base: 12, md: 6, lg: 3 }}>
+        <Grid.Col span={{ base: 12, sm: 6, md: 6, lg: 3 }}>
           <Card h={120}>
             <Group justify="space-between" align="flex-start">
               <div>
@@ -157,7 +161,7 @@ export function Dashboard() {
           </Card>
         </Grid.Col>
         
-        <Grid.Col span={{ base: 12, md: 6, lg: 3 }}>
+        <Grid.Col span={{ base: 12, sm: 6, md: 6, lg: 3 }}>
           <Card h={120}>
             <Group justify="space-between" align="flex-start">
               <div>
@@ -173,7 +177,7 @@ export function Dashboard() {
           </Card>
         </Grid.Col>
         
-        <Grid.Col span={{ base: 12, md: 6, lg: 3 }}>
+        <Grid.Col span={{ base: 12, sm: 6, md: 6, lg: 3 }}>
           <Card h={120}>
             <Group justify="space-between" align="flex-start">
               <div>
@@ -189,7 +193,7 @@ export function Dashboard() {
           </Card>
         </Grid.Col>
         
-        <Grid.Col span={{ base: 12, md: 6, lg: 3 }}>
+        <Grid.Col span={{ base: 12, sm: 6, md: 6, lg: 3 }}>
           <Card h={120}>
             <Group justify="space-between" align="flex-start">
               <div>
@@ -206,10 +210,15 @@ export function Dashboard() {
         </Grid.Col>
       </Grid>
 
+      {/* Today's appointments card */}
       <Card>
-        <Group justify="space-between" mb="md">
+        <Group justify="space-between" mb="md" wrap="wrap">
           <Title order={3}>Dzisiejsze wizyty</Title>
-          <Button size="sm" variant="light">
+          <Button 
+            size="sm" 
+            variant="light"
+            visibleFrom="sm"
+          >
             Zobacz wszystkie
           </Button>
         </Group>
@@ -222,22 +231,34 @@ export function Dashboard() {
           <Stack gap="xs">
             {todaysAppointments.map((appointment) => (
               <Card key={appointment.id} withBorder>
-                <Group justify="space-between">
-                  <div>
-                    <Text fw={500}>
+                <Group justify="space-between" wrap="wrap" gap="xs">
+                  <div style={{ minWidth: 0, flex: 1 }}>
+                    <Text fw={500} truncate>
                       {appointment.patient?.firstName} {appointment.patient?.lastName}
                     </Text>
                     <Text size="sm" c="dimmed">
                       {format(new Date(appointment.date), 'HH:mm', { locale: pl })} - {appointment.duration} min
                     </Text>
                   </div>
-                  <Badge color="blue">
+                  <Badge color="blue" size="sm">
                     {appointment.status}
                   </Badge>
                 </Group>
               </Card>
             ))}
           </Stack>
+        )}
+        
+        {/* Mobile-only "See all" button */}
+        {todaysAppointments.length > 0 && (
+          <Button 
+            variant="light" 
+            fullWidth 
+            mt="md"
+            hiddenFrom="sm"
+          >
+            Zobacz wszystkie wizyty
+          </Button>
         )}
       </Card>
     </Stack>

@@ -3,24 +3,35 @@ import {
   Title, 
   Button, 
   Group, 
-  TextInput, 
-  Table,
-  Card,
-  Modal,
-  Stack,
+  Card, 
+  Text, 
+  Badge, 
   ActionIcon,
-  Badge,
-  Text,
-  Skeleton,
+  Stack,
+  TextInput,
+  Modal,
+  Table,
   Alert,
   Checkbox,
-  Divider
+  Divider,
+  Skeleton,
+  Container
 } from '@mantine/core';
-import { DateInput } from '@mantine/dates';
+import { 
+  IconPlus, 
+  IconSearch, 
+  IconEdit, 
+  IconTrash, 
+  IconUser, 
+  IconDownload,
+  IconPhone,
+  IconMail,
+  IconCalendar
+} from '@tabler/icons-react';
 import { useDisclosure } from '@mantine/hooks';
-import { IconPlus, IconSearch, IconEdit, IconTrash, IconUser, IconDownload } from '@tabler/icons-react';
+import { DateInput } from '@mantine/dates';
+import { notifications } from '@mantine/notifications';
 import { usePatientStore } from '../stores/usePatientStore';
-import { useAppointmentStore } from '../stores/useAppointmentStore';
 import { PatientForm } from '../components/PatientForm';
 import { exportToExcel } from '../utils/export';
 import { format } from 'date-fns';
@@ -28,38 +39,42 @@ import { pl } from 'date-fns/locale';
 import type { Patient } from '../types/Patient';
 
 export function Patients() {
-  const [opened, { open, close }] = useDisclosure(false);
-  const [exportOpened, { open: openExport, close: closeExport }] = useDisclosure(false);
-  const [editingPatient, setEditingPatient] = useState<Patient | null>(null);
-  const [searchQuery, setSearchQuery] = useState('');
-  
-  // Export form state
-  const [selectedPatients, setSelectedPatients] = useState<number[]>([]);
-  const [exportAppointments, setExportAppointments] = useState(true);
-  const [exportPatients, setExportPatients] = useState(true);
-  const [dateFrom, setDateFrom] = useState<Date | null>(null);
-  const [dateTo, setDateTo] = useState<Date | null>(null);
-  
   const { 
     patients, 
     fetchPatients, 
     deletePatient, 
-    searchPatients,
-    loading,
+    loading, 
     error 
   } = usePatientStore();
+  
+  const [opened, { open, close }] = useDisclosure(false);
+  const [exportOpened, { open: openExport, close: closeExport }] = useDisclosure(false);
+  const [editingPatient, setEditingPatient] = useState<Patient | undefined>();
+  const [searchQuery, setSearchQuery] = useState('');
+  
+  // Export state
+  const [exportPatients, setExportPatients] = useState(true);
+  const [exportAppointments, setExportAppointments] = useState(true);
+  const [dateFrom, setDateFrom] = useState<Date | null>(null);
+  const [dateTo, setDateTo] = useState<Date | null>(null);
+  const [selectedPatients, setSelectedPatients] = useState<number[]>([]);
 
-  const { appointments, fetchAppointments } = useAppointmentStore();
+  const filteredPatients = patients.filter(patient => {
+    const query = searchQuery.toLowerCase();
+    return (
+      patient.firstName.toLowerCase().includes(query) ||
+      patient.lastName.toLowerCase().includes(query) ||
+      patient.email?.toLowerCase().includes(query) ||
+      patient.phone?.includes(query)
+    );
+  });
 
   useEffect(() => {
     fetchPatients();
-    fetchAppointments();
-  }, [fetchPatients, fetchAppointments]);
-
-  const filteredPatients = searchQuery ? searchPatients(searchQuery) : patients;
+  }, [fetchPatients]);
 
   const handleAddPatient = () => {
-    setEditingPatient(null);
+    setEditingPatient(undefined);
     open();
   };
 
@@ -69,25 +84,16 @@ export function Patients() {
   };
 
   const handleDeletePatient = async (id: number) => {
-    if (window.confirm('Czy na pewno chcesz usunąć tego pacjenta?')) {
-      await deletePatient(id);
-    }
+    await deletePatient(id);
   };
 
   const handleFormSuccess = () => {
     close();
-    setEditingPatient(null);
+    setEditingPatient(undefined);
   };
 
   const handleExport = () => {
-    exportToExcel(patients, appointments, {
-      patients: exportPatients,
-      appointments: exportAppointments,
-      dateFrom: dateFrom || undefined,
-      dateTo: dateTo || undefined,
-      selectedPatients: selectedPatients.length > 0 ? selectedPatients : undefined,
-    });
-    closeExport();
+    openExport();
   };
 
   const handlePatientSelection = (patientId: number, checked: boolean) => {
@@ -99,52 +105,90 @@ export function Patients() {
   };
 
   const selectAllPatients = () => {
-    const allIds = filteredPatients.map(p => p.id!).filter(Boolean);
-    setSelectedPatients(allIds);
+    setSelectedPatients(filteredPatients.map(p => p.id!).filter(Boolean));
   };
 
   const clearSelection = () => {
     setSelectedPatients([]);
   };
 
+  const handleExportData = async () => {
+    try {
+      const patientsToExport = selectedPatients.length > 0 
+        ? patients.filter(p => selectedPatients.includes(p.id!))
+        : patients;
+
+      await exportToExcel(
+        exportPatients ? patientsToExport : [],
+        [], // appointments będą pobrane przez store
+        {
+          patients: exportPatients,
+          appointments: exportAppointments,
+          dateFrom: dateFrom || undefined,
+          dateTo: dateTo || undefined,
+          selectedPatients: selectedPatients.length > 0 ? selectedPatients : undefined
+        }
+      );
+
+      notifications.show({
+        title: 'Sukces!',
+        message: 'Dane zostały wyeksportowane',
+        color: 'green'
+      });
+      closeExport();
+    } catch {
+      notifications.show({
+        title: 'Błąd',
+        message: 'Nie udało się wyeksportować danych',
+        color: 'red'
+      });
+    }
+  };
+
+
+
   if (loading) {
     return (
       <Stack>
         <Title order={1}>Pacjenci</Title>
-        <Card>
-          <Stack>
-            {[1, 2, 3, 4, 5].map((i) => (
-              <Skeleton key={i} height={50} />
-            ))}
-          </Stack>
-        </Card>
+        {[1, 2, 3].map((i) => (
+          <Skeleton key={i} height={120} />
+        ))}
+      </Stack>
+    );
+  }
+
+  if (error) {
+    return (
+      <Stack>
+        <Title order={1}>Pacjenci</Title>
+        <Alert color="red" title="Błąd">
+          {error}
+        </Alert>
       </Stack>
     );
   }
 
   return (
-    <Stack>
-      <Group justify="space-between">
+    <Container fluid>
+      <Group justify="space-between" wrap="wrap">
         <Title order={1}>Pacjenci</Title>
-        <Group>
+        <Group gap="xs">
           <Button 
             leftSection={<IconDownload size="1rem" />} 
             variant="light"
-            onClick={openExport}
+            onClick={handleExport}
           >
-            Eksportuj
+            Eksport
           </Button>
-          <Button leftSection={<IconPlus size="1rem" />} onClick={handleAddPatient}>
+          <Button 
+            leftSection={<IconPlus size="1rem" />} 
+            onClick={handleAddPatient}
+          >
             Dodaj pacjenta
           </Button>
         </Group>
       </Group>
-
-      {error && (
-        <Alert color="red" title="Błąd">
-          {error}
-        </Alert>
-      )}
 
       <Card>
         <Group mb="md">
@@ -165,24 +209,24 @@ export function Patients() {
             }
           </Alert>
         ) : (
-          <Table.ScrollContainer minWidth={800}>
-            <Table>
-              <Table.Thead>
-                <Table.Tr>
-                  <Table.Th>Imię i nazwisko</Table.Th>
-                  <Table.Th>Kontakt</Table.Th>
-                  <Table.Th>Wizyty</Table.Th>
-                  <Table.Th>Ostatnia wizyta</Table.Th>
-                  <Table.Th>Następna wizyta</Table.Th>
-                  <Table.Th>Akcje</Table.Th>
-                </Table.Tr>
-              </Table.Thead>
-              <Table.Tbody>
-                {filteredPatients.map((patient) => (
-                  <Table.Tr key={patient.id}>
-                    <Table.Td>
-                      <div>
-                        <Text fw={500}>
+          <>
+            {/* Mobile-first Card Layout with better padding */}
+            <Stack gap="md" hiddenFrom="md">
+              {filteredPatients.map((patient) => (
+                <Card 
+                  key={patient.id} 
+                  withBorder 
+                  p="lg"
+                  radius="md"
+                  style={{ 
+                    background: 'var(--mantine-color-dark-7)',
+                    border: '1px solid var(--mantine-color-dark-4)'
+                  }}
+                >
+                  <Stack gap="md">
+                    <Group justify="space-between" align="flex-start" wrap="nowrap">
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <Text fw={600} size="md" truncate>
                           {patient.firstName} {patient.lastName}
                         </Text>
                         {patient.birthDate && (
@@ -191,63 +235,154 @@ export function Patients() {
                           </Text>
                         )}
                       </div>
-                    </Table.Td>
-                    <Table.Td>
-                      <div>
-                        {patient.phone && (
-                          <Text size="sm">{patient.phone}</Text>
-                        )}
-                        {patient.email && (
-                          <Text size="sm" c="dimmed">{patient.email}</Text>
-                        )}
-                      </div>
-                    </Table.Td>
-                    <Table.Td>
-                      <Badge variant="light">
-                        {patient.appointmentCount}
+                      <Badge size="sm" variant="light" color="blue" style={{ flexShrink: 0 }}>
+                        {patient.appointmentCount} wizyt
                       </Badge>
-                    </Table.Td>
-                    <Table.Td>
-                      {patient.lastAppointment ? (
-                        <Text size="sm">
-                          {format(new Date(patient.lastAppointment), 'dd.MM.yyyy', { locale: pl })}
-                        </Text>
-                      ) : (
-                        <Text size="sm" c="dimmed">-</Text>
+                    </Group>
+                    
+                    <Stack gap="sm">
+                      {patient.phone && (
+                        <Group gap="sm" wrap="nowrap">
+                          <ActionIcon size="sm" variant="subtle" color="gray" style={{ flexShrink: 0 }}>
+                            <IconPhone size="1rem" />
+                          </ActionIcon>
+                          <Text size="sm" style={{ flex: 1 }}>{patient.phone}</Text>
+                        </Group>
                       )}
-                    </Table.Td>
-                    <Table.Td>
-                      {patient.nextAppointment ? (
-                        <Text size="sm" c="blue">
-                          {format(new Date(patient.nextAppointment), 'dd.MM.yyyy', { locale: pl })}
-                        </Text>
-                      ) : (
-                        <Text size="sm" c="dimmed">-</Text>
+                      {patient.email && (
+                        <Group gap="sm" wrap="nowrap">
+                          <ActionIcon size="sm" variant="subtle" color="gray" style={{ flexShrink: 0 }}>
+                            <IconMail size="1rem" />
+                          </ActionIcon>
+                          <Text size="sm" c="dimmed" truncate style={{ flex: 1 }}>
+                            {patient.email}
+                          </Text>
+                        </Group>
                       )}
-                    </Table.Td>
-                    <Table.Td>
-                      <Group gap="xs">
-                        <ActionIcon 
-                          variant="light" 
-                          color="blue"
-                          onClick={() => handleEditPatient(patient)}
-                        >
-                          <IconEdit size="1rem" />
-                        </ActionIcon>
-                        <ActionIcon 
-                          variant="light" 
-                          color="red"
-                          onClick={() => patient.id && handleDeletePatient(patient.id)}
-                        >
-                          <IconTrash size="1rem" />
-                        </ActionIcon>
-                      </Group>
-                    </Table.Td>
+                      {patient.nextAppointment && (
+                        <Group gap="sm" wrap="nowrap">
+                          <ActionIcon size="sm" variant="subtle" color="blue" style={{ flexShrink: 0 }}>
+                            <IconCalendar size="1rem" />
+                          </ActionIcon>
+                          <Text size="sm" c="blue" style={{ flex: 1 }}>
+                            Następna: {format(new Date(patient.nextAppointment), 'dd.MM.yyyy', { locale: pl })}
+                          </Text>
+                        </Group>
+                      )}
+                    </Stack>
+                    
+                    <Group justify="center" gap="md" mt="sm">
+                      <Button 
+                        size="sm"
+                        variant="light" 
+                        color="blue"
+                        leftSection={<IconEdit size="1rem" />}
+                        onClick={() => handleEditPatient(patient)}
+                        style={{ flex: 1 }}
+                      >
+                        Edytuj
+                      </Button>
+                      <Button 
+                        size="sm"
+                        variant="light" 
+                        color="red"
+                        leftSection={<IconTrash size="1rem" />}
+                        onClick={() => patient.id && handleDeletePatient(patient.id)}
+                        style={{ flex: 1 }}
+                      >
+                        Usuń
+                      </Button>
+                    </Group>
+                  </Stack>
+                </Card>
+              ))}
+            </Stack>
+
+            {/* Desktop Table Layout */}
+            <Table.ScrollContainer minWidth={800} visibleFrom="md">
+              <Table>
+                <Table.Thead>
+                  <Table.Tr>
+                    <Table.Th>Imię i nazwisko</Table.Th>
+                    <Table.Th>Kontakt</Table.Th>
+                    <Table.Th>Wizyty</Table.Th>
+                    <Table.Th>Ostatnia wizyta</Table.Th>
+                    <Table.Th>Następna wizyta</Table.Th>
+                    <Table.Th>Akcje</Table.Th>
                   </Table.Tr>
-                ))}
-              </Table.Tbody>
-            </Table>
-          </Table.ScrollContainer>
+                </Table.Thead>
+                <Table.Tbody>
+                  {filteredPatients.map((patient) => (
+                    <Table.Tr key={patient.id}>
+                      <Table.Td>
+                        <div>
+                          <Text fw={500}>
+                            {patient.firstName} {patient.lastName}
+                          </Text>
+                          {patient.birthDate && (
+                            <Text size="sm" c="dimmed">
+                              Ur. {format(new Date(patient.birthDate), 'dd.MM.yyyy')}
+                            </Text>
+                          )}
+                        </div>
+                      </Table.Td>
+                      <Table.Td>
+                        <div>
+                          {patient.phone && (
+                            <Text size="sm">{patient.phone}</Text>
+                          )}
+                          {patient.email && (
+                            <Text size="sm" c="dimmed">{patient.email}</Text>
+                          )}
+                        </div>
+                      </Table.Td>
+                      <Table.Td>
+                        <Badge variant="light">
+                          {patient.appointmentCount}
+                        </Badge>
+                      </Table.Td>
+                      <Table.Td>
+                        {patient.lastAppointment ? (
+                          <Text size="sm">
+                            {format(new Date(patient.lastAppointment), 'dd.MM.yyyy', { locale: pl })}
+                          </Text>
+                        ) : (
+                          <Text size="sm" c="dimmed">-</Text>
+                        )}
+                      </Table.Td>
+                      <Table.Td>
+                        {patient.nextAppointment ? (
+                          <Text size="sm" c="blue">
+                            {format(new Date(patient.nextAppointment), 'dd.MM.yyyy', { locale: pl })}
+                          </Text>
+                        ) : (
+                          <Text size="sm" c="dimmed">-</Text>
+                        )}
+                      </Table.Td>
+                      <Table.Td>
+                        <Group gap="xs">
+                          <ActionIcon 
+                            variant="light" 
+                            color="blue"
+                            onClick={() => handleEditPatient(patient)}
+                          >
+                            <IconEdit size="1rem" />
+                          </ActionIcon>
+                          <ActionIcon 
+                            variant="light" 
+                            color="red"
+                            onClick={() => patient.id && handleDeletePatient(patient.id)}
+                          >
+                            <IconTrash size="1rem" />
+                          </ActionIcon>
+                        </Group>
+                      </Table.Td>
+                    </Table.Tr>
+                  ))}
+                </Table.Tbody>
+              </Table>
+            </Table.ScrollContainer>
+          </>
         )}
       </Card>
 
@@ -354,12 +489,14 @@ export function Patients() {
             <Button variant="light" onClick={closeExport}>
               Anuluj
             </Button>
-            <Button onClick={handleExport}>
+            <Button onClick={handleExportData}>
               Eksportuj
             </Button>
           </Group>
         </Stack>
       </Modal>
-    </Stack>
+
+
+    </Container>
   );
 } 

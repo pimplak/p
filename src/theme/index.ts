@@ -91,26 +91,64 @@ export const theme = createTheme({
     defaultRadius: 'md',
     fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
 
+    // MOBILE-OPTIMIZED SIZING
+    fontSizes: {
+        xs: '0.7rem',
+        sm: '0.8rem',
+        md: '0.9rem',
+        lg: '1.1rem',
+        xl: '1.3rem',
+    },
+
+    spacing: {
+        xs: '0.5rem',
+        sm: '0.75rem',
+        md: '1rem',
+        lg: '1.25rem',
+        xl: '1.5rem',
+    },
+
+    breakpoints: {
+        xs: '36em',
+        sm: '48em',
+        md: '62em',
+        lg: '75em',
+        xl: '88em',
+    },
+
     components: {
+        AppShell: {
+            defaultProps: {
+                padding: 'sm',
+            },
+        },
+
         Button: {
             defaultProps: {
                 variant: 'filled',
                 color: 'yellowGreen',
+                size: 'sm',
+                radius: 'md',
             },
         },
+
         Card: {
             defaultProps: {
                 shadow: 'sm',
                 withBorder: true,
                 radius: 'md',
+                padding: 'sm',
             },
         },
+
         Table: {
             defaultProps: {
                 striped: true,
                 highlightOnHover: true,
+                fontSize: 'sm',
             },
         },
+
         Modal: {
             defaultProps: {
                 centered: true,
@@ -123,45 +161,59 @@ export const theme = createTheme({
                 transitionProps: { transition: 'fade', duration: 200 },
             },
         },
+
         TextInput: {
             defaultProps: {
                 variant: 'filled',
+                size: 'sm',
             },
         },
+
         Select: {
             defaultProps: {
                 variant: 'filled',
+                size: 'sm',
             },
         },
+
         NumberInput: {
             defaultProps: {
                 variant: 'filled',
+                size: 'sm',
             },
         },
+
         Textarea: {
             defaultProps: {
                 variant: 'filled',
+                size: 'sm',
             },
         },
-        AppShell: {
-            defaultProps: {
-                padding: 'md',
-            },
-        },
+
         NavLink: {
             defaultProps: {
                 variant: 'filled',
             },
         },
+
         Badge: {
             defaultProps: {
                 color: 'ashGray',
                 variant: 'filled',
+                size: 'sm',
             },
         },
+
         Alert: {
             defaultProps: {
                 color: 'ashGray',
+            },
+        },
+
+        ActionIcon: {
+            defaultProps: {
+                size: 'sm',
+                variant: 'light',
             },
         },
     },

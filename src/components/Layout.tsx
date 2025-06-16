@@ -40,7 +40,7 @@ export function Layout({ children }: LayoutProps) {
               </Title>
             </Group>
           </Group>
-          <Text size="sm" c="dimmed">
+          <Text size="sm" c="dimmed" visibleFrom="md">
             Zarządzanie praktyką psychologiczną
           </Text>
         </Group>
