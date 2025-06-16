@@ -4,7 +4,9 @@ import {
   Button, 
   Group, 
   Stack, 
-  Textarea 
+  Textarea,
+  Select,
+  TagsInput
 } from '@mantine/core';
 import { DateInput } from '@mantine/dates';
 import { usePatientStore } from '../stores/usePatientStore';
@@ -33,6 +35,8 @@ export function PatientForm({ patient, onSuccess, onCancel }: PatientFormProps) 
       emergencyContact: patient?.emergencyContact || '',
       emergencyPhone: patient?.emergencyPhone || '',
       notes: patient?.notes || '',
+      status: patient?.status || 'active',
+      tags: patient?.tags || [],
     },
     validate: (values) => {
       try {
@@ -141,6 +145,23 @@ export function PatientForm({ patient, onSuccess, onCancel }: PatientFormProps) 
             label="Telefon awaryjny"
             placeholder="+48 123 456 789"
             {...form.getInputProps('emergencyPhone')}
+          />
+        </Group>
+
+        <Group grow>
+          <Select
+            label="Status"
+            placeholder="Wybierz status"
+            data={[
+              { value: 'active', label: 'Aktywny' },
+              { value: 'archived', label: 'Zarchiwizowany' }
+            ]}
+            {...form.getInputProps('status')}
+          />
+          <TagsInput
+            label="Tagi"
+            placeholder="Dodaj tagi (np. terapia par, CBT)"
+            {...form.getInputProps('tags')}
           />
         </Group>
 

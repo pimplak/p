@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
   Title, 
   Button, 
@@ -11,7 +12,9 @@ import {
   Stack,
   Text,
   Badge,
-  ActionIcon
+  ActionIcon,
+  Switch,
+  Menu
 } from '@mantine/core';
 import { 
   IconPlus, 
@@ -21,7 +24,10 @@ import {
   IconMail,
   IconCalendar,
   IconEdit,
-  IconTrash
+  IconArchive,
+  IconRestore,
+  IconArchiveOff,
+  IconDots
 } from '@tabler/icons-react';
 import { useDisclosure } from '@mantine/hooks';
 import { useDebounce } from 'use-debounce';
@@ -38,10 +44,14 @@ import { format } from 'date-fns';
 import { pl } from 'date-fns/locale';
 
 export function PatientsPage() {
+  const navigate = useNavigate();
   const { 
     patients, 
     fetchPatients, 
-    deletePatient, 
+    archivePatient,
+    restorePatient,
+    showArchived,
+    toggleShowArchived,
     loading, 
     error 
   } = usePatientStore();
@@ -62,7 +72,8 @@ export function PatientsPage() {
       patient.firstName.toLowerCase().includes(query) ||
       patient.lastName.toLowerCase().includes(query) ||
       patient.email?.toLowerCase().includes(query) ||
-      patient.phone?.includes(query)
+      patient.phone?.includes(query) ||
+      patient.tags?.some(tag => tag.toLowerCase().includes(query))
     );
   }, [patients, debouncedSearchQuery]);
 
@@ -80,9 +91,43 @@ export function PatientsPage() {
     open();
   }, [open]);
 
-  const handleDeletePatient = useCallback(async (id: number) => {
-    await deletePatient(id);
-  }, [deletePatient]);
+  const handleViewPatient = useCallback((patient: Patient) => {
+    navigate(`/patients/${patient.id}`);
+  }, [navigate]);
+
+  const handleArchivePatient = useCallback(async (id: number) => {
+    try {
+      await archivePatient(id);
+      notifications.show({
+        title: 'Sukces',
+        message: 'Pacjent został zarchiwizowany',
+        color: 'green',
+      });
+    } catch {
+      notifications.show({
+        title: 'Błąd',
+        message: 'Nie udało się zarchiwizować pacjenta',
+        color: 'red',
+      });
+    }
+  }, [archivePatient]);
+
+  const handleRestorePatient = useCallback(async (id: number) => {
+    try {
+      await restorePatient(id);
+      notifications.show({
+        title: 'Sukces',
+        message: 'Pacjent został przywrócony',
+        color: 'green',
+      });
+    } catch {
+      notifications.show({
+        title: 'Błąd',
+        message: 'Nie udało się przywrócić pacjenta',
+        color: 'red',
+      });
+    }
+  }, [restorePatient]);
 
   const handleFormSuccess = () => {
     close();
@@ -177,6 +222,18 @@ export function PatientsPage() {
       <Group justify="space-between" wrap="wrap">
         <Title order={1}>Pacjenci</Title>
         <Group gap="xs" visibleFrom="md">
+          <Switch
+            label="Pokaż zarchiwizowanych"
+            checked={showArchived}
+            onChange={toggleShowArchived}
+            thumbIcon={
+              showArchived ? (
+                <IconArchiveOff size="0.8rem" stroke={3} />
+              ) : (
+                <IconArchive size="0.8rem" stroke={3} />
+              )
+            }
+          />
           <Button 
             leftSection={<IconDownload size="1rem" />} 
             variant="light"
@@ -203,7 +260,9 @@ export function PatientsPage() {
           <Alert icon={<IconUser size="1rem" />} title="Brak pacjentów">
             {debouncedSearchQuery 
               ? 'Nie znaleziono pacjentów pasujących do wyszukiwania.'
-              : 'Nie masz jeszcze żadnych pacjentów. Dodaj pierwszego!'
+              : showArchived 
+                ? 'Nie masz żadnych zarchiwizowanych pacjentów.'
+                : 'Nie masz jeszcze żadnych aktywnych pacjentów. Dodaj pierwszego!'
             }
           </Alert>
         ) : (
@@ -217,16 +276,30 @@ export function PatientsPage() {
                   p="lg"
                   radius="md"
                   style={{ 
-                    background: 'var(--mantine-color-dark-7)',
-                    border: '1px solid var(--mantine-color-dark-4)'
+                    background: patient.status === 'archived' 
+                      ? 'var(--mantine-color-gray-9)' 
+                      : 'var(--mantine-color-dark-7)',
+                    border: '1px solid var(--mantine-color-dark-4)',
+                    opacity: patient.status === 'archived' ? 0.7 : 1,
+                    cursor: 'pointer'
                   }}
+                  onClick={() => handleViewPatient(patient)}
                 >
                   <Stack gap="md">
                     <Group justify="space-between" align="flex-start" wrap="nowrap">
                       <div style={{ flex: 1, minWidth: 0 }}>
-                        <Text fw={600} size="md" truncate>
-                          {patient.firstName} {patient.lastName}
-                        </Text>
+                        <Group gap="xs" align="center">
+                          <Text fw={600} size="md" truncate>
+                            {patient.firstName} {patient.lastName}
+                          </Text>
+                          <Badge
+                            size="xs"
+                            color={patient.status === 'active' ? 'green' : 'gray'}
+                            variant="light"
+                          >
+                            {patient.status === 'active' ? 'Aktywny' : 'Zarchiwizowany'}
+                          </Badge>
+                        </Group>
                         {patient.birthDate && (
                           <Text size="sm" c="dimmed">
                             Ur. {format(
@@ -237,10 +310,73 @@ export function PatientsPage() {
                             )}
                           </Text>
                         )}
+                        {patient.tags && patient.tags.length > 0 && (
+                          <Group gap={4} mt={4}>
+                            {patient.tags.slice(0, 3).map((tag) => (
+                              <Badge key={tag} variant="outline" size="xs">
+                                {tag}
+                              </Badge>
+                            ))}
+                            {patient.tags.length > 3 && (
+                              <Badge variant="outline" size="xs" c="dimmed">
+                                +{patient.tags.length - 3}
+                              </Badge>
+                            )}
+                          </Group>
+                        )}
                       </div>
-                      <Badge size="sm" variant="light" color="blue" style={{ flexShrink: 0 }}>
-                        {patient.appointmentCount} wizyt
-                      </Badge>
+                      <Group>
+                        <Badge size="sm" variant="light" color="blue" style={{ flexShrink: 0 }}>
+                          {patient.appointmentCount} wizyt
+                        </Badge>
+                        <Menu shadow="md" width={180}>
+                          <Menu.Target>
+                            <ActionIcon 
+                              variant="light" 
+                              size="sm"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              <IconDots size="1rem" />
+                            </ActionIcon>
+                          </Menu.Target>
+
+                          <Menu.Dropdown>
+                            <Menu.Item
+                              leftSection={<IconEdit size="1rem" />}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleEditPatient(patient);
+                              }}
+                            >
+                              Edytuj
+                            </Menu.Item>
+                            
+                            {patient.status === 'active' ? (
+                              <Menu.Item
+                                leftSection={<IconArchive size="1rem" />}
+                                color="red"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  if (patient.id) handleArchivePatient(patient.id);
+                                }}
+                              >
+                                Archiwizuj
+                              </Menu.Item>
+                            ) : (
+                              <Menu.Item
+                                leftSection={<IconRestore size="1rem" />}
+                                color="green"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  if (patient.id) handleRestorePatient(patient.id);
+                                }}
+                              >
+                                Przywróć
+                              </Menu.Item>
+                            )}
+                          </Menu.Dropdown>
+                        </Menu>
+                      </Group>
                     </Group>
                     
                     <Stack gap="sm">
@@ -279,29 +415,6 @@ export function PatientsPage() {
                         </Group>
                       )}
                     </Stack>
-                    
-                    <Group justify="center" gap="md" mt="sm">
-                      <Button 
-                        size="sm"
-                        variant="light" 
-                        color="blue"
-                        leftSection={<IconEdit size="1rem" />}
-                        onClick={() => handleEditPatient(patient)}
-                        style={{ flex: 1 }}
-                      >
-                        Edytuj
-                      </Button>
-                      <Button 
-                        size="sm"
-                        variant="light" 
-                        color="red"
-                        leftSection={<IconTrash size="1rem" />}
-                        onClick={() => patient.id && handleDeletePatient(patient.id)}
-                        style={{ flex: 1 }}
-                      >
-                        Usuń
-                      </Button>
-                    </Group>
                   </Stack>
                 </Card>
               ))}
@@ -311,7 +424,9 @@ export function PatientsPage() {
             <PatientTable
               patients={filteredPatients}
               onEdit={handleEditPatient}
-              onDelete={handleDeletePatient}
+              onView={handleViewPatient}
+              onArchive={handleArchivePatient}
+              onRestore={handleRestorePatient}
             />
           </>
         )}

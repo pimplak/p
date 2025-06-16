@@ -1,10 +1,12 @@
 import Dexie, { type Table } from 'dexie';
-import type { Patient } from '../types/Patient';
+import type { Patient, Note, Goal } from '../types/Patient';
 import type { Appointment } from '../types/Appointment';
 
 export class PsychFlowDB extends Dexie {
     patients!: Table<Patient>;
     appointments!: Table<Appointment>;
+    notes!: Table<Note>;
+    goals!: Table<Goal>;
 
     constructor() {
         super('PsychFlowDB');
@@ -50,10 +52,34 @@ export class PsychFlowDB extends Dexie {
             ]);
         });
 
+        // Version 3 - dodajemy status, tags do pacjentów oraz tabele notes i goals
+        this.version(3).stores({
+            patients: '++id, lastName, email, phone, status, [firstName+lastName]',
+            appointments: '++id, patientId, date, status',
+            notes: '++id, patientId, sessionId, type, createdAt',
+            goals: '++id, patientId, status, targetDate, createdAt'
+        }).upgrade(tx => {
+            // Migracja: dodaj domyślny status 'active' do istniejących pacjentów
+            return tx.table('patients').toCollection().modify(patient => {
+                if (!patient.status) {
+                    patient.status = 'active';
+                }
+                if (!patient.tags) {
+                    patient.tags = [];
+                }
+            });
+        });
+
         // Add hooks for automatic timestamps (now using ISO strings)
         this.patients.hook('creating', function (_, obj: Partial<Patient>) {
             obj.createdAt = new Date().toISOString() as Date | string;
             obj.updatedAt = new Date().toISOString() as Date | string;
+            if (!obj.status) {
+                obj.status = 'active';
+            }
+            if (!obj.tags) {
+                obj.tags = [];
+            }
         });
 
         this.patients.hook('updating', function (modifications: Partial<Patient>) {
@@ -66,6 +92,27 @@ export class PsychFlowDB extends Dexie {
         });
 
         this.appointments.hook('updating', function (modifications: Partial<Appointment>) {
+            modifications.updatedAt = new Date().toISOString() as Date | string;
+        });
+
+        this.notes.hook('creating', function (_, obj: Partial<Note>) {
+            obj.createdAt = new Date().toISOString() as Date | string;
+            obj.updatedAt = new Date().toISOString() as Date | string;
+        });
+
+        this.notes.hook('updating', function (modifications: Partial<Note>) {
+            modifications.updatedAt = new Date().toISOString() as Date | string;
+        });
+
+        this.goals.hook('creating', function (_, obj: Partial<Goal>) {
+            obj.createdAt = new Date().toISOString() as Date | string;
+            obj.updatedAt = new Date().toISOString() as Date | string;
+            if (typeof obj.progress === 'undefined') {
+                obj.progress = 0;
+            }
+        });
+
+        this.goals.hook('updating', function (modifications: Partial<Goal>) {
             modifications.updatedAt = new Date().toISOString() as Date | string;
         });
     }

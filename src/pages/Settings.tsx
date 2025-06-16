@@ -12,6 +12,7 @@ import {
     Paper,
     Box,
     ThemeIcon,
+    Button,
 } from '@mantine/core';
 import {
     IconSettings,
@@ -21,12 +22,17 @@ import {
     IconDevices,
     IconShield,
     IconDownload,
-    IconTrash,
+    IconDatabase,
+    IconTestPipe,
 } from '@tabler/icons-react';
+import { notifications } from '@mantine/notifications';
 import { useSettingsStore, type ColorPalette } from '../stores/useSettingsStore';
+import { addDemoPatients, clearAllData } from '../utils/demo-data';
+import { usePatientStore } from '../stores/usePatientStore';
 
 export function Settings() {
     const { colorPalette, darkMode, setColorPalette, toggleDarkMode } = useSettingsStore();
+    const { fetchPatients } = usePatientStore();
 
     const paletteOptions = [
         {
@@ -42,6 +48,60 @@ export function Settings() {
             colors: ['#861388', '#e15a97', '#eeabc4', '#4b2840']
         }
     ] as const;
+
+    const handleAddDemoData = async () => {
+        try {
+            const success = await addDemoPatients();
+            if (success) {
+                notifications.show({
+                    title: 'Sukces!',
+                    message: 'Dodano przykładowych pacjentów',
+                    color: 'green'
+                });
+                // Odśwież listę pacjentów
+                fetchPatients();
+            } else {
+                notifications.show({
+                    title: 'Błąd',
+                    message: 'Nie udało się dodać danych demonstracyjnych',
+                    color: 'red'
+                });
+            }
+        } catch {
+            notifications.show({
+                title: 'Błąd',
+                message: 'Wystąpił błąd podczas dodawania danych',
+                color: 'red'
+            });
+        }
+    };
+
+    const handleClearAllData = async () => {
+        try {
+            const success = await clearAllData();
+            if (success) {
+                notifications.show({
+                    title: 'Sukces!',
+                    message: 'Wszystkie dane zostały usunięte',
+                    color: 'green'
+                });
+                // Odśwież listę pacjentów
+                fetchPatients();
+            } else {
+                notifications.show({
+                    title: 'Błąd',
+                    message: 'Nie udało się wyczyścić danych',
+                    color: 'red'
+                });
+            }
+        } catch {
+            notifications.show({
+                title: 'Błąd',
+                message: 'Wystąpił błąd podczas usuwania danych',
+                color: 'red'
+            });
+        }
+    };
 
     return (
         <Container size="md">
@@ -158,6 +218,25 @@ export function Settings() {
 
                             <Group justify="space-between" align="center">
                                 <Stack gap="xs">
+                                    <Text fw={500}>Dodaj dane demonstracyjne</Text>
+                                    <Text size="sm" c="dimmed">
+                                        Dodaj przykładowych pacjentów do testowania aplikacji
+                                    </Text>
+                                </Stack>
+                                <Button
+                                    leftSection={<IconTestPipe size={18} />}
+                                    variant="light"
+                                    color="blue"
+                                    onClick={handleAddDemoData}
+                                >
+                                    Dodaj demo
+                                </Button>
+                            </Group>
+
+                            <Divider variant="dashed" />
+
+                            <Group justify="space-between" align="center">
+                                <Stack gap="xs">
                                     <Text fw={500}>Eksport danych</Text>
                                     <Text size="sm" c="dimmed">
                                         Pobierz kopię zapasową wszystkich danych
@@ -181,20 +260,17 @@ export function Settings() {
                                 <Stack gap="xs">
                                     <Text fw={500} c="red">Usuń wszystkie dane</Text>
                                     <Text size="sm" c="dimmed">
-                                        Permanently delete all patients and appointments
+                                        Trwale usuń wszystkich pacjentów i wizyty
                                     </Text>
                                 </Stack>
-                                <ActionIcon
+                                <Button
+                                    leftSection={<IconDatabase size={18} />}
                                     variant="light"
                                     color="red"
-                                    size="lg"
-                                    onClick={() => {
-                                        // TODO: Implementacja usuwania danych z potwierdzeniem
-                                        console.log('Usuwanie danych...');
-                                    }}
+                                    onClick={handleClearAllData}
                                 >
-                                    <IconTrash size={18} />
-                                </ActionIcon>
+                                    Wyczyść dane
+                                </Button>
                             </Group>
                         </Stack>
                     </Card>

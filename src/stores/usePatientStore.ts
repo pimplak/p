@@ -8,25 +8,39 @@ interface PatientStore {
     patients: PatientWithAppointments[];
     loading: boolean;
     error: string | null;
+    showArchived: boolean;
 
     // Actions
     fetchPatients: () => Promise<void>;
     addPatient: (patient: Omit<Patient, 'id' | 'createdAt' | 'updatedAt'>) => Promise<void>;
     updatePatient: (id: number, patient: Partial<Patient>) => Promise<void>;
     deletePatient: (id: number) => Promise<void>;
+    archivePatient: (id: number) => Promise<void>;
+    restorePatient: (id: number) => Promise<void>;
     getPatient: (id: number) => Promise<Patient | undefined>;
     searchPatients: (query: string) => PatientWithAppointments[];
+    toggleShowArchived: () => void;
 }
 
 export const usePatientStore = create<PatientStore>((set, get) => ({
     patients: [],
     loading: false,
     error: null,
+    showArchived: false,
 
     fetchPatients: async () => {
         set({ loading: true, error: null });
         try {
-            const patients = await db.patients.orderBy('lastName').toArray();
+            const { showArchived } = get();
+
+            // Pobierz pacjentów według statusu
+            const patients = await (showArchived
+                ? db.patients.orderBy('lastName').toArray()
+                : db.patients.where('status').equals('active').toArray()
+            );
+
+            // Sortuj po lastName
+            patients.sort((a, b) => a.lastName.localeCompare(b.lastName));
 
             if (patients.length === 0) {
                 set({ patients: [], loading: false });
@@ -163,6 +177,48 @@ export const usePatientStore = create<PatientStore>((set, get) => ({
         }
     },
 
+    archivePatient: async (id) => {
+        set({ loading: true, error: null });
+        try {
+            await db.patients.update(id, { status: 'archived' });
+
+            // Optimistic update - zaktualizuj status lub usuń z listy jeśli nie pokazujemy zarchiwizowanych
+            set(produce((state: PatientStore) => {
+                const index = state.patients.findIndex(p => p.id === id);
+                if (index !== -1) {
+                    if (state.showArchived) {
+                        state.patients[index].status = 'archived';
+                    } else {
+                        state.patients.splice(index, 1);
+                    }
+                }
+                state.loading = false;
+            }));
+        } catch (error) {
+            console.error('Błąd podczas archiwizacji pacjenta:', error);
+            set({ error: 'Błąd podczas archiwizacji pacjenta', loading: false });
+        }
+    },
+
+    restorePatient: async (id) => {
+        set({ loading: true, error: null });
+        try {
+            await db.patients.update(id, { status: 'active' });
+
+            // Optimistic update
+            set(produce((state: PatientStore) => {
+                const index = state.patients.findIndex(p => p.id === id);
+                if (index !== -1) {
+                    state.patients[index].status = 'active';
+                }
+                state.loading = false;
+            }));
+        } catch (error) {
+            console.error('Błąd podczas przywracania pacjenta:', error);
+            set({ error: 'Błąd podczas przywracania pacjenta', loading: false });
+        }
+    },
+
     getPatient: async (id) => {
         try {
             return await db.patients.get(id);
@@ -182,7 +238,16 @@ export const usePatientStore = create<PatientStore>((set, get) => ({
             patient.firstName.toLowerCase().includes(lowerQuery) ||
             patient.lastName.toLowerCase().includes(lowerQuery) ||
             patient.email?.toLowerCase().includes(lowerQuery) ||
-            patient.phone?.includes(query)
+            patient.phone?.includes(query) ||
+            patient.tags?.some(tag => tag.toLowerCase().includes(lowerQuery))
         );
+    },
+
+    toggleShowArchived: () => {
+        set(produce((state: PatientStore) => {
+            state.showArchived = !state.showArchived;
+        }));
+        // Po zmianie flagi, od razu pobierz pacjentów
+        get().fetchPatients();
     },
 })); 
