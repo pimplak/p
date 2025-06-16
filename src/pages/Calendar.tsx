@@ -115,7 +115,12 @@ export function Calendar() {
             label="Data"
             placeholder="Wybierz datę"
             value={selectedDate}
-            onChange={(date) => date && setSelectedDate(date)}
+            onChange={(value) => {
+              if (value) {
+                const date = typeof value === 'string' ? new Date(value) : value;
+                setSelectedDate(date);
+              }
+            }}
           />
           <Select
             label="Status"

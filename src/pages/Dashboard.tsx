@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { 
   Title, 
   Grid, 
@@ -11,9 +11,11 @@ import {
   Skeleton,
   Alert
 } from '@mantine/core';
-import { IconCalendarEvent, IconUsers, IconClock, IconAlertCircle } from '@tabler/icons-react';
+import { IconCalendarEvent, IconUsers, IconClock, IconAlertCircle, IconDatabase, IconTrash } from '@tabler/icons-react';
 import { usePatientStore } from '../stores/usePatientStore';
 import { useAppointmentStore } from '../stores/useAppointmentStore';
+import { insertSampleData, clearAllData } from '../utils/sampleData';
+import { notifications } from '@mantine/notifications';
 import { format } from 'date-fns';
 import { pl } from 'date-fns/locale';
 
@@ -26,6 +28,9 @@ export function Dashboard() {
     getUpcomingAppointments,
     loading: appointmentsLoading 
   } = useAppointmentStore();
+  
+  const [loadingSampleData, setLoadingSampleData] = useState(false);
+  const [clearingData, setClearingData] = useState(false);
 
   useEffect(() => {
     fetchPatients();
@@ -35,6 +40,60 @@ export function Dashboard() {
   const todaysAppointments = getTodaysAppointments();
   const upcomingAppointments = getUpcomingAppointments();
   const totalAppointments = appointments.length;
+
+  const handleInsertSampleData = async () => {
+    setLoadingSampleData(true);
+    try {
+      const inserted = await insertSampleData();
+      if (inserted) {
+        notifications.show({
+          title: 'Sukces!',
+          message: 'Przykładowe dane zostały dodane',
+          color: 'green'
+        });
+        // Odśwież dane
+        await fetchPatients();
+        await fetchAppointments();
+      } else {
+        notifications.show({
+          title: 'Info',
+          message: 'Dane już istnieją w bazie',
+          color: 'blue'
+        });
+      }
+    } catch {
+      notifications.show({
+        title: 'Błąd',
+        message: 'Nie udało się dodać przykładowych danych',
+        color: 'red'
+      });
+    } finally {
+      setLoadingSampleData(false);
+    }
+  };
+
+  const handleClearData = async () => {
+    setClearingData(true);
+    try {
+      await clearAllData();
+      notifications.show({
+        title: 'Usunięto',
+        message: 'Wszystkie dane zostały usunięte',
+        color: 'orange'
+      });
+      // Odśwież dane
+      await fetchPatients();
+      await fetchAppointments();
+    } catch {
+      notifications.show({
+        title: 'Błąd',
+        message: 'Nie udało się usunąć danych',
+        color: 'red'
+      });
+    } finally {
+      setClearingData(false);
+    }
+  };
 
   if (patientsLoading || appointmentsLoading) {
     return (
@@ -53,7 +112,33 @@ export function Dashboard() {
 
   return (
     <Stack>
-      <Title order={1}>Dashboard</Title>
+      <Group justify="space-between" align="center">
+        <Title order={1}>Dashboard</Title>
+        <Group>
+          {patients.length === 0 && (
+            <Button 
+              variant="filled" 
+              color="blue"
+              leftSection={<IconDatabase size="1rem" />}
+              onClick={handleInsertSampleData}
+              loading={loadingSampleData}
+            >
+              Dodaj przykładowe dane
+            </Button>
+          )}
+          {patients.length > 0 && (
+            <Button 
+              variant="outline" 
+              color="red"
+              leftSection={<IconTrash size="1rem" />}
+              onClick={handleClearData}
+              loading={clearingData}
+            >
+              Wyczyść dane
+            </Button>
+          )}
+        </Group>
+      </Group>
       
       <Grid>
         <Grid.Col span={{ base: 12, md: 6, lg: 3 }}>

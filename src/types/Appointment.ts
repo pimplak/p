@@ -12,21 +12,25 @@ export interface Appointment {
     updatedAt: Date;
 }
 
-export enum AppointmentStatus {
-    SCHEDULED = 'scheduled',
-    COMPLETED = 'completed',
-    CANCELLED = 'cancelled',
-    NO_SHOW = 'no_show',
-    RESCHEDULED = 'rescheduled'
-}
+export const AppointmentStatus = {
+    SCHEDULED: 'scheduled',
+    COMPLETED: 'completed',
+    CANCELLED: 'cancelled',
+    NO_SHOW: 'no_show',
+    RESCHEDULED: 'rescheduled'
+} as const;
 
-export enum AppointmentType {
-    INITIAL = 'initial',
-    FOLLOW_UP = 'follow_up',
-    THERAPY = 'therapy',
-    CONSULTATION = 'consultation',
-    ASSESSMENT = 'assessment'
-}
+export type AppointmentStatus = typeof AppointmentStatus[keyof typeof AppointmentStatus];
+
+export const AppointmentType = {
+    INITIAL: 'initial',
+    FOLLOW_UP: 'follow_up',
+    THERAPY: 'therapy',
+    CONSULTATION: 'consultation',
+    ASSESSMENT: 'assessment'
+} as const;
+
+export type AppointmentType = typeof AppointmentType[keyof typeof AppointmentType];
 
 export interface AppointmentWithPatient extends Appointment {
     patient?: {

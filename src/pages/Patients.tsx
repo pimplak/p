@@ -296,13 +296,27 @@ export function Patients() {
                 label="Od"
                 placeholder="Wybierz datę"
                 value={dateFrom}
-                onChange={setDateFrom}
+                onChange={(value) => {
+                  if (value) {
+                    const date = typeof value === 'string' ? new Date(value) : value;
+                    setDateFrom(date);
+                  } else {
+                    setDateFrom(null);
+                  }
+                }}
               />
               <DateInput
                 label="Do"
                 placeholder="Wybierz datę"
                 value={dateTo}
-                onChange={setDateTo}
+                onChange={(value) => {
+                  if (value) {
+                    const date = typeof value === 'string' ? new Date(value) : value;
+                    setDateTo(date);
+                  } else {
+                    setDateTo(null);
+                  }
+                }}
               />
             </Group>
           </div>

@@ -34,8 +34,8 @@ export function Layout({ children }: LayoutProps) {
           <Group>
             <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
             <Group gap={8}>
-              <IconStethoscope size={28} color="#339af0" />
-              <Title order={3} c="psychFlowBlue.6">
+              <IconStethoscope size={28} color="#85cb33" />
+              <Title order={3} c="drabDarkBrown.7">
                 PsychFlow
               </Title>
             </Group>
