@@ -43,20 +43,37 @@ export function Layout({ children }: LayoutProps) {
           <Group>
             <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
             <Group gap={8}>
-              <IconStethoscope size={28} color="#85cb33" />
-              <Title order={3} c="drabDarkBrown.7">
+              <IconStethoscope 
+                size={28} 
+                style={{ color: 'var(--color-primary)' }}
+              />
+              <Title 
+                order={3} 
+                style={{ color: 'var(--color-text)' }}
+              >
                 PsychFlow
               </Title>
             </Group>
           </Group>
-          <Text size="sm" c="dimmed" visibleFrom="md">
+          <Text 
+            size="sm" 
+            c="dimmed" 
+            visibleFrom="md"
+            style={{ color: 'var(--color-text)', opacity: 0.7 }}
+          >
             Zarządzanie praktyką psychologiczną
           </Text>
         </Group>
       </AppShell.Header>
 
       <AppShell.Navbar p="md">
-        <Text size="xs" tt="uppercase" fw={700} c="dimmed" mb="md">
+        <Text 
+          size="xs" 
+          tt="uppercase" 
+          fw={700} 
+          mb="md"
+          style={{ color: 'var(--color-text)', opacity: 0.6 }}
+        >
           Główne
         </Text>
         {mainNavItems.map((item) => (
@@ -70,8 +87,14 @@ export function Layout({ children }: LayoutProps) {
             mb={4}
           />
         ))}
-        <Divider my="md" />
-        <Text size="xs" tt="uppercase" fw={700} c="dimmed" mb="md">
+        <Divider my="md" style={{ borderColor: 'var(--color-primary)' }} />
+        <Text 
+          size="xs" 
+          tt="uppercase" 
+          fw={700} 
+          mb="md"
+          style={{ color: 'var(--color-text)', opacity: 0.6 }}
+        >
           Aplikacja
         </Text>
         {settingsNavItems.map((item) => (

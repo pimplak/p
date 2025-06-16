@@ -9,16 +9,12 @@ import {
     Badge,
     ActionIcon,
     Container,
-    Paper,
-    Box,
     ThemeIcon,
     Button,
 } from '@mantine/core';
 import {
     IconSettings,
     IconPalette,
-    IconMoon,
-    IconSun,
     IconDevices,
     IconShield,
     IconDownload,
@@ -26,28 +22,12 @@ import {
     IconTestPipe,
 } from '@tabler/icons-react';
 import { notifications } from '@mantine/notifications';
-import { useSettingsStore, type ColorPalette } from '../stores/useSettingsStore';
+import { ThemeSelector, ThemePreview } from '../components/ThemeSelector';
 import { addDemoPatients, clearAllData } from '../utils/demo-data';
 import { usePatientStore } from '../stores/usePatientStore';
 
 export function Settings() {
-    const { colorPalette, darkMode, setColorPalette, toggleDarkMode } = useSettingsStore();
     const { fetchPatients } = usePatientStore();
-
-    const paletteOptions = [
-        {
-            value: 'naturalne' as ColorPalette,
-            label: 'Naturalne',
-            description: 'Zieleń i ciepłe brązy',
-            colors: ['#85cb33', '#efffc8', '#a5cbc3', '#3b341f']
-        },
-        {
-            value: 'magenta-rose' as ColorPalette,
-            label: 'Magenta Rose',
-            description: 'Eleganckie fiolety i róże',
-            colors: ['#861388', '#e15a97', '#eeabc4', '#4b2840']
-        }
-    ] as const;
 
     const handleAddDemoData = async () => {
         try {
@@ -124,85 +104,11 @@ export function Settings() {
                             
                             <Divider />
 
-                            {/* Paleta kolorów */}
-                            <Stack gap="sm">
-                                <Text fw={500}>Paleta kolorów</Text>
-                                <Text size="sm" c="dimmed">
-                                    Wybierz schemat kolorystyczny dla aplikacji
-                                </Text>
-                                
-                                <Box>
-                                    {paletteOptions.map((option) => (
-                                        <Paper
-                                            key={option.value}
-                                            p="md"
-                                            mb="sm"
-                                            withBorder
-                                            style={{
-                                                cursor: 'pointer',
-                                                backgroundColor: colorPalette === option.value 
-                                                    ? 'var(--mantine-color-blue-light)' 
-                                                    : undefined,
-                                                borderColor: colorPalette === option.value 
-                                                    ? 'var(--mantine-color-blue-filled)' 
-                                                    : undefined,
-                                            }}
-                                            onClick={() => setColorPalette(option.value)}
-                                        >
-                                            <Group justify="space-between" align="center">
-                                                <Stack gap="xs">
-                                                    <Group align="center" gap="sm">
-                                                        <Text fw={500}>{option.label}</Text>
-                                                        {colorPalette === option.value && (
-                                                            <Badge size="sm" variant="filled">
-                                                                Aktywne
-                                                            </Badge>
-                                                        )}
-                                                    </Group>
-                                                    <Text size="sm" c="dimmed">
-                                                        {option.description}
-                                                    </Text>
-                                                </Stack>
-                                                
-                                                <Group gap="xs">
-                                                    {option.colors.map((color, index) => (
-                                                        <Box
-                                                            key={index}
-                                                            w={20}
-                                                            h={20}
-                                                            style={{
-                                                                backgroundColor: color,
-                                                                borderRadius: '50%',
-                                                                border: '1px solid rgba(255,255,255,0.2)'
-                                                            }}
-                                                        />
-                                                    ))}
-                                                </Group>
-                                            </Group>
-                                        </Paper>
-                                    ))}
-                                </Box>
+                            {/* Ferro's Advanced Theme System */}
+                            <Stack gap="lg">
+                                <ThemeSelector />
+                                <ThemePreview />
                             </Stack>
-
-                            <Divider variant="dashed" />
-
-                            {/* Tryb ciemny/jasny */}
-                            <Group justify="space-between" align="center">
-                                <Stack gap="xs">
-                                    <Group align="center" gap="sm">
-                                        {darkMode ? <IconMoon size={18} /> : <IconSun size={18} />}
-                                        <Text fw={500}>Tryb ciemny</Text>
-                                    </Group>
-                                    <Text size="sm" c="dimmed">
-                                        Przełącz między jasnym a ciemnym interfejsem
-                                    </Text>
-                                </Stack>
-                                <Switch
-                                    checked={darkMode}
-                                    onChange={toggleDarkMode}
-                                    size="md"
-                                />
-                            </Group>
                         </Stack>
                     </Card>
 
