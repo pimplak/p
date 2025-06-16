@@ -22,6 +22,7 @@ import { AppointmentForm } from '../components/AppointmentForm';
 import { format, startOfDay, endOfDay } from 'date-fns';
 import { pl } from 'date-fns/locale';
 import type { Appointment } from '../types/Appointment';
+import { FloatingActionButton, type FABAction } from '../components/FloatingActionButton';
 
 export function Calendar() {
   const [opened, { open, close }] = useDisclosure(false);
@@ -94,11 +95,26 @@ export function Calendar() {
     }
   };
 
+  // FAB Actions dla mobile
+  const fabActions: FABAction[] = [
+    {
+      id: 'add-appointment',
+      icon: <IconPlus size="1.2rem" />,
+      label: 'Dodaj wizytę',
+      color: 'yellowGreen',
+      onClick: handleAddAppointment,
+    },
+  ];
+
   return (
     <Stack>
       <Group justify="space-between">
         <Title order={1}>Kalendarz</Title>
-        <Button leftSection={<IconPlus size="1rem" />} onClick={handleAddAppointment}>
+        <Button 
+          leftSection={<IconPlus size="1rem" />} 
+          onClick={handleAddAppointment}
+          visibleFrom="md"
+        >
           Dodaj wizytę
         </Button>
       </Group>
@@ -233,6 +249,9 @@ export function Calendar() {
           onCancel={close}
         />
       </Modal>
+
+      {/* Floating Action Button for mobile */}
+      <FloatingActionButton actions={fabActions} />
     </Stack>
   );
 } 

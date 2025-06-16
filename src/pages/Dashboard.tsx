@@ -18,6 +18,7 @@ import { insertSampleData, clearAllData } from '../utils/sampleData';
 import { notifications } from '@mantine/notifications';
 import { format } from 'date-fns';
 import { pl } from 'date-fns/locale';
+import { FloatingActionButton, type FABAction } from '../components/FloatingActionButton';
 
 export function Dashboard() {
   const { patients, fetchPatients, loading: patientsLoading } = usePatientStore();
@@ -95,6 +96,29 @@ export function Dashboard() {
     }
   };
 
+  // FAB Actions dla mobile
+  const fabActions: FABAction[] = [];
+  
+  if (patients.length === 0) {
+    fabActions.push({
+      id: 'add-sample-data',
+      icon: <IconDatabase size="1.2rem" />,
+      label: 'Dodaj przykładowe dane',
+      color: 'blue',
+      onClick: handleInsertSampleData,
+    });
+  }
+  
+  if (patients.length > 0) {
+    fabActions.push({
+      id: 'clear-data',
+      icon: <IconTrash size="1.2rem" />,
+      label: 'Wyczyść dane',
+      color: 'red',
+      onClick: handleClearData,
+    });
+  }
+
   if (patientsLoading || appointmentsLoading) {
     return (
       <Stack>
@@ -115,7 +139,7 @@ export function Dashboard() {
       {/* Mobile-friendly header */}
       <Stack gap="sm">
         <Title order={1}>Dashboard</Title>
-        <Group justify="flex-end" wrap="wrap" gap="xs">
+        <Group justify="flex-end" wrap="wrap" gap="xs" visibleFrom="md">
           {patients.length === 0 && (
             <Button 
               variant="filled" 
@@ -261,6 +285,9 @@ export function Dashboard() {
           </Button>
         )}
       </Card>
+
+      {/* Floating Action Button for mobile */}
+      <FloatingActionButton actions={fabActions} />
     </Stack>
   );
 } 

@@ -9,7 +9,7 @@ interface LayoutProps {
 }
 
 export function Layout({ children }: LayoutProps) {
-  const [opened, { toggle }] = useDisclosure();
+  const [opened, { toggle, close }] = useDisclosure();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -18,6 +18,11 @@ export function Layout({ children }: LayoutProps) {
     { label: 'Pacjenci', icon: IconUsers, path: '/patients' },
     { label: 'Kalendarz', icon: IconCalendar, path: '/calendar' },
   ];
+
+  const handleNavigation = (path: string) => {
+    navigate(path);
+    close(); // Zamknij menu na mobile po nawigacji
+  };
 
   return (
     <AppShell
@@ -56,7 +61,7 @@ export function Layout({ children }: LayoutProps) {
             active={location.pathname === item.path}
             label={item.label}
             leftSection={<item.icon size="1rem" />}
-            onClick={() => navigate(item.path)}
+            onClick={() => handleNavigation(item.path)}
             variant="filled"
             mb={4}
           />

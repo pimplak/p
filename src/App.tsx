@@ -280,6 +280,29 @@ function App() {
             font-size: 1.1rem !important;
           }
         }
+        
+        /* Floating Action Button */
+        .floating-action-button {
+          z-index: 900 !important;
+        }
+        
+        @media (max-width: 768px) {
+          /* FAB adjustments for mobile */
+          .mantine-Affix-root {
+            z-index: 900 !important;
+          }
+          
+          /* Better FAB shadow on mobile */
+          .floating-action-button .mantine-ActionIcon-root {
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4) !important;
+          }
+          
+          /* FAB menu paper improvements */
+          .floating-action-button .mantine-Paper-root {
+            backdrop-filter: blur(8px) !important;
+            background: rgba(16, 11, 0, 0.9) !important;
+          }
+        }
       `}</style>
       <MantineProvider theme={theme} defaultColorScheme="dark">
         <ModalsProvider>

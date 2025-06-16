@@ -37,6 +37,7 @@ import { exportToExcel } from '../utils/export';
 import { format } from 'date-fns';
 import { pl } from 'date-fns/locale';
 import type { Patient } from '../types/Patient';
+import { FloatingActionButton, type FABAction } from '../components/FloatingActionButton';
 
 export function Patients() {
   const { 
@@ -145,7 +146,23 @@ export function Patients() {
     }
   };
 
-
+  // FAB Actions dla mobile
+  const fabActions: FABAction[] = [
+    {
+      id: 'add-patient',
+      icon: <IconPlus size="1.2rem" />,
+      label: 'Dodaj pacjenta',
+      color: 'yellowGreen',
+      onClick: handleAddPatient,
+    },
+    {
+      id: 'export',
+      icon: <IconDownload size="1.2rem" />,
+      label: 'Eksport',
+      color: 'blue',
+      onClick: handleExport,
+    },
+  ];
 
   if (loading) {
     return (
@@ -173,7 +190,7 @@ export function Patients() {
     <Container fluid>
       <Group justify="space-between" wrap="wrap">
         <Title order={1}>Pacjenci</Title>
-        <Group gap="xs">
+        <Group gap="xs" visibleFrom="md">
           <Button 
             leftSection={<IconDownload size="1rem" />} 
             variant="light"
@@ -496,7 +513,8 @@ export function Patients() {
         </Stack>
       </Modal>
 
-
+      {/* Floating Action Button for mobile */}
+      <FloatingActionButton actions={fabActions} />
     </Container>
   );
 } 
