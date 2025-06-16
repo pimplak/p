@@ -1,15 +1,15 @@
 export interface Appointment {
     id?: number;
     patientId: number;
-    date: Date;
+    date: Date | string;
     duration: number; // in minutes
     status: AppointmentStatus;
     type?: AppointmentType;
     notes?: string;
     reminderSent?: boolean;
-    reminderSentAt?: Date;
-    createdAt: Date;
-    updatedAt: Date;
+    reminderSentAt?: Date | string;
+    createdAt: Date | string;
+    updatedAt: Date | string;
 }
 
 export const AppointmentStatus = {

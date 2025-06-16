@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@hookform/resolvers": "^5.1.1",
     "@mantine/core": "^8.1.1",
     "@mantine/dates": "^8.1.1",
     "@mantine/form": "^8.1.1",
@@ -17,13 +18,20 @@
     "@mantine/modals": "^8.1.1",
     "@mantine/notifications": "^8.1.1",
     "@tabler/icons-react": "^3.34.0",
+    "@types/react-window": "^1.8.8",
     "date-fns": "^4.1.0",
     "dayjs": "^1.11.13",
     "dexie": "^4.0.11",
+    "immer": "^10.1.1",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-router-dom": "^7.6.2",
+    "react-virtualized-auto-sizer": "^1.0.26",
+    "react-window": "^1.8.11",
+    "react-window-infinite-loader": "^1.0.10",
+    "use-debounce": "^10.0.5",
     "xlsx": "^0.18.5",
+    "zod": "^3.25.65",
     "zustand": "^5.0.5"
   },
   "devDependencies": {

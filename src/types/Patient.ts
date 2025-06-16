@@ -4,17 +4,17 @@ export interface Patient {
     lastName: string;
     email?: string;
     phone?: string;
-    birthDate?: Date;
+    birthDate?: Date | string;
     address?: string;
     emergencyContact?: string;
     emergencyPhone?: string;
     notes?: string;
-    createdAt: Date;
-    updatedAt: Date;
+    createdAt: Date | string;
+    updatedAt: Date | string;
 }
 
 export interface PatientWithAppointments extends Patient {
     appointmentCount: number;
-    lastAppointment?: Date;
-    nextAppointment?: Date;
+    lastAppointment?: Date | string;
+    nextAppointment?: Date | string;
 } 
