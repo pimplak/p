@@ -70,151 +70,272 @@ const drabDarkBrown: MantineColorsTuple = [
     '#3b341f'   // główny drab dark brown
 ];
 
-// Mapowanie standardowych kolorów Mantine na naszą paletę
-const blue = ashGray;        // niebieski -> ash gray
-const green = yellowGreen;   // zielony -> yellow green  
-const red = drabDarkBrown;   // czerwony -> drab dark brown
+// === NOWA PALETA MAGENTA-ROSE ===
 
-export const theme = createTheme({
-    primaryColor: 'yellowGreen',
-    colors: {
-        smokyBlack,
-        yellowGreen,
-        nyanza,
-        ashGray,
-        drabDarkBrown,
-        // Aliasy dla kompatybilności
-        blue,
-        green,
-        red,
-    },
-    defaultRadius: 'md',
-    fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+// Dark Magenta - główny ciemny kolor
+const darkMagenta: MantineColorsTuple = [
+    '#faf3fb',  // bardzo jasny
+    '#f0e4f2',  // jasny
+    '#e1c9e5',  // jasny fioletowy
+    '#d1abd6',  // średni jasny
+    '#be89c5',  // średni
+    '#a963b0',  // średni intensywny
+    '#861388',  // główny dark magenta
+    '#6e0f70',  // ciemny
+    '#560c57',  // bardzo ciemny
+    '#420943'   // najciemniejszy
+];
 
-    // MOBILE-OPTIMIZED SIZING
-    fontSizes: {
-        xs: '0.7rem',
-        sm: '0.8rem',
-        md: '0.9rem',
-        lg: '1.1rem',
-        xl: '1.3rem',
-    },
+// Brilliant Rose - główny akcent i przyciski
+const brilliantRose: MantineColorsTuple = [
+    '#fef5f9',  // bardzo jasny różowy
+    '#fde8f1',  // jasny różowy
+    '#fad0e4',  // jasny
+    '#f6b5d6',  // średni jasny
+    '#f194c4',  // średni
+    '#eb6aaf',  // średni intensywny
+    '#e15a97',  // główny brilliant rose
+    '#c14480',  // ciemny
+    '#a33169',  // bardzo ciemny
+    '#872254'   // najciemniejszy
+];
 
-    spacing: {
-        xs: '0.5rem',
-        sm: '0.75rem',
-        md: '1rem',
-        lg: '1.25rem',
-        xl: '1.5rem',
-    },
+// Lavender Pink - jasne tła i subtelne akcenty
+const lavenderPink: MantineColorsTuple = [
+    '#fefcfd',  // prawie biały
+    '#fdf8fa',  // bardzo jasny
+    '#fbf3f6',  // jasny
+    '#f8edf2',  // jasny różowawy
+    '#f4e6ec',  // średni jasny
+    '#f0dde5',  // średni
+    '#eeabc4',  // główny lavender pink
+    '#e194b8',  // średni ciemny
+    '#d37eac',  // ciemny
+    '#c569a0'   // najciemniejszy
+];
 
-    breakpoints: {
-        xs: '36em',
-        sm: '48em',
-        md: '62em',
-        lg: '75em',
-        xl: '88em',
-    },
+// Puce - neutralne elementy i granice
+const puce: MantineColorsTuple = [
+    '#fbf8f9',  // bardzo jasny
+    '#f6f1f3',  // jasny
+    '#f0eaec',  // jasny szary
+    '#e7dde0',  // średni jasny
+    '#dccdd2',  // średni
+    '#cdb8c0',  // średni ciemny
+    '#c799a6',  // główny puce
+    '#a97f8e',  // ciemny
+    '#8b6876',  // bardzo ciemny
+    '#6e5260'   // najciemniejszy
+];
 
-    components: {
-        AppShell: {
-            defaultProps: {
-                padding: 'sm',
-            },
+// Violet JTC - ciemne akcenty i teksty
+const violetJtc: MantineColorsTuple = [
+    '#f5f3f4',  // bardzo jasny fioletowy
+    '#e9e4e7',  // jasny fioletowy
+    '#dad0d6',  // jasny
+    '#c8b9c2',  // średni jasny
+    '#b39fab',  // średni
+    '#9a8191',  // średni ciemny
+    '#7e6474',  // ciemny
+    '#624956',  // bardzo ciemny
+    '#4b2840',  // główny violet jtc
+    '#3a1f32'   // najciemniejszy
+];
+
+// Mapowanie standardowych kolorów Mantine dla palety naturalnej
+const naturalBlue = ashGray;
+const naturalGreen = yellowGreen;
+const naturalRed = drabDarkBrown;
+
+// Mapowanie standardowych kolorów Mantine dla palety magenta-rose
+const magentaBlue = puce;
+const magentaGreen = brilliantRose;
+const magentaRed = violetJtc;
+
+// Funkcja tworząca temat na podstawie wybranej palety
+export const createAppTheme = (palette: 'naturalne' | 'magenta-rose' = 'naturalne') => {
+    const isNatural = palette === 'naturalne';
+
+    return createTheme({
+        primaryColor: isNatural ? 'yellowGreen' : 'brilliantRose',
+        colors: {
+            // Zawsze dostępne kolory naturalne
+            smokyBlack,
+            yellowGreen,
+            nyanza,
+            ashGray,
+            drabDarkBrown,
+
+            // Zawsze dostępne kolory magenta-rose
+            darkMagenta,
+            brilliantRose,
+            lavenderPink,
+            puce,
+            violetJtc,
+
+            // Aliasy zależne od palety
+            blue: isNatural ? naturalBlue : magentaBlue,
+            green: isNatural ? naturalGreen : magentaGreen,
+            red: isNatural ? naturalRed : magentaRed,
+        },
+        defaultRadius: 'md',
+        fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+
+        // MOBILE-OPTIMIZED SIZING
+        fontSizes: {
+            xs: '0.7rem',
+            sm: '0.8rem',
+            md: '0.9rem',
+            lg: '1.1rem',
+            xl: '1.3rem',
         },
 
-        Button: {
-            defaultProps: {
-                variant: 'filled',
-                color: 'yellowGreen',
-                size: 'sm',
-                radius: 'md',
-            },
+        spacing: {
+            xs: '0.5rem',
+            sm: '0.75rem',
+            md: '1rem',
+            lg: '1.25rem',
+            xl: '1.5rem',
         },
 
-        Card: {
-            defaultProps: {
-                shadow: 'sm',
-                withBorder: true,
-                radius: 'md',
-                padding: 'sm',
-            },
+        breakpoints: {
+            xs: '36em',
+            sm: '48em',
+            md: '62em',
+            lg: '75em',
+            xl: '88em',
         },
 
-        Table: {
-            defaultProps: {
-                striped: true,
-                highlightOnHover: true,
-                fontSize: 'sm',
-            },
-        },
-
-        Modal: {
-            defaultProps: {
-                centered: true,
-                overlayProps: {
-                    opacity: 0.75,
-                    blur: 4,
-                    backgroundOpacity: 0.55,
+        components: {
+            AppShell: {
+                defaultProps: {
+                    padding: 'sm',
                 },
-                size: 'md',
-                transitionProps: { transition: 'fade', duration: 200 },
             },
-        },
 
-        TextInput: {
-            defaultProps: {
-                variant: 'filled',
-                size: 'sm',
+            Button: {
+                defaultProps: {
+                    variant: 'filled',
+                    color: isNatural ? 'yellowGreen' : 'brilliantRose',
+                    size: 'sm',
+                    radius: 'md',
+                },
             },
-        },
 
-        Select: {
-            defaultProps: {
-                variant: 'filled',
-                size: 'sm',
+            Card: {
+                defaultProps: {
+                    shadow: 'sm',
+                    withBorder: true,
+                    radius: 'md',
+                    padding: 'sm',
+                },
             },
-        },
 
-        NumberInput: {
-            defaultProps: {
-                variant: 'filled',
-                size: 'sm',
+            Table: {
+                defaultProps: {
+                    striped: true,
+                    highlightOnHover: true,
+                    fontSize: 'sm',
+                },
             },
-        },
 
-        Textarea: {
-            defaultProps: {
-                variant: 'filled',
-                size: 'sm',
+            Modal: {
+                defaultProps: {
+                    centered: true,
+                    overlayProps: {
+                        opacity: 0.75,
+                        blur: 4,
+                        backgroundOpacity: 0.55,
+                    },
+                    size: 'md',
+                    transitionProps: { transition: 'fade', duration: 200 },
+                },
             },
-        },
 
-        NavLink: {
-            defaultProps: {
-                variant: 'filled',
+            TextInput: {
+                defaultProps: {
+                    variant: 'filled',
+                    size: 'sm',
+                },
             },
-        },
 
-        Badge: {
-            defaultProps: {
-                color: 'ashGray',
-                variant: 'filled',
-                size: 'sm',
+            Select: {
+                defaultProps: {
+                    variant: 'filled',
+                    size: 'sm',
+                },
             },
-        },
 
-        Alert: {
-            defaultProps: {
-                color: 'ashGray',
+            NumberInput: {
+                defaultProps: {
+                    variant: 'filled',
+                    size: 'sm',
+                },
             },
-        },
 
-        ActionIcon: {
-            defaultProps: {
-                size: 'sm',
-                variant: 'light',
+            Textarea: {
+                defaultProps: {
+                    variant: 'filled',
+                    size: 'sm',
+                },
+            },
+
+            NavLink: {
+                defaultProps: {
+                    variant: 'filled',
+                },
+            },
+
+            Badge: {
+                defaultProps: {
+                    size: 'sm',
+                    radius: 'sm',
+                },
+            },
+
+            Alert: {
+                defaultProps: {
+                    variant: 'filled',
+                    radius: 'md',
+                },
+            },
+
+            Notification: {
+                defaultProps: {
+                    radius: 'md',
+                    withCloseButton: true,
+                },
+            },
+
+            Paper: {
+                defaultProps: {
+                    shadow: 'xs',
+                    p: 'md',
+                    radius: 'md',
+                },
+            },
+
+            Stack: {
+                defaultProps: {
+                    gap: 'md',
+                },
+            },
+
+            Group: {
+                defaultProps: {
+                    gap: 'md',
+                },
+            },
+
+            Container: {
+                defaultProps: {
+                    size: 'xl',
+                    px: 'md',
+                },
             },
         },
-    },
-}); 
+    });
+};
+
+// Eksportujemy domyślny temat (naturalny)
+export const theme = createAppTheme('naturalne'); 

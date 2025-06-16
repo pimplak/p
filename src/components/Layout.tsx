@@ -1,6 +1,6 @@
-import { AppShell, NavLink, Group, Text, Title, Burger } from '@mantine/core';
+import { AppShell, NavLink, Group, Text, Title, Burger, Divider } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { IconUsers, IconCalendar, IconDashboard, IconStethoscope } from '@tabler/icons-react';
+import { IconUsers, IconCalendar, IconDashboard, IconStethoscope, IconSettings } from '@tabler/icons-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import type { ReactNode } from 'react';
 
@@ -13,10 +13,14 @@ export function Layout({ children }: LayoutProps) {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const navItems = [
+  const mainNavItems = [
     { label: 'Dashboard', icon: IconDashboard, path: '/' },
     { label: 'Pacjenci', icon: IconUsers, path: '/patients' },
     { label: 'Kalendarz', icon: IconCalendar, path: '/calendar' },
+  ];
+
+  const settingsNavItems = [
+    { label: 'Ustawienia', icon: IconSettings, path: '/settings' },
   ];
 
   const handleNavigation = (path: string) => {
@@ -53,9 +57,24 @@ export function Layout({ children }: LayoutProps) {
 
       <AppShell.Navbar p="md">
         <Text size="xs" tt="uppercase" fw={700} c="dimmed" mb="md">
-          Nawigacja
+          Główne
         </Text>
-        {navItems.map((item) => (
+        {mainNavItems.map((item) => (
+          <NavLink
+            key={item.path}
+            active={location.pathname === item.path}
+            label={item.label}
+            leftSection={<item.icon size="1rem" />}
+            onClick={() => handleNavigation(item.path)}
+            variant="filled"
+            mb={4}
+          />
+        ))}
+        <Divider my="md" />
+        <Text size="xs" tt="uppercase" fw={700} c="dimmed" mb="md">
+          Aplikacja
+        </Text>
+        {settingsNavItems.map((item) => (
           <NavLink
             key={item.path}
             active={location.pathname === item.path}

@@ -6,13 +6,17 @@ import { MantineProvider, ColorSchemeScript } from '@mantine/core';
 import { ModalsProvider } from '@mantine/modals';
 import { Notifications } from '@mantine/notifications';
 import { BrowserRouter } from 'react-router-dom';
-import { theme } from './theme';
+import { createAppTheme } from './theme';
+import { useSettingsStore } from './stores/useSettingsStore';
 import { AppRouter } from './components/AppRouter';
 
 function App() {
+  const { colorPalette, darkMode } = useSettingsStore();
+  const theme = createAppTheme(colorPalette);
+
   return (
     <>
-      <ColorSchemeScript defaultColorScheme="dark" />
+      <ColorSchemeScript defaultColorScheme={darkMode ? "dark" : "light"} />
       <style>{`
         body {
           background-color: #100b00 !important;
@@ -304,7 +308,10 @@ function App() {
           }
         }
       `}</style>
-      <MantineProvider theme={theme} defaultColorScheme="dark">
+      <MantineProvider 
+        theme={theme} 
+        defaultColorScheme={darkMode ? "dark" : "light"}
+      >
         <ModalsProvider>
           <Notifications />
           <BrowserRouter>
