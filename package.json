@@ -25,6 +25,7 @@
     "immer": "^10.1.1",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
+    "react-error-boundary": "^6.0.0",
     "react-router-dom": "^7.6.2",
     "react-virtualized-auto-sizer": "^1.0.26",
     "react-window": "^1.8.11",

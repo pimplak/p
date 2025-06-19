@@ -8,6 +8,7 @@ import { Notifications } from '@mantine/notifications';
 import { BrowserRouter } from 'react-router-dom';
 import { useTheme } from './hooks/useTheme';
 import { AppRouter } from './components/AppRouter';
+import { GlobalErrorBoundary } from './components/GlobalErrorBoundary';
 import { globalStyles } from './theme/globalStyles';
 
 function App() {
@@ -19,9 +20,11 @@ function App() {
       <MantineProvider theme={mantineTheme}>
         <ModalsProvider>
           <Notifications position="top-right" />
-          <BrowserRouter>
-            <AppRouter />
-          </BrowserRouter>
+          <GlobalErrorBoundary>
+            <BrowserRouter>
+              <AppRouter />
+            </BrowserRouter>
+          </GlobalErrorBoundary>
         </ModalsProvider>
       </MantineProvider>
     </>
