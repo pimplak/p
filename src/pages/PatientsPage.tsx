@@ -18,7 +18,7 @@ import { PatientTable } from '../components/PatientTable';
 import { PatientsPageHeader } from '../components/PatientsPageHeader';
 import { PatientsCardList } from '../components/PatientsCardList';
 import { ExportModal } from '../components/ExportModal';
-import { exportToExcel } from '../utils/export';
+import { lazyExportToExcel } from '../utils/excelLazyLoader';
 import type { Patient } from '../types/Patient';
 import { FloatingActionButton, type FABAction } from '../components/FloatingActionButton';
 
@@ -129,23 +129,33 @@ export function PatientsPage() {
         ? patients.filter(p => options.selectedPatients.includes(p.id!))
         : patients;
 
-      await exportToExcel(
-        options.exportPatients ? patientsToExport : [],
-        [], // appointments będą pobrane przez store
-        {
-          patients: options.exportPatients,
-          appointments: options.exportAppointments,
-          dateFrom: options.dateFrom || undefined,
-          dateTo: options.dateTo || undefined,
-          selectedPatients: options.selectedPatients.length > 0 ? options.selectedPatients : undefined
-        }
-      );
+      // Prepare data for lazy export
+      const sheets = [];
+      
+      if (options.exportPatients) {
+        sheets.push({
+          name: 'Pacjenci',
+          data: patientsToExport.map(p => ({
+            'Imię': p.firstName,
+            'Nazwisko': p.lastName,
+            'Email': p.email,
+            'Telefon': p.phone,
+            'Data urodzenia': p.birthDate,
+            'Adres': p.address,
+            'Status': p.status,
+            'Tagi': p.tags?.join(', '),
+            'Ilość wizyt': p.appointmentCount,
+            'Ostatnia wizyta': p.lastAppointment,
+            'Następna wizyta': p.nextAppointment,
+          }))
+        });
+      }
 
-      notifications.show({
-        title: 'Sukces!',
-        message: 'Dane zostały wyeksportowane',
-        color: 'green'
+      await lazyExportToExcel({
+        sheets,
+        filename: `pacjenci_${new Date().toISOString().split('T')[0]}.xlsx`
       });
+
       closeExport();
     } catch {
       notifications.show({

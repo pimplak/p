@@ -1,37 +1,37 @@
-[ ] ENUMIFY_STATUS – Wyciągnij wszystkie statusy do `constants/status.ts`
- • Usuń magic-stringi `'active' | 'archived' | …`, eksportuj enum lub const-mapkę.
+[✅] ENUMIFY_STATUS – Wyciągnij wszystkie statusy do `constants/status.ts`
+ • Usuń magic-stringi `'active' | 'archived' | …`, eksportuj enum lub const-mapkę.
 
-[ ] DATE_SINGLE_SOURCE – ISO w DB, helpers w kodzie  
- • Dodaj `toDate()` / `toISO()` w `utils/dates.ts`, stosuj przy IO.  
+[✅] DATE_SINGLE_SOURCE – ISO w DB, helpers w kodzie  
+ • Dodaj `toDate()` / `toISO()` w `utils/dates.ts`, stosuj przy IO.  
 
-[ ] SPLIT_PATIENTS_PAGE – rozbij 461 LOC potwora  
- • PatientsPage (layout)  
- • SearchBar  
- • Table / VirtualizedList  
- • FAB / Modale  
+[✅] SPLIT_PATIENTS_PAGE – rozbij 461 LOC potwora  
+ • PatientsPage (layout)  
+ • SearchBar  
+ • Table / VirtualizedList  
+ • FAB / Modale  
 
-[ ] SPLIT_PATIENT_PROFILE – rozbij 415 LOC  
- • Header  
- • QuickInfoCards  
- • Tabs (Notes, Goals…)  
- • ActionMenu / Modale  
+[✅] SPLIT_PATIENT_PROFILE – rozbij 415 LOC  
+ • Header  
+ • QuickInfoCards  
+ • Tabs (Notes, Goals…)  
+ • ActionMenu / Modale  
 
-[ ] ROUTE_LAZY & CODE_SPLIT – `React.lazy`, `Suspense`  
- • Strony (`Dashboard`, `Settings`…)  
- • Ciężkie util – `xlsx` eksport 
+[✅] ROUTE_LAZY & CODE_SPLIT – `React.lazy`, `Suspense`  
+ • Strony (`Dashboard`, `Settings`…)  
+ • Ciężkie util – `xlsx` eksport 
 
-[ ] ERROR_BOUNDARY_GLOBAL – `react-error-boundary` przy `AppRouter`  
- • Fallback => toast + restart button.
+[✅] ERROR_BOUNDARY_GLOBAL – `react-error-boundary` przy `AppRouter`  
+ • Fallback => toast + restart button.
 
-[ ] ZOD_RESOLVER_FORMS – eliminuj ręczne `validate`  
- • `useForm({ validate: zodResolver(AppointmentFormSchema) })`  
- • Powtórz dla `PatientForm`, `GoalForm`…
+[🔄] ZOD_RESOLVER_FORMS – eliminuj ręczne `validate`  
+ • `useForm({ validate: zodResolver(AppointmentFormSchema) })`  
+ • PatientForm ✅, AppointmentForm - problemy z typami
 
-[ ] CLEAN_STORE_SIDE_EFFECTS – wyrzuć toast'y z Zustand  
- • Store zwraca wynik; UI pokazuje notifications.
+[✅] CLEAN_STORE_SIDE_EFFECTS – wyrzuć toast'y z Zustand  
+ • Store zwraca wynik; UI pokazuje notifications.
 
-[ ] EXPORT_OFF_MAIN_THREAD – web-worker / `requestIdleCallback`  
- • Przenieś pętlę XLSX, update postMessage→toast.
+[✅] EXPORT_OFF_MAIN_THREAD – web-worker / `requestIdleCallback`  
+ • Przenieś pętlę XLSX, update postMessage→toast.
 
 [ ] ESLINT_STRICT_ORDER – `@typescript-eslint/consistent-type-imports`, `import/order`  
  • Dodaj do `.eslintrc`, napraw auto-fix.

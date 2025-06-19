@@ -15,6 +15,8 @@ import { DateTimePicker } from '@mantine/dates';
 import { useAppointmentStore } from '../stores/useAppointmentStore';
 import { usePatientStore } from '../stores/usePatientStore';
 import { notifications } from '@mantine/notifications';
+import { type AppointmentFormData } from '../schemas';
+import { APPOINTMENT_STATUS } from '../constants/status';
 import { AppointmentStatus, AppointmentType, PaymentMethod } from '../types/Appointment';
 import type { Appointment } from '../types/Appointment';
 
@@ -24,48 +26,56 @@ interface AppointmentFormProps {
   onCancel: () => void;
 }
 
+interface FormValues {
+  patientId: string;
+  date: Date | string;
+  duration: number;
+  status: string;
+  type?: string;
+  notes?: string;
+  price?: number;
+  paymentInfo?: {
+    isPaid: boolean;
+    paidAt?: Date | string;
+    paymentMethod?: string;
+    notes?: string;
+  };
+}
+
 export function AppointmentForm({ appointment, onSuccess, onCancel }: AppointmentFormProps) {
   const { addAppointment, updateAppointment, loading } = useAppointmentStore();
   const { patients } = usePatientStore();
 
-  const form = useForm({
+  const form = useForm<FormValues>({
     initialValues: {
       patientId: appointment?.patientId?.toString() || '',
       date: appointment?.date ? new Date(appointment.date) : new Date(),
       duration: appointment?.duration || 50,
-      status: appointment?.status || AppointmentStatus.SCHEDULED,
+      status: appointment?.status || APPOINTMENT_STATUS.SCHEDULED,
       type: appointment?.type || AppointmentType.THERAPY,
       notes: appointment?.notes || '',
       price: appointment?.price || 150,
-      isPaid: appointment?.paymentInfo?.isPaid || false,
-      paidAt: appointment?.paymentInfo?.paidAt ? new Date(appointment.paymentInfo.paidAt) : null,
-      paymentMethod: appointment?.paymentInfo?.paymentMethod || '',
-      paymentNotes: appointment?.paymentInfo?.notes || '',
+      paymentInfo: {
+        isPaid: appointment?.paymentInfo?.isPaid || false,
+        paidAt: appointment?.paymentInfo?.paidAt ? new Date(appointment.paymentInfo.paidAt) : undefined,
+        paymentMethod: appointment?.paymentInfo?.paymentMethod || undefined,
+        notes: appointment?.paymentInfo?.notes || '',
+      },
     },
     validate: {
       patientId: (value) => !value ? 'Wybierz pacjenta' : null,
-      date: (value) => !value ? 'Wybierz datę i godzinę' : null,
       duration: (value) => !value || value < 15 ? 'Czas trwania musi być co najmniej 15 minut' : null,
-      price: (value) => value < 0 ? 'Cena nie może być ujemna' : null,
+      price: (value) => value !== undefined && value < 0 ? 'Cena nie może być ujemna' : null,
     },
   });
 
-  const handleSubmit = async (values: typeof form.values) => {
+  const handleSubmit = async (values: FormValues) => {
     try {
-      const appointmentData = {
-        patientId: parseInt(values.patientId),
-        date: values.date,
-        duration: values.duration,
-        status: values.status,
-        type: values.type,
-        notes: values.notes,
-        price: values.price,
-        paymentInfo: {
-          isPaid: values.isPaid,
-          paidAt: values.isPaid && values.paidAt ? values.paidAt : undefined,
-          paymentMethod: values.paymentMethod ? values.paymentMethod as PaymentMethod : undefined,
-          notes: values.paymentNotes || undefined,
-        },
+      // Transform values to match AppointmentFormData schema
+      const appointmentData: AppointmentFormData = {
+        ...values,
+        patientId: parseInt(values.patientId, 10),
+        status: values.status as any, // Cast to satisfy strict types
       };
 
       if (appointment?.id) {
@@ -189,23 +199,23 @@ export function AppointmentForm({ appointment, onSuccess, onCancel }: Appointmen
             />
             <Checkbox
               label="Opłacono"
-              {...form.getInputProps('isPaid', { type: 'checkbox' })}
+              {...form.getInputProps('paymentInfo.isPaid', { type: 'checkbox' })}
             />
           </Group>
 
-          {form.values.isPaid && (
+          {form.values.paymentInfo?.isPaid && (
             <>
               <Group grow mt="md">
                 <DateTimePicker
                   label="Data płatności"
                   placeholder="Kiedy opłacono?"
-                  {...form.getInputProps('paidAt')}
+                  {...form.getInputProps('paymentInfo.paidAt')}
                 />
                 <Select
                   label="Sposób płatności"
                   placeholder="Wybierz sposób"
                   data={paymentMethodOptions}
-                  {...form.getInputProps('paymentMethod')}
+                  {...form.getInputProps('paymentInfo.paymentMethod')}
                 />
               </Group>
 
@@ -213,7 +223,7 @@ export function AppointmentForm({ appointment, onSuccess, onCancel }: Appointmen
                 label="Notatki do płatności"
                 placeholder="Dodatkowe informacje o płatności..."
                 mt="md"
-                {...form.getInputProps('paymentNotes')}
+                {...form.getInputProps('paymentInfo.notes')}
               />
             </>
           )}

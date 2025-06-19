@@ -1,4 +1,5 @@
 import { useForm } from '@mantine/form';
+import { zodResolver } from 'mantine-form-zod-resolver';
 import { 
   TextInput, 
   Button, 
@@ -14,7 +15,6 @@ import { notifications } from '@mantine/notifications';
 import { PatientFormSchema, type PatientFormData } from '../schemas';
 import type { Patient } from '../types/Patient';
 import { PATIENT_STATUS, PATIENT_STATUS_LABELS } from '../constants/status';
-import { ZodError } from 'zod';
 
 interface PatientFormProps {
   patient?: Patient | null;
@@ -39,42 +39,20 @@ export function PatientForm({ patient, onSuccess, onCancel }: PatientFormProps) 
       status: patient?.status || PATIENT_STATUS.ACTIVE,
       tags: patient?.tags || [],
     },
-    validate: (values) => {
-      try {
-        PatientFormSchema.parse(values);
-        return {};
-      } catch (error) {
-        if (error instanceof ZodError) {
-          const errors: Record<string, string> = {};
-          
-          error.issues.forEach((issue) => {
-            const field = issue.path[0];
-            if (field && !errors[field as string]) {
-              errors[field as string] = issue.message;
-            }
-          });
-          
-          return errors;
-        }
-        return {};
-      }
-    },
+    validate: zodResolver(PatientFormSchema),
   });
 
   const handleSubmit = async (values: PatientFormData) => {
     try {
-      // Validate with Zod before submitting
-      const validatedData = PatientFormSchema.parse(values);
-      
       if (patient?.id) {
-        await updatePatient(patient.id, validatedData);
+        await updatePatient(patient.id, values);
         notifications.show({
           title: 'Sukces',
           message: 'Dane pacjenta zostały zaktualizowane',
           color: 'green',
         });
       } else {
-        await addPatient(validatedData);
+        await addPatient(values);
         notifications.show({
           title: 'Sukces',
           message: 'Pacjent został dodany',
