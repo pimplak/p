@@ -1,3 +1,5 @@
+import type { PatientStatus } from '../constants/status';
+
 export interface Patient {
     id?: number;
     firstName: string;
@@ -9,7 +11,7 @@ export interface Patient {
     emergencyContact?: string;
     emergencyPhone?: string;
     notes?: string;
-    status: 'active' | 'archived';
+    status: PatientStatus;
     tags?: string[];
     createdAt: Date | string;
     updatedAt: Date | string;
@@ -39,7 +41,7 @@ export interface Goal {
     id?: number;
     patientId: number;
     description: string;
-    status: 'active' | 'completed' | 'paused' | 'cancelled';
+    status: import('../constants/status').GoalStatus;
     targetDate?: Date | string;
     progress: number; // 0-100%
     notes?: string;

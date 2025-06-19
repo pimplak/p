@@ -13,6 +13,7 @@ import { usePatientStore } from '../stores/usePatientStore';
 import { notifications } from '@mantine/notifications';
 import { PatientFormSchema, type PatientFormData } from '../schemas';
 import type { Patient } from '../types/Patient';
+import { PATIENT_STATUS, PATIENT_STATUS_LABELS } from '../constants/status';
 import { ZodError } from 'zod';
 
 interface PatientFormProps {
@@ -35,7 +36,7 @@ export function PatientForm({ patient, onSuccess, onCancel }: PatientFormProps) 
       emergencyContact: patient?.emergencyContact || '',
       emergencyPhone: patient?.emergencyPhone || '',
       notes: patient?.notes || '',
-      status: patient?.status || 'active',
+      status: patient?.status || PATIENT_STATUS.ACTIVE,
       tags: patient?.tags || [],
     },
     validate: (values) => {
@@ -153,8 +154,8 @@ export function PatientForm({ patient, onSuccess, onCancel }: PatientFormProps) 
             label="Status"
             placeholder="Wybierz status"
             data={[
-              { value: 'active', label: 'Aktywny' },
-              { value: 'archived', label: 'Zarchiwizowany' }
+              { value: PATIENT_STATUS.ACTIVE, label: PATIENT_STATUS_LABELS[PATIENT_STATUS.ACTIVE] },
+              { value: PATIENT_STATUS.ARCHIVED, label: PATIENT_STATUS_LABELS[PATIENT_STATUS.ARCHIVED] }
             ]}
             {...form.getInputProps('status')}
           />

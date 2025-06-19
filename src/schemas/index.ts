@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { PATIENT_STATUS, GOAL_STATUS, APPOINTMENT_STATUS } from '../constants/status';
 
 // Patient Schema - jedno źródło prawdy
 export const PatientSchema = z.object({
@@ -12,7 +13,7 @@ export const PatientSchema = z.object({
     emergencyContact: z.string().optional(),
     emergencyPhone: z.string().optional(),
     notes: z.string().optional(),
-    status: z.enum(['active', 'archived']).default('active'),
+    status: z.enum([PATIENT_STATUS.ACTIVE, PATIENT_STATUS.ARCHIVED]).default(PATIENT_STATUS.ACTIVE),
     tags: z.array(z.string()).optional().default([]),
     createdAt: z.union([z.date(), z.string()]),
     updatedAt: z.union([z.date(), z.string()]),
@@ -52,7 +53,7 @@ export const GoalSchema = z.object({
     id: z.number().optional(),
     patientId: z.number().min(1, 'ID pacjenta jest wymagane'),
     description: z.string().min(1, 'Opis celu jest wymagany'),
-    status: z.enum(['active', 'completed', 'paused', 'cancelled']).default('active'),
+    status: z.enum([GOAL_STATUS.ACTIVE, GOAL_STATUS.COMPLETED, GOAL_STATUS.PAUSED, GOAL_STATUS.CANCELLED]).default(GOAL_STATUS.ACTIVE),
     targetDate: z.union([z.date(), z.string()]).optional(),
     progress: z.number().min(0).max(100).default(0),
     notes: z.string().optional(),
@@ -73,7 +74,7 @@ export const AppointmentSchema = z.object({
     patientId: z.number().min(1, 'ID pacjenta jest wymagane'),
     date: z.union([z.date(), z.string()]),
     duration: z.number().min(1, 'Czas trwania musi być większy od 0'),
-    status: z.enum(['scheduled', 'completed', 'cancelled', 'no_show', 'rescheduled']),
+    status: z.enum([APPOINTMENT_STATUS.SCHEDULED, APPOINTMENT_STATUS.COMPLETED, APPOINTMENT_STATUS.CANCELLED, APPOINTMENT_STATUS.NO_SHOW, APPOINTMENT_STATUS.RESCHEDULED]),
     type: z.enum(['initial', 'follow_up', 'therapy', 'consultation', 'assessment']).optional(),
     notes: z.string().optional(),
     price: z.number().min(0, 'Cena nie może być ujemna').optional(),
