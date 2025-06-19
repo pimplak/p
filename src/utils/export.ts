@@ -39,10 +39,15 @@ interface AppointmentExportData {
     'Data': string;
     'Godzina': string;
     'Czas trwania (min)': number;
+    'Cena (zł)': string;
+    'Status płatności': string;
+    'Data płatności': string;
+    'Sposób płatności': string;
     'Status': string;
     'Typ': string;
     'Telefon pacjenta': string;
     'Notatki': string;
+    'Notatki płatności': string;
     'Przypomnienie wysłane': string;
     'Data utworzenia': string;
 }
@@ -197,10 +202,20 @@ export async function exportToExcel(
                         'HH:mm'
                     ),
                     'Czas trwania (min)': appointment.duration,
+                    'Cena (zł)': appointment.price ? `${appointment.price}` : '',
+                    'Status płatności': appointment.paymentInfo?.isPaid ? 'Opłacono' : 'Nieopłacono',
+                    'Data płatności': appointment.paymentInfo?.isPaid && appointment.paymentInfo?.paidAt ? format(
+                        typeof appointment.paymentInfo.paidAt === 'string'
+                            ? new Date(appointment.paymentInfo.paidAt)
+                            : appointment.paymentInfo.paidAt,
+                        'dd.MM.yyyy HH:mm'
+                    ) : '',
+                    'Sposób płatności': appointment.paymentInfo?.paymentMethod ? getPaymentMethodLabel(appointment.paymentInfo.paymentMethod) : '',
                     'Status': getStatusLabel(appointment.status),
                     'Typ': appointment.type ? getTypeLabel(appointment.type) : '',
                     'Telefon pacjenta': appointment.patient?.phone || '',
                     'Notatki': appointment.notes || '',
+                    'Notatki płatności': appointment.paymentInfo?.notes || '',
                     'Przypomnienie wysłane': appointment.reminderSent ? 'Tak' : 'Nie',
                     'Data utworzenia': format(
                         typeof appointment.createdAt === 'string'
@@ -293,4 +308,14 @@ function getTypeLabel(type: string): string {
         'assessment': 'Ocena'
     };
     return typeLabels[type] || type;
+}
+
+function getPaymentMethodLabel(method: string): string {
+    const methodLabels: Record<string, string> = {
+        'cash': 'Gotówka',
+        'card': 'Karta',
+        'transfer': 'Przelew',
+        'other': 'Inne'
+    };
+    return methodLabels[method] || method;
 } 

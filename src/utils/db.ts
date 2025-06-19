@@ -70,6 +70,26 @@ export class PsychFlowDB extends Dexie {
             });
         });
 
+        // Version 4 - dodajemy pola ceny i płatności do wizyt
+        this.version(4).stores({
+            patients: '++id, lastName, email, phone, status, [firstName+lastName]',
+            appointments: '++id, patientId, date, status',
+            notes: '++id, patientId, sessionId, type, createdAt',
+            goals: '++id, patientId, status, targetDate, createdAt'
+        }).upgrade(tx => {
+            // Migracja: dodaj domyślne wartości dla nowych pól płatności
+            return tx.table('appointments').toCollection().modify(appointment => {
+                if (typeof appointment.price === 'undefined') {
+                    appointment.price = 150; // Domyślna cena 150 zł
+                }
+                if (!appointment.paymentInfo) {
+                    appointment.paymentInfo = {
+                        isPaid: false
+                    };
+                }
+            });
+        });
+
         // Add hooks for automatic timestamps (now using ISO strings)
         this.patients.hook('creating', function (_, obj: Partial<Patient>) {
             obj.createdAt = new Date().toISOString() as Date | string;
@@ -89,6 +109,14 @@ export class PsychFlowDB extends Dexie {
         this.appointments.hook('creating', function (_, obj: Partial<Appointment>) {
             obj.createdAt = new Date().toISOString() as Date | string;
             obj.updatedAt = new Date().toISOString() as Date | string;
+            if (typeof obj.price === 'undefined') {
+                obj.price = 150; // Domyślna cena 150 zł
+            }
+            if (!obj.paymentInfo) {
+                obj.paymentInfo = {
+                    isPaid: false
+                };
+            }
         });
 
         this.appointments.hook('updating', function (modifications: Partial<Appointment>) {

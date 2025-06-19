@@ -76,6 +76,13 @@ export const AppointmentSchema = z.object({
     status: z.enum(['scheduled', 'completed', 'cancelled', 'no_show', 'rescheduled']),
     type: z.enum(['initial', 'follow_up', 'therapy', 'consultation', 'assessment']).optional(),
     notes: z.string().optional(),
+    price: z.number().min(0, 'Cena nie może być ujemna').optional(),
+    paymentInfo: z.object({
+        isPaid: z.boolean().default(false),
+        paidAt: z.union([z.date(), z.string()]).optional(),
+        paymentMethod: z.enum(['cash', 'card', 'transfer', 'other']).optional(),
+        notes: z.string().optional(),
+    }).optional(),
     reminderSent: z.boolean().optional(),
     reminderSentAt: z.union([z.date(), z.string()]).optional(),
     createdAt: z.union([z.date(), z.string()]),

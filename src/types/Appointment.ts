@@ -6,11 +6,29 @@ export interface Appointment {
     status: AppointmentStatus;
     type?: AppointmentType;
     notes?: string;
+    price?: number; // Cena w złotych
+    paymentInfo?: PaymentInfo; // Informacje o płatności
     reminderSent?: boolean;
     reminderSentAt?: Date | string;
     createdAt: Date | string;
     updatedAt: Date | string;
 }
+
+export interface PaymentInfo {
+    isPaid: boolean;
+    paidAt?: Date | string;
+    paymentMethod?: PaymentMethod;
+    notes?: string;
+}
+
+export const PaymentMethod = {
+    CASH: 'cash',
+    CARD: 'card',
+    TRANSFER: 'transfer',
+    OTHER: 'other'
+} as const;
+
+export type PaymentMethod = typeof PaymentMethod[keyof typeof PaymentMethod];
 
 export const AppointmentStatus = {
     SCHEDULED: 'scheduled',

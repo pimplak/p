@@ -162,7 +162,7 @@ export function Calendar() {
             Brak wizyt na wybrany dzień.
           </Alert>
         ) : (
-          <Table.ScrollContainer minWidth={600}>
+          <Table.ScrollContainer minWidth={800}>
             <Table>
               <Table.Thead>
                 <Table.Tr>
@@ -170,6 +170,8 @@ export function Calendar() {
                   <Table.Th>Pacjent</Table.Th>
                   <Table.Th>Typ</Table.Th>
                   <Table.Th>Czas trwania</Table.Th>
+                  <Table.Th>Cena</Table.Th>
+                  <Table.Th>Płatność</Table.Th>
                   <Table.Th>Status</Table.Th>
                   <Table.Th>Akcje</Table.Th>
                 </Table.Tr>
@@ -205,6 +207,18 @@ export function Calendar() {
                       <Text size="sm">
                         {appointment.duration} min
                       </Text>
+                    </Table.Td>
+                    <Table.Td>
+                      <Text size="sm" fw={500}>
+                        {appointment.price ? `${appointment.price} zł` : '-'}
+                      </Text>
+                    </Table.Td>
+                    <Table.Td>
+                      {appointment.paymentInfo?.isPaid ? (
+                        <Badge color="green" size="sm">Opłacono</Badge>
+                      ) : (
+                        <Badge color="red" size="sm">Nieopłacono</Badge>
+                      )}
                     </Table.Td>
                     <Table.Td>
                       <Badge color={getStatusColor(appointment.status)}>
