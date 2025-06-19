@@ -100,6 +100,11 @@ export const globalStyles = `
     background-color: var(--color-surface) !important;
     color: var(--color-text) !important;
   }
+
+  .mantine-Modal-inner {
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+  }
   
   /* MOBILE OPTIMIZATIONS - Ferro's responsive system */
   @media (max-width: 768px) {
