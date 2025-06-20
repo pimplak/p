@@ -22,7 +22,7 @@ import { usePatientStore } from '../stores/usePatientStore';
 import { lazyExportToExcel } from '../utils/excelLazyLoader';
 import type { Patient } from '../types/Patient';
 
-export function PatientsPage() {
+function PatientsPage() {
   const navigate = useNavigate();
   const { 
     patients, 
@@ -275,4 +275,6 @@ export function PatientsPage() {
       <FloatingActionButton actions={fabActions} />
     </Container>
   );
-} 
+}
+
+export default PatientsPage; 

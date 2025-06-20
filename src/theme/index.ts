@@ -1,341 +1,350 @@
 import { createTheme, type MantineColorsTuple } from '@mantine/core';
 
-// Smoky Black - ciemne tło i teksty
-const smokyBlack: MantineColorsTuple = [
-    '#f5f4f0',  // bardzo jasny dla tekstów na ciemnym
-    '#e8e6e0',  // jasny szary
-    '#d4d0c8',  // średni jasny
-    '#bfb9ae',  // średni
-    '#a8a095',  // średni ciemny
-    '#8f867b',  // ciemny
-    '#756c61',  // bardzo ciemny
-    '#5c5248',  // prawie czarny
-    '#423930',  // bardzo ciemny brąz
-    '#100b00'   // główny smoky black
+// === FERRO'S PREMIUM THERAPEUTIC DESIGN SYSTEM ===
+// Inspirowany: Headspace (spokój) + Linear (ostrość) + Notion (hierarchia) + Things 3 (typografia) + Raycast (keyboard-first)
+
+// Primary Indigo - zaufanie i profesjonalizm
+const primaryIndigo: MantineColorsTuple = [
+    '#F0F2FF',  // lightest
+    '#E0E7FF',  // lighter
+    '#C7D2FE',  // light
+    '#A5B4FC',  // medium-light
+    '#818CF8',  // primary-light
+    '#6366F1',  // PRIMARY
+    '#4F46E5',  // primary-dark
+    '#4338CA',  // dark
+    '#3730A3',  // darker
+    '#312E81'   // darkest
 ];
 
-// Yellow Green - główny akcent i przyciski
-const yellowGreen: MantineColorsTuple = [
-    '#f8fef0',  // bardzo jasny zielony
-    '#f0fcde',  // jasny zielony tło
-    '#e4f8c4',  // jasny zielony
-    '#d4f3a3',  // średni jasny
-    '#c2ed7f',  // średni
-    '#aee458',  // średni intensywny
-    '#85cb33',  // główny yellow green
-    '#6ba828',  // ciemny
-    '#53831f',  // bardzo ciemny
-    '#3d5f17'   // najciemniejszy
+// Neutral Grays - clean hierarchy
+const neutralGray: MantineColorsTuple = [
+    '#FAFAFA',  // gray-50
+    '#F4F4F5',  // gray-100
+    '#E4E4E7',  // gray-200
+    '#D4D4D8',  // gray-300
+    '#A1A1AA',  // gray-400
+    '#71717A',  // gray-500
+    '#52525B',  // gray-600
+    '#3F3F46',  // gray-700
+    '#27272A',  // gray-800
+    '#18181B'   // gray-900
 ];
 
-// Nyanza - jasne tła i subtelne akcenty
-const nyanza: MantineColorsTuple = [
-    '#fefffe',  // prawie biały
-    '#fcfefc',  // bardzo jasny
-    '#f8fcf8',  // jasny
-    '#f3faf3',  // jasny zielonkawy
-    '#eef7ee',  // średni jasny
-    '#e8f4e8',  // średni
-    '#efffc8',  // główny nyanza
-    '#d9f0b8',  // średni ciemny
-    '#c4e2a8',  // ciemny
-    '#afd498'   // najciemniejszy
+// Success Green
+const successGreen: MantineColorsTuple = [
+    '#F0FDF4',
+    '#DCFCE7',
+    '#BBF7D0',
+    '#86EFAC',
+    '#4ADE80',
+    '#22C55E',
+    '#16A34A',
+    '#15803D',
+    '#166534',
+    '#14532D'
 ];
 
-// Ash Gray - neutralne elementy i granice
-const ashGray: MantineColorsTuple = [
-    '#f9faf9',  // bardzo jasny
-    '#f3f5f4',  // jasny
-    '#eaeeed',  // jasny szary
-    '#dde3e0',  // średni jasny
-    '#cdd6d2',  // średni
-    '#b8c7c1',  // średni ciemny
-    '#a5cbc3',  // główny ash gray
-    '#8ba99f',  // ciemny
-    '#72897c',  // bardzo ciemny
-    '#5a6b5e'   // najciemniejszy
+// Warning Amber
+const warningAmber: MantineColorsTuple = [
+    '#FFFBEB',
+    '#FEF3C7',
+    '#FDE68A',
+    '#FCD34D',
+    '#FBBF24',
+    '#F59E0B',
+    '#D97706',
+    '#B45309',
+    '#92400E',
+    '#78350F'
 ];
 
-// Drab Dark Brown - ciemne akcenty i teksty
-const drabDarkBrown: MantineColorsTuple = [
-    '#f6f5f3',  // bardzo jasny brąz
-    '#edeae6',  // jasny brąz
-    '#e0dbd4',  // jasny
-    '#d0c8be',  // średni jasny
-    '#beb3a5',  // średni
-    '#a8998a',  // średni ciemny
-    '#8e7d6d',  // ciemny
-    '#6f5e4f',  // bardzo ciemny
-    '#504439',  // prawie czarny
-    '#3b341f'   // główny drab dark brown
+// Danger Red
+const dangerRed: MantineColorsTuple = [
+    '#FEF2F2',
+    '#FEE2E2',
+    '#FECACA',
+    '#FCA5A5',
+    '#F87171',
+    '#EF4444',
+    '#DC2626',
+    '#B91C1C',
+    '#991B1B',
+    '#7F1D1D'
 ];
 
-// === NOWA PALETA MAGENTA-ROSE ===
+export const therapeuticTheme = createTheme({
+    primaryColor: 'indigo',
 
-// Dark Magenta - główny ciemny kolor
-const darkMagenta: MantineColorsTuple = [
-    '#faf3fb',  // bardzo jasny
-    '#f0e4f2',  // jasny
-    '#e1c9e5',  // jasny fioletowy
-    '#d1abd6',  // średni jasny
-    '#be89c5',  // średni
-    '#a963b0',  // średni intensywny
-    '#861388',  // główny dark magenta
-    '#6e0f70',  // ciemny
-    '#560c57',  // bardzo ciemny
-    '#420943'   // najciemniejszy
-];
+    colors: {
+        indigo: primaryIndigo,
+        gray: neutralGray,
+        green: successGreen,
+        yellow: warningAmber,
+        red: dangerRed,
+    },
 
-// Brilliant Rose - główny akcent i przyciski
-const brilliantRose: MantineColorsTuple = [
-    '#fef5f9',  // bardzo jasny różowy
-    '#fde8f1',  // jasny różowy
-    '#fad0e4',  // jasny
-    '#f6b5d6',  // średni jasny
-    '#f194c4',  // średni
-    '#eb6aaf',  // średni intensywny
-    '#e15a97',  // główny brilliant rose
-    '#c14480',  // ciemny
-    '#a33169',  // bardzo ciemny
-    '#872254'   // najciemniejszy
-];
+    // Inter font family
+    fontFamily: 'Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+    headings: {
+        fontFamily: 'Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+        fontWeight: '600',
+        sizes: {
+            h1: { fontSize: '2rem', lineHeight: '2.5rem' },
+            h2: { fontSize: '1.5rem', lineHeight: '2rem' },
+            h3: { fontSize: '1.25rem', lineHeight: '1.75rem' },
+            h4: { fontSize: '1.125rem', lineHeight: '1.75rem' },
+            h5: { fontSize: '1rem', lineHeight: '1.5rem' },
+            h6: { fontSize: '0.875rem', lineHeight: '1.25rem' }
+        }
+    },
 
-// Lavender Pink - jasne tła i subtelne akcenty
-const lavenderPink: MantineColorsTuple = [
-    '#fefcfd',  // prawie biały
-    '#fdf8fa',  // bardzo jasny
-    '#fbf3f6',  // jasny
-    '#f8edf2',  // jasny różowawy
-    '#f4e6ec',  // średni jasny
-    '#f0dde5',  // średni
-    '#eeabc4',  // główny lavender pink
-    '#e194b8',  // średni ciemny
-    '#d37eac',  // ciemny
-    '#c569a0'   // najciemniejszy
-];
+    // Typography scale 1.25
+    fontSizes: {
+        xs: '0.75rem',   // 12px
+        sm: '0.875rem',  // 14px
+        md: '1rem',      // 16px base
+        lg: '1.125rem',  // 18px
+        xl: '1.25rem',   // 20px
+    },
 
-// Puce - neutralne elementy i granice
-const puce: MantineColorsTuple = [
-    '#fbf8f9',  // bardzo jasny
-    '#f6f1f3',  // jasny
-    '#f0eaec',  // jasny szary
-    '#e7dde0',  // średni jasny
-    '#dccdd2',  // średni
-    '#cdb8c0',  // średni ciemny
-    '#c799a6',  // główny puce
-    '#a97f8e',  // ciemny
-    '#8b6876',  // bardzo ciemny
-    '#6e5260'   // najciemniejszy
-];
+    // 8px base grid
+    spacing: {
+        xs: '0.25rem',   // 4px
+        sm: '0.5rem',    // 8px
+        md: '0.75rem',   // 12px
+        lg: '1rem',      // 16px
+        xl: '1.5rem',    // 24px
+    },
 
-// Violet JTC - ciemne akcenty i teksty
-const violetJtc: MantineColorsTuple = [
-    '#f5f3f4',  // bardzo jasny fioletowy
-    '#e9e4e7',  // jasny fioletowy
-    '#dad0d6',  // jasny
-    '#c8b9c2',  // średni jasny
-    '#b39fab',  // średni
-    '#9a8191',  // średni ciemny
-    '#7e6474',  // ciemny
-    '#624956',  // bardzo ciemny
-    '#4b2840',  // główny violet jtc
-    '#3a1f32'   // najciemniejszy
-];
+    // Everything gets rounded corners
+    defaultRadius: 'md',
+    radius: {
+        xs: '0.25rem',   // 4px
+        sm: '0.375rem',  // 6px  
+        md: '0.5rem',    // 8px
+        lg: '0.75rem',   // 12px
+        xl: '1rem',      // 16px
+    },
 
-// Mapowanie standardowych kolorów Mantine dla palety naturalnej
-const naturalBlue = ashGray;
-const naturalGreen = yellowGreen;
-const naturalRed = drabDarkBrown;
+    // Line heights for readability
+    lineHeights: {
+        xs: '1.4',
+        sm: '1.45',
+        md: '1.55',
+        lg: '1.6',
+        xl: '1.65',
+    },
 
-// Mapowanie standardowych kolorów Mantine dla palety magenta-rose
-const magentaBlue = puce;
-const magentaGreen = brilliantRose;
-const magentaRed = violetJtc;
+    // Shadows - subtle and premium
+    shadows: {
+        xs: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
+        sm: '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)',
+        md: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+        lg: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+        xl: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+    },
 
-// Funkcja tworząca temat na podstawie wybranej palety
-export const createAppTheme = (palette: 'naturalne' | 'magenta-rose' = 'naturalne') => {
-    const isNatural = palette === 'naturalne';
-
-    return createTheme({
-        primaryColor: isNatural ? 'yellowGreen' : 'brilliantRose',
-        colors: {
-            // Zawsze dostępne kolory naturalne
-            smokyBlack,
-            yellowGreen,
-            nyanza,
-            ashGray,
-            drabDarkBrown,
-
-            // Zawsze dostępne kolory magenta-rose
-            darkMagenta,
-            brilliantRose,
-            lavenderPink,
-            puce,
-            violetJtc,
-
-            // Aliasy zależne od palety
-            blue: isNatural ? naturalBlue : magentaBlue,
-            green: isNatural ? naturalGreen : magentaGreen,
-            red: isNatural ? naturalRed : magentaRed,
-        },
-        defaultRadius: 'md',
-        fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-
-        // MOBILE-OPTIMIZED SIZING
-        fontSizes: {
-            xs: '0.7rem',
-            sm: '0.8rem',
-            md: '0.9rem',
-            lg: '1.1rem',
-            xl: '1.3rem',
+    // Premium component customization
+    components: {
+        Card: {
+            defaultProps: {
+                shadow: 'sm',
+                padding: 'xl',
+                radius: 'md',
+                withBorder: false,
+            },
+            styles: {
+                root: {
+                    backgroundColor: 'white',
+                    border: '1px solid var(--mantine-color-gray-1)',
+                    transition: 'all 200ms ease-out',
+                    '&:hover': {
+                        transform: 'translateY(-1px)',
+                        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+                    }
+                }
+            }
         },
 
-        spacing: {
-            xs: '0.5rem',
-            sm: '0.75rem',
-            md: '1rem',
-            lg: '1.25rem',
-            xl: '1.5rem',
+        Button: {
+            defaultProps: {
+                radius: 'md',
+                size: 'md',
+            },
+            styles: {
+                root: {
+                    fontWeight: 500,
+                    transition: 'all 200ms ease-out',
+                    '&:hover': {
+                        transform: 'translateY(-1px)',
+                    }
+                }
+            }
         },
 
-        breakpoints: {
-            xs: '36em',
-            sm: '48em',
-            md: '62em',
-            lg: '75em',
-            xl: '88em',
+        TextInput: {
+            defaultProps: {
+                radius: 'md',
+                size: 'md',
+            },
+            styles: {
+                input: {
+                    minHeight: '44px', // Mobile-friendly
+                    fontSize: '1rem',
+                    backgroundColor: 'var(--mantine-color-gray-0)',
+                    border: '1px solid var(--mantine-color-gray-2)',
+                    transition: 'border-color 200ms ease-out',
+                    '&:focus': {
+                        borderColor: '#6366F1',
+                        boxShadow: '0 0 0 1px #6366F1',
+                    }
+                }
+            }
         },
 
-        components: {
-            AppShell: {
-                defaultProps: {
-                    padding: 'sm',
-                },
+        Textarea: {
+            defaultProps: {
+                radius: 'md',
+                size: 'md',
             },
-
-            Button: {
-                defaultProps: {
-                    variant: 'filled',
-                    color: isNatural ? 'yellowGreen' : 'brilliantRose',
-                    size: 'sm',
-                    radius: 'md',
-                },
-            },
-
-            Card: {
-                defaultProps: {
-                    shadow: 'sm',
-                    withBorder: true,
-                    radius: 'md',
-                    padding: 'sm',
-                },
-            },
-
-            Table: {
-                defaultProps: {
-                    striped: true,
-                    highlightOnHover: true,
-                    fontSize: 'sm',
-                },
-            },
-
-            Modal: {
-                defaultProps: {
-                    centered: true,
-                    overlayProps: {
-                        opacity: 0.75,
-                        blur: 4,
-                        backgroundOpacity: 0.55,
-                    },
-                    size: 'md',
-                    transitionProps: { transition: 'fade', duration: 200 },
-                },
-            },
-
-            TextInput: {
-                defaultProps: {
-                    variant: 'filled',
-                    size: 'sm',
-                },
-            },
-
-            Select: {
-                defaultProps: {
-                    variant: 'filled',
-                    size: 'sm',
-                },
-            },
-
-            NumberInput: {
-                defaultProps: {
-                    variant: 'filled',
-                    size: 'sm',
-                },
-            },
-
-            Textarea: {
-                defaultProps: {
-                    variant: 'filled',
-                    size: 'sm',
-                },
-            },
-
-            NavLink: {
-                defaultProps: {
-                    variant: 'filled',
-                },
-            },
-
-            Badge: {
-                defaultProps: {
-                    size: 'sm',
-                    radius: 'sm',
-                },
-            },
-
-            Alert: {
-                defaultProps: {
-                    variant: 'filled',
-                    radius: 'md',
-                },
-            },
-
-            Notification: {
-                defaultProps: {
-                    radius: 'md',
-                    withCloseButton: true,
-                },
-            },
-
-            Paper: {
-                defaultProps: {
-                    shadow: 'xs',
-                    p: 'md',
-                    radius: 'md',
-                },
-            },
-
-            Stack: {
-                defaultProps: {
-                    gap: 'md',
-                },
-            },
-
-            Group: {
-                defaultProps: {
-                    gap: 'md',
-                },
-            },
-
-            Container: {
-                defaultProps: {
-                    size: 'xl',
-                    px: 'md',
-                },
-            },
+            styles: {
+                input: {
+                    minHeight: '44px',
+                    fontSize: '1rem',
+                    backgroundColor: 'var(--mantine-color-gray-0)',
+                    border: '1px solid var(--mantine-color-gray-2)',
+                    transition: 'border-color 200ms ease-out',
+                    '&:focus': {
+                        borderColor: '#6366F1',
+                        boxShadow: '0 0 0 1px #6366F1',
+                    }
+                }
+            }
         },
-    });
-};
 
-// Eksportujemy domyślny temat (naturalny)
-export const theme = createAppTheme('naturalne'); 
+        Select: {
+            defaultProps: {
+                radius: 'md',
+                size: 'md',
+            },
+            styles: {
+                input: {
+                    minHeight: '44px',
+                    fontSize: '1rem',
+                    backgroundColor: 'var(--mantine-color-gray-0)',
+                    border: '1px solid var(--mantine-color-gray-2)',
+                    transition: 'border-color 200ms ease-out',
+                    '&:focus': {
+                        borderColor: '#6366F1',
+                        boxShadow: '0 0 0 1px #6366F1',
+                    }
+                }
+            }
+        },
+
+        Modal: {
+            defaultProps: {
+                centered: true,
+                radius: 'lg',
+                overlayProps: {
+                    opacity: 0.4,
+                    blur: 4,
+                },
+                transitionProps: {
+                    transition: 'fade',
+                    duration: 200,
+                    timingFunction: 'ease-out'
+                },
+            },
+            styles: {
+                content: {
+                    borderRadius: '0.75rem',
+                }
+            }
+        },
+
+        Paper: {
+            defaultProps: {
+                shadow: 'xs',
+                padding: 'xl',
+                radius: 'md',
+            },
+            styles: {
+                root: {
+                    backgroundColor: 'white',
+                    border: '1px solid var(--mantine-color-gray-1)',
+                }
+            }
+        },
+
+        AppShell: {
+            defaultProps: {
+                padding: { base: 'md', sm: 'xl' },
+            },
+            styles: {
+                main: {
+                    backgroundColor: 'var(--mantine-color-gray-0)',
+                    minHeight: '100vh',
+                }
+            }
+        },
+
+        Container: {
+            defaultProps: {
+                size: 'xl', // max-width: 1200px
+                px: { base: 'md', sm: 'xl' },
+            }
+        },
+
+        Stack: {
+            defaultProps: {
+                gap: 'lg',
+            }
+        },
+
+        Group: {
+            defaultProps: {
+                gap: 'md',
+            }
+        },
+
+        Badge: {
+            defaultProps: {
+                radius: 'md',
+                size: 'sm',
+                variant: 'light',
+            }
+        },
+
+        Notification: {
+            defaultProps: {
+                radius: 'md',
+                withCloseButton: true,
+            },
+            styles: {
+                root: {
+                    borderRadius: '0.5rem',
+                }
+            }
+        }
+    },
+
+    // Custom CSS variables for additional styling
+    other: {
+        // Layout constants
+        sidebarWidth: '280px',
+        containerMaxWidth: '1200px',
+
+        // Transition timing
+        transitionSpeed: '200ms',
+        transitionEasing: 'ease-out',
+
+        // Custom shadows for specific use cases
+        cardHoverShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+        buttonHoverShadow: '0 4px 12px rgba(99, 102, 241, 0.15)',
+    }
+});
+
+// Export the theme as default
+export default therapeuticTheme; 

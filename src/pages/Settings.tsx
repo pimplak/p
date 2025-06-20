@@ -25,7 +25,7 @@ import { ThemeSelector, ThemePreview } from '../components/ThemeSelector';
 import { usePatientStore } from '../stores/usePatientStore';
 import { addDemoPatients, clearAllData } from '../utils/demo-data';
 
-export function Settings() {
+function Settings() {
     const { fetchPatients } = usePatientStore();
 
     const handleAddDemoData = async () => {
@@ -227,4 +227,6 @@ export function Settings() {
             </Stack>
         </Container>
     );
-} 
+}
+
+export default Settings; 

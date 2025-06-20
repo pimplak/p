@@ -24,7 +24,7 @@ import { useAppointmentStore } from '../stores/useAppointmentStore';
 import { usePatientStore } from '../stores/usePatientStore';
 import type { Appointment } from '../types/Appointment';
 
-export function Calendar() {
+function Calendar() {
   const [opened, { open, close }] = useDisclosure(false);
   const [editingAppointment, setEditingAppointment] = useState<Appointment | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
@@ -268,4 +268,6 @@ export function Calendar() {
       <FloatingActionButton actions={fabActions} />
     </Stack>
   );
-} 
+}
+
+export default Calendar; 

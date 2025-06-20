@@ -19,7 +19,7 @@ import { PatientProfileTabs } from './PatientProfileTabs';
 import { PatientQuickInfoCards } from './PatientQuickInfoCards';
 import type { Patient } from '../types/Patient';
 
-export function PatientProfile() {
+function PatientProfile() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { getPatient, archivePatient, restorePatient, loading, error } = usePatientStore();
@@ -177,4 +177,6 @@ export function PatientProfile() {
       </Modal>
     </Container>
   );
-} 
+}
+
+export default PatientProfile; 
