@@ -1,6 +1,6 @@
-import { Routes, Route } from 'react-router-dom';
-import { Suspense, lazy } from 'react';
 import { LoadingOverlay, Container } from '@mantine/core';
+import { Suspense, lazy } from 'react';
+import { Routes, Route } from 'react-router-dom';
 import { Layout } from './Layout';
 
 // Lazy load all page components for code splitting

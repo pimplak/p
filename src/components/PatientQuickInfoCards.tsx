@@ -1,7 +1,7 @@
 import { Grid, Card, Stack, Text, Group } from '@mantine/core';
 import { IconPhone, IconMail } from '@tabler/icons-react';
-import type { Patient } from '../types/Patient';
 import { formatDate, calculateAge } from '../utils/dates';
+import type { Patient } from '../types/Patient';
 
 interface PatientQuickInfoCardsProps {
   patient: Patient;

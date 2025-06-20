@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { 
   Modal, 
   Stack, 
@@ -9,6 +8,7 @@ import {
   Button 
 } from '@mantine/core';
 import { DateInput } from '@mantine/dates';
+import { useState } from 'react';
 import type { PatientWithAppointments } from '../types/Patient';
 
 interface ExportModalProps {

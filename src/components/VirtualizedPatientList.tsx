@@ -1,11 +1,10 @@
-import { memo, useMemo } from 'react';
-import { FixedSizeList as List } from 'react-window';
 import { Card, Text, Group, Badge, ActionIcon, Button, Stack } from '@mantine/core';
 import { IconEdit, IconTrash, IconPhone, IconMail, IconCalendar } from '@tabler/icons-react';
 import { format } from 'date-fns';
 import { pl } from 'date-fns/locale';
-import type { PatientWithAppointments } from '../types/Patient';
-import type { Patient } from '../types/Patient';
+import { memo, useMemo } from 'react';
+import { FixedSizeList as List } from 'react-window';
+import type { PatientWithAppointments , Patient } from '../types/Patient';
 
 interface VirtualizedPatientListProps {
   patients: PatientWithAppointments[];

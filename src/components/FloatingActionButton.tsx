@@ -1,6 +1,6 @@
-import { useState } from 'react';
 import { ActionIcon, Stack, Affix, Transition, Paper, Group, Text } from '@mantine/core';
 import { IconPlus, IconX } from '@tabler/icons-react';
+import { useState } from 'react';
 import type { ReactNode } from 'react';
 
 export interface FABAction {

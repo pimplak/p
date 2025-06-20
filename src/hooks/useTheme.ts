@@ -1,5 +1,5 @@
-import { useMemo } from 'react';
 import { createTheme, type MantineColorsTuple } from '@mantine/core';
+import { useMemo } from 'react';
 import { useThemeStore } from '../stores/useThemeStore';
 import { isDarkPalette } from '../types/theme';
 

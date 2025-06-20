@@ -1,6 +1,6 @@
-import { ErrorBoundary } from 'react-error-boundary';
 import { Button, Container, Stack, Text, Alert, Group } from '@mantine/core';
 import { IconAlertTriangle, IconRefresh } from '@tabler/icons-react';
+import { ErrorBoundary } from 'react-error-boundary';
 import type { ReactNode } from 'react';
 
 interface GlobalErrorBoundaryProps {

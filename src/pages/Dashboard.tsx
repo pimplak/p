@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import { 
   Title, 
   Grid, 
@@ -11,14 +10,15 @@ import {
   Skeleton,
   Alert
 } from '@mantine/core';
-import { IconCalendarEvent, IconUsers, IconClock, IconAlertCircle, IconDatabase, IconTrash } from '@tabler/icons-react';
-import { usePatientStore } from '../stores/usePatientStore';
-import { useAppointmentStore } from '../stores/useAppointmentStore';
-import { insertSampleData, clearAllData } from '../utils/sampleData';
 import { notifications } from '@mantine/notifications';
+import { IconCalendarEvent, IconUsers, IconClock, IconAlertCircle, IconDatabase, IconTrash } from '@tabler/icons-react';
 import { format } from 'date-fns';
 import { pl } from 'date-fns/locale';
+import { useEffect, useState } from 'react';
 import { FloatingActionButton, type FABAction } from '../components/FloatingActionButton';
+import { useAppointmentStore } from '../stores/useAppointmentStore';
+import { usePatientStore } from '../stores/usePatientStore';
+import { insertSampleData, clearAllData } from '../utils/sampleData';
 
 export function Dashboard() {
   const { patients, fetchPatients, loading: patientsLoading } = usePatientStore();

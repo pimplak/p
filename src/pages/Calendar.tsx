@@ -1,4 +1,3 @@
-import { useState, useEffect } from 'react';
 import { 
   Title, 
   Button, 
@@ -16,13 +15,14 @@ import {
 import { DateInput } from '@mantine/dates';
 import { useDisclosure } from '@mantine/hooks';
 import { IconPlus, IconCalendarEvent, IconEdit, IconTrash } from '@tabler/icons-react';
-import { useAppointmentStore } from '../stores/useAppointmentStore';
-import { usePatientStore } from '../stores/usePatientStore';
-import { AppointmentForm } from '../components/AppointmentForm';
 import { format, startOfDay, endOfDay } from 'date-fns';
 import { pl } from 'date-fns/locale';
-import type { Appointment } from '../types/Appointment';
+import { useState, useEffect } from 'react';
+import { AppointmentForm } from '../components/AppointmentForm';
 import { FloatingActionButton, type FABAction } from '../components/FloatingActionButton';
+import { useAppointmentStore } from '../stores/useAppointmentStore';
+import { usePatientStore } from '../stores/usePatientStore';
+import type { Appointment } from '../types/Appointment';
 
 export function Calendar() {
   const [opened, { open, close }] = useDisclosure(false);

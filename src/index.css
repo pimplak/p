@@ -11,10 +11,15 @@
   --color-primary-hover: var(--color-accent);
   --color-accent-light: color-mix(in srgb, var(--color-accent) 20%, transparent);
 
+  /* Font weights from business constants */
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 700;
+
   /* Typography and base styles */
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   line-height: 1.5;
-  font-weight: 400;
+  font-weight: var(--font-weight-normal);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -22,7 +27,7 @@
 }
 
 a {
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
   color: #646cff;
   text-decoration: inherit;
 }
@@ -48,7 +53,7 @@ button {
   border: 1px solid transparent;
   padding: 0.6em 1.2em;
   font-size: 1em;
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
   font-family: inherit;
   background-color: #1a1a1a;
   cursor: pointer;

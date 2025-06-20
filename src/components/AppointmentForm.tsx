@@ -1,4 +1,3 @@
-import { useForm } from '@mantine/form';
 import { 
   Button, 
   Group, 
@@ -12,11 +11,13 @@ import {
   Divider
 } from '@mantine/core';
 import { DateTimePicker } from '@mantine/dates';
+import { useForm } from '@mantine/form';
+import { notifications } from '@mantine/notifications';
+import { DEFAULT_APPOINTMENT_PRICE } from '../constants/business';
+import { APPOINTMENT_STATUS } from '../constants/status';
+import { type AppointmentFormData } from '../schemas';
 import { useAppointmentStore } from '../stores/useAppointmentStore';
 import { usePatientStore } from '../stores/usePatientStore';
-import { notifications } from '@mantine/notifications';
-import { type AppointmentFormData } from '../schemas';
-import { APPOINTMENT_STATUS } from '../constants/status';
 import { AppointmentStatus, AppointmentType, PaymentMethod } from '../types/Appointment';
 import type { Appointment } from '../types/Appointment';
 
@@ -54,7 +55,7 @@ export function AppointmentForm({ appointment, onSuccess, onCancel }: Appointmen
       status: appointment?.status || APPOINTMENT_STATUS.SCHEDULED,
       type: appointment?.type || AppointmentType.THERAPY,
       notes: appointment?.notes || '',
-      price: appointment?.price || 150,
+      price: appointment?.price || DEFAULT_APPOINTMENT_PRICE,
       paymentInfo: {
         isPaid: appointment?.paymentInfo?.isPaid || false,
         paidAt: appointment?.paymentInfo?.paidAt ? new Date(appointment.paymentInfo.paidAt) : undefined,
@@ -75,7 +76,12 @@ export function AppointmentForm({ appointment, onSuccess, onCancel }: Appointmen
       const appointmentData: AppointmentFormData = {
         ...values,
         patientId: parseInt(values.patientId, 10),
-        status: values.status as any, // Cast to satisfy strict types
+        status: values.status as 'scheduled' | 'completed' | 'cancelled' | 'no_show' | 'rescheduled',
+        type: values.type as 'initial' | 'follow_up' | 'therapy' | 'consultation' | 'assessment' | undefined,
+        paymentInfo: values.paymentInfo ? {
+          ...values.paymentInfo,
+          paymentMethod: values.paymentInfo.paymentMethod as 'cash' | 'card' | 'transfer' | 'other' | undefined,
+        } : undefined,
       };
 
       if (appointment?.id) {
@@ -191,7 +197,7 @@ export function AppointmentForm({ appointment, onSuccess, onCancel }: Appointmen
           <Group grow>
             <NumberInput
               label="Cena (zł)"
-              placeholder="150"
+              placeholder={DEFAULT_APPOINTMENT_PRICE.toString()}
               min={0}
               step={10}
               required

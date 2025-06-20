@@ -1,6 +1,7 @@
 import Dexie, { type Table } from 'dexie';
-import type { Patient, Note, Goal } from '../types/Patient';
+import { DEFAULT_APPOINTMENT_PRICE } from '../constants/business';
 import type { Appointment } from '../types/Appointment';
+import type { Patient, Note, Goal } from '../types/Patient';
 
 export class PsychFlowDB extends Dexie {
     patients!: Table<Patient>;
@@ -80,7 +81,7 @@ export class PsychFlowDB extends Dexie {
             // Migracja: dodaj domyślne wartości dla nowych pól płatności
             return tx.table('appointments').toCollection().modify(appointment => {
                 if (typeof appointment.price === 'undefined') {
-                    appointment.price = 150; // Domyślna cena 150 zł
+                    appointment.price = DEFAULT_APPOINTMENT_PRICE;
                 }
                 if (!appointment.paymentInfo) {
                     appointment.paymentInfo = {
@@ -110,7 +111,7 @@ export class PsychFlowDB extends Dexie {
             obj.createdAt = new Date().toISOString() as Date | string;
             obj.updatedAt = new Date().toISOString() as Date | string;
             if (typeof obj.price === 'undefined') {
-                obj.price = 150; // Domyślna cena 150 zł
+                obj.price = DEFAULT_APPOINTMENT_PRICE;
             }
             if (!obj.paymentInfo) {
                 obj.paymentInfo = {

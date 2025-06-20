@@ -6,6 +6,7 @@
  */
 
 import { notifications } from '@mantine/notifications';
+import { EXPORT_CHUNK_SIZE, NOTIFICATION_TIMEOUT } from '../constants/business';
 import type { WorkBook } from 'xlsx';
 
 export interface ExcelExportData {
@@ -52,7 +53,7 @@ export async function lazyExportToExcel(exportData: ExcelExportData): Promise<vo
 
             // Use requestIdleCallback if available, otherwise setTimeout
             if ('requestIdleCallback' in window) {
-                requestIdleCallback(processExport, { timeout: 5000 });
+                requestIdleCallback(processExport, { timeout: NOTIFICATION_TIMEOUT });
             } else {
                 setTimeout(processExport, 0);
             }
@@ -84,7 +85,7 @@ export async function lazyExportToExcel(exportData: ExcelExportData): Promise<vo
             message: 'Nie udało się wygenerować pliku Excel',
             color: 'red',
             loading: false,
-            autoClose: 5000,
+            autoClose: NOTIFICATION_TIMEOUT,
         });
 
         throw error;
@@ -102,7 +103,7 @@ export async function processLargeDataset<T, R>(
         onProgress?: (progress: number) => void;
     } = {}
 ): Promise<R[]> {
-    const { chunkSize = 500, onProgress } = options;
+    const { chunkSize = EXPORT_CHUNK_SIZE, onProgress } = options;
     const result: R[] = [];
     const totalChunks = Math.ceil(data.length / chunkSize);
 

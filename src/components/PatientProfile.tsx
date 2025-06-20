@@ -1,5 +1,3 @@
-import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
 import {
   Container,
   Stack,
@@ -10,13 +8,15 @@ import {
   Group,
   Button
 } from '@mantine/core';
+import { notifications } from '@mantine/notifications';
 import { IconAlertCircle } from '@tabler/icons-react';
+import { useState, useEffect, useCallback } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { usePatientStore } from '../stores/usePatientStore';
 import { PatientForm } from './PatientForm';
 import { PatientProfileHeader } from './PatientProfileHeader';
-import { PatientQuickInfoCards } from './PatientQuickInfoCards';
 import { PatientProfileTabs } from './PatientProfileTabs';
-import { notifications } from '@mantine/notifications';
+import { PatientQuickInfoCards } from './PatientQuickInfoCards';
 import type { Patient } from '../types/Patient';
 
 export function PatientProfile() {
@@ -28,13 +28,7 @@ export function PatientProfile() {
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [archiveModalOpen, setArchiveModalOpen] = useState(false);
 
-  useEffect(() => {
-    if (id) {
-      loadPatient(parseInt(id));
-    }
-  }, [id]);
-
-  const loadPatient = async (patientId: number) => {
+  const loadPatient = useCallback(async (patientId: number) => {
     try {
       const patientData = await getPatient(patientId);
       if (patientData) {
@@ -55,7 +49,13 @@ export function PatientProfile() {
         color: 'red',
       });
     }
-  };
+  }, [getPatient, navigate]);
+
+  useEffect(() => {
+    if (id) {
+      loadPatient(parseInt(id));
+    }
+  }, [id, loadPatient]);
 
   const handleArchive = async () => {
     if (!patient?.id) return;

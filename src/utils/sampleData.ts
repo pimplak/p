@@ -1,7 +1,8 @@
-import { db } from './db';
+import { PATIENT_STATUS } from '../constants/status';
 import { AppointmentStatus, AppointmentType } from '../types/Appointment';
-import type { Patient } from '../types/Patient';
+import { db } from './db';
 import type { Appointment } from '../types/Appointment';
+import type { Patient } from '../types/Patient';
 
 const samplePatients: Omit<Patient, 'id' | 'createdAt' | 'updatedAt'>[] = [
     {
@@ -13,7 +14,8 @@ const samplePatients: Omit<Patient, 'id' | 'createdAt' | 'updatedAt'>[] = [
         address: 'ul. Kwiatowa 12, 00-001 Warszawa',
         emergencyContact: 'Jan Kowalski',
         emergencyPhone: '+48 987 654 321',
-        notes: 'Pacjentka z zaburzeniami lękowymi. Regularne sesje terapii poznawczo-behawioralnej.'
+        notes: 'Pacjentka z zaburzeniami lękowymi. Regularne sesje terapii poznawczo-behawioralnej.',
+        status: PATIENT_STATUS.ACTIVE
     },
     {
         firstName: 'Michał',
@@ -24,7 +26,8 @@ const samplePatients: Omit<Patient, 'id' | 'createdAt' | 'updatedAt'>[] = [
         address: 'ul. Słoneczna 8/15, 02-123 Warszawa',
         emergencyContact: 'Maria Nowak',
         emergencyPhone: '+48 876 543 210',
-        notes: 'Terapia par. Problemy komunikacyjne w związku.'
+        notes: 'Terapia par. Problemy komunikacyjne w związku.',
+        status: PATIENT_STATUS.ACTIVE
     },
     {
         firstName: 'Katarzyna',
@@ -35,7 +38,8 @@ const samplePatients: Omit<Patient, 'id' | 'createdAt' | 'updatedAt'>[] = [
         address: 'ul. Różana 25, 03-456 Warszawa',
         emergencyContact: 'Tomasz Wiśniewski',
         emergencyPhone: '+48 765 432 109',
-        notes: 'Depresja sezonowa. Sesje w okresie jesienno-zimowym.'
+        notes: 'Depresja sezonowa. Sesje w okresie jesienno-zimowym.',
+        status: PATIENT_STATUS.ACTIVE
     },
     {
         firstName: 'Piotr',
@@ -46,7 +50,8 @@ const samplePatients: Omit<Patient, 'id' | 'createdAt' | 'updatedAt'>[] = [
         address: 'ul. Leśna 7, 04-789 Warszawa',
         emergencyContact: 'Agnieszka Zielińska',
         emergencyPhone: '+48 654 321 098',
-        notes: 'Wypalenie zawodowe. Manager w korporacji. Techniki radzenia sobie ze stresem.'
+        notes: 'Wypalenie zawodowe. Manager w korporacji. Techniki radzenia sobie ze stresem.',
+        status: PATIENT_STATUS.ACTIVE
     },
     {
         firstName: 'Magdalena',
@@ -57,7 +62,8 @@ const samplePatients: Omit<Patient, 'id' | 'createdAt' | 'updatedAt'>[] = [
         address: 'ul. Akademicka 33, 05-012 Warszawa',
         emergencyContact: 'Robert Dąbrowski',
         emergencyPhone: '+48 543 210 987',
-        notes: 'Studentka doktorancka. Problemy z prokrastynacją i motywacją do nauki.'
+        notes: 'Studentka doktorancka. Problemy z prokrastynacją i motywacją do nauki.',
+        status: PATIENT_STATUS.ACTIVE
     },
     {
         firstName: 'Tomasz',
@@ -68,7 +74,8 @@ const samplePatients: Omit<Patient, 'id' | 'createdAt' | 'updatedAt'>[] = [
         address: 'ul. Sportowa 19, 06-345 Warszawa',
         emergencyContact: 'Ewa Kamińska',
         emergencyPhone: '+48 432 109 876',
-        notes: 'Uzależnienie behawioralne od gier. Terapia grupowa i indywidualna.'
+        notes: 'Uzależnienie behawioralne od gier. Terapia grupowa i indywidualna.',
+        status: PATIENT_STATUS.ACTIVE
     },
     {
         firstName: 'Aleksandra',
@@ -79,7 +86,8 @@ const samplePatients: Omit<Patient, 'id' | 'createdAt' | 'updatedAt'>[] = [
         address: 'ul. Biznesowa 44, 07-678 Warszawa',
         emergencyContact: 'Marcin Jankowski',
         emergencyPhone: '+48 321 098 765',
-        notes: 'Syndrom impostera. Dyrektorka w start-upie. Praca nad pewnością siebie.'
+        notes: 'Syndrom impostera. Dyrektorka w start-upie. Praca nad pewnością siebie.',
+        status: PATIENT_STATUS.ACTIVE
     },
     {
         firstName: 'Rafał',
@@ -90,7 +98,8 @@ const samplePatients: Omit<Patient, 'id' | 'createdAt' | 'updatedAt'>[] = [
         address: 'ul. Programistów 15, 08-901 Warszawa',
         emergencyContact: 'Joanna Kowalczyk',
         emergencyPhone: '+48 210 987 654',
-        notes: 'Problemy ze snem i uzależnienie od pracy. Developer w trybie crunch.'
+        notes: 'Problemy ze snem i uzależnienie od pracy. Developer w trybie crunch.',
+        status: PATIENT_STATUS.ACTIVE
     },
     {
         firstName: 'Natalia',
@@ -101,7 +110,8 @@ const samplePatients: Omit<Patient, 'id' | 'createdAt' | 'updatedAt'>[] = [
         address: 'ul. Medyczna 28, 09-234 Warszawa',
         emergencyContact: 'Adam Lewandowski',
         emergencyPhone: '+48 109 876 543',
-        notes: 'Lekarka z wypaleniem zawodowym. Trauma wtórna po pracy w COVID.'
+        notes: 'Lekarka z wypaleniem zawodowym. Trauma wtórna po pracy w COVID.',
+        status: PATIENT_STATUS.ACTIVE
     },
     {
         firstName: 'Jakub',
@@ -112,7 +122,8 @@ const samplePatients: Omit<Patient, 'id' | 'createdAt' | 'updatedAt'>[] = [
         address: 'ul. Studencka 67, 10-567 Warszawa',
         emergencyContact: 'Barbara Wójcik',
         emergencyPhone: '+48 098 765 432',
-        notes: 'Student medycyny. Ataki paniki przed egzaminami. Perfekcjonizm.'
+        notes: 'Student medycyny. Ataki paniki przed egzaminami. Perfekcjonizm.',
+        status: PATIENT_STATUS.ACTIVE
     },
     {
         firstName: 'Karolina',
@@ -123,7 +134,8 @@ const samplePatients: Omit<Patient, 'id' | 'createdAt' | 'updatedAt'>[] = [
         address: 'ul. Artystyczna 52, 11-890 Warszawa',
         emergencyContact: 'Piotr Mazur',
         emergencyPhone: '+48 987 654 321',
-        notes: 'Graficzka freelancer. Problemy z organizacją czasu i niepewnością.'
+        notes: 'Graficzka freelancer. Problemy z organizacją czasu i niepewnością.',
+        status: PATIENT_STATUS.ACTIVE
     },
     {
         firstName: 'Bartłomiej',
@@ -134,7 +146,8 @@ const samplePatients: Omit<Patient, 'id' | 'createdAt' | 'updatedAt'>[] = [
         address: 'ul. Prawnicza 89, 12-123 Warszawa',
         emergencyContact: 'Monika Szymańska',
         emergencyPhone: '+48 876 543 210',
-        notes: 'Adwokat z problemami alkoholowymi. Terapia uzależnień i motywacyjna.'
+        notes: 'Adwokat z problemami alkoholowymi. Terapia uzależnień i motywacyjna.',
+        status: PATIENT_STATUS.ACTIVE
     }
 ];
 

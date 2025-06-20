@@ -1,8 +1,9 @@
-import * as XLSX from 'xlsx';
-import { format } from 'date-fns';
 import { notifications } from '@mantine/notifications';
-import type { PatientWithAppointments } from '../types/Patient';
+import { format } from 'date-fns';
+import * as XLSX from 'xlsx';
+import { EXPORT_CHUNK_SIZE } from '../constants/business';
 import type { AppointmentWithPatient } from '../types/Appointment';
+import type { PatientWithAppointments } from '../types/Patient';
 
 export interface ExportOptions {
     patients?: boolean;
@@ -13,7 +14,7 @@ export interface ExportOptions {
 }
 
 // Chunk size dla streaming
-const CHUNK_SIZE = 500;
+const CHUNK_SIZE = EXPORT_CHUNK_SIZE;
 
 // Types for export data
 interface PatientExportData {

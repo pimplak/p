@@ -7,8 +7,8 @@ import {
   IconArchive, 
   IconRestore 
 } from '@tabler/icons-react';
-import type { Patient } from '../types/Patient';
 import { PATIENT_STATUS, PATIENT_STATUS_LABELS } from '../constants/status';
+import type { Patient } from '../types/Patient';
 
 interface PatientProfileHeaderProps {
   patient: Patient;

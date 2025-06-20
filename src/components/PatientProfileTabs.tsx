@@ -1,8 +1,8 @@
-import { useState } from 'react';
 import { Tabs, Paper, Stack, Text, Divider } from '@mantine/core';
 import { IconNotes, IconCalendar, IconTarget } from '@tabler/icons-react';
-import type { Patient } from '../types/Patient';
+import { useState } from 'react';
 import { formatDate } from '../utils/dates';
+import type { Patient } from '../types/Patient';
 
 interface PatientProfileTabsProps {
   patient: Patient;

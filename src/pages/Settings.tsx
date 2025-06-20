@@ -4,7 +4,6 @@ import {
     Stack,
     Group,
     Text,
-    Switch,
     Divider,
     Badge,
     ActionIcon,
@@ -12,6 +11,7 @@ import {
     ThemeIcon,
     Button,
 } from '@mantine/core';
+import { notifications } from '@mantine/notifications';
 import {
     IconSettings,
     IconPalette,
@@ -21,10 +21,9 @@ import {
     IconDatabase,
     IconTestPipe,
 } from '@tabler/icons-react';
-import { notifications } from '@mantine/notifications';
 import { ThemeSelector, ThemePreview } from '../components/ThemeSelector';
-import { addDemoPatients, clearAllData } from '../utils/demo-data';
 import { usePatientStore } from '../stores/usePatientStore';
+import { addDemoPatients, clearAllData } from '../utils/demo-data';
 
 export function Settings() {
     const { fetchPatients } = usePatientStore();

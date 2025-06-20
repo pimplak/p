@@ -10,9 +10,9 @@ import {
 } from '@tabler/icons-react';
 import { format } from 'date-fns';
 import { pl } from 'date-fns/locale';
-import type { PatientWithAppointments, Patient } from '../types/Patient';
 import { PATIENT_STATUS, PATIENT_STATUS_LABELS } from '../constants/status';
 import { formatDate } from '../utils/dates';
+import type { PatientWithAppointments, Patient } from '../types/Patient';
 
 interface PatientsCardListProps {
   patients: PatientWithAppointments[];
