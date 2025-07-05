@@ -14,13 +14,13 @@ export const Button: React.FC<CustomButtonProps> = ({
     switch (variant) {
       case 'primary':
         return {
-          backgroundColor: '#6366F1',
+          backgroundColor: 'var(--color-primary)',
           border: 'none',
-          color: 'white',
+          color: 'var(--color-button-text)',
           fontWeight: 500,
           transition: 'all 200ms ease-out',
           '&:hover': {
-            backgroundColor: '#4F46E5',
+            backgroundColor: 'var(--color-primary-hover)',
             transform: 'translateY(-1px)',
             boxShadow: '0 4px 12px rgba(99, 102, 241, 0.15)',
           }
@@ -29,13 +29,13 @@ export const Button: React.FC<CustomButtonProps> = ({
       case 'secondary':
         return {
           backgroundColor: 'transparent',
-          border: '1px solid var(--gray-200)',
-          color: 'var(--gray-800)',
+          border: '1px solid var(--color-input-border)',
+          color: 'var(--color-text)',
           fontWeight: 500,
           transition: 'all 200ms ease-out',
           '&:hover': {
-            backgroundColor: 'var(--gray-50)',
-            borderColor: 'var(--gray-300)',
+            backgroundColor: 'var(--color-primary-light)',
+            borderColor: 'var(--color-primary)',
             transform: 'translateY(-1px)',
           }
         };
@@ -44,12 +44,12 @@ export const Button: React.FC<CustomButtonProps> = ({
         return {
           backgroundColor: 'transparent',
           border: 'none',
-          color: 'var(--gray-600)',
+          color: 'var(--color-text-muted)',
           fontWeight: 500,
           transition: 'all 200ms ease-out',
           '&:hover': {
-            backgroundColor: 'var(--gray-100)',
-            color: 'var(--gray-800)',
+            backgroundColor: 'var(--color-accent-light)',
+            color: 'var(--color-text)',
           }
         };
       

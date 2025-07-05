@@ -51,16 +51,17 @@ export const Textarea = forwardRef<HTMLTextAreaElement, CustomTextareaProps>(
         case 'filled':
           return {
             ...baseStyles,
-            backgroundColor: 'var(--gray-50)',
-            border: '1px solid var(--gray-200)',
+            backgroundColor: 'var(--color-input-bg)',
+            border: '1px solid var(--color-input-border)',
+            color: 'var(--color-text)',
             '&:focus, &:focus-within': {
-              backgroundColor: 'white',
-              borderColor: '#6366F1',
-              boxShadow: '0 0 0 1px #6366F1',
+              backgroundColor: 'var(--color-surface)',
+              borderColor: 'var(--color-primary)',
+              boxShadow: '0 0 0 1px var(--color-primary)',
               outline: 'none',
             },
             '&:hover:not(:focus):not(:focus-within)': {
-              borderColor: 'var(--gray-300)',
+              borderColor: 'var(--color-primary-light)',
             }
           };
 
@@ -80,15 +81,16 @@ export const Textarea = forwardRef<HTMLTextAreaElement, CustomTextareaProps>(
         default:
           return {
             ...baseStyles,
-            backgroundColor: 'white',
-            border: '1px solid var(--gray-200)',
+            backgroundColor: 'var(--color-input-bg)',
+            border: '1px solid var(--color-input-border)',
+            color: 'var(--color-text)',
             '&:focus, &:focus-within': {
-              borderColor: '#6366F1',
-              boxShadow: '0 0 0 1px #6366F1',
+              borderColor: 'var(--color-primary)',
+              boxShadow: '0 0 0 1px var(--color-primary)',
               outline: 'none',
             },
             '&:hover:not(:focus):not(:focus-within)': {
-              borderColor: 'var(--gray-300)',
+              borderColor: 'var(--color-primary-light)',
             }
           };
       }
@@ -103,12 +105,12 @@ export const Textarea = forwardRef<HTMLTextAreaElement, CustomTextareaProps>(
           style={style}
           styles={{
             input: getVariantStyles(),
-            label: {
-              fontSize: '0.875rem',
-              fontWeight: 500,
-              color: 'var(--gray-700)',
-              marginBottom: '6px',
-            },
+                      label: {
+            fontSize: '0.875rem',
+            fontWeight: 500,
+            color: 'var(--color-text)',
+            marginBottom: '6px',
+          },
             error: {
               fontSize: '0.875rem',
               color: 'var(--danger)',

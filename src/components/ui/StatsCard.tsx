@@ -40,11 +40,12 @@ export const StatsCard: React.FC<StatsCardProps> = ({
       padding="xl"
       radius="md"
       style={{
-        backgroundColor: 'white',
-        border: '1px solid var(--gray-100)',
+        backgroundColor: 'var(--color-surface)',
+        border: '1px solid var(--color-primary)',
         transition: 'all 200ms ease-out',
         height: '100%',
-        cursor: 'pointer'
+        cursor: 'pointer',
+        color: 'var(--color-text)'
       }}
       onMouseEnter={(e) => {
         e.currentTarget.style.transform = 'translateY(-2px)';
@@ -59,9 +60,10 @@ export const StatsCard: React.FC<StatsCardProps> = ({
         <Stack gap="xs" style={{ flex: 1 }}>
           <Text 
             size="sm" 
-            c="var(--gray-600)" 
             fw={500}
             style={{ 
+              color: 'var(--color-text)',
+              opacity: 0.7,
               letterSpacing: '-0.01em',
               textTransform: 'uppercase',
               fontSize: '0.75rem'
@@ -73,8 +75,8 @@ export const StatsCard: React.FC<StatsCardProps> = ({
           <Text 
             size="xl" 
             fw={700} 
-            c="var(--gray-900)"
             style={{ 
+              color: 'var(--color-text)',
               fontSize: '2rem',
               lineHeight: '2.5rem',
               letterSpacing: '-0.02em'
@@ -86,8 +88,11 @@ export const StatsCard: React.FC<StatsCardProps> = ({
           {description && (
             <Text 
               size="sm" 
-              c="var(--gray-600)"
-              style={{ lineHeight: '1.5' }}
+              style={{ 
+                color: 'var(--color-text)', 
+                opacity: 0.7,
+                lineHeight: '1.5' 
+              }}
             >
               {description}
             </Text>

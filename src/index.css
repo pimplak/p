@@ -50,13 +50,19 @@
   
   /* === LIQUID GLASS DESIGN SYSTEM === */
   
-  /* Glass effect variables */
+  /* Glass effect variables - Dynamic based on theme */
   --glass-bg: rgba(255, 255, 255, 0.1);
   --glass-bg-subtle: rgba(255, 255, 255, 0.05);
   --glass-bg-strong: rgba(255, 255, 255, 0.15);
   --glass-bg-dark: rgba(0, 0, 0, 0.1);
   --glass-border: rgba(255, 255, 255, 0.2);
   --glass-border-dark: rgba(255, 255, 255, 0.1);
+  
+  /* Dark theme glass overrides */
+  --glass-bg-dark-theme: rgba(255, 255, 255, 0.05);
+  --glass-bg-dark-subtle: rgba(255, 255, 255, 0.03);
+  --glass-bg-dark-strong: rgba(255, 255, 255, 0.08);
+  --glass-border-dark-theme: rgba(255, 255, 255, 0.1);
   
   /* Premium gradients */
   --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -86,8 +92,10 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
-  background-color: var(--gray-50);
-  color: var(--gray-900);
+  background-color: var(--color-background, var(--gray-50));
+  color: var(--color-text, var(--gray-900));
+  transition: background-color var(--transition-speed) var(--transition-easing),
+              color var(--transition-speed) var(--transition-easing);
 }
 
 /* Headings with premium letter-spacing */
@@ -142,23 +150,24 @@ button {
 
 /* Utility classes for theme integration */
 .theme-surface {
-  background-color: white !important;
+  background-color: var(--color-surface, white) !important;
 }
 
 .theme-background {
-  background-color: var(--gray-50) !important;
+  background-color: var(--color-background, var(--gray-50)) !important;
 }
 
 .theme-primary {
-  color: var(--primary) !important;
+  color: var(--color-primary, var(--primary)) !important;
 }
 
 .theme-text {
-  color: var(--gray-900) !important;
+  color: var(--color-text, var(--gray-900)) !important;
 }
 
 .theme-text-muted {
-  color: var(--gray-600) !important;
+  color: var(--color-text, var(--gray-600)) !important;
+  opacity: 0.7;
 }
 
 /* Smooth transitions for all interactive elements */
@@ -249,11 +258,12 @@ button {
 }
 
 .glass-modal {
-  background: rgba(255, 255, 255, 0.95);
+  background: var(--color-surface, rgba(255, 255, 255, 0.95));
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  border: 1px solid var(--glass-border-dark-theme, rgba(255, 255, 255, 0.3));
   border-radius: 12px;
+  color: var(--color-text);
 }
 
 /* Mobile navigation glass */
@@ -371,4 +381,57 @@ button {
   .no-print {
     display: none !important;
   }
+}
+
+/* === FERRO'S ADVANCED INPUT STYLING === */
+
+/* Input placeholders with proper theming */
+input::placeholder,
+textarea::placeholder,
+select::placeholder {
+  color: var(--color-text-muted, var(--gray-600)) !important;
+  opacity: 0.7;
+}
+
+/* Better focus states for all inputs */
+input:focus,
+textarea:focus,
+select:focus {
+  outline: 2px solid var(--color-primary, var(--primary)) !important;
+  outline-offset: 2px !important;
+  box-shadow: 0 0 0 1px var(--color-primary, var(--primary)) !important;
+}
+
+/* Autofill styling for dark themes */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 30px var(--color-input-bg, white) inset !important;
+  -webkit-text-fill-color: var(--color-text, var(--gray-900)) !important;
+  border: 1px solid var(--color-input-border, var(--gray-200)) !important;
+}
+
+/* Utility classes for consistent theming */
+.text-primary {
+  color: var(--color-primary, var(--primary)) !important;
+}
+
+.text-accent {
+  color: var(--color-accent, var(--success)) !important;
+}
+
+.text-muted {
+  color: var(--color-text-muted, var(--gray-600)) !important;
+}
+
+.bg-surface {
+  background-color: var(--color-surface, white) !important;
+}
+
+.bg-primary {
+  background-color: var(--color-primary, var(--primary)) !important;
+}
+
+.border-primary {
+  border-color: var(--color-primary, var(--primary)) !important;
 }

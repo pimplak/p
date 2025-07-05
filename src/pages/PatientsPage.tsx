@@ -138,15 +138,9 @@ function PatientsPage() {
           data: patientsToExport.map(p => ({
             'Imię': p.firstName,
             'Nazwisko': p.lastName,
-            'Email': p.email,
-            'Telefon': p.phone,
-            'Data urodzenia': p.birthDate,
             'Adres': p.address,
-            'Status': p.status,
-            'Tagi': p.tags?.join(', '),
-            'Ilość wizyt': p.appointmentCount,
-            'Ostatnia wizyta': p.lastAppointment,
-            'Następna wizyta': p.nextAppointment,
+            'Telefon': p.phone,
+            'Email': p.email,
           }))
         });
       }

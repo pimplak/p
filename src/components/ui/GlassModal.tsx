@@ -33,20 +33,21 @@ export const GlassModal: React.FC<GlassModalProps> = ({
       case 'dark':
         return {
           ...baseStyles,
-          background: 'rgba(39, 39, 42, 0.95)',
+          background: 'var(--color-surface)',
           backdropFilter: 'blur(15px)',
           WebkitBackdropFilter: 'blur(15px)',
-          border: '1px solid rgba(255, 255, 255, 0.1)',
-          color: 'white',
+          border: '1px solid var(--glass-border-dark-theme)',
+          color: 'var(--color-text)',
         };
 
       default:
         return {
           ...baseStyles,
-          background: 'rgba(255, 255, 255, 0.95)',
+          background: 'var(--color-surface)',
           backdropFilter: 'blur(10px)',
           WebkitBackdropFilter: 'blur(10px)',
-          border: '1px solid rgba(255, 255, 255, 0.3)',
+          border: '1px solid var(--glass-border-dark-theme)',
+          color: 'var(--color-text)',
         };
     }
   };
@@ -75,24 +76,25 @@ export const GlassModal: React.FC<GlassModalProps> = ({
         },
         header: {
           background: 'transparent',
-          borderBottom: `1px solid ${variant === 'dark' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.05)'}`,
+          borderBottom: `1px solid var(--glass-border-dark-theme)`,
           padding: '24px 24px 16px',
           borderRadius: '12px 12px 0 0',
+          color: 'var(--color-text)',
         },
         body: {
           padding: '16px 24px 24px',
           background: 'transparent',
         },
         close: {
-          color: variant === 'dark' ? 'white' : 'var(--gray-600)',
+          color: 'var(--color-text)',
           '&:hover': {
-            backgroundColor: variant === 'dark' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.05)',
+            backgroundColor: 'var(--glass-bg-dark-theme)',
           }
         },
         title: {
           fontSize: '1.25rem',
           fontWeight: 600,
-          color: variant === 'dark' ? 'white' : 'var(--gray-900)',
+          color: 'var(--color-text)',
           letterSpacing: '-0.01em',
         },
         ...styles,

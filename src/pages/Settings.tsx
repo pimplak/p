@@ -22,6 +22,7 @@ import {
     IconTestPipe,
 } from '@tabler/icons-react';
 import { ThemeSelector, ThemePreview } from '../components/ThemeSelector';
+import { DarkThemeDemo } from '../components/DarkThemeDemo';
 import { usePatientStore } from '../stores/usePatientStore';
 import { addDemoPatients, clearAllData } from '../utils/demo-data';
 
@@ -107,6 +108,7 @@ function Settings() {
                             <Stack gap="lg">
                                 <ThemeSelector />
                                 <ThemePreview />
+                                <DarkThemeDemo />
                             </Stack>
                         </Stack>
                     </Card>

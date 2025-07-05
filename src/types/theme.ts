@@ -125,13 +125,58 @@ export const COLOR_PALETTES: Record<string, ColorPalette> = {
         accent: '#d62828',      // fire engine red - czerwony akcent
         text: '#003049',        // prussian blue - kontrastowy niebieski tekst
     },
+
+    // === FERRO'S PROFESSIONAL DARK THEMES ===
+
+    darkpro: {
+        name: 'Dark Professional',
+        id: 'darkpro',
+        background: '#0a0a0f',  // bardzo ciemny niebieski
+        surface: '#1a1a24',     // ciemny niebieski surface
+        primary: '#4f8ff7',     // jasny niebieski (lepszy kontrast)
+        accent: '#22d3ee',      // cyan akcent
+        text: '#f1f5f9',        // bardzo jasny tekst
+    },
+
+    darkslate: {
+        name: 'Dark Slate',
+        id: 'darkslate',
+        background: '#0f172a',  // slate-900
+        surface: '#1e293b',     // slate-800
+        primary: '#7c3aed',     // fioletowy primary (lepszy kontrast)
+        accent: '#06b6d4',      // cyan akcent
+        text: '#f1f5f9',        // slate-100
+    },
+
+    darkgray: {
+        name: 'Dark Gray',
+        id: 'darkgray',
+        background: '#111827',  // gray-900
+        surface: '#1f2937',     // gray-800
+        primary: '#3b82f6',     // niebieski primary
+        accent: '#10b981',      // zielony akcent
+        text: '#f9fafb',        // gray-50
+    },
+
+    darkcarbon: {
+        name: 'Dark Carbon',
+        id: 'darkcarbon',
+        background: '#0c0c0c',  // carbon black
+        surface: '#1c1c1e',     // ciemny surface z lekkim odcieniem
+        primary: '#ff6b6b',     // coral red
+        accent: '#4ecdc4',      // turquoise
+        text: '#ffffff',        // pure white
+    },
 };
 
 export type PaletteId = keyof typeof COLOR_PALETTES;
 
 // Helper do sprawdzania czy paleta jest ciemna
 export const isDarkPalette = (paletteId: PaletteId): boolean => {
-    const darkPalettes: PaletteId[] = ['forest', 'midnight', 'neonnight', 'mysticdusk'];
+    const darkPalettes: PaletteId[] = [
+        'forest', 'midnight', 'neonnight', 'mysticdusk',
+        'darkpro', 'darkslate', 'darkgray', 'darkcarbon'
+    ];
     return darkPalettes.includes(paletteId);
 };
 

@@ -2,8 +2,9 @@ import { notifications } from '@mantine/notifications';
 import { format } from 'date-fns';
 import * as XLSX from 'xlsx';
 import { EXPORT_CHUNK_SIZE } from '../constants/business';
+import { db } from './db';
 import type { AppointmentWithPatient } from '../types/Appointment';
-import type { PatientWithAppointments } from '../types/Patient';
+import type { PatientWithAppointments, Patient } from '../types/Patient';
 
 export interface ExportOptions {
     patients?: boolean;
@@ -18,39 +19,20 @@ const CHUNK_SIZE = EXPORT_CHUNK_SIZE;
 
 // Types for export data
 interface PatientExportData {
-    'ID': number | undefined;
     'Imię': string;
     'Nazwisko': string;
-    'Email': string;
-    'Telefon': string;
-    'Data urodzenia': string;
     'Adres': string;
-    'Kontakt awaryjny': string;
-    'Telefon awaryjny': string;
-    'Liczba wizyt': number;
-    'Ostatnia wizyta': string;
-    'Następna wizyta': string;
-    'Notatki': string;
-    'Data utworzenia': string;
+    'Telefon': string;
+    'Email': string;
 }
 
 interface AppointmentExportData {
-    'ID': number | undefined;
-    'Pacjent': string;
-    'Data': string;
-    'Godzina': string;
-    'Czas trwania (min)': number;
-    'Cena (zł)': string;
-    'Status płatności': string;
-    'Data płatności': string;
-    'Sposób płatności': string;
-    'Status': string;
-    'Typ': string;
-    'Telefon pacjenta': string;
-    'Notatki': string;
-    'Notatki płatności': string;
-    'Przypomnienie wysłane': string;
-    'Data utworzenia': string;
+    'Imię': string;
+    'Nazwisko': string;
+    'Adres': string;
+    'Data wizyty': string;
+    'Data zapłaty': string;
+    'Kwota': string;
 }
 
 export async function exportToExcel(
@@ -107,40 +89,11 @@ export async function exportToExcel(
 
                 // Transform chunk to worksheet data
                 const chunkData = chunk.map(patient => ({
-                    'ID': patient.id,
                     'Imię': patient.firstName,
                     'Nazwisko': patient.lastName,
-                    'Email': patient.email || '',
-                    'Telefon': patient.phone || '',
-                    'Data urodzenia': patient.birthDate ? format(
-                        typeof patient.birthDate === 'string'
-                            ? new Date(patient.birthDate)
-                            : patient.birthDate,
-                        'dd.MM.yyyy'
-                    ) : '',
                     'Adres': patient.address || '',
-                    'Kontakt awaryjny': patient.emergencyContact || '',
-                    'Telefon awaryjny': patient.emergencyPhone || '',
-                    'Liczba wizyt': patient.appointmentCount,
-                    'Ostatnia wizyta': patient.lastAppointment ? format(
-                        typeof patient.lastAppointment === 'string'
-                            ? new Date(patient.lastAppointment)
-                            : patient.lastAppointment,
-                        'dd.MM.yyyy'
-                    ) : '',
-                    'Następna wizyta': patient.nextAppointment ? format(
-                        typeof patient.nextAppointment === 'string'
-                            ? new Date(patient.nextAppointment)
-                            : patient.nextAppointment,
-                        'dd.MM.yyyy'
-                    ) : '',
-                    'Notatki': patient.notes || '',
-                    'Data utworzenia': format(
-                        typeof patient.createdAt === 'string'
-                            ? new Date(patient.createdAt)
-                            : patient.createdAt,
-                        'dd.MM.yyyy HH:mm'
-                    ),
+                    'Telefon': patient.phone || '',
+                    'Email': patient.email || '',
                 }));
 
                 allPatientsData.push(...chunkData);
@@ -187,44 +140,34 @@ export async function exportToExcel(
                 const endIndex = Math.min(startIndex + CHUNK_SIZE, totalAppointments);
                 const chunk = filteredAppointments.slice(startIndex, endIndex);
 
-                const chunkData = chunk.map(appointment => ({
-                    'ID': appointment.id,
-                    'Pacjent': `${appointment.patient?.firstName} ${appointment.patient?.lastName}`,
-                    'Data': format(
-                        typeof appointment.date === 'string'
-                            ? new Date(appointment.date)
-                            : appointment.date,
-                        'dd.MM.yyyy'
-                    ),
-                    'Godzina': format(
-                        typeof appointment.date === 'string'
-                            ? new Date(appointment.date)
-                            : appointment.date,
-                        'HH:mm'
-                    ),
-                    'Czas trwania (min)': appointment.duration,
-                    'Cena (zł)': appointment.price ? `${appointment.price}` : '',
-                    'Status płatności': appointment.paymentInfo?.isPaid ? 'Opłacono' : 'Nieopłacono',
-                    'Data płatności': appointment.paymentInfo?.isPaid && appointment.paymentInfo?.paidAt ? format(
-                        typeof appointment.paymentInfo.paidAt === 'string'
-                            ? new Date(appointment.paymentInfo.paidAt)
-                            : appointment.paymentInfo.paidAt,
-                        'dd.MM.yyyy HH:mm'
-                    ) : '',
-                    'Sposób płatności': appointment.paymentInfo?.paymentMethod ? getPaymentMethodLabel(appointment.paymentInfo.paymentMethod) : '',
-                    'Status': getStatusLabel(appointment.status),
-                    'Typ': appointment.type ? getTypeLabel(appointment.type) : '',
-                    'Telefon pacjenta': appointment.patient?.phone || '',
-                    'Notatki': appointment.notes || '',
-                    'Notatki płatności': appointment.paymentInfo?.notes || '',
-                    'Przypomnienie wysłane': appointment.reminderSent ? 'Tak' : 'Nie',
-                    'Data utworzenia': format(
-                        typeof appointment.createdAt === 'string'
-                            ? new Date(appointment.createdAt)
-                            : appointment.createdAt,
-                        'dd.MM.yyyy HH:mm'
-                    ),
-                }));
+                // Pobierz pełne dane pacjentów dla tego chunka
+                const patientIds = [...new Set(chunk.map(apt => apt.patientId))];
+                const fullPatients = await Promise.all(
+                    patientIds.map(id => db.patients.get(id))
+                );
+                const patientMap = new Map(fullPatients.filter((p): p is Patient => p !== undefined).map(p => [p.id!, p]));
+
+                const chunkData = chunk.map(appointment => {
+                    const fullPatient = patientMap.get(appointment.patientId);
+                    return {
+                        'Imię': fullPatient?.firstName || appointment.patient?.firstName || '',
+                        'Nazwisko': fullPatient?.lastName || appointment.patient?.lastName || '',
+                        'Adres': fullPatient?.address || '',
+                        'Data wizyty': format(
+                            typeof appointment.date === 'string'
+                                ? new Date(appointment.date)
+                                : appointment.date,
+                            'dd.MM.yyyy'
+                        ),
+                        'Data zapłaty': appointment.paymentInfo?.isPaid && appointment.paymentInfo?.paidAt ? format(
+                            typeof appointment.paymentInfo.paidAt === 'string'
+                                ? new Date(appointment.paymentInfo.paidAt)
+                                : appointment.paymentInfo.paidAt,
+                            'dd.MM.yyyy HH:mm'
+                        ) : '',
+                        'Kwota': appointment.price ? `${appointment.price}` : '',
+                    };
+                });
 
                 allAppointmentsData.push(...chunkData);
 
@@ -289,34 +232,3 @@ export async function exportToExcel(
     }
 }
 
-function getStatusLabel(status: string): string {
-    const statusLabels: Record<string, string> = {
-        'scheduled': 'Zaplanowana',
-        'completed': 'Zakończona',
-        'cancelled': 'Anulowana',
-        'no_show': 'Niestawienie się',
-        'rescheduled': 'Przełożona'
-    };
-    return statusLabels[status] || status;
-}
-
-function getTypeLabel(type: string): string {
-    const typeLabels: Record<string, string> = {
-        'initial': 'Pierwsza wizyta',
-        'follow_up': 'Wizyta kontrolna',
-        'therapy': 'Terapia',
-        'consultation': 'Konsultacja',
-        'assessment': 'Ocena'
-    };
-    return typeLabels[type] || type;
-}
-
-function getPaymentMethodLabel(method: string): string {
-    const methodLabels: Record<string, string> = {
-        'cash': 'Gotówka',
-        'card': 'Karta',
-        'transfer': 'Przelew',
-        'other': 'Inne'
-    };
-    return methodLabels[method] || method;
-} 

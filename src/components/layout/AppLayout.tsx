@@ -83,11 +83,12 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
       {/* Header */}
       <AppShell.Header
         style={{
-          backgroundColor: 'white',
-          borderBottom: '1px solid var(--gray-100)',
+          backgroundColor: 'var(--color-surface)',
+          borderBottom: '1px solid var(--color-primary)',
           padding: '0 24px',
           display: 'flex',
           alignItems: 'center',
+          color: 'var(--color-text)',
         }}
       >
         <Group h="100%" justify="space-between" w="100%">
@@ -102,7 +103,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
             <Text 
               size="lg" 
               fw={600}
-              c="var(--gray-900)"
+              style={{ color: 'var(--color-text)' }}
               visibleFrom="sm"
             >
               PsychFlow
@@ -110,7 +111,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
           </Group>
           
           <Group gap="md">
-            <Text size="sm" c="var(--gray-600)">
+            <Text size="sm" style={{ color: 'var(--color-text)', opacity: 0.7 }}>
               Dr Anna Terapeutka
             </Text>
           </Group>
@@ -120,9 +121,10 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
       {/* Sidebar */}
       <AppShell.Navbar
         style={{
-          backgroundColor: 'white',
-          borderRight: '1px solid var(--gray-100)',
+          backgroundColor: 'var(--color-surface)',
+          borderRight: '1px solid var(--color-primary)',
           padding: '24px 16px',
+          color: 'var(--color-text)',
         }}
       >
         <ScrollArea style={{ height: '100%' }}>
@@ -147,8 +149,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
               <Text 
                 size="lg" 
                 fw={600}
-                c="var(--gray-900)"
-                style={{ letterSpacing: '-0.01em' }}
+                style={{ letterSpacing: '-0.01em', color: 'var(--color-text)' }}
               >
                 PsychFlow
               </Text>
@@ -239,9 +240,10 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
       {/* Main Content */}
       <AppShell.Main
         style={{
-          backgroundColor: 'var(--gray-50)',
+          backgroundColor: 'var(--color-background)',
           minHeight: 'calc(100vh - 70px)',
           paddingBottom: isMobile ? '80px' : '0', // Space for mobile navigation
+          color: 'var(--color-text)',
         }}
       >
         {children}

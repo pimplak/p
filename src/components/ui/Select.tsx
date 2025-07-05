@@ -77,15 +77,16 @@ export const Select = forwardRef<HTMLInputElement, CustomSelectProps>(
         default:
           return {
             ...baseStyles,
-            backgroundColor: 'white',
-            border: '1px solid var(--gray-200)',
+            backgroundColor: 'var(--color-input-bg)',
+            border: '1px solid var(--color-input-border)',
+            color: 'var(--color-text)',
             '&:focus, &:focus-within': {
-              borderColor: '#6366F1',
-              boxShadow: '0 0 0 1px #6366F1',
+              borderColor: 'var(--color-primary)',
+              boxShadow: '0 0 0 1px var(--color-primary)',
               outline: 'none',
             },
             '&:hover:not(:focus):not(:focus-within)': {
-              borderColor: 'var(--gray-300)',
+              borderColor: 'var(--color-primary-light)',
             }
           };
       }
@@ -118,25 +119,27 @@ export const Select = forwardRef<HTMLInputElement, CustomSelectProps>(
             marginTop: '4px',
           },
           dropdown: {
-            backgroundColor: 'white',
-            border: '1px solid var(--gray-200)',
+            backgroundColor: 'var(--color-surface)',
+            border: '1px solid var(--color-input-border)',
             borderRadius: '8px',
             boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
             padding: '4px',
+            color: 'var(--color-text)',
           },
           option: {
             borderRadius: '6px',
             padding: '8px 12px',
             fontSize: '0.875rem',
             transition: 'all 150ms ease-out',
+            color: 'var(--color-text)',
             '&[data-hovered]': {
-              backgroundColor: 'var(--gray-50)',
+              backgroundColor: 'var(--color-accent-light)',
             },
             '&[data-selected]': {
-              backgroundColor: '#6366F1',
-              color: 'white',
+              backgroundColor: 'var(--color-primary)',
+              color: 'var(--color-button-text)',
               '&[data-hovered]': {
-                backgroundColor: '#4F46E5',
+                backgroundColor: 'var(--color-primary-hover)',
               }
             }
           },

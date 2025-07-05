@@ -24,7 +24,7 @@ function Dashboard() {
               style={{
                 fontSize: '2rem',
                 fontWeight: 700,
-                color: 'var(--gray-900)',
+                color: 'var(--color-text)',
                 letterSpacing: '-0.02em',
                 lineHeight: '2.5rem'
               }}
@@ -33,8 +33,7 @@ function Dashboard() {
             </Title>
             <Text 
               size="lg" 
-              c="var(--gray-600)"
-              style={{ lineHeight: '1.6' }}
+              style={{ lineHeight: '1.6', color: 'var(--color-text)', opacity: 0.7 }}
             >
               Witaj ponownie! Oto przegląd Twojej praktyki terapeutycznej.
             </Text>
@@ -64,7 +63,7 @@ function Dashboard() {
             style={{
               fontSize: '1.25rem',
               fontWeight: 600,
-              color: 'var(--gray-900)',
+              color: 'var(--color-text)',
               letterSpacing: '-0.01em'
             }}
           >
@@ -77,17 +76,18 @@ function Dashboard() {
               padding="xl"
               radius="md"
               style={{
-                backgroundColor: 'white',
-                border: '1px solid var(--gray-100)',
+                backgroundColor: 'var(--color-surface)',
+                border: '1px solid var(--color-primary)',
                 cursor: 'pointer',
-                transition: 'all 200ms ease-out'
+                transition: 'all 200ms ease-out',
+                color: 'var(--color-text)'
               }}
             >
               <Stack gap="md">
-                <Title order={4} c="var(--gray-900)">
+                <Title order={4} style={{ color: 'var(--color-text)' }}>
                   Kalendarz sesji
                 </Title>
-                <Text size="sm" c="var(--gray-600)">
+                <Text size="sm" style={{ color: 'var(--color-text)', opacity: 0.7 }}>
                   Zarządzaj terminami i planuj spotkania z pacjentami
                 </Text>
                 <Button variant="secondary" style={{ alignSelf: 'flex-start' }}>
@@ -101,17 +101,18 @@ function Dashboard() {
               padding="xl"
               radius="md"
               style={{
-                backgroundColor: 'white',
-                border: '1px solid var(--gray-100)',
+                backgroundColor: 'var(--color-surface)',
+                border: '1px solid var(--color-primary)',
                 cursor: 'pointer',
-                transition: 'all 200ms ease-out'
+                transition: 'all 200ms ease-out',
+                color: 'var(--color-text)'
               }}
             >
               <Stack gap="md">
-                <Title order={4} c="var(--gray-900)">
+                <Title order={4} style={{ color: 'var(--color-text)' }}>
                   Lista pacjentów
                 </Title>
-                <Text size="sm" c="var(--gray-600)">
+                <Text size="sm" style={{ color: 'var(--color-text)', opacity: 0.7 }}>
                   Przeglądaj profile i historie terapii
                 </Text>
                 <Button variant="secondary" style={{ alignSelf: 'flex-start' }}>
@@ -125,17 +126,18 @@ function Dashboard() {
               padding="xl"
               radius="md"
               style={{
-                backgroundColor: 'white',
-                border: '1px solid var(--gray-100)',
+                backgroundColor: 'var(--color-surface)',
+                border: '1px solid var(--color-primary)',
                 cursor: 'pointer',
-                transition: 'all 200ms ease-out'
+                transition: 'all 200ms ease-out',
+                color: 'var(--color-text)'
               }}
             >
               <Stack gap="md">
-                <Title order={4} c="var(--gray-900)">
+                <Title order={4} style={{ color: 'var(--color-text)' }}>
                   Notatki z sesji
                 </Title>
-                <Text size="sm" c="var(--gray-600)">
+                <Text size="sm" style={{ color: 'var(--color-text)', opacity: 0.7 }}>
                   Dodaj obserwacje i śledź postępy
                 </Text>
                 <Button variant="secondary" style={{ alignSelf: 'flex-start' }}>
@@ -153,7 +155,7 @@ function Dashboard() {
             style={{
               fontSize: '1.25rem',
               fontWeight: 600,
-              color: 'var(--gray-900)',
+              color: 'var(--color-text)',
               letterSpacing: '-0.01em'
             }}
           >
@@ -165,18 +167,19 @@ function Dashboard() {
             padding="xl"
             radius="md"
             style={{
-              backgroundColor: 'white',
-              border: '1px solid var(--gray-100)'
+              backgroundColor: 'var(--color-surface)',
+              border: '1px solid var(--color-primary)',
+              color: 'var(--color-text)'
             }}
           >
             <Stack gap="md">
-              <Text size="sm" c="var(--gray-600)">
+              <Text size="sm" style={{ color: 'var(--color-text)', opacity: 0.7 }}>
                 Dzisiaj, 14:30
               </Text>
-              <Text fw={500} c="var(--gray-900)">
+              <Text fw={500} style={{ color: 'var(--color-text)' }}>
                 Zakończono sesję z Anną Kowalską
               </Text>
-              <Text size="sm" c="var(--gray-600)">
+              <Text size="sm" style={{ color: 'var(--color-text)', opacity: 0.7 }}>
                 Długość: 50 min • Notatka: Znaczący postęp w radzeniu sobie ze stresem
               </Text>
             </Stack>
