@@ -138,6 +138,11 @@ export const useTheme = () => {
                                 '&:hover': {
                                     backgroundColor: 'var(--color-primary-hover)',
                                 },
+                                '&:focus-visible': {
+                                    outline: '2px solid var(--color-primary)',
+                                    outlineOffset: '2px',
+                                    boxShadow: '0 0 0 4px var(--color-primary-light)',
+                                },
                             },
                             '&[data-variant="outline"]': {
                                 backgroundColor: 'transparent',
@@ -168,6 +173,12 @@ export const useTheme = () => {
                                 color: isDark ? 'white' : 'var(--color-text)',
                             },
                             '&:hover': {
+                                backgroundColor: 'var(--color-accent-light)',
+                            },
+                            '&:focus-visible': {
+                                outline: '2px solid var(--color-primary)',
+                                outlineOffset: '2px',
+                                boxShadow: '0 0 0 4px var(--color-primary-light)',
                                 backgroundColor: 'var(--color-accent-light)',
                             },
                         },
@@ -223,6 +234,9 @@ export const useTheme = () => {
                             color: 'var(--color-text)',
                             '&:focus': {
                                 borderColor: 'var(--color-primary)',
+                                boxShadow: '0 0 0 3px var(--color-primary-light)',
+                                outline: '2px solid var(--color-primary)',
+                                outlineOffset: '2px',
                             },
                         },
                         label: {
@@ -239,6 +253,9 @@ export const useTheme = () => {
                             color: 'var(--color-text)',
                             '&:focus': {
                                 borderColor: 'var(--color-primary)',
+                                boxShadow: '0 0 0 3px var(--color-primary-light)',
+                                outline: '2px solid var(--color-primary)',
+                                outlineOffset: '2px',
                             },
                         },
                         label: {
@@ -254,6 +271,9 @@ export const useTheme = () => {
                                 backgroundColor: 'var(--color-primary)',
                                 color: 'var(--color-button-text)',
                             },
+                            '&:hover': {
+                                backgroundColor: 'var(--color-accent-light)',
+                            },
                         },
                     }),
                 },
@@ -266,9 +286,40 @@ export const useTheme = () => {
                             color: 'var(--color-text)',
                             '&:focus': {
                                 borderColor: 'var(--color-primary)',
+                                boxShadow: '0 0 0 3px var(--color-primary-light)',
+                                outline: '2px solid var(--color-primary)',
+                                outlineOffset: '2px',
                             },
                         },
                         label: {
+                            color: 'var(--color-text)',
+                        },
+                    }),
+                },
+
+                Tabs: {
+                    styles: () => ({
+                        tab: {
+                            color: 'var(--color-text)',
+                            borderColor: 'var(--color-input-border)',
+                            '&:hover': {
+                                backgroundColor: 'var(--color-accent-light)',
+                                borderColor: 'var(--color-primary)',
+                            },
+                            '&[data-active]': {
+                                color: 'var(--color-primary)',
+                                borderColor: 'var(--color-primary)',
+                            },
+                            '&:focus-visible': {
+                                outline: '2px solid var(--color-primary)',
+                                outlineOffset: '2px',
+                                boxShadow: '0 0 0 4px var(--color-primary-light)',
+                                backgroundColor: 'var(--color-accent-light)',
+                                borderColor: 'var(--color-primary)',
+                            },
+                        },
+                        panel: {
+                            backgroundColor: 'var(--color-background)',
                             color: 'var(--color-text)',
                         },
                     }),

@@ -54,8 +54,9 @@ export const TextInput = forwardRef<HTMLInputElement, CustomTextInputProps>(
             '&:focus, &:focus-within': {
               backgroundColor: 'var(--color-surface)',
               borderColor: 'var(--color-primary)',
-              boxShadow: '0 0 0 1px var(--color-primary)',
-              outline: 'none',
+              boxShadow: '0 0 0 3px var(--color-primary-light)',
+              outline: '2px solid var(--color-primary)',
+              outlineOffset: '2px',
             },
             '&:hover:not(:focus):not(:focus-within)': {
               borderColor: 'var(--color-primary-light)',
@@ -83,8 +84,9 @@ export const TextInput = forwardRef<HTMLInputElement, CustomTextInputProps>(
             color: 'var(--color-text)',
             '&:focus, &:focus-within': {
               borderColor: 'var(--color-primary)',
-              boxShadow: '0 0 0 1px var(--color-primary)',
-              outline: 'none',
+              boxShadow: '0 0 0 3px var(--color-primary-light)',
+              outline: '2px solid var(--color-primary)',
+              outlineOffset: '2px',
             },
             '&:hover:not(:focus):not(:focus-within)': {
               borderColor: 'var(--color-primary-light)',

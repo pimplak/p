@@ -1,7 +1,5 @@
 import { AppShell, NavLink, Group, Text, Stack, Burger, ScrollArea } from '@mantine/core';
 import { useDisclosure, useMediaQuery } from '@mantine/hooks';
-import type { ReactNode } from 'react';
-import { Link, useLocation } from 'react-router-dom';
 import { 
   IconDashboard,
   IconUsers,
@@ -11,7 +9,9 @@ import {
   IconSettings,
   IconLogout
 } from '@tabler/icons-react';
+import { Link, useLocation } from 'react-router-dom';
 import { MobileNavigation } from './MobileNavigation';
+import type { ReactNode } from 'react';
 
 interface AppLayoutProps {
   children: ReactNode;
@@ -135,14 +135,20 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
                 style={{
                   width: '32px',
                   height: '32px',
-                  backgroundColor: '#6366F1',
+                  background: 'var(--color-primary)',
                   borderRadius: '8px',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
+                  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
+                  transition: 'all 200ms ease-out',
                 }}
               >
-                <Text c="white" fw={700} size="sm">
+                <Text 
+                  fw={700} 
+                  size="sm"
+                  style={{ color: 'var(--color-button-text)' }}
+                >
                   P
                 </Text>
               </div>
@@ -181,15 +187,16 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
                     }}
                     styles={{
                       root: {
+                        color: 'var(--color-text)',
                         '&[data-active]': {
-                          backgroundColor: '#6366F1',
-                          color: 'white',
+                          backgroundColor: 'var(--color-primary)',
+                          color: 'var(--color-button-text)',
                           '&:hover': {
-                            backgroundColor: '#4F46E5',
+                            backgroundColor: 'var(--color-primary-hover)',
                           }
                         },
                         '&:not([data-active]):hover': {
-                          backgroundColor: 'var(--gray-50)',
+                          backgroundColor: 'var(--color-accent-light)',
                         }
                       }
                     }}
@@ -224,8 +231,9 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
                     }}
                     styles={{
                       root: {
+                        color: item.color === 'red' ? 'var(--danger)' : 'var(--color-text)',
                         '&:hover': {
-                          backgroundColor: item.color === 'red' ? '#FEF2F2' : 'var(--gray-50)',
+                          backgroundColor: item.color === 'red' ? 'var(--color-accent-light)' : 'var(--color-accent-light)',
                         }
                       }
                     }}

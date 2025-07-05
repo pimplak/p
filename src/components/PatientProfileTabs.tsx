@@ -12,7 +12,28 @@ export function PatientProfileTabs({ patient }: PatientProfileTabsProps) {
   const [activeTab, setActiveTab] = useState<string>('overview');
 
   return (
-    <Tabs value={activeTab} onChange={(value) => value && setActiveTab(value)}>
+    <Tabs 
+      value={activeTab} 
+      onChange={(value) => value && setActiveTab(value)}
+      styles={{
+        tab: {
+          color: 'var(--color-text)',
+          borderColor: 'var(--color-input-border)',
+          '&:hover': {
+            backgroundColor: 'var(--color-accent-light)',
+            borderColor: 'var(--color-primary)',
+          },
+          '&[data-active]': {
+            color: 'var(--color-primary)',
+            borderColor: 'var(--color-primary)',
+          },
+        },
+        panel: {
+          backgroundColor: 'var(--color-background)',
+          color: 'var(--color-text)',
+        }
+      }}
+    >
       <Tabs.List>
         <Tabs.Tab value="overview" leftSection={<IconNotes size="1rem" />}>
           Przegląd

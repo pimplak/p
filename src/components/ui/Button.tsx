@@ -23,6 +23,12 @@ export const Button: React.FC<CustomButtonProps> = ({
             backgroundColor: 'var(--color-primary-hover)',
             transform: 'translateY(-1px)',
             boxShadow: '0 4px 12px rgba(99, 102, 241, 0.15)',
+          },
+          '&:focus-visible': {
+            outline: '2px solid var(--color-primary)',
+            outlineOffset: '2px',
+            boxShadow: '0 0 0 4px var(--color-primary-light), 0 4px 12px rgba(0, 0, 0, 0.15)',
+            transform: 'translateY(-1px)',
           }
         };
       
@@ -37,6 +43,13 @@ export const Button: React.FC<CustomButtonProps> = ({
             backgroundColor: 'var(--color-primary-light)',
             borderColor: 'var(--color-primary)',
             transform: 'translateY(-1px)',
+          },
+          '&:focus-visible': {
+            outline: '2px solid var(--color-primary)',
+            outlineOffset: '2px',
+            boxShadow: '0 0 0 4px var(--color-primary-light)',
+            backgroundColor: 'var(--color-primary-light)',
+            borderColor: 'var(--color-primary)',
           }
         };
       
@@ -48,6 +61,13 @@ export const Button: React.FC<CustomButtonProps> = ({
           fontWeight: 500,
           transition: 'all 200ms ease-out',
           '&:hover': {
+            backgroundColor: 'var(--color-accent-light)',
+            color: 'var(--color-text)',
+          },
+          '&:focus-visible': {
+            outline: '2px solid var(--color-primary)',
+            outlineOffset: '2px',
+            boxShadow: '0 0 0 4px var(--color-primary-light)',
             backgroundColor: 'var(--color-accent-light)',
             color: 'var(--color-text)',
           }

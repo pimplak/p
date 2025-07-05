@@ -136,8 +136,27 @@ button:focus-visible,
 input:focus-visible,
 select:focus-visible,
 textarea:focus-visible {
-  outline: 2px solid var(--primary);
-  outline-offset: 2px;
+  outline: 2px solid var(--color-primary, var(--primary)) !important;
+  outline-offset: 2px !important;
+  box-shadow: 0 0 0 4px var(--color-primary-light, rgba(99, 102, 241, 0.2)) !important;
+  border-radius: 6px !important;
+}
+
+/* Enhanced button focus */
+button:focus-visible {
+  transform: translateY(-1px) !important;
+  box-shadow: 
+    0 0 0 4px var(--color-primary-light, rgba(99, 102, 241, 0.2)),
+    0 4px 12px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Navigation link focus */
+a:focus-visible,
+.mantine-NavLink-root:focus-visible {
+  outline: 2px solid var(--color-primary, var(--primary)) !important;
+  outline-offset: 2px !important;
+  box-shadow: 0 0 0 4px var(--color-primary-light, rgba(99, 102, 241, 0.2)) !important;
+  border-radius: 6px !important;
 }
 
 /* Remove default button styles */
@@ -399,7 +418,8 @@ textarea:focus,
 select:focus {
   outline: 2px solid var(--color-primary, var(--primary)) !important;
   outline-offset: 2px !important;
-  box-shadow: 0 0 0 1px var(--color-primary, var(--primary)) !important;
+  box-shadow: 0 0 0 3px var(--color-primary-light, rgba(99, 102, 241, 0.3)) !important;
+  border-color: var(--color-primary, var(--primary)) !important;
 }
 
 /* Autofill styling for dark themes */
@@ -434,4 +454,89 @@ input:-webkit-autofill:focus {
 
 .border-primary {
   border-color: var(--color-primary, var(--primary)) !important;
+}
+
+/* === FERRO'S ICON THEMING === */
+
+/* All Tabler icons inherit theme colors */
+.tabler-icon,
+svg[data-tabler] {
+  color: inherit !important;
+}
+
+/* Icon-specific theming */
+.icon-primary {
+  color: var(--color-primary, var(--primary)) !important;
+}
+
+.icon-accent {
+  color: var(--color-accent, var(--success)) !important;
+}
+
+.icon-muted {
+  color: var(--color-text-muted, var(--gray-600)) !important;
+}
+
+/* Better hover states for interactive icons */
+button svg,
+a svg,
+.clickable svg {
+  transition: color var(--transition-speed, 200ms) var(--transition-easing, ease-out) !important;
+}
+
+button:hover svg,
+a:hover svg,
+.clickable:hover svg {
+  color: var(--color-primary, var(--primary)) !important;
+}
+
+/* === FERRO'S ADVANCED FOCUS SYSTEM === */
+
+/* Tab focus for keyboard navigation */
+.mantine-Tabs-tab:focus-visible {
+  outline: 2px solid var(--color-primary, var(--primary)) !important;
+  outline-offset: 2px !important;
+  box-shadow: 0 0 0 4px var(--color-primary-light, rgba(99, 102, 241, 0.2)) !important;
+  border-radius: 6px !important;
+}
+
+/* Card focus for interactive cards */
+.mantine-Card-root:focus-visible {
+  outline: 2px solid var(--color-primary, var(--primary)) !important;
+  outline-offset: 2px !important;
+  box-shadow: 0 0 0 4px var(--color-primary-light, rgba(99, 102, 241, 0.2)) !important;
+  transform: translateY(-2px) !important;
+}
+
+/* Action Icon focus */
+.mantine-ActionIcon-root:focus-visible {
+  outline: 2px solid var(--color-primary, var(--primary)) !important;
+  outline-offset: 2px !important;
+  box-shadow: 0 0 0 4px var(--color-primary-light, rgba(99, 102, 241, 0.2)) !important;
+  transform: scale(1.05) !important;
+}
+
+/* Select and dropdown focus */
+.mantine-Select-input:focus,
+.mantine-Combobox-input:focus {
+  outline: 2px solid var(--color-primary, var(--primary)) !important;
+  outline-offset: 2px !important;
+  box-shadow: 0 0 0 3px var(--color-primary-light, rgba(99, 102, 241, 0.3)) !important;
+  border-color: var(--color-primary, var(--primary)) !important;
+}
+
+/* Mobile navigation focus */
+.mobile-nav-item:focus-visible {
+  outline: 2px solid var(--color-primary, var(--primary)) !important;
+  outline-offset: 2px !important;
+  box-shadow: 0 0 0 4px var(--color-primary-light, rgba(99, 102, 241, 0.2)) !important;
+  border-radius: 12px !important;
+}
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  *:focus-visible {
+    transition: none !important;
+    transform: none !important;
+  }
 }
