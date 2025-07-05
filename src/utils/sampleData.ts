@@ -169,311 +169,47 @@ export async function insertSampleData(): Promise<boolean> {
             patientIds.push(id as number);
         }
 
-        // Stwórz przykładowe wizyty
+        // Stwórz przykładowe wizyty na przestrzeni 2.5 miesiąca (75 dni)
+        const daysRange = 75;
+        const appointmentsPerPatient = 8; // ile wizyt na pacjenta (rozłożone w czasie)
         const now = new Date();
         const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-
-        const sampleAppointments: Omit<Appointment, 'id' | 'createdAt' | 'updatedAt'>[] = [
-            // Dzisiejsze wizyty (więcej wizyt w ciągu dnia)
-            {
-                patientId: patientIds[0],
-                date: new Date(today.getTime() + 8 * 60 * 60 * 1000), // 8:00
-                duration: 50,
-                status: AppointmentStatus.SCHEDULED,
-                type: AppointmentType.THERAPY,
-                notes: 'Sesja terapii CBT - praca z technikami relaksacyjnymi',
-                reminderSent: true,
-                reminderSentAt: new Date(today.getTime() - 24 * 60 * 60 * 1000)
-            },
-            {
-                patientId: patientIds[1],
-                date: new Date(today.getTime() + 10 * 60 * 60 * 1000), // 10:00
-                duration: 60,
-                status: AppointmentStatus.SCHEDULED,
-                type: AppointmentType.THERAPY,
-                notes: 'Terapia par - ćwiczenia komunikacyjne',
-                reminderSent: true,
-                reminderSentAt: new Date(today.getTime() - 24 * 60 * 60 * 1000)
-            },
-            {
-                patientId: patientIds[6], // Aleksandra
-                date: new Date(today.getTime() + 12 * 60 * 60 * 1000), // 12:00
-                duration: 50,
-                status: AppointmentStatus.SCHEDULED,
-                type: AppointmentType.THERAPY,
-                notes: 'Praca z syndromem impostera - techniki cognitive restructuring',
-                reminderSent: true,
-                reminderSentAt: new Date(today.getTime() - 24 * 60 * 60 * 1000)
-            },
-            {
-                patientId: patientIds[2],
-                date: new Date(today.getTime() + 14 * 60 * 60 * 1000), // 14:00
-                duration: 50,
-                status: AppointmentStatus.SCHEDULED,
-                type: AppointmentType.FOLLOW_UP,
-                notes: 'Kontrola postępów w terapii depresji',
-                reminderSent: false
-            },
-            {
-                patientId: patientIds[9], // Jakub
-                date: new Date(today.getTime() + 16 * 60 * 60 * 1000), // 16:00
-                duration: 50,
-                status: AppointmentStatus.SCHEDULED,
-                type: AppointmentType.THERAPY,
-                notes: 'Techniki radzenia sobie z atakami paniki przed egzaminami',
-                reminderSent: false
-            },
-
-            // Wczorajsze wizyty (zakończone i problematyczne)
-            {
-                patientId: patientIds[3],
-                date: new Date(today.getTime() - 24 * 60 * 60 * 1000 + 9 * 60 * 60 * 1000), // wczoraj 9:00
-                duration: 50,
-                status: AppointmentStatus.COMPLETED,
-                type: AppointmentType.THERAPY,
-                notes: 'Praca z technikami mindfulness. Pacjent pokazuje postępy.'
-            },
-            {
-                patientId: patientIds[4],
-                date: new Date(today.getTime() - 24 * 60 * 60 * 1000 + 11 * 60 * 60 * 1000), // wczoraj 11:00
-                duration: 50,
-                status: AppointmentStatus.NO_SHOW,
-                type: AppointmentType.THERAPY,
-                notes: 'Pacjentka nie stawiła się na sesję. Skontaktować się telefonicznie.'
-            },
-            {
-                patientId: patientIds[7], // Rafał
-                date: new Date(today.getTime() - 24 * 60 * 60 * 1000 + 15 * 60 * 60 * 1000), // wczoraj 15:00
-                duration: 50,
-                status: AppointmentStatus.COMPLETED,
-                type: AppointmentType.THERAPY,
-                notes: 'Hygiena snu i work-life balance. Ustalenie granic czasowych.'
-            },
-            {
-                patientId: patientIds[11], // Bartłomiej
-                date: new Date(today.getTime() - 24 * 60 * 60 * 1000 + 17 * 60 * 60 * 1000), // wczoraj 17:00
-                duration: 50,
-                status: AppointmentStatus.CANCELLED,
-                type: AppointmentType.THERAPY,
-                notes: 'Pacjent odwołał - konflikt w pracy. Przełożenie na jutro.'
-            },
-
-            // Jutrzejsze wizyty
-            {
-                patientId: patientIds[5],
-                date: new Date(today.getTime() + 24 * 60 * 60 * 1000 + 9 * 60 * 60 * 1000), // jutro 9:00
-                duration: 50,
-                status: AppointmentStatus.SCHEDULED,
-                type: AppointmentType.THERAPY,
-                notes: 'Kontynuacja terapii uzależnienia behawioralnego',
-                reminderSent: false
-            },
-            {
-                patientId: patientIds[8], // Natalia
-                date: new Date(today.getTime() + 24 * 60 * 60 * 1000 + 11 * 60 * 60 * 1000), // jutro 11:00
-                duration: 50,
-                status: AppointmentStatus.SCHEDULED,
-                type: AppointmentType.THERAPY,
-                notes: 'EMDR - praca z traumą wtórną',
-                reminderSent: false
-            },
-            {
-                patientId: patientIds[0],
-                date: new Date(today.getTime() + 24 * 60 * 60 * 1000 + 13 * 60 * 60 * 1000), // jutro 13:00
-                duration: 50,
-                status: AppointmentStatus.SCHEDULED,
-                type: AppointmentType.THERAPY,
-                notes: 'Praca z hierarchią lęków',
-                reminderSent: false
-            },
-            {
-                patientId: patientIds[10], // Karolina
-                date: new Date(today.getTime() + 24 * 60 * 60 * 1000 + 15 * 60 * 60 * 1000), // jutro 15:00
-                duration: 50,
-                status: AppointmentStatus.SCHEDULED,
-                type: AppointmentType.ASSESSMENT,
-                notes: 'Ocena postępów - time management i asertywność',
-                reminderSent: false
-            },
-            {
-                patientId: patientIds[11], // Bartłomiej - przełożona wizyta
-                date: new Date(today.getTime() + 24 * 60 * 60 * 1000 + 17 * 60 * 60 * 1000), // jutro 17:00
-                duration: 50,
-                status: AppointmentStatus.SCHEDULED,
-                type: AppointmentType.THERAPY,
-                notes: 'Przełożona wizyta. Praca z motywacją do abstynencji.',
-                reminderSent: false
-            },
-
-            // Ten tydzień - reszta wizyt
-            {
-                patientId: patientIds[1],
-                date: new Date(today.getTime() + 2 * 24 * 60 * 60 * 1000 + 10 * 60 * 60 * 1000), // pojutrze
-                duration: 60,
-                status: AppointmentStatus.SCHEDULED,
-                type: AppointmentType.THERAPY,
-                notes: 'Terapia par - techniki rozwiązywania konfliktów'
-            },
-            {
-                patientId: patientIds[6], // Aleksandra
-                date: new Date(today.getTime() + 3 * 24 * 60 * 60 * 1000 + 14 * 60 * 60 * 1000),
-                duration: 50,
-                status: AppointmentStatus.SCHEDULED,
-                type: AppointmentType.THERAPY,
-                notes: 'Networking i autoprezentacja - przełamanie barier'
-            },
-            {
-                patientId: patientIds[9], // Jakub
-                date: new Date(today.getTime() + 4 * 24 * 60 * 60 * 1000 + 12 * 60 * 60 * 1000),
-                duration: 50,
-                status: AppointmentStatus.SCHEDULED,
-                type: AppointmentType.THERAPY,
-                notes: 'Techniki egzaminacyjne i zarządzanie stresem'
-            },
-
-            // Przyszły tydzień
-            {
-                patientId: patientIds[1],
-                date: new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000 + 10 * 60 * 60 * 1000), // za tydzień
-                duration: 60,
-                status: AppointmentStatus.SCHEDULED,
-                type: AppointmentType.THERAPY,
-                notes: 'Terapia par - planowane ćwiczenia z asertywności'
-            },
-            {
-                patientId: patientIds[2],
-                date: new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000 + 14 * 60 * 60 * 1000), // za tydzień
-                duration: 50,
-                status: AppointmentStatus.SCHEDULED,
-                type: AppointmentType.ASSESSMENT,
-                notes: 'Ocena postępów w terapii - możliwa zmiana częstotliwości sesji'
-            },
-            {
-                patientId: patientIds[7], // Rafał
-                date: new Date(today.getTime() + 8 * 24 * 60 * 60 * 1000 + 16 * 60 * 60 * 1000),
-                duration: 50,
-                status: AppointmentStatus.SCHEDULED,
-                type: AppointmentType.THERAPY,
-                notes: 'Boundary setting z szefem i zespołem'
-            },
-            {
-                patientId: patientIds[8], // Natalia
-                date: new Date(today.getTime() + 9 * 24 * 60 * 60 * 1000 + 11 * 60 * 60 * 1000),
-                duration: 50,
-                status: AppointmentStatus.SCHEDULED,
-                type: AppointmentType.THERAPY,
-                notes: 'Self-care strategies i zapobieganie wypaleniu'
-            },
-
-            // Historyczne wizyty - pierwsze kontakty
-            {
-                patientId: patientIds[0],
-                date: new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000 + 9 * 60 * 60 * 1000), // tydzień temu
-                duration: 50,
-                status: AppointmentStatus.COMPLETED,
-                type: AppointmentType.INITIAL,
-                notes: 'Pierwsza wizyta. Wywiad i ustalenie celów terapii.'
-            },
-            {
-                patientId: patientIds[3],
-                date: new Date(today.getTime() - 14 * 24 * 60 * 60 * 1000 + 10 * 60 * 60 * 1000), // 2 tygodnie temu
-                duration: 50,
-                status: AppointmentStatus.COMPLETED,
-                type: AppointmentType.INITIAL,
-                notes: 'Pierwszy kontakt. Ocena wypalenia zawodowego.'
-            },
-            {
-                patientId: patientIds[6], // Aleksandra
-                date: new Date(today.getTime() - 10 * 24 * 60 * 60 * 1000 + 12 * 60 * 60 * 1000),
-                duration: 60,
-                status: AppointmentStatus.COMPLETED,
-                type: AppointmentType.INITIAL,
-                notes: 'Intake - syndrom impostera w środowisku biznesowym'
-            },
-            {
-                patientId: patientIds[7], // Rafał
-                date: new Date(today.getTime() - 21 * 24 * 60 * 60 * 1000 + 15 * 60 * 60 * 1000), // 3 tygodnie temu
-                duration: 50,
-                status: AppointmentStatus.COMPLETED,
-                type: AppointmentType.INITIAL,
-                notes: 'Ocena problemów ze snem i pracoholizmu'
-            },
-            {
-                patientId: patientIds[9], // Jakub
-                date: new Date(today.getTime() - 5 * 24 * 60 * 60 * 1000 + 16 * 60 * 60 * 1000),
-                duration: 50,
-                status: AppointmentStatus.COMPLETED,
-                type: AppointmentType.INITIAL,
-                notes: 'Student medycyny - ataki paniki i perfekcjonizm'
-            },
-
-            // Więcej historycznych sesji terapeutycznych
-            {
-                patientId: patientIds[0],
-                date: new Date(today.getTime() - 14 * 24 * 60 * 60 * 1000 + 9 * 60 * 60 * 1000),
-                duration: 50,
-                status: AppointmentStatus.COMPLETED,
-                type: AppointmentType.THERAPY,
-                notes: 'CBT - identyfikacja myśli automatycznych'
-            },
-            {
-                patientId: patientIds[1],
-                date: new Date(today.getTime() - 8 * 24 * 60 * 60 * 1000 + 10 * 60 * 60 * 1000),
-                duration: 60,
-                status: AppointmentStatus.COMPLETED,
-                type: AppointmentType.THERAPY,
-                notes: 'Terapia par - ćwiczenia active listening'
-            },
-            {
-                patientId: patientIds[3],
-                date: new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000 + 10 * 60 * 60 * 1000),
-                duration: 50,
-                status: AppointmentStatus.COMPLETED,
-                type: AppointmentType.THERAPY,
-                notes: 'Techniki relaksacyjne i meditation mindfulness'
-            },
-            {
-                patientId: patientIds[6], // Aleksandra
-                date: new Date(today.getTime() - 3 * 24 * 60 * 60 * 1000 + 12 * 60 * 60 * 1000),
-                duration: 50,
-                status: AppointmentStatus.COMPLETED,
-                type: AppointmentType.THERAPY,
-                notes: 'Power posing i confidence building exercises'
-            },
-            {
-                patientId: patientIds[7], // Rafał
-                date: new Date(today.getTime() - 14 * 24 * 60 * 60 * 1000 + 15 * 60 * 60 * 1000),
-                duration: 50,
-                status: AppointmentStatus.COMPLETED,
-                type: AppointmentType.THERAPY,
-                notes: 'Sleep hygiene i digital detox strategies'
-            },
-            {
-                patientId: patientIds[8], // Natalia
-                date: new Date(today.getTime() - 12 * 24 * 60 * 60 * 1000 + 11 * 60 * 60 * 1000),
-                duration: 50,
-                status: AppointmentStatus.COMPLETED,
-                type: AppointmentType.INITIAL,
-                notes: 'Ocena trauma wtórnej i resilience w medycynie'
-            },
-            {
-                patientId: patientIds[10], // Karolina
-                date: new Date(today.getTime() - 6 * 24 * 60 * 60 * 1000 + 15 * 60 * 60 * 1000),
-                duration: 50,
-                status: AppointmentStatus.COMPLETED,
-                type: AppointmentType.INITIAL,
-                notes: 'Freelancer struggles - niepewność finansowa i izolacja'
-            },
-            {
-                patientId: patientIds[11], // Bartłomiej
-                date: new Date(today.getTime() - 28 * 24 * 60 * 60 * 1000 + 17 * 60 * 60 * 1000), // miesiąc temu
-                duration: 50,
-                status: AppointmentStatus.COMPLETED,
-                type: AppointmentType.INITIAL,
-                notes: 'Intake - problemy z alkoholem i stres zawodowy'
-            }
+        const sampleAppointments: Omit<Appointment, 'id' | 'createdAt' | 'updatedAt'>[] = [];
+        const types = [AppointmentType.THERAPY, AppointmentType.FOLLOW_UP, AppointmentType.INITIAL, AppointmentType.ASSESSMENT];
+        const statuses = [
+            AppointmentStatus.SCHEDULED,
+            AppointmentStatus.COMPLETED,
+            AppointmentStatus.NO_SHOW,
+            AppointmentStatus.CANCELLED
         ];
-
+        for (let i = 0; i < patientIds.length; i++) {
+            for (let j = 0; j < appointmentsPerPatient; j++) {
+                // Rozkładamy wizyty równomiernie na 2.5 miesiąca wokół dzisiaj
+                const daysOffset = Math.floor((j / (appointmentsPerPatient - 1)) * (daysRange * 2)) - daysRange;
+                const hour = 9 + (j % 6) * 2; // 9:00, 11:00, 13:00, 15:00, 17:00, 19:00
+                const date = new Date(today.getTime() + daysOffset * 24 * 60 * 60 * 1000 + hour * 60 * 60 * 1000);
+                const type = types[j % types.length];
+                // Status: przeszłość = COMPLETED, przyszłość = SCHEDULED, losowo NO_SHOW/CANCELLED
+                let status: AppointmentStatus;
+                if (date < today) {
+                    status = Math.random() < 0.8 ? AppointmentStatus.COMPLETED : statuses[2 + Math.floor(Math.random() * 2)];
+                } else if (date > today) {
+                    status = Math.random() < 0.85 ? AppointmentStatus.SCHEDULED : statuses[2 + Math.floor(Math.random() * 2)];
+                } else {
+                    status = AppointmentStatus.SCHEDULED;
+                }
+                sampleAppointments.push({
+                    patientId: patientIds[i],
+                    date,
+                    duration: 50 + (j % 2) * 10, // 50 lub 60 min
+                    status,
+                    type,
+                    notes: `Wizyta testowa (${type}, status: ${status})`,
+                    reminderSent: status === AppointmentStatus.SCHEDULED && date > today ? false : undefined,
+                    reminderSentAt: undefined
+                });
+            }
+        }
         // Dodaj wizyty
         for (const appointmentData of sampleAppointments) {
             await db.appointments.add(appointmentData as Appointment);

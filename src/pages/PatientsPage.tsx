@@ -18,8 +18,9 @@ import { PatientsCardList } from '../components/PatientsCardList';
 import { PatientSearchBar } from '../components/PatientSearchBar';
 import { PatientsPageHeader } from '../components/PatientsPageHeader';
 import { PatientTable } from '../components/PatientTable';
+import { useAppointmentStore } from '../stores/useAppointmentStore';
 import { usePatientStore } from '../stores/usePatientStore';
-import { lazyExportToExcel } from '../utils/excelLazyLoader';
+import { exportToExcel } from '../utils/export';
 import type { Patient } from '../types/Patient';
 
 function PatientsPage() {
@@ -34,6 +35,8 @@ function PatientsPage() {
     loading, 
     error 
   } = usePatientStore();
+
+  const { appointments, fetchAppointments } = useAppointmentStore();
   
   const [opened, { open, close }] = useDisclosure(false);
   const [exportOpened, { open: openExport, close: closeExport }] = useDisclosure(false);
@@ -58,7 +61,8 @@ function PatientsPage() {
 
   useEffect(() => {
     fetchPatients();
-  }, [fetchPatients]);
+    fetchAppointments();
+  }, [fetchPatients, fetchAppointments]);
 
   const handleAddPatient = useCallback(() => {
     setEditingPatient(undefined);
@@ -129,29 +133,22 @@ function PatientsPage() {
         ? patients.filter(p => options.selectedPatients.includes(p.id!))
         : patients;
 
-      // Prepare data for lazy export
-      const sheets = [];
-      
-      if (options.exportPatients) {
-        sheets.push({
-          name: 'Pacjenci',
-          data: patientsToExport.map(p => ({
-            'Imię': p.firstName,
-            'Nazwisko': p.lastName,
-            'Adres': p.address,
-            'Telefon': p.phone,
-            'Email': p.email,
-          }))
-        });
-      }
-
-      await lazyExportToExcel({
-        sheets,
-        filename: `pacjenci_${new Date().toISOString().split('T')[0]}.xlsx`
-      });
+      // Use the proper exportToExcel function that handles both patients and appointments
+      await exportToExcel(
+        patientsToExport,
+        appointments,
+        {
+          patients: options.exportPatients,
+          appointments: options.exportAppointments,
+          dateFrom: options.dateFrom || undefined,
+          dateTo: options.dateTo || undefined,
+          selectedPatients: options.selectedPatients.length > 0 ? options.selectedPatients : undefined
+        }
+      );
 
       closeExport();
-    } catch {
+    } catch (error) {
+      console.error('Export error:', error);
       notifications.show({
         title: 'Błąd',
         message: 'Nie udało się wyeksportować danych',
