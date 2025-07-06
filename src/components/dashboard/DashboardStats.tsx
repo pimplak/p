@@ -3,8 +3,7 @@ import {
   IconUsers, 
   IconCalendar, 
   IconClock, 
-  IconTrendingUp,
-  IconNotes
+  IconTrendingUp
 } from '@tabler/icons-react';
 import { StatsCard } from '../ui/StatsCard';
 
@@ -15,16 +14,23 @@ interface DashboardStatsProps {
     avgSessionDuration: number;
     completionRate: number;
     totalNotes: number;
+    todaysAppointments: number;
+    nextAppointment: {
+      patient: string;
+      time: string;
+    } | null;
   };
 }
 
 export const DashboardStats: React.FC<DashboardStatsProps> = ({ 
   stats = {
-    totalPatients: 42,
-    sessionsThisWeek: 18,
-    avgSessionDuration: 55,
-    completionRate: 94,
-    totalNotes: 267
+    totalPatients: 0,
+    sessionsThisWeek: 0,
+    avgSessionDuration: 0,
+    completionRate: 0,
+    totalNotes: 0,
+    todaysAppointments: 0,
+    nextAppointment: null
   }
 }) => {
   return (
@@ -53,10 +59,6 @@ export const DashboardStats: React.FC<DashboardStatsProps> = ({
           description="Łącznie w systemie"
           icon={IconUsers}
           color="indigo"
-          trend={{
-            value: 8,
-            period: "w tym miesiącu"
-          }}
         />
         
         <StatsCard
@@ -65,34 +67,22 @@ export const DashboardStats: React.FC<DashboardStatsProps> = ({
           description="Zaplanowane spotkania"
           icon={IconCalendar}
           color="green"
-          trend={{
-            value: 12,
-            period: "vs poprzedni tydzień"
-          }}
         />
         
         <StatsCard
           title="Średni czas sesji"
-          value={`${stats.avgSessionDuration} min`}
+          value={stats.avgSessionDuration > 0 ? `${stats.avgSessionDuration} min` : 'Brak danych'}
           description="Przeciętna długość"
           icon={IconClock}
           color="yellow"
-          trend={{
-            value: -3,
-            period: "w tym miesiącu"
-          }}
         />
         
         <StatsCard
-          title="Skuteczność terapii"
+          title="Wskaźnik ukończenia"
           value={`${stats.completionRate}%`}
-          description="Ukończone cele"
+          description="Ukończone wizyty"
           icon={IconTrendingUp}
           color="green"
-          trend={{
-            value: 5,
-            period: "wzrost postępów"
-          }}
         />
       </SimpleGrid>
       
@@ -102,17 +92,17 @@ export const DashboardStats: React.FC<DashboardStatsProps> = ({
         spacing="xl"
       >
         <StatsCard
-          title="Notatki z sesji"
-          value={stats.totalNotes}
-          description="Zapisane obserwacje"
-          icon={IconNotes}
+          title="Dzisiejsze wizyty"
+          value={stats.todaysAppointments}
+          description="Zaplanowane na dziś"
+          icon={IconCalendar}
           color="indigo"
         />
         
         <StatsCard
           title="Najbliższa sesja"
-          value="Za 2 godz."
-          description="Anna Kowalska - kontrola postępów"
+          value={stats.nextAppointment ? stats.nextAppointment.time : 'Brak'}
+          description={stats.nextAppointment ? stats.nextAppointment.patient : 'Brak zaplanowanych wizyt'}
           icon={IconCalendar}
           color="yellow"
         />
