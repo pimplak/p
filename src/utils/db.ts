@@ -3,14 +3,14 @@ import { DEFAULT_APPOINTMENT_PRICE } from '../constants/business';
 import type { Appointment } from '../types/Appointment';
 import type { Patient, Note, Goal } from '../types/Patient';
 
-export class PsychFlowDB extends Dexie {
+export class PDB extends Dexie {
     patients!: Table<Patient>;
     appointments!: Table<Appointment>;
     notes!: Table<Note>;
     goals!: Table<Goal>;
 
     constructor() {
-        super('PsychFlowDB');
+        super('PDB');
 
         // Version 1 - oryginalny schema
         this.version(1).stores({
@@ -147,4 +147,4 @@ export class PsychFlowDB extends Dexie {
     }
 }
 
-export const db = new PsychFlowDB(); 
+export const db = new PDB(); 

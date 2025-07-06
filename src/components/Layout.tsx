@@ -1,6 +1,6 @@
-import { AppShell, NavLink, Group, Text, Title, Burger, Divider } from '@mantine/core';
+import { AppShell, NavLink, Group, Text, Burger, Divider } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { IconUsers, IconCalendar, IconDashboard, IconStethoscope, IconSettings } from '@tabler/icons-react';
+import { IconActivity, IconCalendar, IconDashboard, IconSettings, IconUsers } from '@tabler/icons-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import type { ReactNode } from 'react';
 
@@ -43,16 +43,10 @@ export function Layout({ children }: LayoutProps) {
           <Group>
             <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
             <Group gap={8}>
-              <IconStethoscope 
-                size={28} 
-                style={{ color: 'var(--color-primary)' }}
-              />
-              <Title 
-                order={3} 
-                style={{ color: 'var(--color-text)' }}
-              >
-                PsychFlow
-              </Title>
+              <IconActivity size={32} />
+              <Text size="xl" fw={700}>
+                P
+              </Text>
             </Group>
           </Group>
           <Text 

@@ -301,7 +301,7 @@ function Settings() {
                             <Divider variant="dashed" />
                             
                             <Text size="xs" c="dimmed" ta="center">
-                                PsychFlow - Progressive Web App dla psychologów
+                                P - Progressive Web App dla psychologów
                                 <br />
                                 Zbudowane z ❤️ dla społeczności terapeutycznej
                             </Text>

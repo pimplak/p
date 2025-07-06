@@ -14,10 +14,10 @@ export default defineConfig({
         globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}']
       },
       manifest: {
-        name: 'PsychFlow - Professional Psychology Practice Management',
-        short_name: 'PsychFlow',
-        description: 'Complete practice management solution for psychologists. Manage patients, appointments, and notes offline-capable.',
-        theme_color: '#1976d2',
+        name: 'P',
+        short_name: 'P',
+        description: 'A Progressive Web App for Psychologists',
+        theme_color: '#ffffff',
         background_color: '#ffffff',
         display: 'standalone',
         orientation: 'portrait',

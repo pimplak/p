@@ -89,8 +89,13 @@ const updateCSSVariables = (palette: ColorPalette) => {
     }
 };
 
-// localStorage persistence
-const THEME_STORAGE_KEY = 'psychflow-theme';
+// Constants
+// =====================================================================
+
+const THEME_STORAGE_KEY = 'p-theme';
+
+// Store Definition
+// =====================================================================
 
 const getStoredPaletteId = (): PaletteId => {
     try {

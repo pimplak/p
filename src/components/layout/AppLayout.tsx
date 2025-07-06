@@ -101,12 +101,12 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
               style={{ color: 'var(--gray-600)' }}
             />
             <Text 
-              size="lg" 
-              fw={600}
+              size="xl" 
+              fw={700}
               style={{ color: 'var(--color-text)' }}
               visibleFrom="sm"
             >
-              PsychFlow
+              P
             </Text>
           </Group>
           
@@ -157,7 +157,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
                 fw={600}
                 style={{ letterSpacing: '-0.01em', color: 'var(--color-text)' }}
               >
-                PsychFlow
+                P
               </Text>
             </Group>
 

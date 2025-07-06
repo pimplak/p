@@ -15,7 +15,7 @@ export function PWAInstallPrompt() {
         <Notification
           icon={<IconDownload size={rem(20)} />}
           color="blue"
-          title="Install PsychFlow"
+          title="Install P"
           onClose={() => {}} // Keep visible until user installs
           withCloseButton={false}
           mb="md"

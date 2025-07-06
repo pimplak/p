@@ -199,7 +199,7 @@ export async function exportToExcel(
             ? `_${format(options.dateFrom, 'dd-MM-yyyy')}_${format(options.dateTo, 'dd-MM-yyyy')}`
             : '';
 
-        const filename = `psychflow_export${dateRange}_${format(new Date(), 'dd-MM-yyyy_HH-mm')}.xlsx`;
+        const filename = `p_export${dateRange}_${format(new Date(), 'dd-MM-yyyy_HH-mm')}.xlsx`;
 
         // Download file
         XLSX.writeFile(workbook, filename);

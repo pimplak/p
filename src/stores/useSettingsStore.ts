@@ -28,7 +28,7 @@ interface SettingsStore {
 }
 
 // Prosty localStorage helper
-const STORAGE_KEY = 'psychflow-settings';
+const STORAGE_KEY = 'p-settings';
 
 const getStoredSettings = (): Partial<SettingsStore> => {
     try {

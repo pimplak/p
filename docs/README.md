@@ -1,4 +1,4 @@
-# PsychFlow – Progressive Web App for Psychologists
+# P – Progressive Web App for Psychologists
 
 ## The Problem
 
@@ -13,7 +13,7 @@ Psychologists waste 2-3 hours weekly on administrative overhead:
 
 ## The Solution
 
-**PsychFlow: One app. All patients. Zero hassle.**
+**P: One app. All patients. Zero hassle.**
 
 A lightweight, installable Progressive Web App designed specifically for solo and small-practice psychologists. Works seamlessly across desktop, tablet, and mobile - online or offline.
 
@@ -253,8 +253,8 @@ src/
 ### For Development
 ```bash
 # Clone repository
-git clone https://github.com/your-username/psychflow.git
-cd psychflow
+git clone https://github.com/your-username/p.git
+cd p
 
 # Install dependencies
 npm install
@@ -323,16 +323,16 @@ We welcome contributions from the psychology and development communities:
 1. **Feature requests** - what would make your practice more efficient?
 2. **Bug reports** - help us improve reliability
 3. **Code contributions** - review our GitHub issues
-4. **User feedback** - tell us how you use PsychFlow
+4. **User feedback** - tell us how you use P
 
 ---
 
 ## Support & Documentation
 
-- **User Guide:** [docs.psychflow.app](https://docs.psychflow.app)
-- **Developer Documentation:** [dev.psychflow.app](https://dev.psychflow.app)
-- **Community Forum:** [community.psychflow.app](https://community.psychflow.app)
-- **Email Support:** support@psychflow.app
+- **User Guide:** 
+- **Developer Documentation:** 
+- **Community Forum:** 
+- **Email Support:** support@p.app
 
 ---
 
@@ -342,4 +342,4 @@ MIT License - See [LICENSE.md](LICENSE.md) for details.
 
 ---
 
-*PsychFlow: Because your time should be spent helping patients, not fighting with software.*
+*P: Because your time should be spent helping patients, not fighting with software.*
