@@ -10,6 +10,7 @@ import {
 import { IconPlus, IconCalendar } from '@tabler/icons-react';
 import { useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { BulkSMSReminders } from '../components/BulkSMSReminders';
 import { DashboardStats } from '../components/dashboard/DashboardStats';
 import { Button } from '../components/ui/Button';
 import { GlassFAB } from '../components/ui/GlassFAB';
@@ -111,14 +112,23 @@ function Dashboard() {
             </Text>
           </Stack>
           
-          <div onClick={() => navigate('/calendar')} style={{ cursor: 'pointer' }}>
-            <Button 
-              variant="primary"
-            >
-              <IconPlus size={getIconSize('md')} style={{ marginRight: '8px' }} />
-              Nowa sesja
-            </Button>
-          </div>
+          <Group gap="sm">
+            <BulkSMSReminders 
+              size="sm" 
+              onRemindersSent={(count) => {
+                // Refresh appointments after sending reminders
+                fetchAppointments();
+              }}
+            />
+            <div onClick={() => navigate('/calendar')} style={{ cursor: 'pointer' }}>
+              <Button 
+                variant="primary"
+              >
+                <IconPlus size={getIconSize('md')} style={{ marginRight: '8px' }} />
+                Nowa sesja
+              </Button>
+            </div>
+          </Group>
         </Group>
 
         {/* Stats Cards */}

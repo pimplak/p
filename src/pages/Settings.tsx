@@ -9,6 +9,8 @@ import {
   Button,
   ThemeIcon,
   Badge,
+  TextInput,
+  Select,
 } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import {
@@ -19,15 +21,24 @@ import {
   IconDownload,
   IconShield,
   IconInfoCircle,
+  IconMessage,
 } from '@tabler/icons-react';
+import { SMSAnalytics } from '../components/SMSAnalytics';
 import { ThemeSelector } from '../components/ThemeSelector';
 import { useAppointmentStore } from '../stores/useAppointmentStore';
 import { usePatientStore } from '../stores/usePatientStore';
+import { useSettingsStore } from '../stores/useSettingsStore';
 import { insertSampleData, clearAllData } from '../utils/sampleData';
 
 function Settings() {
     const { fetchPatients } = usePatientStore();
     const { fetchAppointments } = useAppointmentStore();
+    const { 
+        practitionerName, 
+        practitionerTitle,
+        setPractitionerName,
+        setPractitionerTitle 
+    } = useSettingsStore();
 
     const handleAddDemoData = async () => {
         try {
@@ -101,6 +112,56 @@ function Settings() {
                             <Divider />
 
                             <ThemeSelector />
+                        </Stack>
+                    </Card>
+
+                    {/* SMS Settings */}
+                    <Card shadow="sm" padding="lg" radius="md" withBorder>
+                        <Stack gap="md">
+                            <Group align="center" gap="sm">
+                                <IconMessage size={20} color="var(--mantine-color-blue-6)" />
+                                <Text fw={600} size="lg">Przypomnienia SMS</Text>
+                            </Group>
+                            
+                            <Divider />
+
+                            <Stack gap="md">
+                                <TextInput
+                                    label="Nazwa gabinetu"
+                                    placeholder="Gabinet Psychologiczny"
+                                    value={practitionerName}
+                                    onChange={(e) => setPractitionerName(e.target.value)}
+                                    description="Nazwa wyświetlana w wiadomościach SMS"
+                                />
+                                
+                                <Select
+                                    label="Tytuł zawodowy"
+                                    placeholder="Wybierz tytuł"
+                                    value={practitionerTitle}
+                                    onChange={(value) => setPractitionerTitle(value || 'mgr')}
+                                    data={[
+                                        { value: 'mgr', label: 'mgr' },
+                                        { value: 'dr', label: 'dr' },
+                                        { value: 'dr hab.', label: 'dr hab.' },
+                                        { value: 'prof.', label: 'prof.' },
+                                    ]}
+                                    description="Tytuł używany w wiadomościach SMS"
+                                />
+                            </Stack>
+                        </Stack>
+                    </Card>
+
+                    {/* SMS Analytics */}
+                    <Card shadow="sm" padding="lg" radius="md" withBorder>
+                        <Stack gap="md">
+                            <Group align="center" gap="sm">
+                                <IconInfoCircle size={20} color="var(--mantine-color-teal-6)" />
+                                <Text fw={600} size="lg">Analiza SMS</Text>
+                            </Group>
+                            
+                            <Divider />
+
+                            <SMSAnalytics period="month" />
                         </Stack>
                     </Card>
 

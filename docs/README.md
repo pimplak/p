@@ -211,13 +211,13 @@ src/
 - [x] Dexie.js database schema and patient model
 - [x] Basic patient management (CRUD operations)
 - [x] Simple appointment creation and calendar view
-- [ ] SMS reminder integration with manual sending
-- [ ] Basic Excel export functionality
+- [x] SMS reminder integration with manual sending
+- [x] Basic Excel export functionality
 - [ ] PWA installation and offline capabilities
 
 ### Phase 2: Enhanced UX & Professional Features (3-4 weeks)
-- [ ] **Dashboard implementation** with today's schedule and practice metrics
-- [ ] **Enhanced patient profiles** with session history and progress tracking
+- [x] **Dashboard implementation** with today's schedule and practice metrics
+- [x] **Enhanced patient profiles** with session history and progress tracking
 - [ ] **Advanced note-taking** with SOAP templates and voice-to-text
 - [ ] **Drag & drop calendar** with conflict detection and bulk operations
 - [ ] **Professional reminder workflow** with status tracking and response management

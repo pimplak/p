@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { db } from '../utils/db';
 import type { Appointment, AppointmentWithPatient } from '../types/Appointment';
+import { needsReminder } from '../utils/sms';
 
 interface AppointmentStore {
     appointments: AppointmentWithPatient[];
@@ -17,6 +18,12 @@ interface AppointmentStore {
     getAppointmentsByDateRange: (startDate: Date, endDate: Date) => AppointmentWithPatient[];
     getTodaysAppointments: () => AppointmentWithPatient[];
     getUpcomingAppointments: () => AppointmentWithPatient[];
+
+    // SMS reminder methods
+    getAppointmentsNeedingReminders: () => AppointmentWithPatient[];
+    markReminderSent: (appointmentId: number) => Promise<void>;
+    markReminderDelivered: (appointmentId: number) => Promise<void>;
+    markPatientResponded: (appointmentId: number, response?: string) => Promise<void>;
 }
 
 export const useAppointmentStore = create<AppointmentStore>((set, get) => ({
@@ -136,5 +143,48 @@ export const useAppointmentStore = create<AppointmentStore>((set, get) => ({
             new Date(appointment.date) > now
         ).sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
             .slice(0, 10); // Next 10 appointments
+    },
+
+    // SMS reminder methods
+    getAppointmentsNeedingReminders: () => {
+        const { appointments } = get();
+        return appointments.filter(appointment => needsReminder(appointment));
+    },
+
+    markReminderSent: async (appointmentId) => {
+        try {
+            await db.appointments.update(appointmentId, {
+                reminderSent: true,
+                reminderSentAt: new Date().toISOString(),
+            });
+            await get().fetchAppointments();
+        } catch (error) {
+            console.error('Error marking reminder as sent:', error);
+        }
+    },
+
+    markReminderDelivered: async (appointmentId) => {
+        try {
+            await db.appointments.update(appointmentId, {
+                reminderSent: true,
+                reminderSentAt: new Date().toISOString(),
+            });
+            await get().fetchAppointments();
+        } catch (error) {
+            console.error('Error marking reminder as delivered:', error);
+        }
+    },
+
+    markPatientResponded: async (appointmentId, response) => {
+        try {
+            await db.appointments.update(appointmentId, {
+                reminderSent: true,
+                reminderSentAt: new Date().toISOString(),
+                // Note: We could add response tracking to the Appointment type in the future
+            });
+            await get().fetchAppointments();
+        } catch (error) {
+            console.error('Error marking patient response:', error);
+        }
     },
 })); 

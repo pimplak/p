@@ -51,7 +51,9 @@ import {
 import { pl } from 'date-fns/locale';
 import { useState, useEffect, useMemo } from 'react';
 import { AppointmentForm } from '../components/AppointmentForm';
+import { BulkSMSReminders } from '../components/BulkSMSReminders';
 import { FloatingActionButton, type FABAction } from '../components/FloatingActionButton';
+import { SMSReminderButton } from '../components/SMSReminderButton';
 import { useAppointmentStore } from '../stores/useAppointmentStore';
 import { usePatientStore } from '../stores/usePatientStore';
 import { useSettingsStore } from '../stores/useSettingsStore';
@@ -202,13 +204,22 @@ function Calendar() {
       {/* Header */}
       <Group justify="space-between">
         <Title order={1}>Kalendarz</Title>
-        <Button 
-          leftSection={<IconPlus size="1rem" />} 
-          onClick={() => handleAddAppointment()}
-          visibleFrom="md"
-        >
-          Dodaj wizytę
-        </Button>
+        <Group gap="sm">
+          <BulkSMSReminders 
+            size="sm" 
+            onRemindersSent={() => {
+              // Refresh appointments after sending reminders
+              fetchAppointments();
+            }}
+          />
+          <Button 
+            leftSection={<IconPlus size="1rem" />} 
+            onClick={() => handleAddAppointment()}
+            visibleFrom="md"
+          >
+            Dodaj wizytę
+          </Button>
+        </Group>
       </Group>
 
       {error && (
@@ -476,6 +487,18 @@ function DayView({
               </Table.Td>
               <Table.Td>
                 <Group gap="xs">
+                  {appointment.patient && (
+                    <SMSReminderButton
+                      patient={appointment.patient}
+                      appointment={appointment}
+                      variant="icon"
+                      size="sm"
+                      onReminderSent={() => {
+                        // Refresh appointments
+                        fetchAppointments();
+                      }}
+                    />
+                  )}
                   <ActionIcon 
                     variant="light" 
                     color="blue"
