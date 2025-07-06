@@ -6,6 +6,7 @@ export const PatientSchema = z.object({
     id: z.number().optional(),
     firstName: z.string().min(1, 'Imię jest wymagane').max(50, 'Imię może mieć maksymalnie 50 znaków'),
     lastName: z.string().min(1, 'Nazwisko jest wymagane').max(50, 'Nazwisko może mieć maksymalnie 50 znaków'),
+    nazwa: z.string().max(100, 'Nazwa może mieć maksymalnie 100 znaków').optional(),
     email: z.string().email('Nieprawidłowy format email').optional().or(z.literal('')),
     phone: z.string().optional(),
     birthDate: z.union([z.date(), z.string()]).optional(),

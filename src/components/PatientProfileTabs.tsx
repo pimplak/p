@@ -1,7 +1,10 @@
-import { Tabs, Paper, Stack, Text, Divider } from '@mantine/core';
-import { IconNotes, IconCalendar, IconTarget } from '@tabler/icons-react';
-import { useState } from 'react';
-import { formatDate } from '../utils/dates';
+import { Tabs, Paper, Stack, Text, Divider, Badge, Group, Card, Title, Button } from '@mantine/core';
+import { IconNotes, IconCalendar, IconTarget, IconPlus } from '@tabler/icons-react';
+import { useState, useEffect } from 'react';
+import { useAppointmentStore } from '../stores/useAppointmentStore';
+import { AppointmentStatus } from '../types/Appointment';
+import { formatDate, formatDateTime } from '../utils/dates';
+import type { Appointment } from '../types/Appointment';
 import type { Patient } from '../types/Patient';
 
 interface PatientProfileTabsProps {
@@ -10,6 +13,19 @@ interface PatientProfileTabsProps {
 
 export function PatientProfileTabs({ patient }: PatientProfileTabsProps) {
   const [activeTab, setActiveTab] = useState<string>('overview');
+  const [appointments, setAppointments] = useState<Appointment[]>([]);
+  const { getAppointmentsByPatient } = useAppointmentStore();
+
+  useEffect(() => {
+    const loadAppointments = async () => {
+      if (patient.id) {
+        const patientAppointments = await getAppointmentsByPatient(patient.id);
+        setAppointments(patientAppointments);
+      }
+    };
+    
+    loadAppointments();
+  }, [patient.id, getAppointmentsByPatient]);
 
   return (
     <Tabs 
@@ -90,7 +106,80 @@ export function PatientProfileTabs({ patient }: PatientProfileTabsProps) {
 
       <Tabs.Panel value="appointments" pt="md">
         <Paper p="md" withBorder>
-          <Text>Lista wizyt będzie tutaj - do implementacji</Text>
+          <Group justify="space-between" align="center" mb="md">
+            <Title order={4}>Wizyty ({appointments.length})</Title>
+            <Button
+              size="sm"
+              leftSection={<IconPlus size="1rem" />}
+              variant="light"
+            >
+              Dodaj wizytę
+            </Button>
+          </Group>
+          
+          {appointments.length === 0 ? (
+            <Text size="sm" c="dimmed">
+              Brak wizyt dla tego pacjenta.
+            </Text>
+          ) : (
+            <Stack gap="md">
+              {appointments.map((appointment) => (
+                <Card key={appointment.id} withBorder p="md">
+                  <Group justify="space-between" align="flex-start">
+                    <div>
+                      <Group gap="xs" mb="xs">
+                        <Text fw={500}>
+                          {formatDateTime(appointment.date)}
+                        </Text>
+                        <Badge
+                          color={
+                            appointment.status === AppointmentStatus.COMPLETED ? 'green' :
+                            appointment.status === AppointmentStatus.CANCELLED ? 'red' :
+                            appointment.status === AppointmentStatus.NO_SHOW ? 'orange' :
+                            'blue'
+                          }
+                          variant="light"
+                          size="sm"
+                        >
+                          {appointment.status === AppointmentStatus.COMPLETED ? 'Zakończona' :
+                           appointment.status === AppointmentStatus.CANCELLED ? 'Anulowana' :
+                           appointment.status === AppointmentStatus.NO_SHOW ? 'Nieobecność' :
+                           appointment.status === AppointmentStatus.SCHEDULED ? 'Zaplanowana' :
+                           'Przełożona'}
+                        </Badge>
+                      </Group>
+                      
+                      <Text size="sm" c="dimmed">
+                        Czas trwania: {appointment.duration} min
+                      </Text>
+                      
+                      {appointment.type && (
+                        <Text size="sm" c="dimmed">
+                          Typ: {appointment.type === 'therapy' ? 'Terapia' :
+                                appointment.type === 'initial' ? 'Wizyta początkowa' :
+                                appointment.type === 'follow_up' ? 'Wizyta kontrolna' :
+                                appointment.type === 'consultation' ? 'Konsultacja' :
+                                'Ocena'}
+                        </Text>
+                      )}
+                      
+                      {appointment.notes && (
+                        <Text size="sm" mt="xs">
+                          <strong>Notatki:</strong> {appointment.notes}
+                        </Text>
+                      )}
+                    </div>
+                    
+                    {appointment.price && (
+                      <Text size="sm" fw={500} c="green">
+                        {appointment.price} zł
+                      </Text>
+                    )}
+                  </Group>
+                </Card>
+              ))}
+            </Stack>
+          )}
         </Paper>
       </Tabs.Panel>
 

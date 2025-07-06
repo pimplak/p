@@ -29,6 +29,7 @@ export function PatientForm({ patient, onSuccess, onCancel }: PatientFormProps) 
     initialValues: {
       firstName: patient?.firstName || '',
       lastName: patient?.lastName || '',
+      nazwa: patient?.nazwa || '',
       email: patient?.email || '',
       phone: patient?.phone || '',
       birthDate: patient?.birthDate ? (typeof patient.birthDate === 'string' ? new Date(patient.birthDate) : patient.birthDate) : undefined,
@@ -87,6 +88,12 @@ export function PatientForm({ patient, onSuccess, onCancel }: PatientFormProps) 
             {...form.getInputProps('lastName')}
           />
         </Group>
+
+        <TextInput
+          label="Nazwa wyświetlana (opcjonalnie)"
+          placeholder="Jeśli nie podano, będzie używane imię i nazwisko"
+          {...form.getInputProps('nazwa')}
+        />
 
         <Group grow>
           <TextInput

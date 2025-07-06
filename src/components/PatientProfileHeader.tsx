@@ -1,4 +1,4 @@
-import { Paper, Group, Stack, Title, Badge, ActionIcon, Menu } from '@mantine/core';
+import { Paper, Group, Stack, Title, Badge, ActionIcon, Menu, Text } from '@mantine/core';
 import { 
   IconDots, 
   IconEdit, 
@@ -39,6 +39,12 @@ export function PatientProfileHeader({
               {PATIENT_STATUS_LABELS[patient.status]}
             </Badge>
           </Group>
+          
+          {patient.nazwa && (
+            <Text size="sm" c="dimmed">
+              {patient.firstName} {patient.lastName}
+            </Text>
+          )}
           
           {patient.tags && patient.tags.length > 0 && (
             <Group gap="xs">
