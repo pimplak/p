@@ -56,7 +56,7 @@ export async function exportToExcel(
     }
 
     if (options.dateFrom || options.dateTo) {
-        filteredAppointments = appointments.filter(appointment => {
+        filteredAppointments = filteredAppointments.filter(appointment => {
             const appointmentDate = new Date(appointment.date);
             const afterFrom = !options.dateFrom || appointmentDate >= options.dateFrom;
             const beforeTo = !options.dateTo || appointmentDate <= options.dateTo;
