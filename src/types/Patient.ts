@@ -4,6 +4,7 @@ export interface Patient {
     id?: number;
     firstName: string;
     lastName: string;
+    nazwa?: string; // Alternatywna nazwa wyświetlana zamiast imienia i nazwiska
     email?: string;
     phone?: string;
     birthDate?: Date | string;

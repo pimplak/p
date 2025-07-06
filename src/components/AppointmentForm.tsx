@@ -20,6 +20,7 @@ import { useAppointmentStore } from '../stores/useAppointmentStore';
 import { usePatientStore } from '../stores/usePatientStore';
 import { AppointmentStatus, AppointmentType, PaymentMethod } from '../types/Appointment';
 import type { Appointment } from '../types/Appointment';
+import { getPatientDisplayName } from '../utils/dates';
 
 interface AppointmentFormProps {
   appointment?: Appointment | null;
@@ -112,7 +113,7 @@ export function AppointmentForm({ appointment, onSuccess, onCancel }: Appointmen
 
   const patientOptions = patients.map(patient => ({
     value: patient.id?.toString() || '',
-    label: `${patient.firstName} ${patient.lastName}`,
+    label: getPatientDisplayName(patient),
   }));
 
   const statusOptions = [

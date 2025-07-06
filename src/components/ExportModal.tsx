@@ -9,6 +9,7 @@ import {
 } from '@mantine/core';
 import { DateInput } from '@mantine/dates';
 import { useState } from 'react';
+import { getPatientDisplayName } from '../utils/dates';
 import type { PatientWithAppointments } from '../types/Patient';
 
 interface ExportModalProps {
@@ -139,7 +140,7 @@ export function ExportModal({
             {filteredPatients.map((patient) => (
               <Checkbox
                 key={patient.id}
-                label={`${patient.firstName} ${patient.lastName}`}
+                label={getPatientDisplayName(patient)}
                 checked={selectedPatients.includes(patient.id!)}
                 onChange={(e) => handlePatientSelection(patient.id!, e.currentTarget.checked)}
               />

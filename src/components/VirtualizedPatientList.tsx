@@ -4,6 +4,7 @@ import { format } from 'date-fns';
 import { pl } from 'date-fns/locale';
 import { memo, useMemo } from 'react';
 import { FixedSizeList as List } from 'react-window';
+import { getPatientDisplayName } from '../utils/dates';
 import type { PatientWithAppointments , Patient } from '../types/Patient';
 
 interface VirtualizedPatientListProps {
@@ -45,7 +46,7 @@ const PatientCard = memo(({ index, style, data }: PatientCardProps) => {
           <Group justify="space-between" align="flex-start" wrap="nowrap">
             <div style={{ flex: 1, minWidth: 0 }}>
               <Text fw={600} size="md" truncate>
-                {patient.firstName} {patient.lastName}
+                {getPatientDisplayName(patient)}
               </Text>
               {patient.birthDate && (
                 <Text size="sm" c="dimmed">

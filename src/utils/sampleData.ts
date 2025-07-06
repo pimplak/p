@@ -32,6 +32,7 @@ const samplePatients: Omit<Patient, 'id' | 'createdAt' | 'updatedAt'>[] = [
     {
         firstName: 'Katarzyna',
         lastName: 'Wiśniewska',
+        nazwa: 'Kasia W.',
         email: 'k.wisniewska@outlook.com',
         phone: '+48 345 678 901',
         birthDate: new Date('1992-07-08'),
@@ -56,6 +57,7 @@ const samplePatients: Omit<Patient, 'id' | 'createdAt' | 'updatedAt'>[] = [
     {
         firstName: 'Magdalena',
         lastName: 'Dąbrowska',
+        nazwa: 'Magda D.',
         email: 'magda.dabrowska@uni.edu.pl',
         phone: '+48 567 890 123',
         birthDate: new Date('1995-12-14'),
@@ -80,6 +82,7 @@ const samplePatients: Omit<Patient, 'id' | 'createdAt' | 'updatedAt'>[] = [
     {
         firstName: 'Aleksandra',
         lastName: 'Jankowska',
+        nazwa: 'Ola J.',
         email: 'aleksandra.jankowska@corp.com',
         phone: '+48 789 012 345',
         birthDate: new Date('1990-08-12'),
@@ -128,6 +131,7 @@ const samplePatients: Omit<Patient, 'id' | 'createdAt' | 'updatedAt'>[] = [
     {
         firstName: 'Karolina',
         lastName: 'Mazur',
+        nazwa: 'Karo M.',
         email: 'karolina.mazur@creative.com',
         phone: '+48 123 456 789',
         birthDate: new Date('1991-09-14'),
@@ -147,6 +151,194 @@ const samplePatients: Omit<Patient, 'id' | 'createdAt' | 'updatedAt'>[] = [
         emergencyContact: 'Monika Szymańska',
         emergencyPhone: '+48 876 543 210',
         notes: 'Adwokat z problemami alkoholowymi. Terapia uzależnień i motywacyjna.',
+        status: PATIENT_STATUS.ACTIVE
+    },
+    // === NOWI PACJENCI ===
+    {
+        firstName: 'Paweł',
+        lastName: 'Kowalski',
+        email: 'pawel.kowalski@email.com',
+        phone: '+48 111 222 333',
+        birthDate: new Date('1983-07-12'),
+        address: 'ul. Kwiatowa 12, 00-001 Warszawa',
+        emergencyContact: 'Anna Kowalska',
+        emergencyPhone: '+48 123 456 789',
+        notes: 'Mąż Anny Kowalskiej. Terapia par - problemy komunikacyjne w małżeństwie.',
+        status: PATIENT_STATUS.ACTIVE
+    },
+    {
+        firstName: 'Maria',
+        lastName: 'Nowak',
+        email: 'maria.nowak@gmail.com',
+        phone: '+48 444 555 666',
+        birthDate: new Date('1980-04-18'),
+        address: 'ul. Słoneczna 8/15, 02-123 Warszawa',
+        emergencyContact: 'Michał Nowak',
+        emergencyPhone: '+48 234 567 890',
+        notes: 'Żona Michała Nowaka. Terapia par - trudności w komunikacji.',
+        status: PATIENT_STATUS.ACTIVE
+    },
+    {
+        firstName: 'Agnieszka',
+        lastName: 'Zielińska',
+        nazwa: 'Aga Z.',
+        email: 'agnieszka.zielinska@work.pl',
+        phone: '+48 777 888 999',
+        birthDate: new Date('1991-11-05'),
+        address: 'ul. Leśna 7, 04-789 Warszawa',
+        emergencyContact: 'Piotr Zieliński',
+        emergencyPhone: '+48 456 789 012',
+        notes: 'Żona Piotra Zielińskiego. Terapia indywidualna - problemy z pewnością siebie.',
+        status: PATIENT_STATUS.ACTIVE
+    },
+    {
+        firstName: 'Dominik',
+        lastName: 'Krawczyk',
+        email: 'dominik.krawczyk@tech.pl',
+        phone: '+48 555 666 777',
+        birthDate: new Date('1988-09-30'),
+        address: 'ul. Technologiczna 45, 13-456 Warszawa',
+        emergencyContact: 'Paulina Krawczyk',
+        emergencyPhone: '+48 666 777 888',
+        notes: 'Programista z zespołem Aspergera. Terapia wspomagająca funkcjonowanie społeczne.',
+        status: PATIENT_STATUS.ACTIVE
+    },
+    {
+        firstName: 'Paulina',
+        lastName: 'Krawczyk',
+        nazwa: 'Paula K.',
+        email: 'paulina.krawczyk@design.pl',
+        phone: '+48 666 777 888',
+        birthDate: new Date('1990-02-14'),
+        address: 'ul. Technologiczna 45, 13-456 Warszawa',
+        emergencyContact: 'Dominik Krawczyk',
+        emergencyPhone: '+48 555 666 777',
+        notes: 'Żona Dominika. UX designerka. Terapia wspomagająca - partnerka osoby z Aspergerem.',
+        status: PATIENT_STATUS.ACTIVE
+    },
+    {
+        firstName: 'Sebastian',
+        lastName: 'Górski',
+        email: 'sebastian.gorski@finance.pl',
+        phone: '+48 333 444 555',
+        birthDate: new Date('1985-12-08'),
+        address: 'ul. Finansowa 78, 14-789 Warszawa',
+        emergencyContact: 'Martyna Górska',
+        emergencyPhone: '+48 444 555 666',
+        notes: 'Analityk finansowy. Zaburzenia obsesyjno-kompulsywne związane z pracą.',
+        status: PATIENT_STATUS.ACTIVE
+    },
+    {
+        firstName: 'Martyna',
+        lastName: 'Górska',
+        nazwa: 'Martyna G.',
+        email: 'martyna.gorska@marketing.pl',
+        phone: '+48 444 555 666',
+        birthDate: new Date('1987-06-22'),
+        address: 'ul. Finansowa 78, 14-789 Warszawa',
+        emergencyContact: 'Sebastian Górski',
+        emergencyPhone: '+48 333 444 555',
+        notes: 'Żona Sebastiana. Marketingowiec. Terapia wspomagająca - partner osoby z OCD.',
+        status: PATIENT_STATUS.ACTIVE
+    },
+    {
+        firstName: 'Łukasz',
+        lastName: 'Wiśniewski',
+        email: 'lukasz.wisniewski@startup.pl',
+        phone: '+48 888 999 000',
+        birthDate: new Date('1992-03-17'),
+        address: 'ul. Startupowa 23, 15-012 Warszawa',
+        emergencyContact: 'Joanna Wiśniewska',
+        emergencyPhone: '+48 999 000 111',
+        notes: 'Founder startupu. Zespół ADHD. Terapia wspomagająca koncentrację i organizację.',
+        status: PATIENT_STATUS.ACTIVE
+    },
+    {
+        firstName: 'Joanna',
+        lastName: 'Wiśniewska',
+        nazwa: 'Asia W.',
+        email: 'joanna.wisniewska@hr.pl',
+        phone: '+48 999 000 111',
+        birthDate: new Date('1993-08-29'),
+        address: 'ul. Startupowa 23, 15-012 Warszawa',
+        emergencyContact: 'Łukasz Wiśniewski',
+        emergencyPhone: '+48 888 999 000',
+        notes: 'Żona Łukasza. HR Business Partner. Terapia - wypalenie zawodowe.',
+        status: PATIENT_STATUS.ACTIVE
+    },
+    {
+        firstName: 'Krzysztof',
+        lastName: 'Adamski',
+        nazwa: 'Krzysiek A.',
+        email: 'krzysztof.adamski@consulting.pl',
+        phone: '+48 222 333 444',
+        birthDate: new Date('1981-10-11'),
+        address: 'ul. Konsultingowa 56, 16-345 Warszawa',
+        emergencyContact: 'Beata Adamska',
+        emergencyPhone: '+48 333 444 555',
+        notes: 'Konsultant biznesowy. Uzależnienie od pracy. Problemy z work-life balance.',
+        status: PATIENT_STATUS.ACTIVE
+    },
+    {
+        firstName: 'Beata',
+        lastName: 'Adamska',
+        email: 'beata.adamska@wellness.pl',
+        phone: '+48 333 444 555',
+        birthDate: new Date('1984-01-25'),
+        address: 'ul. Konsultingowa 56, 16-345 Warszawa',
+        emergencyContact: 'Krzysztof Adamski',
+        emergencyPhone: '+48 222 333 444',
+        notes: 'Żona Krzysztofa. Trenerka wellness. Terapia wspomagająca - partner workaholika.',
+        status: PATIENT_STATUS.ACTIVE
+    },
+    {
+        firstName: 'Marcin',
+        lastName: 'Stępień',
+        email: 'marcin.stepien@media.pl',
+        phone: '+48 555 777 999',
+        birthDate: new Date('1986-05-03'),
+        address: 'ul. Medialna 89, 17-678 Warszawa',
+        emergencyContact: 'Katarzyna Stępień',
+        emergencyPhone: '+48 666 888 000',
+        notes: 'Dziennikarz. Zespół lękowy uogólniony. Ataki paniki.',
+        status: PATIENT_STATUS.ACTIVE
+    },
+    {
+        firstName: 'Katarzyna',
+        lastName: 'Stępień',
+        nazwa: 'Kasia S.',
+        email: 'katarzyna.stepien@education.pl',
+        phone: '+48 666 888 000',
+        birthDate: new Date('1988-12-19'),
+        address: 'ul. Medialna 89, 17-678 Warszawa',
+        emergencyContact: 'Marcin Stępień',
+        emergencyPhone: '+48 555 777 999',
+        notes: 'Żona Marcina. Nauczycielka. Depresja poporodowa po drugim dziecku.',
+        status: PATIENT_STATUS.ACTIVE
+    },
+    {
+        firstName: 'Adrian',
+        lastName: 'Kowalczyk',
+        email: 'adrian.kowalczyk@sports.pl',
+        phone: '+48 777 999 111',
+        birthDate: new Date('1994-07-28'),
+        address: 'ul. Sportowa 34, 18-901 Warszawa',
+        emergencyContact: 'Weronika Kowalczyk',
+        emergencyPhone: '+48 888 000 222',
+        notes: 'Trener personalny. Dysmorfofobia. Obsesja na punkcie wyglądu.',
+        status: PATIENT_STATUS.ACTIVE
+    },
+    {
+        firstName: 'Weronika',
+        lastName: 'Kowalczyk',
+        nazwa: 'Wera K.',
+        email: 'weronika.kowalczyk@nutrition.pl',
+        phone: '+48 888 000 222',
+        birthDate: new Date('1996-04-15'),
+        address: 'ul. Sportowa 34, 18-901 Warszawa',
+        emergencyContact: 'Adrian Kowalczyk',
+        emergencyPhone: '+48 777 999 111',
+        notes: 'Żona Adriana. Dietetyczka. Zaburzenia odżywiania w przeszłości.',
         status: PATIENT_STATUS.ACTIVE
     }
 ];
@@ -169,53 +361,159 @@ export async function insertSampleData(): Promise<boolean> {
             patientIds.push(id as number);
         }
 
-        // Stwórz przykładowe wizyty na przestrzeni 2.5 miesiąca (75 dni)
-        const daysRange = 75;
-        const appointmentsPerPatient = 8; // ile wizyt na pacjenta (rozłożone w czasie)
+        // === NOWA LOGIKA WIZYT ===
+        // 1.5 miesiąca = 45 dni
+        // 4-5 wizyt dziennie = około 200 wizyt total
+        // Rozłożone równomiernie między pacjentów
+
+        const daysRange = 45;
+        const appointmentsPerDay = 4.5; // średnio 4-5 wizyt dziennie
+        const totalAppointments = Math.floor(daysRange * appointmentsPerDay);
+        const appointmentsPerPatient = Math.floor(totalAppointments / patientIds.length);
+
         const now = new Date();
         const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
         const sampleAppointments: Omit<Appointment, 'id' | 'createdAt' | 'updatedAt'>[] = [];
-        const types = [AppointmentType.THERAPY, AppointmentType.FOLLOW_UP, AppointmentType.INITIAL, AppointmentType.ASSESSMENT];
+
+        const types = [AppointmentType.THERAPY, AppointmentType.FOLLOW_UP, AppointmentType.INITIAL, AppointmentType.ASSESSMENT, AppointmentType.CONSULTATION];
         const statuses = [
             AppointmentStatus.SCHEDULED,
             AppointmentStatus.COMPLETED,
             AppointmentStatus.NO_SHOW,
             AppointmentStatus.CANCELLED
         ];
+
+        // Godziny pracy: 8:00-20:00, sloty co 30 minut
+        const workingHours: number[] = [];
+        for (let hour = 8; hour <= 19; hour++) {
+            workingHours.push(hour * 60); // 8:00 = 480 minut
+            workingHours.push(hour * 60 + 30); // 8:30 = 510 minut
+        }
+
+        // Zbiór zajętych slotów czasowych (klucz: "YYYY-MM-DD-HHmm")
+        const occupiedSlots = new Set<string>();
+
+        // Funkcja do generowania unikalnego slotu czasowego
+        const generateUniqueTimeSlot = (baseDate: Date, maxAttempts: 50): Date | null => {
+            for (let attempt = 0; attempt < maxAttempts; attempt++) {
+                // Losowy dzień w zakresie ±3 dni od baseDate
+                const dayOffset = Math.floor(Math.random() * 7) - 3;
+                const date = new Date(baseDate.getTime() + dayOffset * 24 * 60 * 60 * 1000);
+
+                // Losowa godzina z dostępnych slotów
+                const randomMinutes = workingHours[Math.floor(Math.random() * workingHours.length)];
+                const hour = Math.floor(randomMinutes / 60);
+                const minutes = randomMinutes % 60;
+
+                date.setHours(hour, minutes, 0, 0);
+
+                // Sprawdź czy slot jest wolny
+                const slotKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}-${String(hour).padStart(2, '0')}${String(minutes).padStart(2, '0')}`;
+
+                if (!occupiedSlots.has(slotKey)) {
+                    occupiedSlots.add(slotKey);
+                    return date;
+                }
+            }
+            return null; // Nie udało się znaleźć wolnego slotu
+        };
+
+        // Generuj wizyty dla każdego pacjenta
         for (let i = 0; i < patientIds.length; i++) {
             for (let j = 0; j < appointmentsPerPatient; j++) {
-                // Rozkładamy wizyty równomiernie na 2.5 miesiąca wokół dzisiaj
+                // Rozkładamy wizyty równomiernie na 1.5 miesiąca wokół dzisiaj
                 const daysOffset = Math.floor((j / (appointmentsPerPatient - 1)) * (daysRange * 2)) - daysRange;
-                const hour = 9 + (j % 6) * 2; // 9:00, 11:00, 13:00, 15:00, 17:00, 19:00
-                const date = new Date(today.getTime() + daysOffset * 24 * 60 * 60 * 1000 + hour * 60 * 60 * 1000);
+                const baseDate = new Date(today.getTime() + daysOffset * 24 * 60 * 60 * 1000);
+
+                // Generuj unikalny slot czasowy
+                const date = generateUniqueTimeSlot(baseDate, 50);
+                if (!date) {
+                    console.warn(`Nie udało się wygenerować unikalnego slotu dla pacjenta ${i}, wizyty ${j}`);
+                    continue;
+                }
+
                 const type = types[j % types.length];
-                // Status: przeszłość = COMPLETED, przyszłość = SCHEDULED, losowo NO_SHOW/CANCELLED
+
+                // Status: przeszłość = głównie COMPLETED, przyszłość = głównie SCHEDULED
                 let status: AppointmentStatus;
                 if (date < today) {
-                    status = Math.random() < 0.8 ? AppointmentStatus.COMPLETED : statuses[2 + Math.floor(Math.random() * 2)];
+                    const rand = Math.random();
+                    if (rand < 0.75) status = AppointmentStatus.COMPLETED;
+                    else if (rand < 0.85) status = AppointmentStatus.NO_SHOW;
+                    else status = AppointmentStatus.CANCELLED;
                 } else if (date > today) {
-                    status = Math.random() < 0.85 ? AppointmentStatus.SCHEDULED : statuses[2 + Math.floor(Math.random() * 2)];
+                    const rand = Math.random();
+                    if (rand < 0.85) status = AppointmentStatus.SCHEDULED;
+                    else if (rand < 0.92) status = AppointmentStatus.CANCELLED;
+                    else status = AppointmentStatus.RESCHEDULED;
                 } else {
                     status = AppointmentStatus.SCHEDULED;
                 }
+
+                // Różne długości sesji
+                const duration = [50, 60, 90][j % 3];
+
                 sampleAppointments.push({
                     patientId: patientIds[i],
                     date,
-                    duration: 50 + (j % 2) * 10, // 50 lub 60 min
+                    duration,
                     status,
                     type,
-                    notes: `Wizyta testowa (${type}, status: ${status})`,
+                    notes: `Sesja ${type} - ${status === AppointmentStatus.COMPLETED ? 'zakończona' : 'zaplanowana'}`,
                     reminderSent: status === AppointmentStatus.SCHEDULED && date > today ? false : undefined,
                     reminderSentAt: undefined
                 });
             }
         }
-        // Dodaj wizyty
+
+        // Dodaj dodatkowe losowe wizyty żeby osiągnąć 4-5 wizyt dziennie
+        const additionalAppointments = totalAppointments - sampleAppointments.length;
+        for (let i = 0; i < additionalAppointments; i++) {
+            const randomPatientId = patientIds[Math.floor(Math.random() * patientIds.length)];
+
+            // Losowy dzień w całym zakresie
+            const randomDay = Math.floor(Math.random() * daysRange * 2) - daysRange;
+            const baseDate = new Date(today.getTime() + randomDay * 24 * 60 * 60 * 1000);
+
+            // Generuj unikalny slot czasowy
+            const date = generateUniqueTimeSlot(baseDate, 50);
+            if (!date) {
+                console.warn(`Nie udało się wygenerować unikalnego slotu dla dodatkowej wizyty ${i}`);
+                continue;
+            }
+
+            const type = types[Math.floor(Math.random() * types.length)];
+            let status: AppointmentStatus;
+
+            if (date < today) {
+                status = Math.random() < 0.8 ? AppointmentStatus.COMPLETED : statuses[2 + Math.floor(Math.random() * 2)];
+            } else {
+                status = Math.random() < 0.85 ? AppointmentStatus.SCHEDULED : statuses[2 + Math.floor(Math.random() * 2)];
+            }
+
+            sampleAppointments.push({
+                patientId: randomPatientId,
+                date,
+                duration: [50, 60, 90][Math.floor(Math.random() * 3)],
+                status,
+                type,
+                notes: `Dodatkowa sesja ${type}`,
+                reminderSent: status === AppointmentStatus.SCHEDULED && date > today ? false : undefined,
+                reminderSentAt: undefined
+            });
+        }
+
+        // Sortuj wizyty chronologicznie
+        sampleAppointments.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+
+        // Dodaj wizyty do bazy
         for (const appointmentData of sampleAppointments) {
             await db.appointments.add(appointmentData as Appointment);
         }
 
         console.log(`Dodano ${patientIds.length} pacjentów i ${sampleAppointments.length} wizyt`);
+        console.log(`Średnio ${(sampleAppointments.length / daysRange).toFixed(1)} wizyt dziennie przez ${daysRange} dni`);
+        console.log(`Używano ${occupiedSlots.size} unikalnych slotów czasowych`);
         return true;
     } catch (error) {
         console.error('Błąd podczas wstawiania przykładowych danych:', error);
@@ -227,6 +525,8 @@ export async function clearAllData(): Promise<void> {
     try {
         await db.appointments.clear();
         await db.patients.clear();
+        await db.notes.clear();
+        await db.goals.clear();
         console.log('Wszystkie dane zostały usunięte');
     } catch (error) {
         console.error('Błąd podczas usuwania danych:', error);

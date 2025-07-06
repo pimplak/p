@@ -11,14 +11,15 @@ import { IconPlus, IconBell, IconSearch, IconNotes } from '@tabler/icons-react';
 import { DashboardStats } from '../components/dashboard/DashboardStats';
 import { Button } from '../components/ui/Button';
 import { GlassFAB } from '../components/ui/GlassFAB';
+import { PRESETS, DESIGN_SYSTEM, getIconSize } from '../theme/designSystem';
 
 function Dashboard() {
   return (
-    <Container size="xl" px={{ base: 'md', sm: 'xl' }}>
-      <Stack gap="xl" py="xl">
+    <Container size={DESIGN_SYSTEM.layout.containerSize} px={{ base: 'md', sm: 'xl' }}>
+      <Stack gap={DESIGN_SYSTEM.spacing.xl} py={DESIGN_SYSTEM.spacing.xl}>
         {/* Header */}
         <Group justify="space-between" align="flex-start">
-          <Stack gap="xs">
+          <Stack gap={DESIGN_SYSTEM.spacing.xs}>
             <Title 
               order={1}
               style={{
@@ -32,22 +33,22 @@ function Dashboard() {
               Dashboard
             </Title>
             <Text 
-              size="lg" 
+              size={DESIGN_SYSTEM.text.lg}
               style={{ lineHeight: '1.6', color: 'var(--color-text)', opacity: 0.7 }}
             >
               Witaj ponownie! Oto przegląd Twojej praktyki terapeutycznej.
             </Text>
           </Stack>
           
-          <Group gap="md">
+          <Group gap={DESIGN_SYSTEM.spacing.md}>
             <Button variant="ghost">
-              <IconBell size={20} />
+              <IconBell size={getIconSize('md')} />
             </Button>
             <Button variant="ghost">
-              <IconSearch size={20} />
+              <IconSearch size={getIconSize('md')} />
             </Button>
             <Button variant="primary">
-              <IconPlus size={20} style={{ marginRight: '8px' }} />
+              <IconPlus size={getIconSize('md')} style={{ marginRight: '8px' }} />
               Nowa sesja
             </Button>
           </Group>
@@ -57,7 +58,7 @@ function Dashboard() {
         <DashboardStats />
 
         {/* Quick Actions */}
-        <Stack gap="lg">
+        <Stack gap={DESIGN_SYSTEM.spacing.lg}>
           <Title 
             order={3}
             style={{
@@ -70,11 +71,9 @@ function Dashboard() {
             Szybkie akcje
           </Title>
           
-          <SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }} spacing="xl">
+          <SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }} spacing={DESIGN_SYSTEM.spacing.xl}>
             <Card
-              shadow="sm"
-              padding="xl"
-              radius="md"
+              {...PRESETS.card}
               style={{
                 backgroundColor: 'var(--color-surface)',
                 border: '1px solid var(--color-primary)',
@@ -83,11 +82,11 @@ function Dashboard() {
                 color: 'var(--color-text)'
               }}
             >
-              <Stack gap="md">
+              <Stack gap={DESIGN_SYSTEM.spacing.md}>
                 <Title order={4} style={{ color: 'var(--color-text)' }}>
                   Kalendarz sesji
                 </Title>
-                <Text size="sm" style={{ color: 'var(--color-text)', opacity: 0.7 }}>
+                <Text size={DESIGN_SYSTEM.text.sm} style={{ color: 'var(--color-text)', opacity: 0.7 }}>
                   Zarządzaj terminami i planuj spotkania z pacjentami
                 </Text>
                 <Button variant="secondary" style={{ alignSelf: 'flex-start' }}>
@@ -97,9 +96,7 @@ function Dashboard() {
             </Card>
 
             <Card
-              shadow="sm"
-              padding="xl"
-              radius="md"
+              {...PRESETS.card}
               style={{
                 backgroundColor: 'var(--color-surface)',
                 border: '1px solid var(--color-primary)',
@@ -108,11 +105,11 @@ function Dashboard() {
                 color: 'var(--color-text)'
               }}
             >
-              <Stack gap="md">
+              <Stack gap={DESIGN_SYSTEM.spacing.md}>
                 <Title order={4} style={{ color: 'var(--color-text)' }}>
                   Lista pacjentów
                 </Title>
-                <Text size="sm" style={{ color: 'var(--color-text)', opacity: 0.7 }}>
+                <Text size={DESIGN_SYSTEM.text.sm} style={{ color: 'var(--color-text)', opacity: 0.7 }}>
                   Przeglądaj profile i historie terapii
                 </Text>
                 <Button variant="secondary" style={{ alignSelf: 'flex-start' }}>
@@ -122,9 +119,7 @@ function Dashboard() {
             </Card>
 
             <Card
-              shadow="sm"
-              padding="xl"
-              radius="md"
+              {...PRESETS.card}
               style={{
                 backgroundColor: 'var(--color-surface)',
                 border: '1px solid var(--color-primary)',
@@ -133,11 +128,11 @@ function Dashboard() {
                 color: 'var(--color-text)'
               }}
             >
-              <Stack gap="md">
+              <Stack gap={DESIGN_SYSTEM.spacing.md}>
                 <Title order={4} style={{ color: 'var(--color-text)' }}>
                   Notatki z sesji
                 </Title>
-                <Text size="sm" style={{ color: 'var(--color-text)', opacity: 0.7 }}>
+                <Text size={DESIGN_SYSTEM.text.sm} style={{ color: 'var(--color-text)', opacity: 0.7 }}>
                   Dodaj obserwacje i śledź postępy
                 </Text>
                 <Button variant="secondary" style={{ alignSelf: 'flex-start' }}>
@@ -149,7 +144,7 @@ function Dashboard() {
         </Stack>
 
         {/* Recent Activity */}
-        <Stack gap="lg">
+        <Stack gap={DESIGN_SYSTEM.spacing.lg}>
           <Title 
             order={3}
             style={{
@@ -163,37 +158,32 @@ function Dashboard() {
           </Title>
           
           <Card
-            shadow="sm"
-            padding="xl"
-            radius="md"
+            {...PRESETS.card}
             style={{
               backgroundColor: 'var(--color-surface)',
               border: '1px solid var(--color-primary)',
               color: 'var(--color-text)'
             }}
           >
-            <Stack gap="md">
-              <Text size="sm" style={{ color: 'var(--color-text)', opacity: 0.7 }}>
-                Dzisiaj, 14:30
+            <Stack gap={DESIGN_SYSTEM.spacing.md}>
+              <Text size={DESIGN_SYSTEM.text.sm} style={{ color: 'var(--color-text)', opacity: 0.7 }}>
+                Brak ostatniej aktywności do wyświetlenia
               </Text>
-              <Text fw={500} style={{ color: 'var(--color-text)' }}>
-                Zakończono sesję z Anną Kowalską
-              </Text>
-              <Text size="sm" style={{ color: 'var(--color-text)', opacity: 0.7 }}>
-                Długość: 50 min • Notatka: Znaczący postęp w radzeniu sobie ze stresem
-              </Text>
+              <Button variant="ghost" style={{ alignSelf: 'flex-start' }}>
+                <IconNotes size={getIconSize('sm')} style={{ marginRight: '8px' }} />
+                Dodaj pierwszą notatkę
+              </Button>
             </Stack>
           </Card>
         </Stack>
 
-        {/* Glass FAB for quick actions */}
+        {/* Floating Action Button - tylko na mobile */}
         <GlassFAB
-          icon={IconNotes}
-          label="Szybka notatka"
-          onClick={() => console.log('Quick note modal')}
+          icon={IconPlus}
+          label="Dodaj nową sesję"
+          onClick={() => console.log('Add session')}
           variant="primary"
           position="bottom-right"
-          animate
         />
       </Stack>
     </Container>

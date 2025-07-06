@@ -25,7 +25,9 @@ import {
   IconEdit, 
   IconTrash, 
   IconChevronLeft, 
-  IconChevronRight
+  IconChevronRight,
+  IconEye,
+  IconEyeOff
 } from '@tabler/icons-react';
 import { 
   format, 
@@ -52,6 +54,7 @@ import { AppointmentForm } from '../components/AppointmentForm';
 import { FloatingActionButton, type FABAction } from '../components/FloatingActionButton';
 import { useAppointmentStore } from '../stores/useAppointmentStore';
 import { usePatientStore } from '../stores/usePatientStore';
+import { useSettingsStore } from '../stores/useSettingsStore';
 import type { Appointment, AppointmentWithPatient } from '../types/Appointment';
 
 type CalendarView = 'day' | 'week' | 'month';
@@ -71,6 +74,7 @@ function Calendar() {
   } = useAppointmentStore();
 
   const { fetchPatients } = usePatientStore();
+  const { hideWeekends, toggleHideWeekends } = useSettingsStore();
 
   useEffect(() => {
     fetchAppointments();
@@ -288,6 +292,19 @@ function Calendar() {
               size="sm"
               w={140}
             />
+            
+            {/* Calendar View Options */}
+            {view === 'week' && (
+              <ActionIcon
+                variant={hideWeekends ? 'filled' : 'light'}
+                color="blue"
+                size="sm"
+                onClick={toggleHideWeekends}
+                title={hideWeekends ? 'Pokaż weekendy' : 'Ukryj weekendy'}
+              >
+                {hideWeekends ? <IconEyeOff size="1rem" /> : <IconEye size="1rem" />}
+              </ActionIcon>
+            )}
           </Group>
         </Group>
 
@@ -315,6 +332,7 @@ function Calendar() {
             onAddAppointment={handleAddAppointment}
             getStatusColor={getStatusColor}
             getStatusLabel={getStatusLabel}
+            hideWeekends={hideWeekends}
           />
         )}
 
@@ -360,6 +378,7 @@ interface CalendarViewProps {
   onAddAppointment: (date?: Date) => void;
   getStatusColor: (status: string) => string;
   getStatusLabel: (status: string) => string;
+  hideWeekends?: boolean;
 }
 
 function DayView({ 
@@ -487,48 +506,94 @@ function WeekView({
   appointments, 
   onEditAppointment, 
   onAddAppointment,
-  getStatusColor
+  getStatusColor,
+  hideWeekends = false
 }: CalendarViewProps) {
   const weekStart = startOfWeek(date, { weekStartsOn: 1 });
-  const weekDays = eachDayOfInterval({
+  const allWeekDays = eachDayOfInterval({
     start: weekStart,
     end: endOfWeek(date, { weekStartsOn: 1 })
   });
+  
+  // Filter out weekends if hideWeekends is true
+  const weekDays = hideWeekends 
+    ? allWeekDays.filter(day => {
+        const dayOfWeek = day.getDay();
+        return dayOfWeek !== 0 && dayOfWeek !== 6; // 0 = Sunday, 6 = Saturday
+      })
+    : allWeekDays;
 
   const timeSlots = Array.from({ length: 13 }, (_, i) => 8 + i); // 8:00 - 20:00
+  const dayCount = weekDays.length;
+  // Always use compact style
+  const timeColumnWidth = '60px';
+  const cellPadding = '4px';
+  const cellMinHeight = '45px';
 
   return (
     <ScrollArea>
-      <Box style={{ minWidth: '800px' }}>
+      <Box style={{ 
+        minWidth: hideWeekends ? '500px' : '650px',
+        maxWidth: '100%'
+      }}>
         {/* Days Header */}
-        <Group mb="md" style={{ display: 'grid', gridTemplateColumns: '80px repeat(7, 1fr)', gap: '8px' }}>
+        <Box 
+          mb="md" 
+          style={{ 
+            display: 'grid', 
+            gridTemplateColumns: `${timeColumnWidth} repeat(${dayCount}, 1fr)`, 
+            gap: cellPadding,
+            alignItems: 'stretch'
+          }}
+        >
           <Box></Box>
           {weekDays.map((day) => (
             <Paper 
               key={day.toISOString()} 
-              p="sm" 
+              p="xs"
               style={{ 
                 textAlign: 'center',
                 backgroundColor: isToday(day) ? 'var(--color-primary-light)' : 'var(--color-surface)',
-                cursor: 'pointer'
+                cursor: 'pointer',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                minHeight: '50px'
               }}
               onClick={() => onAddAppointment(day)}
             >
-              <Text size="sm" c="dimmed">
+              <Text size="xs" c="dimmed">
                 {format(day, 'EEE', { locale: pl })}
               </Text>
-              <Text fw={500} size="lg">
+              <Text fw={500} size="md">
                 {format(day, 'd')}
               </Text>
             </Paper>
           ))}
-        </Group>
+        </Box>
 
         {/* Time Grid */}
-        <Stack gap="xs">
+        <Stack gap="2px">
           {timeSlots.map((hour) => (
-            <Group key={hour} style={{ display: 'grid', gridTemplateColumns: '80px repeat(7, 1fr)', gap: '8px' }}>
-              <Text size="sm" c="dimmed" ta="right" pt="xs">
+            <Box 
+              key={hour} 
+              style={{ 
+                display: 'grid', 
+                gridTemplateColumns: `${timeColumnWidth} repeat(${dayCount}, 1fr)`, 
+                gap: cellPadding,
+                alignItems: 'stretch'
+              }}
+            >
+              <Text 
+                size="xs" 
+                c="dimmed" 
+                ta="right" 
+                pt="xs"
+                style={{ 
+                  alignSelf: 'flex-start',
+                  lineHeight: '1.2'
+                }}
+              >
                 {hour}:00
               </Text>
               {weekDays.map((day) => {
@@ -540,12 +605,15 @@ function WeekView({
                 return (
                   <Paper 
                     key={`${day.toISOString()}-${hour}`}
-                    p="xs" 
+                    p="2px"
                     style={{ 
-                      minHeight: '60px',
+                      minHeight: dayAppointments.length > 0 ? 'auto' : cellMinHeight,
                       backgroundColor: 'var(--color-surface)',
                       cursor: 'pointer',
-                      border: '1px solid var(--color-input-border)'
+                      border: '1px solid var(--color-input-border)',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '2px'
                     }}
                     onClick={() => {
                       const appointmentDate = new Date(day);
@@ -556,21 +624,21 @@ function WeekView({
                     {dayAppointments.map((appointment) => (
                       <Paper
                         key={appointment.id}
-                        p="xs"
-                        mb="xs"
+                        p="2px"
                         style={{ 
                           backgroundColor: `var(--mantine-color-${getStatusColor(appointment.status)}-light)`,
-                          cursor: 'pointer'
+                          cursor: 'pointer',
+                          borderRadius: '4px'
                         }}
                         onClick={(e) => {
                           e.stopPropagation();
                           onEditAppointment(appointment);
                         }}
                       >
-                        <Text size="xs" fw={500}>
+                        <Text size="xs" fw={500} style={{ lineHeight: '1.2' }}>
                           {format(new Date(appointment.date), 'HH:mm')}
                         </Text>
-                        <Text size="xs" truncate>
+                        <Text size="xs" truncate style={{ lineHeight: '1.2' }}>
                           {appointment.patient?.firstName} {appointment.patient?.lastName}
                         </Text>
                       </Paper>
@@ -578,7 +646,7 @@ function WeekView({
                   </Paper>
                 );
               })}
-            </Group>
+            </Box>
           ))}
         </Stack>
       </Box>
@@ -610,19 +678,25 @@ function MonthView({
 
   const weekDays = ['Pon', 'Wt', 'Śr', 'Czw', 'Pt', 'Sob', 'Nie'];
 
+  // Always use compact style
+  const cellGap = '4px';
+  const cellMinHeight = '90px';
+  const cellPadding = 'xs';
+  const stackGap = '2px';
+
   return (
     <Box>
       {/* Days of Week Header */}
-      <Group mb="md" style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '8px' }}>
+      <Group mb="md" style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: cellGap }}>
         {weekDays.map((day) => (
-          <Text key={day} ta="center" fw={500} c="dimmed">
+          <Text key={day} ta="center" fw={500} c="dimmed" size="xs">
             {day}
           </Text>
         ))}
       </Group>
 
       {/* Calendar Grid */}
-      <Box style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '8px' }}>
+      <Box style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: cellGap }}>
         {calendarDays.map((day) => {
           const dayAppointments = appointments.filter(apt => 
             isSameDay(new Date(apt.date), day)
@@ -634,9 +708,9 @@ function MonthView({
           return (
             <Paper
               key={day.toISOString()}
-              p="sm"
+              p={cellPadding}
               style={{
-                minHeight: '120px',
+                minHeight: dayAppointments.length > 0 ? 'auto' : cellMinHeight,
                 backgroundColor: isTodayDay 
                   ? 'var(--color-primary-light)' 
                   : isCurrentMonth 
@@ -649,18 +723,18 @@ function MonthView({
               onClick={() => onDateClick(day)}
             >
               <Text 
-                size="sm" 
+                size="xs" 
                 fw={isTodayDay ? 600 : 400}
-                mb="xs"
+                mb="4px"
               >
                 {format(day, 'd')}
               </Text>
               
-              <Stack gap="xs">
-                {dayAppointments.slice(0, 3).map((appointment) => (
+              <Stack gap={stackGap}>
+                {dayAppointments.map((appointment) => (
                   <Paper
                     key={appointment.id}
-                    p="xs"
+                    p="2px"
                     style={{
                       backgroundColor: `var(--mantine-color-${getStatusColor(appointment.status)}-light)`,
                       cursor: 'pointer'
@@ -670,20 +744,14 @@ function MonthView({
                       onEditAppointment(appointment);
                     }}
                   >
-                    <Text size="xs" fw={500} truncate>
+                    <Text size="xs" fw={500} truncate style={{ lineHeight: '1.2' }}>
                       {format(new Date(appointment.date), 'HH:mm')}
                     </Text>
-                    <Text size="xs" truncate>
+                    <Text size="xs" truncate style={{ lineHeight: '1.2' }}>
                       {appointment.patient?.firstName} {appointment.patient?.lastName}
                     </Text>
                   </Paper>
                 ))}
-                
-                {dayAppointments.length > 3 && (
-                  <Text size="xs" c="dimmed">
-                    +{dayAppointments.length - 3} więcej
-                  </Text>
-                )}
               </Stack>
             </Paper>
           );

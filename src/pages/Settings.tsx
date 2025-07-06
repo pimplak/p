@@ -1,50 +1,51 @@
 import {
-    Title,
-    Card,
-    Stack,
-    Group,
-    Text,
-    Divider,
-    Badge,
-    ActionIcon,
-    Container,
-    ThemeIcon,
-    Button,
+  Container,
+  Stack,
+  Group,
+  Title,
+  Text,
+  Card,
+  Divider,
+  Button,
+  ThemeIcon,
+  Badge,
 } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import {
-    IconSettings,
-    IconPalette,
-    IconDevices,
-    IconShield,
-    IconDownload,
-    IconDatabase,
-    IconTestPipe,
+  IconSettings,
+  IconPalette,
+  IconDatabase,
+  IconTestPipe,
+  IconDownload,
+  IconShield,
+  IconInfoCircle,
 } from '@tabler/icons-react';
-import { ThemeSelector, ThemePreview } from '../components/ThemeSelector';
-import { DarkThemeDemo } from '../components/DarkThemeDemo';
+import { ThemeSelector } from '../components/ThemeSelector';
+import { useAppointmentStore } from '../stores/useAppointmentStore';
 import { usePatientStore } from '../stores/usePatientStore';
-import { addDemoPatients, clearAllData } from '../utils/demo-data';
+import { insertSampleData, clearAllData } from '../utils/sampleData';
 
 function Settings() {
     const { fetchPatients } = usePatientStore();
+    const { fetchAppointments } = useAppointmentStore();
 
     const handleAddDemoData = async () => {
         try {
-            const success = await addDemoPatients();
+            const success = await insertSampleData();
             if (success) {
                 notifications.show({
                     title: 'Sukces!',
-                    message: 'Dodano przykładowych pacjentów',
+                    message: 'Dodano przykładowych pacjentów i wizyty',
                     color: 'green'
-                });
-                // Odśwież listę pacjentów
-                fetchPatients();
+                            });
+            // Odśwież listę pacjentów i wizyt
+            fetchPatients();
+            fetchAppointments();
             } else {
                 notifications.show({
-                    title: 'Błąd',
-                    message: 'Nie udało się dodać danych demonstracyjnych',
-                    color: 'red'
+                    title: 'Informacja',
+                    message: 'Dane już istnieją w bazie',
+                    color: 'yellow'
                 });
             }
         } catch {
@@ -58,22 +59,15 @@ function Settings() {
 
     const handleClearAllData = async () => {
         try {
-            const success = await clearAllData();
-            if (success) {
-                notifications.show({
-                    title: 'Sukces!',
-                    message: 'Wszystkie dane zostały usunięte',
-                    color: 'green'
-                });
-                // Odśwież listę pacjentów
+            await clearAllData();
+            notifications.show({
+                title: 'Sukces!',
+                message: 'Wszystkie dane zostały usunięte',
+                color: 'green'
+                            });
+                // Odśwież listę pacjentów i wizyt
                 fetchPatients();
-            } else {
-                notifications.show({
-                    title: 'Błąd',
-                    message: 'Nie udało się wyczyścić danych',
-                    color: 'red'
-                });
-            }
+                fetchAppointments();
         } catch {
             notifications.show({
                 title: 'Błąd',
@@ -85,55 +79,54 @@ function Settings() {
 
     return (
         <Container size="md">
-            <Stack>
+            <Stack gap="xl">
+                {/* Header Section */}
                 <Group align="center" gap="md">
-                    <ThemeIcon size="xl" variant="light">
+                    <ThemeIcon size="xl" variant="light" color="indigo">
                         <IconSettings size={24} />
                     </ThemeIcon>
                     <Title order={1}>Ustawienia</Title>
                 </Group>
 
+                {/* Settings Sections */}
                 <Stack gap="lg">
                     {/* Wygląd i interfejs */}
-                    <Card>
-                        <Stack>
+                    <Card shadow="sm" padding="lg" radius="md" withBorder>
+                        <Stack gap="md">
                             <Group align="center" gap="sm">
-                                <IconPalette size={20} />
+                                <IconPalette size={20} color="var(--mantine-color-indigo-6)" />
                                 <Text fw={600} size="lg">Wygląd i interfejs</Text>
                             </Group>
                             
                             <Divider />
 
-                            {/* Ferro's Advanced Theme System */}
-                            <Stack gap="lg">
-                                <ThemeSelector />
-                                <ThemePreview />
-                                <DarkThemeDemo />
-                            </Stack>
+                            <ThemeSelector />
                         </Stack>
                     </Card>
 
                     {/* Aplikacja i dane */}
-                    <Card>
-                        <Stack>
+                    <Card shadow="sm" padding="lg" radius="md" withBorder>
+                        <Stack gap="md">
                             <Group align="center" gap="sm">
-                                <IconDevices size={20} />
+                                <IconDatabase size={20} color="var(--mantine-color-blue-6)" />
                                 <Text fw={600} size="lg">Aplikacja i dane</Text>
                             </Group>
                             
                             <Divider />
 
-                            <Group justify="space-between" align="center">
-                                <Stack gap="xs">
+                            {/* Demo Data Section */}
+                            <Group justify="space-between" align="flex-start">
+                                <Stack gap="xs" style={{ flex: 1 }}>
                                     <Text fw={500}>Dodaj dane demonstracyjne</Text>
                                     <Text size="sm" c="dimmed">
                                         Dodaj przykładowych pacjentów do testowania aplikacji
                                     </Text>
                                 </Stack>
                                 <Button
-                                    leftSection={<IconTestPipe size={18} />}
+                                    leftSection={<IconTestPipe size={16} />}
                                     variant="light"
                                     color="blue"
+                                    size="sm"
                                     onClick={handleAddDemoData}
                                 >
                                     Dodaj demo
@@ -142,38 +135,43 @@ function Settings() {
 
                             <Divider variant="dashed" />
 
-                            <Group justify="space-between" align="center">
-                                <Stack gap="xs">
+                            {/* Export Data Section */}
+                            <Group justify="space-between" align="flex-start">
+                                <Stack gap="xs" style={{ flex: 1 }}>
                                     <Text fw={500}>Eksport danych</Text>
                                     <Text size="sm" c="dimmed">
                                         Pobierz kopię zapasową wszystkich danych
                                     </Text>
                                 </Stack>
-                                <ActionIcon
+                                <Button
+                                    leftSection={<IconDownload size={16} />}
                                     variant="light"
-                                    size="lg"
+                                    color="green"
+                                    size="sm"
                                     onClick={() => {
                                         // TODO: Implementacja eksportu danych
                                         console.log('Eksport danych...');
                                     }}
                                 >
-                                    <IconDownload size={18} />
-                                </ActionIcon>
+                                    Eksportuj
+                                </Button>
                             </Group>
 
                             <Divider variant="dashed" />
 
-                            <Group justify="space-between" align="center">
-                                <Stack gap="xs">
+                            {/* Clear Data Section */}
+                            <Group justify="space-between" align="flex-start">
+                                <Stack gap="xs" style={{ flex: 1 }}>
                                     <Text fw={500} c="red">Usuń wszystkie dane</Text>
                                     <Text size="sm" c="dimmed">
                                         Trwale usuń wszystkich pacjentów i wizyty
                                     </Text>
                                 </Stack>
                                 <Button
-                                    leftSection={<IconDatabase size={18} />}
+                                    leftSection={<IconDatabase size={16} />}
                                     variant="light"
                                     color="red"
+                                    size="sm"
                                     onClick={handleClearAllData}
                                 >
                                     Wyczyść dane
@@ -183,42 +181,65 @@ function Settings() {
                     </Card>
 
                     {/* Prywatność i bezpieczeństwo */}
-                    <Card>
-                        <Stack>
+                    <Card shadow="sm" padding="lg" radius="md" withBorder>
+                        <Stack gap="md">
                             <Group align="center" gap="sm">
-                                <IconShield size={20} />
+                                <IconShield size={20} color="var(--mantine-color-green-6)" />
                                 <Text fw={600} size="lg">Prywatność i bezpieczeństwo</Text>
                             </Group>
                             
                             <Divider />
 
-                            <Text size="sm" c="dimmed">
-                                <strong>Lokalny storage:</strong> Wszystkie dane są przechowywane lokalnie na twoim urządzeniu.
-                                <br /><br />
-                                <strong>Offline-first:</strong> Aplikacja działa bez połączenia z internetem.
-                                <br /><br />
-                                <strong>HIPAA-compliant:</strong> Zbudowana z myślą o ochronie danych medycznych.
-                            </Text>
+                            <Stack gap="sm">
+                                <Group align="flex-start" gap="sm">
+                                    <Text fw={500} size="sm">Lokalny storage:</Text>
+                                    <Text size="sm" c="dimmed" style={{ flex: 1 }}>
+                                        Wszystkie dane są przechowywane lokalnie na twoim urządzeniu.
+                                    </Text>
+                                </Group>
+                                
+                                <Group align="flex-start" gap="sm">
+                                    <Text fw={500} size="sm">Offline-first:</Text>
+                                    <Text size="sm" c="dimmed" style={{ flex: 1 }}>
+                                        Aplikacja działa bez połączenia z internetem.
+                                    </Text>
+                                </Group>
+                                
+                                <Group align="flex-start" gap="sm">
+                                    <Text fw={500} size="sm">HIPAA-compliant:</Text>
+                                    <Text size="sm" c="dimmed" style={{ flex: 1 }}>
+                                        Zbudowana z myślą o ochronie danych medycznych.
+                                    </Text>
+                                </Group>
+                            </Stack>
                         </Stack>
                     </Card>
 
                     {/* Informacje o aplikacji */}
-                    <Card>
-                        <Stack>
-                            <Text fw={600} size="lg">O aplikacji</Text>
+                    <Card shadow="sm" padding="lg" radius="md" withBorder>
+                        <Stack gap="md">
+                            <Group align="center" gap="sm">
+                                <IconInfoCircle size={20} color="var(--mantine-color-gray-6)" />
+                                <Text fw={600} size="lg">O aplikacji</Text>
+                            </Group>
+                            
                             <Divider />
                             
-                            <Group justify="space-between">
-                                <Text size="sm">Wersja aplikacji</Text>
-                                <Badge variant="light">1.0.0-beta</Badge>
-                            </Group>
+                            <Stack gap="sm">
+                                <Group justify="space-between" align="center">
+                                    <Text fw={500} size="sm">Wersja aplikacji</Text>
+                                    <Badge variant="light" color="indigo">1.0.0-BETA</Badge>
+                                </Group>
+                                
+                                <Group justify="space-between" align="center">
+                                    <Text fw={500} size="sm">Ostatnia aktualizacja</Text>
+                                    <Text size="sm" c="dimmed">Dziś</Text>
+                                </Group>
+                            </Stack>
                             
-                            <Group justify="space-between">
-                                <Text size="sm">Ostatnia aktualizacja</Text>
-                                <Text size="sm" c="dimmed">Dziś</Text>
-                            </Group>
+                            <Divider variant="dashed" />
                             
-                            <Text size="xs" c="dimmed" ta="center" mt="md">
+                            <Text size="xs" c="dimmed" ta="center">
                                 PsychFlow - Progressive Web App dla psychologów
                                 <br />
                                 Zbudowane z ❤️ dla społeczności terapeutycznej

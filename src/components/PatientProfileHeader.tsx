@@ -8,6 +8,7 @@ import {
   IconRestore 
 } from '@tabler/icons-react';
 import { PATIENT_STATUS, PATIENT_STATUS_LABELS } from '../constants/status';
+import { getPatientDisplayName } from '../utils/dates';
 import type { Patient } from '../types/Patient';
 
 interface PatientProfileHeaderProps {
@@ -29,7 +30,7 @@ export function PatientProfileHeader({
         <Stack gap="xs">
           <Group align="center">
             <Title order={2}>
-              {patient.firstName} {patient.lastName}
+              {getPatientDisplayName(patient)}
             </Title>
             <Badge
               color={patient.status === PATIENT_STATUS.ACTIVE ? 'green' : 'gray'}

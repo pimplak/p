@@ -2,6 +2,7 @@ import { Table, Text, Badge, ActionIcon, Group, Menu } from '@mantine/core';
 import { IconEdit, IconArchive, IconRestore, IconDots } from '@tabler/icons-react';
 import { format } from 'date-fns';
 import { pl } from 'date-fns/locale';
+import { getPatientDisplayName } from '../utils/dates';
 import type { PatientWithAppointments, Patient } from '../types/Patient';
 
 interface PatientTableProps {
@@ -37,7 +38,7 @@ export function PatientTable({ patients, onEdit, onView, onArchive, onRestore }:
               <Table.Td>
                 <div>
                   <Text fw={500}>
-                    {patient.firstName} {patient.lastName}
+                    {getPatientDisplayName(patient)}
                   </Text>
                   {patient.birthDate && (
                     <Text size="sm" c="dimmed">

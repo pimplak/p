@@ -13,6 +13,7 @@ import { IconAlertCircle } from '@tabler/icons-react';
 import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { usePatientStore } from '../stores/usePatientStore';
+import { getPatientDisplayName } from '../utils/dates';
 import { PatientForm } from './PatientForm';
 import { PatientProfileHeader } from './PatientProfileHeader';
 import { PatientProfileTabs } from './PatientProfileTabs';
@@ -159,7 +160,7 @@ function PatientProfile() {
         <Stack gap="md">
           <Text>
             Czy na pewno chcesz zarchiwizować pacjenta{' '}
-            <strong>{patient.firstName} {patient.lastName}</strong>?
+            <strong>{getPatientDisplayName(patient)}</strong>?
           </Text>
           <Text size="sm" c="dimmed">
             Pacjent zostanie ukryty z głównej listy, ale wszystkie dane

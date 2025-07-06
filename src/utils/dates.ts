@@ -4,6 +4,10 @@
  * ISO strings w DB, Date objects w kodzie UI
  */
 
+import { format, parseISO, differenceInYears } from 'date-fns';
+import { pl } from 'date-fns/locale';
+import type { Patient } from '../types/Patient';
+
 /**
  * Convert Date to ISO string for database storage
  */
@@ -44,40 +48,28 @@ export function toDate(date: Date | string | undefined): Date | undefined {
 /**
  * Safe date formatting - handles both Date and ISO string
  */
-export function formatDate(
-    date: Date | string | undefined,
-    format: 'short' | 'long' | 'time' = 'short'
-): string {
-    const dateObj = toDate(date);
-    if (!dateObj) return 'Brak danych';
+export function formatDate(date: Date | string | undefined): string {
+    if (!date) return 'Brak danych';
 
-    const options: Intl.DateTimeFormatOptions = {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-        ...(format === 'long' && { weekday: 'long' }),
-        ...(format === 'time' && { hour: '2-digit', minute: '2-digit' })
-    };
+    const dateObj = typeof date === 'string' ? parseISO(date) : date;
+    return format(dateObj, 'dd.MM.yyyy', { locale: pl });
+}
 
-    return dateObj.toLocaleDateString('pl-PL', options);
+export function formatDateTime(date: Date | string | undefined): string {
+    if (!date) return 'Brak danych';
+
+    const dateObj = typeof date === 'string' ? parseISO(date) : date;
+    return format(dateObj, 'dd.MM.yyyy HH:mm', { locale: pl });
 }
 
 /**
  * Calculate age from birth date
  */
 export function calculateAge(birthDate: Date | string | undefined): number | null {
-    const birth = toDate(birthDate);
-    if (!birth) return null;
+    if (!birthDate) return null;
 
-    const today = new Date();
-    let age = today.getFullYear() - birth.getFullYear();
-    const monthDiff = today.getMonth() - birth.getMonth();
-
-    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
-        age--;
-    }
-
-    return age;
+    const dateObj = typeof birthDate === 'string' ? parseISO(birthDate) : birthDate;
+    return differenceInYears(new Date(), dateObj);
 }
 
 /**
@@ -104,4 +96,12 @@ export function getDayRange(date: Date | string): { start: Date; end: Date } {
     end.setHours(23, 59, 59, 999);
 
     return { start, end };
+}
+
+// Helper do wyświetlania nazwy pacjenta - używa 'nazwa' jeśli dostępna, w przeciwnym razie imię i nazwisko
+export function getPatientDisplayName(patient: Patient): string {
+    if (patient.nazwa) {
+        return patient.nazwa;
+    }
+    return `${patient.firstName} ${patient.lastName}`;
 } 

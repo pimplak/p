@@ -11,7 +11,7 @@ import {
 import { format } from 'date-fns';
 import { pl } from 'date-fns/locale';
 import { PATIENT_STATUS, PATIENT_STATUS_LABELS } from '../constants/status';
-import { formatDate } from '../utils/dates';
+import { formatDate, getPatientDisplayName } from '../utils/dates';
 import type { PatientWithAppointments, Patient } from '../types/Patient';
 
 interface PatientsCardListProps {
@@ -52,7 +52,7 @@ export function PatientsCardList({
               <div style={{ flex: 1, minWidth: 0 }}>
                 <Group gap="xs" align="center">
                   <Text fw={600} size="md" truncate>
-                    {patient.firstName} {patient.lastName}
+                    {getPatientDisplayName(patient)}
                   </Text>
                   <Badge
                     size="xs"

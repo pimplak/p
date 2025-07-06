@@ -6,9 +6,13 @@ interface SettingsStore {
     colorPalette: ColorPalette;
     darkMode: boolean;
 
+    // Calendar settings
+    hideWeekends: boolean;
+
     // Actions
     setColorPalette: (palette: ColorPalette) => void;
     toggleDarkMode: () => void;
+    toggleHideWeekends: () => void;
 }
 
 // Prosty localStorage helper
@@ -37,17 +41,36 @@ export const useSettingsStore = create<SettingsStore>((set, get) => {
     return {
         colorPalette: storedSettings.colorPalette || 'naturalne',
         darkMode: storedSettings.darkMode ?? true,
+        hideWeekends: storedSettings.hideWeekends ?? false,
 
         setColorPalette: (palette) => {
             set({ colorPalette: palette });
             const state = get();
-            saveSettings({ colorPalette: palette, darkMode: state.darkMode });
+            saveSettings({
+                colorPalette: palette,
+                darkMode: state.darkMode,
+                hideWeekends: state.hideWeekends
+            });
         },
 
         toggleDarkMode: () => {
             set((state) => ({ darkMode: !state.darkMode }));
             const state = get();
-            saveSettings({ colorPalette: state.colorPalette, darkMode: state.darkMode });
+            saveSettings({
+                colorPalette: state.colorPalette,
+                darkMode: state.darkMode,
+                hideWeekends: state.hideWeekends
+            });
+        },
+
+        toggleHideWeekends: () => {
+            set((state) => ({ hideWeekends: !state.hideWeekends }));
+            const state = get();
+            saveSettings({
+                colorPalette: state.colorPalette,
+                darkMode: state.darkMode,
+                hideWeekends: state.hideWeekends
+            });
         },
     };
 }); 
