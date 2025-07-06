@@ -50,10 +50,8 @@ export const AppointmentType = {
 
 export type AppointmentType = typeof AppointmentType[keyof typeof AppointmentType];
 
+import type { Patient } from './Patient';
+
 export interface AppointmentWithPatient extends Appointment {
-    patient?: {
-        firstName: string;
-        lastName: string;
-        phone?: string;
-    };
+    patient?: Patient;
 } 

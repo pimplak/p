@@ -7,7 +7,6 @@ import {
   Progress,
   SimpleGrid,
   Title,
-  Divider,
   Table,
   ScrollArea,
   ActionIcon,
@@ -15,21 +14,18 @@ import {
   Alert,
 } from '@mantine/core';
 import {
-  IconMessage,
   IconCheck,
   IconClock,
   IconAlertCircle,
   IconTrendingUp,
   IconPhone,
-  IconCalendar,
   IconInfoCircle,
 } from '@tabler/icons-react';
-import { format, subDays, subWeeks, subMonths, isAfter, isBefore } from 'date-fns';
+import { format, subDays, subMonths, isAfter } from 'date-fns';
 import { pl } from 'date-fns/locale';
 import { useMemo } from 'react';
 import { useAppointmentStore } from '../stores/useAppointmentStore';
 import { usePatientStore } from '../stores/usePatientStore';
-import type { AppointmentWithPatient } from '../types/Appointment';
 import { needsReminder, validatePhoneNumber } from '../utils/sms';
 
 interface SMSAnalyticsProps {

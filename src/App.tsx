@@ -8,6 +8,7 @@ import { Notifications } from '@mantine/notifications';
 import { BrowserRouter } from 'react-router-dom';
 import { AppRouter } from './components/AppRouter';
 import { GlobalErrorBoundary } from './components/GlobalErrorBoundary';
+import { PWAInstallPrompt } from './components/PWAInstallPrompt';
 import { useTheme } from './hooks/useTheme';
 
 // Ferro's Dynamic Theme Provider
@@ -31,6 +32,7 @@ function App() {
             <AppRouter />
           </BrowserRouter>
         </GlobalErrorBoundary>
+        <PWAInstallPrompt />
       </ModalsProvider>
     </ThemeProvider>
   );

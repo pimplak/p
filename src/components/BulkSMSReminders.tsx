@@ -7,7 +7,6 @@ import {
   Checkbox,
   Table,
   Badge,
-  Alert,
   Select,
   Card,
   ScrollArea,
@@ -21,10 +20,7 @@ import { notifications } from '@mantine/notifications';
 import {
   IconMessage,
   IconSend,
-  IconCheck,
   IconX,
-  IconAlertCircle,
-  IconClock,
   IconEye,
   IconSelectAll,
 } from '@tabler/icons-react';

@@ -42,11 +42,7 @@ export const useAppointmentStore = create<AppointmentStore>((set, get) => ({
                     const patient = await db.patients.get(appointment.patientId);
                     return {
                         ...appointment,
-                        patient: patient ? {
-                            firstName: patient.firstName,
-                            lastName: patient.lastName,
-                            phone: patient.phone,
-                        } : undefined,
+                        patient: patient || undefined,
                     };
                 })
             );
@@ -175,7 +171,7 @@ export const useAppointmentStore = create<AppointmentStore>((set, get) => ({
         }
     },
 
-    markPatientResponded: async (appointmentId, response) => {
+    markPatientResponded: async (appointmentId) => {
         try {
             await db.appointments.update(appointmentId, {
                 reminderSent: true,

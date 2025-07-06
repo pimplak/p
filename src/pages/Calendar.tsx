@@ -495,7 +495,7 @@ function DayView({
                       size="sm"
                       onReminderSent={() => {
                         // Refresh appointments
-                        fetchAppointments();
+                        window.location.reload();
                       }}
                     />
                   )}

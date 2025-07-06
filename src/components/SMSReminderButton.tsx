@@ -113,9 +113,6 @@ export function SMSReminderButton({
     }
 
     try {
-      // Use custom message if provided, otherwise use template
-      const finalMessage = customMessage.trim() || messagePreview;
-      
       // Open SMS app
       sendSMSReminder(patient, appointment, currentTemplateId, practitionerName, smsTemplates);
       

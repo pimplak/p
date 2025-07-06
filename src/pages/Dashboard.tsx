@@ -115,7 +115,7 @@ function Dashboard() {
           <Group gap="sm">
             <BulkSMSReminders 
               size="sm" 
-              onRemindersSent={(count) => {
+              onRemindersSent={() => {
                 // Refresh appointments after sending reminders
                 fetchAppointments();
               }}
