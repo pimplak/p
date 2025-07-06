@@ -1,10 +1,11 @@
-import { Tabs, Paper, Stack, Text, Divider, Badge, Group, Card, Title, Button } from '@mantine/core';
-import { IconNotes, IconCalendar, IconTarget, IconPlus } from '@tabler/icons-react';
+import { Tabs, Paper, Stack, Text, Divider, Badge, Group, Card, Title, Button, Checkbox, Menu, ActionIcon } from '@mantine/core';
+import { IconNotes, IconCalendar, IconTarget, IconPlus, IconDownload, IconCheck, IconX, IconFileExport } from '@tabler/icons-react';
 import { useState, useEffect } from 'react';
 import { useAppointmentStore } from '../stores/useAppointmentStore';
 import { AppointmentStatus } from '../types/Appointment';
 import { formatDate, formatDateTime } from '../utils/dates';
-import type { Appointment } from '../types/Appointment';
+import { exportToExcel } from '../utils/export';
+import type { Appointment, AppointmentWithPatient } from '../types/Appointment';
 import type { Patient } from '../types/Patient';
 
 interface PatientProfileTabsProps {
@@ -14,6 +15,7 @@ interface PatientProfileTabsProps {
 export function PatientProfileTabs({ patient }: PatientProfileTabsProps) {
   const [activeTab, setActiveTab] = useState<string>('overview');
   const [appointments, setAppointments] = useState<Appointment[]>([]);
+  const [selectedAppointments, setSelectedAppointments] = useState<number[]>([]);
   const { getAppointmentsByPatient } = useAppointmentStore();
 
   useEffect(() => {
@@ -26,6 +28,48 @@ export function PatientProfileTabs({ patient }: PatientProfileTabsProps) {
     
     loadAppointments();
   }, [patient.id, getAppointmentsByPatient]);
+
+  const handleAppointmentSelection = (appointmentId: number, checked: boolean) => {
+    if (checked) {
+      setSelectedAppointments(prev => [...prev, appointmentId]);
+    } else {
+      setSelectedAppointments(prev => prev.filter(id => id !== appointmentId));
+    }
+  };
+
+  const selectAllAppointments = () => {
+    setSelectedAppointments(appointments.map(apt => apt.id!).filter(Boolean));
+  };
+
+  const clearSelection = () => {
+    setSelectedAppointments([]);
+  };
+
+  const handleExportSelected = async () => {
+    if (selectedAppointments.length === 0) {
+      return;
+    }
+
+    // Convert selected appointments to AppointmentWithPatient format
+    const selectedAppointmentsWithPatient: AppointmentWithPatient[] = appointments
+      .filter(apt => selectedAppointments.includes(apt.id!))
+      .map(apt => ({
+        ...apt,
+        patient: {
+          ...patient,
+          id: patient.id!,
+          status: patient.status,
+          createdAt: patient.createdAt,
+          updatedAt: patient.updatedAt
+        }
+      }));
+
+    await exportToExcel([], selectedAppointmentsWithPatient, {
+      patients: false,
+      appointments: true,
+      selectedPatients: patient.id ? [patient.id] : []
+    });
+  };
 
   return (
     <Tabs 
@@ -107,14 +151,56 @@ export function PatientProfileTabs({ patient }: PatientProfileTabsProps) {
       <Tabs.Panel value="appointments" pt="md">
         <Paper p="md" withBorder>
           <Group justify="space-between" align="center" mb="md">
-            <Title order={4}>Wizyty ({appointments.length})</Title>
-            <Button
-              size="sm"
-              leftSection={<IconPlus size="1rem" />}
-              variant="light"
-            >
-              Dodaj wizytę
-            </Button>
+            <Group gap="md">
+              <Title order={4}>Wizyty ({appointments.length})</Title>
+              {selectedAppointments.length > 0 && (
+                <Badge color="blue" variant="light">
+                  {selectedAppointments.length} zaznaczonych
+                </Badge>
+              )}
+            </Group>
+            <Group gap="xs">
+              {appointments.length > 0 && (
+                <Menu>
+                  <Menu.Target>
+                    <ActionIcon variant="light" size="sm">
+                      <IconDownload size="1rem" />
+                    </ActionIcon>
+                  </Menu.Target>
+                  <Menu.Dropdown>
+                    <Menu.Item
+                      leftSection={<IconCheck size="1rem" />}
+                      onClick={selectAllAppointments}
+                      disabled={selectedAppointments.length === appointments.length}
+                    >
+                      Zaznacz wszystkie
+                    </Menu.Item>
+                    <Menu.Item
+                      leftSection={<IconX size="1rem" />}
+                      onClick={clearSelection}
+                      disabled={selectedAppointments.length === 0}
+                    >
+                      Wyczyść zaznaczenie
+                    </Menu.Item>
+                    <Menu.Divider />
+                    <Menu.Item
+                      leftSection={<IconFileExport size="1rem" />}
+                      onClick={handleExportSelected}
+                      disabled={selectedAppointments.length === 0}
+                    >
+                      Eksportuj zaznaczone
+                    </Menu.Item>
+                  </Menu.Dropdown>
+                </Menu>
+              )}
+              <Button
+                size="sm"
+                leftSection={<IconPlus size="1rem" />}
+                variant="light"
+              >
+                Dodaj wizytę
+              </Button>
+            </Group>
           </Group>
           
           {appointments.length === 0 ? (
@@ -126,49 +212,56 @@ export function PatientProfileTabs({ patient }: PatientProfileTabsProps) {
               {appointments.map((appointment) => (
                 <Card key={appointment.id} withBorder p="md">
                   <Group justify="space-between" align="flex-start">
-                    <div>
-                      <Group gap="xs" mb="xs">
-                        <Text fw={500}>
-                          {formatDateTime(appointment.date)}
-                        </Text>
-                        <Badge
-                          color={
-                            appointment.status === AppointmentStatus.COMPLETED ? 'green' :
-                            appointment.status === AppointmentStatus.CANCELLED ? 'red' :
-                            appointment.status === AppointmentStatus.NO_SHOW ? 'orange' :
-                            'blue'
-                          }
-                          variant="light"
-                          size="sm"
-                        >
-                          {appointment.status === AppointmentStatus.COMPLETED ? 'Zakończona' :
-                           appointment.status === AppointmentStatus.CANCELLED ? 'Anulowana' :
-                           appointment.status === AppointmentStatus.NO_SHOW ? 'Nieobecność' :
-                           appointment.status === AppointmentStatus.SCHEDULED ? 'Zaplanowana' :
-                           'Przełożona'}
-                        </Badge>
-                      </Group>
-                      
-                      <Text size="sm" c="dimmed">
-                        Czas trwania: {appointment.duration} min
-                      </Text>
-                      
-                      {appointment.type && (
+                    <Group align="flex-start" gap="md">
+                      <Checkbox
+                        checked={selectedAppointments.includes(appointment.id!)}
+                        onChange={(e) => handleAppointmentSelection(appointment.id!, e.currentTarget.checked)}
+                        mt="2px"
+                      />
+                      <div>
+                        <Group gap="xs" mb="xs">
+                          <Text fw={500}>
+                            {formatDateTime(appointment.date)}
+                          </Text>
+                          <Badge
+                            color={
+                              appointment.status === AppointmentStatus.COMPLETED ? 'green' :
+                              appointment.status === AppointmentStatus.CANCELLED ? 'red' :
+                              appointment.status === AppointmentStatus.NO_SHOW ? 'orange' :
+                              'blue'
+                            }
+                            variant="light"
+                            size="sm"
+                          >
+                            {appointment.status === AppointmentStatus.COMPLETED ? 'Zakończona' :
+                             appointment.status === AppointmentStatus.CANCELLED ? 'Anulowana' :
+                             appointment.status === AppointmentStatus.NO_SHOW ? 'Nieobecność' :
+                             appointment.status === AppointmentStatus.SCHEDULED ? 'Zaplanowana' :
+                             'Przełożona'}
+                          </Badge>
+                        </Group>
+                        
                         <Text size="sm" c="dimmed">
-                          Typ: {appointment.type === 'therapy' ? 'Terapia' :
-                                appointment.type === 'initial' ? 'Wizyta początkowa' :
-                                appointment.type === 'follow_up' ? 'Wizyta kontrolna' :
-                                appointment.type === 'consultation' ? 'Konsultacja' :
-                                'Ocena'}
+                          Czas trwania: {appointment.duration} min
                         </Text>
-                      )}
-                      
-                      {appointment.notes && (
-                        <Text size="sm" mt="xs">
-                          <strong>Notatki:</strong> {appointment.notes}
-                        </Text>
-                      )}
-                    </div>
+                        
+                        {appointment.type && (
+                          <Text size="sm" c="dimmed">
+                            Typ: {appointment.type === 'therapy' ? 'Terapia' :
+                                  appointment.type === 'initial' ? 'Wizyta początkowa' :
+                                  appointment.type === 'follow_up' ? 'Wizyta kontrolna' :
+                                  appointment.type === 'consultation' ? 'Konsultacja' :
+                                  'Ocena'}
+                          </Text>
+                        )}
+                        
+                        {appointment.notes && (
+                          <Text size="sm" mt="xs">
+                            <strong>Notatki:</strong> {appointment.notes}
+                          </Text>
+                        )}
+                      </div>
+                    </Group>
                     
                     {appointment.price && (
                       <Text size="sm" fw={500} c="green">
