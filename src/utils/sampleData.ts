@@ -20,6 +20,7 @@ const samplePatients: Omit<Patient, 'id' | 'createdAt' | 'updatedAt'>[] = [
     {
         firstName: 'Michał',
         lastName: 'Nowak',
+        nazwa: 'Michał od Marii',
         email: 'michal.nowak@gmail.com',
         phone: '+48 234 567 890',
         birthDate: new Date('1978-11-22'),
@@ -32,7 +33,7 @@ const samplePatients: Omit<Patient, 'id' | 'createdAt' | 'updatedAt'>[] = [
     {
         firstName: 'Katarzyna',
         lastName: 'Wiśniewska',
-        nazwa: 'Kasia W.',
+        nazwa: 'Kasia od Tomka',
         email: 'k.wisniewska@outlook.com',
         phone: '+48 345 678 901',
         birthDate: new Date('1992-07-08'),
@@ -57,7 +58,7 @@ const samplePatients: Omit<Patient, 'id' | 'createdAt' | 'updatedAt'>[] = [
     {
         firstName: 'Magdalena',
         lastName: 'Dąbrowska',
-        nazwa: 'Magda D.',
+        nazwa: 'Magda od Roberta',
         email: 'magda.dabrowska@uni.edu.pl',
         phone: '+48 567 890 123',
         birthDate: new Date('1995-12-14'),
@@ -70,6 +71,7 @@ const samplePatients: Omit<Patient, 'id' | 'createdAt' | 'updatedAt'>[] = [
     {
         firstName: 'Tomasz',
         lastName: 'Kaminski',
+        nazwa: 'Tomek od Ewy',
         email: 'tomek.kaminski@free.com',
         phone: '+48 678 901 234',
         birthDate: new Date('1982-05-26'),
@@ -82,7 +84,7 @@ const samplePatients: Omit<Patient, 'id' | 'createdAt' | 'updatedAt'>[] = [
     {
         firstName: 'Aleksandra',
         lastName: 'Jankowska',
-        nazwa: 'Ola J.',
+        nazwa: 'Ola od Marcina',
         email: 'aleksandra.jankowska@corp.com',
         phone: '+48 789 012 345',
         birthDate: new Date('1990-08-12'),
@@ -107,6 +109,7 @@ const samplePatients: Omit<Patient, 'id' | 'createdAt' | 'updatedAt'>[] = [
     {
         firstName: 'Natalia',
         lastName: 'Lewandowska',
+        nazwa: 'Natka od Adama',
         email: 'natalia.lewandowska@med.pl',
         phone: '+48 901 234 567',
         birthDate: new Date('1983-12-03'),
@@ -119,6 +122,7 @@ const samplePatients: Omit<Patient, 'id' | 'createdAt' | 'updatedAt'>[] = [
     {
         firstName: 'Jakub',
         lastName: 'Wójcik',
+        nazwa: 'Kuba od Basi',
         email: 'jakub.wojcik@student.edu.pl',
         phone: '+48 012 345 678',
         birthDate: new Date('1999-06-25'),
@@ -131,7 +135,7 @@ const samplePatients: Omit<Patient, 'id' | 'createdAt' | 'updatedAt'>[] = [
     {
         firstName: 'Karolina',
         lastName: 'Mazur',
-        nazwa: 'Karo M.',
+        nazwa: 'Karo od Piotra',
         email: 'karolina.mazur@creative.com',
         phone: '+48 123 456 789',
         birthDate: new Date('1991-09-14'),
@@ -144,6 +148,7 @@ const samplePatients: Omit<Patient, 'id' | 'createdAt' | 'updatedAt'>[] = [
     {
         firstName: 'Bartłomiej',
         lastName: 'Szymański',
+        nazwa: 'Bartek od Moniki',
         email: 'bartlomiej.szymanski@law.pl',
         phone: '+48 234 567 890',
         birthDate: new Date('1979-02-28'),
@@ -157,6 +162,7 @@ const samplePatients: Omit<Patient, 'id' | 'createdAt' | 'updatedAt'>[] = [
     {
         firstName: 'Paweł',
         lastName: 'Kowalski',
+        nazwa: 'Paweł od Anny',
         email: 'pawel.kowalski@email.com',
         phone: '+48 111 222 333',
         birthDate: new Date('1983-07-12'),
@@ -169,6 +175,7 @@ const samplePatients: Omit<Patient, 'id' | 'createdAt' | 'updatedAt'>[] = [
     {
         firstName: 'Maria',
         lastName: 'Nowak',
+        nazwa: 'Maria od Michała',
         email: 'maria.nowak@gmail.com',
         phone: '+48 444 555 666',
         birthDate: new Date('1980-04-18'),
@@ -181,7 +188,7 @@ const samplePatients: Omit<Patient, 'id' | 'createdAt' | 'updatedAt'>[] = [
     {
         firstName: 'Agnieszka',
         lastName: 'Zielińska',
-        nazwa: 'Aga Z.',
+        nazwa: 'Aga od Piotra',
         email: 'agnieszka.zielinska@work.pl',
         phone: '+48 777 888 999',
         birthDate: new Date('1991-11-05'),
@@ -194,6 +201,7 @@ const samplePatients: Omit<Patient, 'id' | 'createdAt' | 'updatedAt'>[] = [
     {
         firstName: 'Dominik',
         lastName: 'Krawczyk',
+        nazwa: 'Dominik od Pauliny',
         email: 'dominik.krawczyk@tech.pl',
         phone: '+48 555 666 777',
         birthDate: new Date('1988-09-30'),
@@ -206,7 +214,7 @@ const samplePatients: Omit<Patient, 'id' | 'createdAt' | 'updatedAt'>[] = [
     {
         firstName: 'Paulina',
         lastName: 'Krawczyk',
-        nazwa: 'Paula K.',
+        nazwa: 'Paula od Dominika',
         email: 'paulina.krawczyk@design.pl',
         phone: '+48 666 777 888',
         birthDate: new Date('1990-02-14'),
@@ -219,6 +227,7 @@ const samplePatients: Omit<Patient, 'id' | 'createdAt' | 'updatedAt'>[] = [
     {
         firstName: 'Sebastian',
         lastName: 'Górski',
+        nazwa: 'Sebastian od Martyny',
         email: 'sebastian.gorski@finance.pl',
         phone: '+48 333 444 555',
         birthDate: new Date('1985-12-08'),
@@ -231,7 +240,7 @@ const samplePatients: Omit<Patient, 'id' | 'createdAt' | 'updatedAt'>[] = [
     {
         firstName: 'Martyna',
         lastName: 'Górska',
-        nazwa: 'Martyna G.',
+        nazwa: 'Martyna od Sebastiana',
         email: 'martyna.gorska@marketing.pl',
         phone: '+48 444 555 666',
         birthDate: new Date('1987-06-22'),
@@ -244,6 +253,7 @@ const samplePatients: Omit<Patient, 'id' | 'createdAt' | 'updatedAt'>[] = [
     {
         firstName: 'Łukasz',
         lastName: 'Wiśniewski',
+        nazwa: 'Łukasz od Joanny',
         email: 'lukasz.wisniewski@startup.pl',
         phone: '+48 888 999 000',
         birthDate: new Date('1992-03-17'),
@@ -256,7 +266,7 @@ const samplePatients: Omit<Patient, 'id' | 'createdAt' | 'updatedAt'>[] = [
     {
         firstName: 'Joanna',
         lastName: 'Wiśniewska',
-        nazwa: 'Asia W.',
+        nazwa: 'Asia od Łukasza',
         email: 'joanna.wisniewska@hr.pl',
         phone: '+48 999 000 111',
         birthDate: new Date('1993-08-29'),
@@ -269,7 +279,7 @@ const samplePatients: Omit<Patient, 'id' | 'createdAt' | 'updatedAt'>[] = [
     {
         firstName: 'Krzysztof',
         lastName: 'Adamski',
-        nazwa: 'Krzysiek A.',
+        nazwa: 'Krzysiek od Beaty',
         email: 'krzysztof.adamski@consulting.pl',
         phone: '+48 222 333 444',
         birthDate: new Date('1981-10-11'),
@@ -282,6 +292,7 @@ const samplePatients: Omit<Patient, 'id' | 'createdAt' | 'updatedAt'>[] = [
     {
         firstName: 'Beata',
         lastName: 'Adamska',
+        nazwa: 'Beata od Krzysztofa',
         email: 'beata.adamska@wellness.pl',
         phone: '+48 333 444 555',
         birthDate: new Date('1984-01-25'),
@@ -294,6 +305,7 @@ const samplePatients: Omit<Patient, 'id' | 'createdAt' | 'updatedAt'>[] = [
     {
         firstName: 'Marcin',
         lastName: 'Stępień',
+        nazwa: 'Marcin od Kasi',
         email: 'marcin.stepien@media.pl',
         phone: '+48 555 777 999',
         birthDate: new Date('1986-05-03'),
@@ -306,7 +318,7 @@ const samplePatients: Omit<Patient, 'id' | 'createdAt' | 'updatedAt'>[] = [
     {
         firstName: 'Katarzyna',
         lastName: 'Stępień',
-        nazwa: 'Kasia S.',
+        nazwa: 'Kasia od Marcina',
         email: 'katarzyna.stepien@education.pl',
         phone: '+48 666 888 000',
         birthDate: new Date('1988-12-19'),
@@ -319,6 +331,7 @@ const samplePatients: Omit<Patient, 'id' | 'createdAt' | 'updatedAt'>[] = [
     {
         firstName: 'Adrian',
         lastName: 'Kowalczyk',
+        nazwa: 'Adrian od Werki',
         email: 'adrian.kowalczyk@sports.pl',
         phone: '+48 777 999 111',
         birthDate: new Date('1994-07-28'),
@@ -331,7 +344,7 @@ const samplePatients: Omit<Patient, 'id' | 'createdAt' | 'updatedAt'>[] = [
     {
         firstName: 'Weronika',
         lastName: 'Kowalczyk',
-        nazwa: 'Wera K.',
+        nazwa: 'Wera od Adriana',
         email: 'weronika.kowalczyk@nutrition.pl',
         phone: '+48 888 000 222',
         birthDate: new Date('1996-04-15'),

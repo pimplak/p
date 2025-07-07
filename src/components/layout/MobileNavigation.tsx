@@ -1,14 +1,15 @@
-import { Group, Text, UnstyledButton } from '@mantine/core';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { Group, Text, UnstyledButton } from '@mantine/core';
 import { 
   IconDashboard,
   IconUsers,
   IconCalendar,
   IconNotes,
-  IconChartLine
+  IconChartLine,
+  type Icon
 } from '@tabler/icons-react';
-import type { Icon } from '@tabler/icons-react';
+import { useAppointmentStore } from '../../stores/useAppointmentStore';
 
 interface NavigationItem {
   id: string;
@@ -17,40 +18,6 @@ interface NavigationItem {
   href: string;
   badge?: number;
 }
-
-const navigationItems: NavigationItem[] = [
-  { 
-    id: 'dashboard',
-    label: 'Dashboard', 
-    icon: IconDashboard, 
-    href: '/' 
-  },
-  { 
-    id: 'patients',
-    label: 'Pacjenci', 
-    icon: IconUsers, 
-    href: '/patients',
-    badge: 3
-  },
-  { 
-    id: 'calendar',
-    label: 'Kalendarz', 
-    icon: IconCalendar, 
-    href: '/calendar' 
-  },
-  { 
-    id: 'notes',
-    label: 'Notatki', 
-    icon: IconNotes, 
-    href: '/notes' 
-  },
-  { 
-    id: 'analytics',
-    label: 'Statystyki', 
-    icon: IconChartLine, 
-    href: '/analytics' 
-  },
-];
 
 interface MobileNavigationProps {
   onItemClick?: (item: NavigationItem) => void;
@@ -62,6 +29,57 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
   const [pressedItem, setPressedItem] = useState<string | null>(null);
   const navigate = useNavigate();
   const location = useLocation();
+  const { appointments } = useAppointmentStore();
+
+  // Liczenie dzisiejszych wizyt które jeszcze się nie odbyły - reactive na appointments
+  const todaysPendingAppointments = useMemo(() => {
+    const today = new Date();
+    const startOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    const endOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23, 59, 59);
+    const now = new Date();
+    
+    return appointments.filter(appointment => {
+      const appointmentDate = new Date(appointment.date);
+      return appointmentDate >= startOfDay && 
+             appointmentDate <= endOfDay && 
+             appointmentDate > now && 
+             appointment.status === 'scheduled';
+    }).length;
+  }, [appointments]);
+
+  const navigationItems: NavigationItem[] = [
+    { 
+      id: 'dashboard',
+      label: 'Dashboard', 
+      icon: IconDashboard, 
+      href: '/' 
+    },
+    { 
+      id: 'patients',
+      label: 'Pacjenci', 
+      icon: IconUsers, 
+      href: '/patients'
+    },
+    { 
+      id: 'calendar',
+      label: 'Kalendarz', 
+      icon: IconCalendar, 
+      href: '/calendar',
+      badge: todaysPendingAppointments > 0 ? todaysPendingAppointments : undefined
+    },
+    { 
+      id: 'notes',
+      label: 'Notatki', 
+      icon: IconNotes, 
+      href: '/notes' 
+    },
+    { 
+      id: 'analytics',
+      label: 'Statystyki', 
+      icon: IconChartLine, 
+      href: '/analytics' 
+    },
+  ];
 
   const handleItemPress = (item: NavigationItem) => {
     setPressedItem(item.id);

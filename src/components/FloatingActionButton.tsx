@@ -18,7 +18,7 @@ interface FloatingActionButtonProps {
 
 export function FloatingActionButton({ 
   actions, 
-  position = { bottom: 20, right: 20 } 
+  position = { bottom: 100, right: 20 }
 }: FloatingActionButtonProps) {
   const [opened, setOpened] = useState(false);
 
@@ -38,6 +38,7 @@ export function FloatingActionButton({
           style={{
             boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
             border: '1px solid var(--color-primary)',
+            zIndex: 1001,
           }}
         >
           {action.icon}
@@ -49,7 +50,7 @@ export function FloatingActionButton({
   // Jeśli więcej akcji, pokaż expandable menu
   return (
     <Affix position={position} hiddenFrom="md" className="floating-action-button">
-      <Stack gap="sm" align="flex-end">
+      <Stack gap="sm" align="flex-end" style={{ zIndex: 1001 }}>
         {/* Menu Actions */}
         <Transition
           mounted={opened}
@@ -58,7 +59,7 @@ export function FloatingActionButton({
           timingFunction="ease"
         >
           {(styles) => (
-            <Stack gap="xs" style={styles}>
+            <Stack gap="xs" style={{ ...styles, zIndex: 1001 }}>
               {actions.map((action) => (
                 <Paper 
                   key={action.id}
@@ -66,6 +67,7 @@ export function FloatingActionButton({
                   style={{
                     boxShadow: '0 2px 8px rgba(0, 0, 0, 0.2)',
                     border: '1px solid var(--color-primary)',
+                    zIndex: 1001,
                   }}
                 >
                   <Group gap="sm" wrap="nowrap" onClick={action.onClick} style={{ cursor: 'pointer' }}>
@@ -99,6 +101,7 @@ export function FloatingActionButton({
             border: '1px solid var(--color-primary)',
             transform: opened ? 'rotate(45deg)' : 'rotate(0deg)',
             transition: 'transform 200ms ease',
+            zIndex: 1001,
           }}
         >
           {opened ? <IconX size="1.5rem" /> : <IconPlus size="1.5rem" />}

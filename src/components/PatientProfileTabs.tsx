@@ -1,5 +1,5 @@
-import { Tabs, Paper, Stack, Text, Divider, Badge, Group, Card, Title, Button, Checkbox, Menu, ActionIcon } from '@mantine/core';
-import { IconNotes, IconCalendar, IconTarget, IconPlus, IconDownload, IconCheck, IconX, IconFileExport } from '@tabler/icons-react';
+import { Tabs, Paper, Stack, Text, Divider, Badge, Group, Card, Title, Button, Checkbox, Menu, ActionIcon, ThemeIcon } from '@mantine/core';
+import { IconNotes, IconCalendar, IconTarget, IconPlus, IconDownload, IconCheck, IconX, IconFileExport, IconClock } from '@tabler/icons-react';
 import { useState, useEffect } from 'react';
 import { useAppointmentStore } from '../stores/useAppointmentStore';
 import { AppointmentStatus } from '../types/Appointment';
@@ -278,13 +278,37 @@ export function PatientProfileTabs({ patient }: PatientProfileTabsProps) {
 
       <Tabs.Panel value="notes" pt="md">
         <Paper p="md" withBorder>
-          <Text>System notatek SOAP będzie tutaj - do implementacji</Text>
+          <Stack gap="md" align="center" ta="center" py="xl">
+            <ThemeIcon size="lg" variant="light" color="yellow">
+              <IconClock size="1.5rem" />
+            </ThemeIcon>
+            <div>
+              <Text fw={500} size="lg" mb="xs">
+                Feature będzie dostępny soon
+              </Text>
+              <Text size="sm" c="dimmed">
+                System notatek SOAP dla pacjentów jest w przygotowaniu
+              </Text>
+            </div>
+          </Stack>
         </Paper>
       </Tabs.Panel>
 
       <Tabs.Panel value="goals" pt="md">
         <Paper p="md" withBorder>
-          <Text>Cele terapii będą tutaj - do implementacji</Text>
+          <Stack gap="md" align="center" ta="center" py="xl">
+            <ThemeIcon size="lg" variant="light" color="yellow">
+              <IconClock size="1.5rem" />
+            </ThemeIcon>
+            <div>
+              <Text fw={500} size="lg" mb="xs">
+                Feature będzie dostępny soon
+              </Text>
+              <Text size="sm" c="dimmed">
+                System śledzenia celów terapii jest w przygotowaniu
+              </Text>
+            </div>
+          </Stack>
         </Paper>
       </Tabs.Panel>
     </Tabs>

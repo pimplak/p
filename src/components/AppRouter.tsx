@@ -9,6 +9,8 @@ const PatientsPage = lazy(() => import('../pages/PatientsPage'));
 const PatientProfile = lazy(() => import('./PatientProfile'));
 const Calendar = lazy(() => import('../pages/Calendar'));
 const Settings = lazy(() => import('../pages/Settings'));
+const Notes = lazy(() => import('../pages/Notes'));
+const Analytics = lazy(() => import('../pages/Analytics'));
 
 // Loading fallback component
 function PageLoader() {
@@ -28,6 +30,8 @@ export function AppRouter() {
           <Route path="/patients" element={<PatientsPage />} />
           <Route path="/patients/:id" element={<PatientProfile />} />
           <Route path="/calendar" element={<Calendar />} />
+          <Route path="/notes" element={<Notes />} />
+          <Route path="/analytics" element={<Analytics />} />
           <Route path="/settings" element={<Settings />} />
         </Routes>
       </Suspense>
