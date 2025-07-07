@@ -11,7 +11,9 @@ import {
 import {
   IconChartLine,
   IconClock,
+  IconMessage,
 } from '@tabler/icons-react';
+import { SMSAnalytics } from '../components/SMSAnalytics';
 
 function Analytics() {
   return (
@@ -30,6 +32,18 @@ function Analytics() {
           </div>
         </Group>
 
+        {/* SMS Analytics */}
+        <Card shadow="sm" padding="lg" radius="md" withBorder>
+          <Stack gap="md">
+            <Group align="center" gap="sm">
+              <IconMessage size={20} color="var(--mantine-color-blue-6)" />
+              <Text fw={600} size="lg">Statystyki SMS</Text>
+            </Group>
+            
+            <SMSAnalytics period="month" />
+          </Stack>
+        </Card>
+
         {/* Coming Soon Card */}
         <Card shadow="sm" padding="xl" radius="md" withBorder>
           <Stack gap="lg" align="center" ta="center">
@@ -39,7 +53,7 @@ function Analytics() {
             
             <Stack gap="sm" align="center">
               <Title order={2} size="h3">
-                Feature będzie dostępny soon
+                Więcej funkcji będzie dostępnych soon
               </Title>
               <Text size="lg" c="dimmed" maw={500}>
                 Przygotowujemy zaawansowane narzędzia analityczne do śledzenia postępów praktyki i efektywności terapii.
@@ -64,7 +78,6 @@ function Analytics() {
               <Text size="sm">💰 Analiza przychodów i płatności</Text>
               <Text size="sm">📅 Raport wykorzystania czasu</Text>
               <Text size="sm">📊 Statystyki skuteczności terapii</Text>
-              <Text size="sm">📱 Analiza przypomnień SMS (dostępna w Ustawieniach)</Text>
               <Text size="sm">📋 Raporty compliance i frekwencji</Text>
               <Text size="sm">📄 Eksport raportów do PDF/Excel</Text>
             </Stack>
@@ -81,7 +94,7 @@ function Analytics() {
             <Text size="sm">
               🔹 Podstawowe statystyki praktyki znajdziesz na <strong>Dashboard</strong>
               <br />
-              🔹 Analiza SMS dostępna w sekcji <strong>Ustawienia</strong>
+              🔹 Analiza SMS dostępna powyżej w tej sekcji
             </Text>
           </Stack>
         </Card>

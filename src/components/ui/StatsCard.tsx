@@ -1,5 +1,5 @@
-import React from 'react';
 import { Card, Text, Group, Stack, ThemeIcon } from '@mantine/core';
+import React from 'react';
 import type { Icon } from '@tabler/icons-react';
 
 interface StatsCardProps {
@@ -12,6 +12,7 @@ interface StatsCardProps {
     value: number;
     period: string;
   };
+  onClick?: () => void;
 }
 
 export const StatsCard: React.FC<StatsCardProps> = ({
@@ -20,7 +21,8 @@ export const StatsCard: React.FC<StatsCardProps> = ({
   description,
   icon: Icon,
   color = 'indigo',
-  trend
+  trend,
+  onClick
 }) => {
   const getColorScheme = (colorName: string) => {
     const colors = {
@@ -39,6 +41,7 @@ export const StatsCard: React.FC<StatsCardProps> = ({
       shadow="sm"
       padding="xl"
       radius="md"
+      onClick={onClick}
       style={{
         backgroundColor: 'var(--color-surface)',
         border: '1px solid var(--color-primary)',

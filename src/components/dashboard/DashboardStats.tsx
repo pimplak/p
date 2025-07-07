@@ -1,10 +1,9 @@
 import { SimpleGrid, Stack, Title } from '@mantine/core';
 import { 
   IconUsers, 
-  IconCalendar, 
-  IconClock, 
-  IconTrendingUp
+  IconCalendar
 } from '@tabler/icons-react';
+import { useNavigate } from 'react-router-dom';
 import { StatsCard } from '../ui/StatsCard';
 
 interface DashboardStatsProps {
@@ -33,6 +32,8 @@ export const DashboardStats: React.FC<DashboardStatsProps> = ({
     nextAppointment: null
   }
 }) => {
+  const navigate = useNavigate();
+
   return (
     <Stack gap="xl">
       <Title 
@@ -49,7 +50,7 @@ export const DashboardStats: React.FC<DashboardStatsProps> = ({
       </Title>
       
       <SimpleGrid
-        cols={{ base: 1, sm: 2, lg: 4 }}
+        cols={{ base: 1, sm: 2 }}
         spacing="xl"
         style={{ marginBottom: '2rem' }}
       >
@@ -59,6 +60,7 @@ export const DashboardStats: React.FC<DashboardStatsProps> = ({
           description="Łącznie w systemie"
           icon={IconUsers}
           color="indigo"
+          onClick={() => navigate('/patients')}
         />
         
         <StatsCard
@@ -67,22 +69,7 @@ export const DashboardStats: React.FC<DashboardStatsProps> = ({
           description="Zaplanowane spotkania"
           icon={IconCalendar}
           color="green"
-        />
-        
-        <StatsCard
-          title="Średni czas sesji"
-          value={stats.avgSessionDuration > 0 ? `${stats.avgSessionDuration} min` : 'Brak danych'}
-          description="Przeciętna długość"
-          icon={IconClock}
-          color="yellow"
-        />
-        
-        <StatsCard
-          title="Wskaźnik ukończenia"
-          value={`${stats.completionRate}%`}
-          description="Ukończone wizyty"
-          icon={IconTrendingUp}
-          color="green"
+          onClick={() => navigate('/calendar')}
         />
       </SimpleGrid>
       

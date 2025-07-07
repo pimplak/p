@@ -23,7 +23,6 @@ import {
   IconInfoCircle,
   IconMessage,
 } from '@tabler/icons-react';
-import { SMSAnalytics } from '../components/SMSAnalytics';
 import { ThemeSelector } from '../components/ThemeSelector';
 import { useAppointmentStore } from '../stores/useAppointmentStore';
 import { usePatientStore } from '../stores/usePatientStore';
@@ -151,19 +150,7 @@ function Settings() {
                         </Stack>
                     </Card>
 
-                    {/* SMS Analytics */}
-                    <Card shadow="sm" padding="lg" radius="md" withBorder>
-                        <Stack gap="md">
-                            <Group align="center" gap="sm">
-                                <IconInfoCircle size={20} color="var(--mantine-color-teal-6)" />
-                                <Text fw={600} size="lg">Analiza SMS</Text>
-                            </Group>
-                            
-                            <Divider />
 
-                            <SMSAnalytics period="month" />
-                        </Stack>
-                    </Card>
 
                     {/* Aplikacja i dane */}
                     <Card shadow="sm" padding="lg" radius="md" withBorder>
