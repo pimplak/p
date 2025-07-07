@@ -541,9 +541,9 @@ a:hover svg,
   }
 }
 
-/* === FERRO'S RUTHLESS iOS ZOOM PREVENTION === */
+/* === FERRO'S PRAGMATIC iOS TEST VERSION === */
 
-/* Force 16px minimum on inputs to prevent iOS auto-zoom */
+/* Beautiful 14px for all platforms - testing if iOS will zoom */
 @media (max-width: 768px) {
   input, 
   textarea, 
@@ -556,12 +556,12 @@ a:hover svg,
   .mantine-DateTimePicker-input,
   .mantine-TagsInput-input,
   .mantine-PasswordInput-input {
-    font-size: 16px !important; /* iOS nie zoomuje przy 16px+ */
-    line-height: 1.4 !important; /* Maintain proper line height */
+    font-size: 14px !important; /* TEST: Will iOS zoom at 14px? */
+    line-height: 1.4 !important; 
   }
 }
 
-/* iOS Safari specific fixes */
+/* iOS Safari specific fixes (keeping the good stuff) */
 @supports (-webkit-touch-callout: none) {
   /* iOS device detection and fixes */
   html {
