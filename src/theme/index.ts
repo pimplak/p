@@ -156,8 +156,6 @@ export const therapeuticTheme = createTheme({
             },
             styles: {
                 root: {
-                    backgroundColor: 'white',
-                    border: '1px solid var(--mantine-color-gray-1)',
                     transition: 'all 200ms ease-out',
                     '&:hover': {
                         transform: 'translateY(-1px)',
@@ -192,13 +190,7 @@ export const therapeuticTheme = createTheme({
                 input: {
                     minHeight: '44px', // Mobile-friendly
                     fontSize: '1rem',
-                    backgroundColor: 'var(--mantine-color-gray-0)',
-                    border: '1px solid var(--mantine-color-gray-2)',
                     transition: 'border-color 200ms ease-out',
-                    '&:focus': {
-                        borderColor: '#6366F1',
-                        boxShadow: '0 0 0 1px #6366F1',
-                    }
                 }
             }
         },
@@ -212,13 +204,7 @@ export const therapeuticTheme = createTheme({
                 input: {
                     minHeight: '44px',
                     fontSize: '1rem',
-                    backgroundColor: 'var(--mantine-color-gray-0)',
-                    border: '1px solid var(--mantine-color-gray-2)',
                     transition: 'border-color 200ms ease-out',
-                    '&:focus': {
-                        borderColor: '#6366F1',
-                        boxShadow: '0 0 0 1px #6366F1',
-                    }
                 }
             }
         },
@@ -232,13 +218,7 @@ export const therapeuticTheme = createTheme({
                 input: {
                     minHeight: '44px',
                     fontSize: '1rem',
-                    backgroundColor: 'var(--mantine-color-gray-0)',
-                    border: '1px solid var(--mantine-color-gray-2)',
                     transition: 'border-color 200ms ease-out',
-                    '&:focus': {
-                        borderColor: '#6366F1',
-                        boxShadow: '0 0 0 1px #6366F1',
-                    }
                 }
             }
         },
@@ -272,8 +252,7 @@ export const therapeuticTheme = createTheme({
             },
             styles: {
                 root: {
-                    backgroundColor: 'white',
-                    border: '1px solid var(--mantine-color-gray-1)',
+                    // Let globalStyles.ts handle the theming via CSS variables
                 }
             }
         },
@@ -284,7 +263,6 @@ export const therapeuticTheme = createTheme({
             },
             styles: {
                 main: {
-                    backgroundColor: 'var(--mantine-color-gray-0)',
                     minHeight: '100vh',
                 }
             }

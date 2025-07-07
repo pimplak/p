@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { COLOR_PALETTES, type PaletteId, type ColorPalette } from '../types/theme';
+import { COLOR_PALETTES, type PaletteId, type ColorPalette, isDarkPalette } from '../types/theme';
 
 interface ThemeStore {
     currentPaletteId: PaletteId;
@@ -45,9 +45,11 @@ const hslToHex = (h: number, s: number, l: number) => {
     return `#${f(0)}${f(8)}${f(4)}`;
 };
 
-// CSS Variables Manager - Ferro's Advanced System
+// CSS Variables Manager - Ferro's Fixed System  
 const updateCSSVariables = (palette: ColorPalette) => {
     const root = document.documentElement;
+    const paletteId = palette.id as PaletteId;
+    const isDark = isDarkPalette(paletteId);
 
     // Podstawowe kolory
     root.style.setProperty('--color-background', palette.background);
@@ -60,33 +62,38 @@ const updateCSSVariables = (palette: ColorPalette) => {
     const [primaryH, primaryS, primaryL] = hexToHsl(palette.primary);
     const [accentH, accentS, accentL] = hexToHsl(palette.accent);
     const [textH, textS, textL] = hexToHsl(palette.text);
+    const [surfaceH, surfaceS, surfaceL] = hexToHsl(palette.surface);
 
     // Primary variants
-    root.style.setProperty('--color-primary-hover', hslToHex(primaryH, primaryS, Math.min(primaryL + 10, 90)));
-    root.style.setProperty('--color-primary-light', hslToHex(primaryH, primaryS * 0.6, Math.min(primaryL + 30, 95)));
+    root.style.setProperty('--color-primary-hover', hslToHex(primaryH, primaryS, isDark ? Math.min(primaryL + 10, 90) : Math.max(primaryL - 10, 10)));
+    root.style.setProperty('--color-primary-light', hslToHex(primaryH, primaryS * 0.6, isDark ? Math.min(primaryL + 30, 95) : Math.min(primaryL + 30, 95)));
     root.style.setProperty('--color-primary-dark', hslToHex(primaryH, primaryS, Math.max(primaryL - 15, 10)));
 
     // Accent variants
-    root.style.setProperty('--color-accent-hover', hslToHex(accentH, accentS, Math.min(accentL + 10, 90)));
-    root.style.setProperty('--color-accent-light', hslToHex(accentH, accentS * 0.4, Math.min(accentL + 35, 95)));
+    root.style.setProperty('--color-accent-hover', hslToHex(accentH, accentS, isDark ? Math.min(accentL + 10, 90) : Math.max(accentL - 10, 10)));
+    root.style.setProperty('--color-accent-light', hslToHex(accentH, accentS * 0.4, isDark ? Math.min(accentL + 35, 95) : Math.min(accentL + 35, 95)));
 
-    // Text variants
-    root.style.setProperty('--color-text-muted', hslToHex(textH, textS * 0.5, Math.max(textL - 25, 15)));
-    root.style.setProperty('--color-text-inverse', hslToHex(textH, textS, textL > 50 ? 10 : 90));
+    // Text variants - Fixed logic
+    root.style.setProperty('--color-text-muted', hslToHex(textH, textS * 0.6, isDark ? Math.max(textL - 30, 30) : Math.min(textL + 20, 70)));
+    root.style.setProperty('--color-text-inverse', isDark ? '#000000' : '#ffffff');
 
-    // Input/Button specific colors
-    const isDark = textL > 50; // Sprawdź czy to dark theme
+    // Surface variants for better contrast
     if (isDark) {
-        // Dark theme input colors
-        root.style.setProperty('--color-input-bg', hslToHex(primaryH, primaryS * 0.2, Math.min(primaryL + 5, 25)));
-        root.style.setProperty('--color-input-border', hslToHex(primaryH, primaryS * 0.3, Math.min(primaryL + 15, 35)));
-        root.style.setProperty('--color-button-text', palette.text);
+        // Dark theme: surface variants
+        root.style.setProperty('--color-surface-hover', hslToHex(surfaceH, surfaceS, Math.min(surfaceL + 8, 40)));
+        root.style.setProperty('--color-surface-active', hslToHex(surfaceH, surfaceS, Math.min(surfaceL + 15, 50)));
     } else {
-        // Light theme input colors
-        root.style.setProperty('--color-input-bg', '#ffffff');
-        root.style.setProperty('--color-input-border', hslToHex(primaryH, primaryS * 0.3, 85));
-        root.style.setProperty('--color-button-text', palette.text);
+        // Light theme: surface variants
+        root.style.setProperty('--color-surface-hover', hslToHex(surfaceH, surfaceS, Math.max(surfaceL - 8, 90)));
+        root.style.setProperty('--color-surface-active', hslToHex(surfaceH, surfaceS, Math.max(surfaceL - 15, 85)));
     }
+
+    // Debug: Set theme type variable
+    root.style.setProperty('--theme-type', isDark ? 'dark' : 'light');
+
+    // Debug info
+    console.log(`🎨 Ferro Theme Applied: ${palette.name} (${isDark ? 'dark' : 'light'})`);
+    console.log(`📊 Colors: bg=${palette.background}, surface=${palette.surface}, primary=${palette.primary}, text=${palette.text}`);
 };
 
 // Constants
@@ -106,7 +113,7 @@ const getStoredPaletteId = (): PaletteId => {
     } catch {
         // ignore
     }
-    return 'arctic'; // default
+    return 'darkgray'; // default - Dark Gray palette (professional)
 };
 
 const savePaletteId = (paletteId: PaletteId) => {

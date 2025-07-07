@@ -12,160 +12,166 @@ export interface ColorPalette {
     text: string;         // główny kolor tekstu
 }
 
-// Predefiniowane palety - każda RADYKALNIE różna
+// === FERRO'S BRUTAL COLOR SYSTEM ===
+// Palety oparte na teorii kolorów, nie na przypadku
+
 export const COLOR_PALETTES: Record<string, ColorPalette> = {
+    // === LIGHT PROFESSIONAL THEMES ===
+
     arctic: {
         name: 'Arctic Frost',
         id: 'arctic',
-        background: '#f8fafb',  // lodowato białe tło
-        surface: '#ffffff',     // czyste białe powierzchnie
-        primary: '#0ea5e9',     // błękit arktyczny
-        accent: '#3b82f6',      // intensywny niebieski
-        text: '#1e293b',        // ciemnoszary tekst
-    },
-
-    forest: {
-        name: 'Deep Forest',
-        id: 'forest',
-        background: '#0f1f0f',  // ciemne leśne tło
-        surface: '#1a2e1a',     // zielonkawe powierzchnie
-        primary: '#22c55e',     // żywy zielony
-        accent: '#84cc16',      // limonkowy akcent
-        text: '#f0fdf4',        // jasny tekst
+        background: '#fafbfc',  // glacial white
+        surface: '#ffffff',     // pure white cards
+        primary: '#0284c7',     // deep sky blue (główny brand)
+        accent: '#0ea5e9',      // bright blue (hover/accent)
+        text: '#0f172a',        // slate-900 (perfect contrast)
     },
 
     sunset: {
         name: 'Golden Sunset',
         id: 'sunset',
-        background: '#fef3e2',  // ciepłe kremowe tło
-        surface: '#fff7ed',     // jasne pomarańczowe powierzchnie
-        primary: '#f59e0b',     // złoty pomarańcz
-        accent: '#dc2626',      // czerwony akcent
-        text: '#451a03',        // ciemny brąz
-    },
-
-    midnight: {
-        name: 'Midnight Purple',
-        id: 'midnight',
-        background: '#0f0f1a',  // ciemne fioletowe tło
-        surface: '#1a1a2e',     // ciemnofioletowe powierzchnie
-        primary: '#8b5cf6',     // fioletowy primary
-        accent: '#ec4899',      // różowy akcent
-        text: '#f3f4f6',        // jasny tekst
+        background: '#fffbf5',  // warm cream background
+        surface: '#ffffff',     // clean white cards
+        primary: '#ea580c',     // sunset orange (główny)
+        accent: '#f59e0b',      // golden amber (akcent)
+        text: '#1c1917',        // stone-900 (excellent readability)
     },
 
     coral: {
         name: 'Coral Reef',
         id: 'coral',
-        background: '#fef7f7',  // delikatnie różowe tło
-        surface: '#fff1f2',     // jasne powierzchnie
-        primary: '#f43f5e',     // koralowy primary
-        accent: '#06b6d4',      // turkusowy akcent
-        text: '#1f2937',        // ciemnoszary tekst
+        background: '#fef7f7',  // soft coral background
+        surface: '#ffffff',     // pure white cards
+        primary: '#dc2626',     // coral red (główny)
+        accent: '#f97316',      // warm orange (kontrastowy akcent)
+        text: '#1f2937',        // gray-800 (strong contrast)
     },
 
-    // === FERRO'S NEW CUSTOM PALETTES ===
+    // === WARM HARMONIOUS THEMES ===
 
     winefire: {
         name: 'Wine & Fire',
         id: 'winefire',
-        background: '#ff9b54',  // sandy brown - najjaśniejszy
-        surface: '#ff7f51',     // coral - powierzchnie
-        primary: '#ce4257',     // amaranth - główny brand
-        accent: '#720026',      // claret - kontrastowy akcent
-        text: '#4f000b',        // chocolate cosmos - najciemniejszy tekst
+        background: '#fef2f2',  // soft wine background
+        surface: '#ffffff',     // clean white surface
+        primary: '#991b1b',     // deep wine red
+        accent: '#dc2626',      // fire red accent
+        text: '#1f2937',        // dark gray text
     },
 
     springblush: {
         name: 'Spring Blush',
         id: 'springblush',
-        background: '#f9ada0',  // melon - delikatne tło
-        surface: '#83b692',     // cambridge blue - powierzchnie
-        primary: '#f9627d',     // bright pink - główny
-        accent: '#c65b7c',      // blush - akcent
-        text: '#5b3758',        // violet jtc - ciemny tekst
+        background: '#fdf2f8',  // soft pink background
+        surface: '#ffffff',     // white surface
+        primary: '#be185d',     // deep pink primary
+        accent: '#ec4899',      // bright pink accent
+        text: '#1f2937',        // dark text
     },
 
     earthgarden: {
         name: 'Earth Garden',
         id: 'earthgarden',
-        background: '#bca371',  // ecru - ziemiste tło
-        surface: '#a6b07e',     // sage - powierzchnie
-        primary: '#68a357',     // asparagus - zielony primary
-        accent: '#32965d',      // shamrock green - żywy akcent
-        text: '#c97064',        // indian red - kontrastowy tekst
+        background: '#f7f5f0',  // earthy cream
+        surface: '#ffffff',     // clean white
+        primary: '#059669',     // forest green
+        accent: '#10b981',      // bright emerald
+        text: '#1f2937',        // dark text
     },
+
+    // === VIBRANT MODERN THEMES ===
 
     mysticdusk: {
         name: 'Mystic Dusk',
         id: 'mysticdusk',
-        background: '#c4a69d',  // rosy brown - najjaśniejsze
-        surface: '#98a886',     // cambridge blue - powierzchnie
-        primary: '#735290',     // ultra violet - fioletowy primary
-        accent: '#465c69',      // paynes gray - szary akcent
-        text: '#363457',        // space cadet - ciemny tekst
+        background: '#faf5ff',  // soft purple background
+        surface: '#ffffff',     // white surface
+        primary: '#7c3aed',     // mystic violet
+        accent: '#a855f7',      // bright purple
+        text: '#1f2937',        // dark text
     },
 
     neonnight: {
         name: 'Neon Night',
         id: 'neonnight',
-        background: '#c2c1c2',  // silver - neutralne tło
-        surface: '#683257',     // violet jtc - ciemne powierzchnie
-        primary: '#bd4089',     // mulberry - główny fioletowy
-        accent: '#f51aa4',      // hollywood cerise - neonowy akcent
-        text: '#42213d',        // dark purple - głęboki tekst
+        background: '#f0f9ff',  // soft cyan background
+        surface: '#ffffff',     // white surface
+        primary: '#0891b2',     // cyan primary
+        accent: '#06b6d4',      // bright cyan
+        text: '#1f2937',        // dark text
     },
 
     retrofire: {
         name: 'Retro Fire',
         id: 'retrofire',
-        background: '#eae2b7',  // vanilla - jasne retro tło
-        surface: '#fcbf49',     // xanthous - żółte powierzchnie
-        primary: '#f77f00',     // orange wheel - pomarańczowy primary
-        accent: '#d62828',      // fire engine red - czerwony akcent
-        text: '#003049',        // prussian blue - kontrastowy niebieski tekst
+        background: '#fffbeb',  // warm amber background
+        surface: '#ffffff',     // white surface
+        primary: '#d97706',     // retro amber
+        accent: '#f59e0b',      // bright yellow
+        text: '#1f2937',        // dark text
     },
 
-    // === FERRO'S PROFESSIONAL DARK THEMES ===
+    // === DARK PROFESSIONAL THEMES ===
+
+    forest: {
+        name: 'Deep Forest',
+        id: 'forest',
+        background: '#0c1810',  // forest night
+        surface: '#1a2f1a',     // dark moss surface
+        primary: '#22c55e',     // forest green
+        accent: '#4ade80',      // bright lime
+        text: '#f0fdf4',        // soft mint text
+    },
+
+    midnight: {
+        name: 'Midnight Purple',
+        id: 'midnight',
+        background: '#0f0a1a',  // deep purple night
+        surface: '#1e1a2e',     // dark purple surface
+        primary: '#8b5cf6',     // royal violet
+        accent: '#a78bfa',      // light purple
+        text: '#f3f4f6',        // soft gray text
+    },
 
     darkpro: {
         name: 'Dark Professional',
         id: 'darkpro',
-        background: '#0a0a0f',  // bardzo ciemny niebieski
-        surface: '#1a1a24',     // ciemny niebieski surface
-        primary: '#4f8ff7',     // jasny niebieski (lepszy kontrast)
-        accent: '#22d3ee',      // cyan akcent
-        text: '#f1f5f9',        // bardzo jasny tekst
+        background: '#0a0e1a',  // professional dark blue
+        surface: '#1e293b',     // slate surface
+        primary: '#3b82f6',     // professional blue
+        accent: '#60a5fa',      // bright blue
+        text: '#f1f5f9',        // crisp white text
     },
 
     darkslate: {
         name: 'Dark Slate',
         id: 'darkslate',
-        background: '#0f172a',  // slate-900
-        surface: '#1e293b',     // slate-800
-        primary: '#7c3aed',     // fioletowy primary (lepszy kontrast)
-        accent: '#06b6d4',      // cyan akcent
-        text: '#f1f5f9',        // slate-100
+        background: '#0f172a',  // slate-900 background
+        surface: '#1e293b',     // slate-800 surface
+        primary: '#6366f1',     // indigo primary
+        accent: '#8b5cf6',      // violet accent
+        text: '#f1f5f9',        // slate-100 text
     },
 
     darkgray: {
         name: 'Dark Gray',
         id: 'darkgray',
-        background: '#111827',  // gray-900
-        surface: '#1f2937',     // gray-800
-        primary: '#3b82f6',     // niebieski primary
-        accent: '#10b981',      // zielony akcent
-        text: '#f9fafb',        // gray-50
+        background: '#111827',  // gray-900 background
+        surface: '#1f2937',     // gray-800 surface
+        primary: '#10b981',     // emerald primary
+        accent: '#34d399',      // bright emerald
+        text: '#f9fafb',        // gray-50 text
     },
 
     darkcarbon: {
         name: 'Dark Carbon',
         id: 'darkcarbon',
-        background: '#0c0c0c',  // carbon black
-        surface: '#1c1c1e',     // ciemny surface z lekkim odcieniem
-        primary: '#ff6b6b',     // coral red
-        accent: '#4ecdc4',      // turquoise
-        text: '#ffffff',        // pure white
+        background: '#0c0c0c',  // pure carbon black
+        surface: '#1c1c1e',     // carbon surface
+        primary: '#ef4444',     // red primary
+        accent: '#f87171',      // bright red accent
+        text: '#ffffff',        // pure white text
     },
 };
 
@@ -174,8 +180,7 @@ export type PaletteId = keyof typeof COLOR_PALETTES;
 // Helper do sprawdzania czy paleta jest ciemna
 export const isDarkPalette = (paletteId: PaletteId): boolean => {
     const darkPalettes: PaletteId[] = [
-        'forest', 'midnight', 'neonnight', 'mysticdusk',
-        'darkpro', 'darkslate', 'darkgray', 'darkcarbon'
+        'forest', 'midnight', 'darkpro', 'darkslate', 'darkgray', 'darkcarbon'
     ];
     return darkPalettes.includes(paletteId);
 };

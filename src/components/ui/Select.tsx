@@ -48,16 +48,16 @@ export const Select = forwardRef<HTMLInputElement, CustomSelectProps>(
         case 'filled':
           return {
             ...baseStyles,
-            backgroundColor: 'var(--gray-50)',
-            border: '1px solid var(--gray-200)',
+            backgroundColor: 'var(--color-surface)',
+            border: '1px solid var(--color-primary)',
             '&:focus, &:focus-within': {
-              backgroundColor: 'white',
-              borderColor: '#6366F1',
-              boxShadow: '0 0 0 1px #6366F1',
+              backgroundColor: 'var(--color-surface)',
+              borderColor: 'var(--color-primary)',
+              boxShadow: '0 0 0 1px var(--color-primary)',
               outline: 'none',
             },
             '&:hover:not(:focus):not(:focus-within)': {
-              borderColor: 'var(--gray-300)',
+              borderColor: 'var(--color-primary-light)',
             }
           };
 
@@ -66,10 +66,10 @@ export const Select = forwardRef<HTMLInputElement, CustomSelectProps>(
             ...baseStyles,
             backgroundColor: 'transparent',
             border: 'none',
-            borderBottom: '2px solid var(--gray-200)',
+            borderBottom: '2px solid var(--color-text-muted)',
             borderRadius: '0',
             '&:focus, &:focus-within': {
-              borderBottomColor: '#6366F1',
+              borderBottomColor: 'var(--color-primary)',
               outline: 'none',
             }
           };
@@ -77,8 +77,8 @@ export const Select = forwardRef<HTMLInputElement, CustomSelectProps>(
         default:
           return {
             ...baseStyles,
-            backgroundColor: 'var(--color-input-bg)',
-            border: '1px solid var(--color-input-border)',
+            backgroundColor: 'var(--color-surface)',
+            border: '1px solid var(--color-primary)',
             color: 'var(--color-text)',
             '&:focus, &:focus-within': {
               borderColor: 'var(--color-primary)',
@@ -105,7 +105,7 @@ export const Select = forwardRef<HTMLInputElement, CustomSelectProps>(
           label: {
             fontSize: '0.875rem',
             fontWeight: 500,
-            color: 'var(--gray-700)',
+            color: 'var(--color-text)',
             marginBottom: '6px',
           },
           error: {
@@ -115,12 +115,12 @@ export const Select = forwardRef<HTMLInputElement, CustomSelectProps>(
           },
           description: {
             fontSize: '0.875rem',
-            color: 'var(--gray-600)',
+            color: 'var(--color-text-muted)',
             marginTop: '4px',
           },
           dropdown: {
             backgroundColor: 'var(--color-surface)',
-            border: '1px solid var(--color-input-border)',
+            border: '1px solid var(--color-primary)',
             borderRadius: '8px',
             boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
             padding: '4px',
@@ -137,7 +137,7 @@ export const Select = forwardRef<HTMLInputElement, CustomSelectProps>(
             },
             '&[data-selected]': {
               backgroundColor: 'var(--color-primary)',
-              color: 'var(--color-button-text)',
+              color: 'var(--color-text-inverse)',
               '&[data-hovered]': {
                 backgroundColor: 'var(--color-primary-hover)',
               }

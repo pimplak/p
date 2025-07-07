@@ -51,8 +51,8 @@ export const Textarea = forwardRef<HTMLTextAreaElement, CustomTextareaProps>(
         case 'filled':
           return {
             ...baseStyles,
-            backgroundColor: 'var(--color-input-bg)',
-            border: '1px solid var(--color-input-border)',
+            backgroundColor: 'var(--color-surface)',
+            border: '1px solid var(--color-primary)',
             color: 'var(--color-text)',
             '&:focus, &:focus-within': {
               backgroundColor: 'var(--color-surface)',
@@ -70,10 +70,10 @@ export const Textarea = forwardRef<HTMLTextAreaElement, CustomTextareaProps>(
             ...baseStyles,
             backgroundColor: 'transparent',
             border: 'none',
-            borderBottom: '2px solid var(--gray-200)',
+            borderBottom: '2px solid var(--color-text-muted)',
             borderRadius: '0',
             '&:focus, &:focus-within': {
-              borderBottomColor: '#6366F1',
+              borderBottomColor: 'var(--color-primary)',
               outline: 'none',
             }
           };
@@ -81,8 +81,8 @@ export const Textarea = forwardRef<HTMLTextAreaElement, CustomTextareaProps>(
         default:
           return {
             ...baseStyles,
-            backgroundColor: 'var(--color-input-bg)',
-            border: '1px solid var(--color-input-border)',
+            backgroundColor: 'var(--color-surface)',
+            border: '1px solid var(--color-primary)',
             color: 'var(--color-text)',
             '&:focus, &:focus-within': {
               borderColor: 'var(--color-primary)',
@@ -118,7 +118,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, CustomTextareaProps>(
             },
             description: {
               fontSize: '0.875rem',
-              color: 'var(--gray-600)',
+              color: 'var(--color-text-muted)',
               marginTop: '4px',
             },
             ...styles,
@@ -134,7 +134,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, CustomTextareaProps>(
               bottom: '8px',
               right: '12px',
               fontSize: '0.75rem',
-              color: 'var(--gray-500)',
+              color: 'var(--color-text-muted)',
               display: 'flex',
               alignItems: 'center',
               gap: '4px',

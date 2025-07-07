@@ -48,8 +48,8 @@ export const TextInput = forwardRef<HTMLInputElement, CustomTextInputProps>(
         case 'filled':
           return {
             ...baseStyles,
-            backgroundColor: 'var(--color-input-bg)',
-            border: '1px solid var(--color-input-border)',
+            backgroundColor: 'var(--color-surface)',
+            border: '1px solid var(--color-primary)',
             color: 'var(--color-text)',
             '&:focus, &:focus-within': {
               backgroundColor: 'var(--color-surface)',
@@ -68,10 +68,10 @@ export const TextInput = forwardRef<HTMLInputElement, CustomTextInputProps>(
             ...baseStyles,
             backgroundColor: 'transparent',
             border: 'none',
-            borderBottom: '2px solid var(--gray-200)',
+            borderBottom: '2px solid var(--color-text-muted)',
             borderRadius: '0',
             '&:focus, &:focus-within': {
-              borderBottomColor: '#6366F1',
+              borderBottomColor: 'var(--color-primary)',
               outline: 'none',
             }
           };
@@ -79,8 +79,8 @@ export const TextInput = forwardRef<HTMLInputElement, CustomTextInputProps>(
         default:
           return {
             ...baseStyles,
-            backgroundColor: 'var(--color-input-bg)',
-            border: '1px solid var(--color-input-border)',
+            backgroundColor: 'var(--color-surface)',
+            border: '1px solid var(--color-primary)',
             color: 'var(--color-text)',
             '&:focus, &:focus-within': {
               borderColor: 'var(--color-primary)',
