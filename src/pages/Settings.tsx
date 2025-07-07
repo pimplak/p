@@ -23,6 +23,7 @@ import {
   IconInfoCircle,
   IconMessage,
 } from '@tabler/icons-react';
+import { SMSTemplateManager } from '../components/SMSTemplateManager';
 import { ThemeSelector } from '../components/ThemeSelector';
 import { useAppointmentStore } from '../stores/useAppointmentStore';
 import { usePatientStore } from '../stores/usePatientStore';
@@ -146,6 +147,10 @@ function Settings() {
                                     ]}
                                     description="Tytuł używany w wiadomościach SMS"
                                 />
+
+                                <Divider variant="dashed" />
+
+                                <SMSTemplateManager />
                             </Stack>
                         </Stack>
                     </Card>

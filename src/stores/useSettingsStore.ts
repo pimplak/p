@@ -23,7 +23,9 @@ interface SettingsStore {
     // SMS actions
     setPractitionerName: (name: string) => void;
     setPractitionerTitle: (title: string) => void;
+    addSMSTemplate: (template: Omit<SMSTemplate, 'id'>) => void;
     updateSMSTemplate: (templateId: string, template: Partial<SMSTemplate>) => void;
+    deleteSMSTemplate: (templateId: string) => void;
     resetSMSTemplates: () => void;
 }
 
@@ -50,6 +52,19 @@ const saveSettings = (settings: Partial<SettingsStore>) => {
 export const useSettingsStore = create<SettingsStore>((set, get) => {
     const storedSettings = getStoredSettings();
 
+    // Helper function to save all settings
+    const saveAllSettings = () => {
+        const state = get();
+        saveSettings({
+            colorPalette: state.colorPalette,
+            darkMode: state.darkMode,
+            hideWeekends: state.hideWeekends,
+            practitionerName: state.practitionerName,
+            practitionerTitle: state.practitionerTitle,
+            smsTemplates: state.smsTemplates
+        });
+    };
+
     return {
         colorPalette: storedSettings.colorPalette || 'naturalne',
         darkMode: storedSettings.darkMode ?? true,
@@ -62,68 +77,40 @@ export const useSettingsStore = create<SettingsStore>((set, get) => {
 
         setColorPalette: (palette) => {
             set({ colorPalette: palette });
-            const state = get();
-            saveSettings({
-                colorPalette: palette,
-                darkMode: state.darkMode,
-                hideWeekends: state.hideWeekends,
-                practitionerName: state.practitionerName,
-                practitionerTitle: state.practitionerTitle,
-                smsTemplates: state.smsTemplates
-            });
+            saveAllSettings();
         },
 
         toggleDarkMode: () => {
             set((state) => ({ darkMode: !state.darkMode }));
-            const state = get();
-            saveSettings({
-                colorPalette: state.colorPalette,
-                darkMode: state.darkMode,
-                hideWeekends: state.hideWeekends,
-                practitionerName: state.practitionerName,
-                practitionerTitle: state.practitionerTitle,
-                smsTemplates: state.smsTemplates
-            });
+            saveAllSettings();
         },
 
         toggleHideWeekends: () => {
             set((state) => ({ hideWeekends: !state.hideWeekends }));
-            const state = get();
-            saveSettings({
-                colorPalette: state.colorPalette,
-                darkMode: state.darkMode,
-                hideWeekends: state.hideWeekends,
-                practitionerName: state.practitionerName,
-                practitionerTitle: state.practitionerTitle,
-                smsTemplates: state.smsTemplates
-            });
+            saveAllSettings();
         },
 
         // SMS actions
         setPractitionerName: (name) => {
             set({ practitionerName: name });
-            const state = get();
-            saveSettings({
-                colorPalette: state.colorPalette,
-                darkMode: state.darkMode,
-                hideWeekends: state.hideWeekends,
-                practitionerName: name,
-                practitionerTitle: state.practitionerTitle,
-                smsTemplates: state.smsTemplates
-            });
+            saveAllSettings();
         },
 
         setPractitionerTitle: (title) => {
             set({ practitionerTitle: title });
-            const state = get();
-            saveSettings({
-                colorPalette: state.colorPalette,
-                darkMode: state.darkMode,
-                hideWeekends: state.hideWeekends,
-                practitionerName: state.practitionerName,
-                practitionerTitle: title,
-                smsTemplates: state.smsTemplates
-            });
+            saveAllSettings();
+        },
+
+        addSMSTemplate: (templateData) => {
+            const newTemplate: SMSTemplate = {
+                ...templateData,
+                id: `custom_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
+            };
+
+            set((state) => ({
+                smsTemplates: [...state.smsTemplates, newTemplate]
+            }));
+            saveAllSettings();
         },
 
         updateSMSTemplate: (templateId, templateUpdate) => {
@@ -134,28 +121,19 @@ export const useSettingsStore = create<SettingsStore>((set, get) => {
                         : template
                 )
             }));
-            const state = get();
-            saveSettings({
-                colorPalette: state.colorPalette,
-                darkMode: state.darkMode,
-                hideWeekends: state.hideWeekends,
-                practitionerName: state.practitionerName,
-                practitionerTitle: state.practitionerTitle,
-                smsTemplates: state.smsTemplates
-            });
+            saveAllSettings();
+        },
+
+        deleteSMSTemplate: (templateId) => {
+            set((state) => ({
+                smsTemplates: state.smsTemplates.filter(template => template.id !== templateId)
+            }));
+            saveAllSettings();
         },
 
         resetSMSTemplates: () => {
             set({ smsTemplates: DEFAULT_SMS_TEMPLATES });
-            const state = get();
-            saveSettings({
-                colorPalette: state.colorPalette,
-                darkMode: state.darkMode,
-                hideWeekends: state.hideWeekends,
-                practitionerName: state.practitionerName,
-                practitionerTitle: state.practitionerTitle,
-                smsTemplates: DEFAULT_SMS_TEMPLATES
-            });
+            saveAllSettings();
         },
     };
 }); 
