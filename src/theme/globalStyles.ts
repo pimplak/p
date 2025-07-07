@@ -23,6 +23,40 @@ export const globalStyles: CSSObject = {
     backgroundColor: 'var(--color-surface) !important',
   },
 
+  /* Date and Special Input components */
+  '.mantine-DateInput-input, .mantine-DateTimePicker-input, .mantine-DatePicker-input, .mantine-TagsInput-input': {
+    color: 'var(--color-text) !important',
+    backgroundColor: 'var(--color-surface) !important',
+    borderColor: 'var(--color-primary) !important',
+  },
+
+  /* TagsInput pills */
+  '.mantine-TagsInput-pill': {
+    backgroundColor: 'var(--color-primary) !important',
+    color: 'var(--color-surface) !important',
+  },
+
+  /* Input labels */
+  '.mantine-TextInput-label, .mantine-Select-label, .mantine-NumberInput-label, .mantine-Textarea-label, .mantine-DateInput-label, .mantine-DateTimePicker-label, .mantine-TagsInput-label': {
+    color: 'var(--color-text) !important',
+  },
+
+  /* Input wrappers and borders */
+  '.mantine-TextInput-wrapper, .mantine-Select-wrapper, .mantine-NumberInput-wrapper, .mantine-Textarea-wrapper, .mantine-DateInput-wrapper, .mantine-DateTimePicker-wrapper, .mantine-TagsInput-wrapper': {
+    borderColor: 'var(--color-primary) !important',
+  },
+
+  /* Input placeholders */
+  '.mantine-TextInput-input::placeholder, .mantine-Select-input::placeholder, .mantine-NumberInput-input::placeholder, .mantine-Textarea-input::placeholder, .mantine-DateInput-input::placeholder, .mantine-DateTimePicker-input::placeholder, .mantine-TagsInput-input::placeholder': {
+    color: 'color-mix(in srgb, var(--color-text) 50%, transparent) !important',
+  },
+
+  /* Dropdown backgrounds */
+  '.mantine-Select-dropdown, .mantine-Combobox-dropdown, .mantine-DatePicker-dropdown': {
+    backgroundColor: 'var(--color-surface) !important',
+    borderColor: 'var(--color-primary) !important',
+  },
+
   /* Theme-aware component overrides */
   '.mantine-AppShell-main': {
     backgroundColor: 'var(--color-background) !important',
@@ -170,11 +204,11 @@ export const globalStyles: CSSObject = {
       borderRadius: '0.5rem !important',
     },
 
-    '.mantine-TextInput-root, .mantine-Select-root, .mantine-NumberInput-root': {
+    '.mantine-TextInput-root, .mantine-Select-root, .mantine-NumberInput-root, .mantine-DateInput-root, .mantine-DateTimePicker-root, .mantine-TagsInput-root, .mantine-Textarea-root': {
       marginBottom: '1rem !important',
     },
 
-    '.mantine-TextInput-input, .mantine-Select-input, .mantine-NumberInput-input': {
+    '.mantine-TextInput-input, .mantine-Select-input, .mantine-NumberInput-input, .mantine-DateInput-input, .mantine-DateTimePicker-input, .mantine-TagsInput-input, .mantine-Textarea-input': {
       height: '2.5rem !important',
       fontSize: '0.9rem !important',
       padding: '0 0.75rem !important',
@@ -200,6 +234,11 @@ export const globalStyles: CSSObject = {
 
     '.mantine-NumberInput-controls': {
       display: 'none !important',
+    },
+
+    '.mantine-DateTimePicker-timeInput': {
+      height: '2.5rem !important',
+      fontSize: '0.9rem !important',
     },
 
     '.patient-table-responsive': {
@@ -251,5 +290,44 @@ export const globalStyles: CSSObject = {
       gap: '0.5rem !important',
       marginTop: '0.75rem !important',
     },
+  },
+
+  /* Checkbox and form controls */
+  '.mantine-Checkbox-root, .mantine-Switch-root': {
+    color: 'var(--color-text) !important',
+  },
+
+  '.mantine-Checkbox-input:checked': {
+    backgroundColor: 'var(--color-primary) !important',
+    borderColor: 'var(--color-primary) !important',
+  },
+
+  '.mantine-Switch-track[data-checked]': {
+    backgroundColor: 'var(--color-primary) !important',
+  },
+
+  /* Focus states for all inputs */
+  '.mantine-TextInput-input:focus, .mantine-Select-input:focus, .mantine-NumberInput-input:focus, .mantine-Textarea-input:focus, .mantine-DateInput-input:focus, .mantine-DateTimePicker-input:focus, .mantine-TagsInput-input:focus': {
+    borderColor: 'var(--color-accent) !important',
+  },
+
+  /* Input icons and buttons */
+  '.mantine-DateInput-calendarIcon, .mantine-DateTimePicker-calendarIcon, .mantine-Select-rightSection': {
+    color: 'var(--color-text) !important',
+  },
+
+  '.mantine-TagsInput-pill button': {
+    color: 'var(--color-surface) !important',
+  },
+
+  '.mantine-NumberInput-controls button': {
+    color: 'var(--color-text) !important',
+    backgroundColor: 'var(--color-surface) !important',
+    borderColor: 'var(--color-primary) !important',
+  },
+
+  '.mantine-NumberInput-controls button:hover': {
+    backgroundColor: 'var(--color-primary) !important',
+    color: 'var(--color-surface) !important',
   },
 }; 

@@ -38,8 +38,8 @@ const PatientCard = memo(({ index, style, data }: PatientCardProps) => {
         radius="md"
         style={{ 
           margin: '0 16px 16px 16px',
-          background: 'var(--mantine-color-dark-7)',
-          border: '1px solid var(--mantine-color-dark-4)'
+          background: 'var(--color-surface)',
+          border: '1px solid var(--color-primary)'
         }}
       >
         <Stack gap="md">

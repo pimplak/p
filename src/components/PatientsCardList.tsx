@@ -39,9 +39,9 @@ export function PatientsCardList({
           radius="md"
           style={{ 
             background: patient.status === PATIENT_STATUS.ARCHIVED
-              ? 'var(--mantine-color-gray-9)' 
-              : 'var(--mantine-color-dark-7)',
-            border: '1px solid var(--mantine-color-dark-4)',
+              ? 'var(--color-surface)' 
+              : 'var(--color-surface)',
+            border: '1px solid var(--color-primary)',
             opacity: patient.status === PATIENT_STATUS.ARCHIVED ? 0.7 : 1,
             cursor: 'pointer'
           }}

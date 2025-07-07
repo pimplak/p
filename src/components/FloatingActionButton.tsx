@@ -37,7 +37,7 @@ export function FloatingActionButton({
           onClick={action.onClick}
           style={{
             boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
-            border: '1px solid var(--mantine-color-dark-4)',
+            border: '1px solid var(--color-primary)',
           }}
         >
           {action.icon}
@@ -65,7 +65,7 @@ export function FloatingActionButton({
                   p="xs"
                   style={{
                     boxShadow: '0 2px 8px rgba(0, 0, 0, 0.2)',
-                    border: '1px solid var(--mantine-color-dark-4)',
+                    border: '1px solid var(--color-primary)',
                   }}
                 >
                   <Group gap="sm" wrap="nowrap" onClick={action.onClick} style={{ cursor: 'pointer' }}>
@@ -96,7 +96,7 @@ export function FloatingActionButton({
           onClick={() => setOpened(!opened)}
           style={{
             boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
-            border: '1px solid var(--mantine-color-dark-4)',
+            border: '1px solid var(--color-primary)',
             transform: opened ? 'rotate(45deg)' : 'rotate(0deg)',
             transition: 'transform 200ms ease',
           }}

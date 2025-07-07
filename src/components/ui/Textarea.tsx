@@ -24,7 +24,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, CustomTextareaProps>(
       if (hasError) {
         return {
           ...baseStyles,
-          backgroundColor: '#FEF2F2',
+          backgroundColor: 'var(--color-surface)',
           border: '1px solid var(--danger)',
           '&:focus, &:focus-within': {
             borderColor: 'var(--danger)',
@@ -37,7 +37,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, CustomTextareaProps>(
       if (hasSuccess) {
         return {
           ...baseStyles,
-          backgroundColor: '#F0FDF4',
+          backgroundColor: 'var(--color-surface)',
           border: '1px solid var(--success)',
           '&:focus, &:focus-within': {
             borderColor: 'var(--success)',

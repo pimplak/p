@@ -21,7 +21,7 @@ export const Select = forwardRef<HTMLInputElement, CustomSelectProps>(
       if (hasError) {
         return {
           ...baseStyles,
-          backgroundColor: '#FEF2F2',
+          backgroundColor: 'var(--color-surface)',
           border: '1px solid var(--danger)',
           '&:focus, &:focus-within': {
             borderColor: 'var(--danger)',
@@ -34,7 +34,7 @@ export const Select = forwardRef<HTMLInputElement, CustomSelectProps>(
       if (hasSuccess) {
         return {
           ...baseStyles,
-          backgroundColor: '#F0FDF4',
+          backgroundColor: 'var(--color-surface)',
           border: '1px solid var(--success)',
           '&:focus, &:focus-within': {
             borderColor: 'var(--success)',
