@@ -540,3 +540,74 @@ a:hover svg,
     transform: none !important;
   }
 }
+
+/* === FERRO'S RUTHLESS iOS ZOOM PREVENTION === */
+
+/* Force 16px minimum on inputs to prevent iOS auto-zoom */
+@media (max-width: 768px) {
+  input, 
+  textarea, 
+  select,
+  .mantine-TextInput-input,
+  .mantine-Textarea-input,
+  .mantine-Select-input,
+  .mantine-NumberInput-input,
+  .mantine-DateInput-input,
+  .mantine-DateTimePicker-input,
+  .mantine-TagsInput-input,
+  .mantine-PasswordInput-input {
+    font-size: 16px !important; /* iOS nie zoomuje przy 16px+ */
+    line-height: 1.4 !important; /* Maintain proper line height */
+  }
+}
+
+/* iOS Safari specific fixes */
+@supports (-webkit-touch-callout: none) {
+  /* iOS device detection and fixes */
+  html {
+    -webkit-text-size-adjust: 100% !important;
+    -webkit-touch-callout: none !important;
+    -webkit-tap-highlight-color: transparent !important;
+  }
+  
+  body {
+    -webkit-user-select: none !important;
+    user-select: none !important;
+    -webkit-touch-callout: none !important;
+  }
+  
+  /* Allow text selection in inputs and textareas */
+  input, 
+  textarea,
+  .mantine-TextInput-input,
+  .mantine-Textarea-input,
+  .mantine-Select-input {
+    -webkit-user-select: text !important;
+    user-select: text !important;
+  }
+  
+  /* Prevent iOS bounce scroll */
+  body {
+    position: fixed;
+    overflow: hidden;
+    width: 100%;
+    height: 100vh;
+  }
+  
+  #root {
+    overflow: auto;
+    height: 100vh;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* iOS PWA status bar spacing */
+  .mantine-AppShell-header {
+    padding-top: env(safe-area-inset-top) !important;
+  }
+  
+  /* iOS keyboard viewport fix */
+  .mantine-AppShell-main {
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
+  }
+}
