@@ -18,7 +18,7 @@ import {
   ScrollArea
 } from '@mantine/core';
 import { DateInput } from '@mantine/dates';
-import { useDisclosure } from '@mantine/hooks';
+import { useDisclosure, useMediaQuery } from '@mantine/hooks';
 import { 
   IconPlus, 
   IconCalendarEvent, 
@@ -54,6 +54,7 @@ import { AppointmentForm } from '../components/AppointmentForm';
 import { BulkSMSReminders } from '../components/BulkSMSReminders';
 import { FloatingActionButton, type FABAction } from '../components/FloatingActionButton';
 import { SMSReminderButton } from '../components/SMSReminderButton';
+import { ExpandableAppointmentRow } from '../components/ui/ExpandableAppointmentRow';
 import { useAppointmentStore } from '../stores/useAppointmentStore';
 import { usePatientStore } from '../stores/usePatientStore';
 import { useSettingsStore } from '../stores/useSettingsStore';
@@ -401,6 +402,8 @@ function DayView({
   getStatusColor,
   getStatusLabel 
 }: CalendarViewProps) {
+  const isMobile = useMediaQuery('(max-width: 768px)');
+  
   const dayAppointments = appointments.filter(apt => 
     isSameDay(new Date(apt.date), date)
   );
@@ -421,6 +424,28 @@ function DayView({
     );
   }
 
+  const sortedAppointments = dayAppointments
+    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+
+  // Mobile view with expandable cards
+  if (isMobile) {
+    return (
+      <Stack gap="sm">
+        {sortedAppointments.map((appointment) => (
+          <ExpandableAppointmentRow
+            key={appointment.id}
+            appointment={appointment}
+            onEditAppointment={onEditAppointment}
+            onDeleteAppointment={onDeleteAppointment}
+            getStatusColor={getStatusColor}
+            getStatusLabel={getStatusLabel}
+          />
+        ))}
+      </Stack>
+    );
+  }
+
+  // Desktop view with table
   return (
     <Table.ScrollContainer minWidth={800}>
       <Table>
@@ -437,9 +462,7 @@ function DayView({
           </Table.Tr>
         </Table.Thead>
         <Table.Tbody>
-          {dayAppointments
-            .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
-            .map((appointment) => (
+          {sortedAppointments.map((appointment) => (
             <Table.Tr key={appointment.id}>
               <Table.Td>
                 <Text fw={500}>
