@@ -11,9 +11,7 @@ import {
 import {
   IconChartLine,
   IconClock,
-  IconMessage,
 } from '@tabler/icons-react';
-import { SMSAnalytics } from '../components/SMSAnalytics';
 
 function Analytics() {
   return (
@@ -32,17 +30,7 @@ function Analytics() {
           </div>
         </Group>
 
-        {/* SMS Analytics */}
-        <Card shadow="sm" padding="lg" radius="md" withBorder>
-          <Stack gap="md">
-            <Group align="center" gap="sm">
-              <IconMessage size={20} color="var(--mantine-color-blue-6)" />
-              <Text fw={600} size="lg">Statystyki SMS</Text>
-            </Group>
-            
-            <SMSAnalytics period="month" />
-          </Stack>
-        </Card>
+
 
         {/* Coming Soon Card */}
         <Card shadow="sm" padding="xl" radius="md" withBorder>
