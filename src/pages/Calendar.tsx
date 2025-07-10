@@ -79,7 +79,7 @@ function Calendar() {
   } = useAppointmentStore();
 
   const { fetchPatients } = usePatientStore();
-  const { currentPalette } = useTheme();
+  const { currentPalette, utilityColors } = useTheme();
 
   useEffect(() => {
     fetchAppointments();
@@ -179,8 +179,8 @@ function Calendar() {
     switch (status) {
       case 'scheduled': return currentPalette.primary;
       case 'completed': return currentPalette.accent;
-      case 'cancelled': return '#ef4444';
-      case 'no_show': return '#f59e0b';
+      case 'cancelled': return utilityColors.error;
+      case 'no_show': return utilityColors.warning;
       default: return currentPalette.text;
     }
   };
@@ -189,8 +189,8 @@ function Calendar() {
     switch (status) {
       case 'scheduled': return `${currentPalette.primary}33`;
       case 'completed': return `${currentPalette.accent}33`;
-      case 'cancelled': return '#ef444433';
-      case 'no_show': return '#f59e0b33';
+      case 'cancelled': return `${utilityColors.error}33`;
+      case 'no_show': return `${utilityColors.warning}33`;
       default: return `${currentPalette.text}26`;
     }
   };
@@ -211,7 +211,6 @@ function Calendar() {
       id: 'add-appointment',
       icon: <IconPlus size="1.2rem" />,
       label: 'Dodaj wizytę',
-      color: 'yellowGreen',
       onClick: () => handleAddAppointment(),
     },
   ];
@@ -350,6 +349,7 @@ function Calendar() {
             getStatusBackgroundColor={getStatusBackgroundColor}
             getStatusLabel={getStatusLabel}
             currentPalette={currentPalette}
+            utilityColors={utilityColors}
           />
         )}
 
@@ -415,6 +415,11 @@ interface CalendarViewProps {
   getStatusLabel: (status: string) => string;
   hideWeekends?: boolean;
   currentPalette: ColorPalette;
+  utilityColors?: {
+    error: string;
+    success: string;
+    warning: string;
+  };
 }
 
 function DayView({ 
@@ -424,7 +429,8 @@ function DayView({
   onDeleteAppointment, 
   onAddAppointment,
   getStatusColor,
-  getStatusLabel 
+  getStatusLabel,
+  utilityColors
 }: CalendarViewProps) {
   const isMobile = useMediaQuery('(max-width: 768px)');
   
@@ -522,9 +528,9 @@ function DayView({
               </Table.Td>
               <Table.Td>
                 {appointment.paymentInfo?.isPaid ? (
-                  <Badge color="green" size="sm">Opłacono</Badge>
+                  <Badge color={utilityColors?.success || 'green'} size="sm">Opłacono</Badge>
                 ) : (
-                  <Badge color="red" size="sm">Nieopłacono</Badge>
+                  <Badge color={utilityColors?.error || 'red'} size="sm">Nieopłacono</Badge>
                 )}
               </Table.Td>
               <Table.Td>
@@ -578,7 +584,7 @@ function WeekView({
   onAddAppointment,
   getStatusBackgroundColor,
   hideWeekends = false,
-  currentPalette
+  currentPalette,
 }: CalendarViewProps) {
   const weekStart = startOfWeek(date, { weekStartsOn: 1 });
   const allWeekDays = eachDayOfInterval({
@@ -736,7 +742,7 @@ function MonthView({
   onEditAppointment, 
   onDateClick,
   getStatusBackgroundColor,
-  currentPalette
+  currentPalette,
 }: MonthViewProps) {
   const monthStart = startOfMonth(date);
   const monthEnd = endOfMonth(date);
@@ -790,7 +796,7 @@ function MonthView({
                     : currentPalette.background,
                 opacity: isCurrentMonth ? 1 : 0.6,
                 cursor: 'pointer',
-                border: '1px solid var(--color-input-border)'
+                border: `1px solid ${currentPalette.primary}40`
               }}
               onClick={() => onDateClick(day)}
             >

@@ -10,7 +10,7 @@ interface CustomTextInputProps extends TextInputProps {
 
 export const TextInput = forwardRef<HTMLInputElement, CustomTextInputProps>(
   ({ variant = 'default', hasError, hasSuccess, style, styles, ...props }, ref) => {
-    const { currentPalette } = useTheme();
+    const { currentPalette, utilityColors } = useTheme();
 
     const getVariantStyles = () => {
       const baseStyles = {
@@ -25,11 +25,11 @@ export const TextInput = forwardRef<HTMLInputElement, CustomTextInputProps>(
         return {
           ...baseStyles,
           backgroundColor: currentPalette.surface,
-          border: `1px solid #ef4444`,
+          border: `1px solid ${utilityColors.error}`,
           color: currentPalette.text,
           '&:focus, &:focus-within': {
-            borderColor: '#ef4444',
-            boxShadow: '0 0 0 1px #ef4444',
+            borderColor: utilityColors.error,
+            boxShadow: `0 0 0 1px ${utilityColors.error}`,
             outline: 'none',
           }
         };
@@ -39,11 +39,11 @@ export const TextInput = forwardRef<HTMLInputElement, CustomTextInputProps>(
         return {
           ...baseStyles,
           backgroundColor: currentPalette.surface,
-          border: `1px solid #10b981`,
+          border: `1px solid ${utilityColors.success}`,
           color: currentPalette.text,
           '&:focus, &:focus-within': {
-            borderColor: '#10b981',
-            boxShadow: '0 0 0 1px #10b981',
+            borderColor: utilityColors.success,
+            boxShadow: `0 0 0 1px ${utilityColors.success}`,
             outline: 'none',
           }
         };
@@ -116,7 +116,7 @@ export const TextInput = forwardRef<HTMLInputElement, CustomTextInputProps>(
           },
           error: {
             fontSize: '0.875rem',
-            color: '#ef4444',
+            color: utilityColors.error,
             marginTop: '4px',
           },
           description: {

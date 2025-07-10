@@ -144,12 +144,244 @@ export const useTheme = () => {
                         radius: 'md',
                         size: 'md',
                     },
+                    styles: {
+                        root: {
+                            backgroundColor: currentPalette.primary,
+                            color: currentPalette.surface,
+                            border: `1px solid ${currentPalette.primary}`,
+                            '&:hover': {
+                                backgroundColor: currentPalette.accent,
+                            },
+                        },
+                    },
                 },
 
                 TextInput: {
                     defaultProps: {
                         radius: 'md',
                         size: 'md',
+                    },
+                    styles: {
+                        input: {
+                            backgroundColor: currentPalette.surface,
+                            color: currentPalette.text,
+                            border: `1px solid ${currentPalette.primary}60`,
+                            '&:focus': {
+                                borderColor: currentPalette.primary,
+                                boxShadow: `0 0 0 1px ${currentPalette.primary}`,
+                            },
+                        },
+                        label: {
+                            color: currentPalette.text,
+                        },
+                    },
+                },
+
+                Select: {
+                    defaultProps: {
+                        radius: 'md',
+                        size: 'md',
+                    },
+                    styles: {
+                        input: {
+                            backgroundColor: currentPalette.surface,
+                            color: currentPalette.text,
+                            border: `1px solid ${currentPalette.primary}60`,
+                            '&:focus': {
+                                borderColor: currentPalette.primary,
+                                boxShadow: `0 0 0 1px ${currentPalette.primary}`,
+                            },
+                        },
+                        label: {
+                            color: currentPalette.text,
+                        },
+                        dropdown: {
+                            backgroundColor: currentPalette.surface,
+                            border: `1px solid ${currentPalette.primary}60`,
+                        },
+                        option: {
+                            color: currentPalette.text,
+                            '&[data-selected="true"]': {
+                                backgroundColor: currentPalette.primary,
+                                color: currentPalette.surface,
+                            },
+                            '&:hover': {
+                                backgroundColor: `${currentPalette.primary}20`,
+                            },
+                        },
+                    },
+                },
+
+                DateInput: {
+                    defaultProps: {
+                        radius: 'md',
+                        size: 'md',
+                    },
+                    styles: {
+                        input: {
+                            backgroundColor: currentPalette.surface,
+                            color: currentPalette.text,
+                            border: `1px solid ${currentPalette.primary}60`,
+                            '&:focus': {
+                                borderColor: currentPalette.primary,
+                                boxShadow: `0 0 0 1px ${currentPalette.primary}`,
+                            },
+                        },
+                        label: {
+                            color: currentPalette.text,
+                        },
+                    },
+                },
+
+                NumberInput: {
+                    defaultProps: {
+                        radius: 'md',
+                        size: 'md',
+                    },
+                    styles: {
+                        input: {
+                            backgroundColor: currentPalette.surface,
+                            color: currentPalette.text,
+                            border: `1px solid ${currentPalette.primary}60`,
+                            '&:focus': {
+                                borderColor: currentPalette.primary,
+                                boxShadow: `0 0 0 1px ${currentPalette.primary}`,
+                            },
+                        },
+                        label: {
+                            color: currentPalette.text,
+                        },
+                        control: {
+                            backgroundColor: currentPalette.surface,
+                            color: currentPalette.text,
+                            border: `1px solid ${currentPalette.primary}60`,
+                        },
+                    },
+                },
+
+                Textarea: {
+                    defaultProps: {
+                        radius: 'md',
+                        size: 'md',
+                    },
+                    styles: {
+                        input: {
+                            backgroundColor: currentPalette.surface,
+                            color: currentPalette.text,
+                            border: `1px solid ${currentPalette.primary}60`,
+                            '&:focus': {
+                                borderColor: currentPalette.primary,
+                                boxShadow: `0 0 0 1px ${currentPalette.primary}`,
+                            },
+                        },
+                        label: {
+                            color: currentPalette.text,
+                        },
+                    },
+                },
+
+                Checkbox: {
+                    defaultProps: {
+                        radius: 'sm',
+                        size: 'md',
+                    },
+                    styles: {
+                        input: {
+                            backgroundColor: currentPalette.surface,
+                            border: `1px solid ${currentPalette.primary}60`,
+                            '&:checked': {
+                                backgroundColor: currentPalette.primary,
+                                borderColor: currentPalette.primary,
+                            },
+                        },
+                        label: {
+                            color: currentPalette.text,
+                        },
+                    },
+                },
+
+                Switch: {
+                    defaultProps: {
+                        radius: 'xl',
+                        size: 'md',
+                    },
+                    styles: {
+                        track: {
+                            backgroundColor: `${currentPalette.primary}40`,
+                            borderColor: currentPalette.primary,
+                        },
+                        thumb: {
+                            backgroundColor: currentPalette.surface,
+                            borderColor: currentPalette.primary,
+                        },
+                        label: {
+                            color: currentPalette.text,
+                        },
+                    },
+                },
+
+                DateTimePicker: {
+                    defaultProps: {
+                        radius: 'md',
+                        size: 'md',
+                    },
+                    styles: {
+                        input: {
+                            backgroundColor: currentPalette.surface,
+                            color: currentPalette.text,
+                            border: `1px solid ${currentPalette.primary}60`,
+                            '&:focus': {
+                                borderColor: currentPalette.primary,
+                                boxShadow: `0 0 0 1px ${currentPalette.primary}`,
+                            },
+                        },
+                        label: {
+                            color: currentPalette.text,
+                        },
+                    },
+                },
+
+                TagsInput: {
+                    defaultProps: {
+                        radius: 'md',
+                        size: 'md',
+                    },
+                    styles: {
+                        input: {
+                            backgroundColor: currentPalette.surface,
+                            color: currentPalette.text,
+                            border: `1px solid ${currentPalette.primary}60`,
+                            '&:focus': {
+                                borderColor: currentPalette.primary,
+                                boxShadow: `0 0 0 1px ${currentPalette.primary}`,
+                            },
+                        },
+                        label: {
+                            color: currentPalette.text,
+                        },
+                        pill: {
+                            backgroundColor: `${currentPalette.primary}20`,
+                            color: currentPalette.text,
+                        },
+                    },
+                },
+
+                Alert: {
+                    defaultProps: {
+                        radius: 'md',
+                    },
+                    styles: {
+                        root: {
+                            backgroundColor: currentPalette.surface,
+                            color: currentPalette.text,
+                            border: `1px solid ${currentPalette.primary}40`,
+                        },
+                        title: {
+                            color: currentPalette.text,
+                        },
+                        message: {
+                            color: currentPalette.text,
+                        },
                     },
                 },
 
@@ -177,6 +409,25 @@ export const useTheme = () => {
                             blur: 4,
                         },
                     },
+                    styles: {
+                        content: {
+                            backgroundColor: currentPalette.surface,
+                            color: currentPalette.text,
+                            border: `1px solid ${currentPalette.primary}40`,
+                        },
+                        body: {
+                            color: currentPalette.text,
+                        },
+                        header: {
+                            backgroundColor: currentPalette.surface,
+                            borderBottom: `1px solid ${currentPalette.primary}40`,
+                            color: currentPalette.text,
+                        },
+                        title: {
+                            color: currentPalette.text,
+                            fontWeight: 600,
+                        },
+                    },
                 },
 
                 Container: {
@@ -196,6 +447,13 @@ export const useTheme = () => {
 
         // Enhanced Mantine integration (guaranteed non-null)
         mantineTheme,
+
+        // Utility colors (theme-aware)
+        utilityColors: {
+            error: isDarkPalette(currentPaletteId) ? '#f87171' : '#dc2626',
+            success: isDarkPalette(currentPaletteId) ? '#4ade80' : '#16a34a',
+            warning: isDarkPalette(currentPaletteId) ? '#fbbf24' : '#d97706',
+        },
 
         // Actions
         setPalette,

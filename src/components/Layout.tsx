@@ -2,6 +2,7 @@ import { AppShell, NavLink, Group, Text, Burger, Divider } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { IconActivity, IconCalendar, IconDashboard, IconSettings, IconUsers } from '@tabler/icons-react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useTheme } from '../hooks/useTheme';
 import type { ReactNode } from 'react';
 
 interface LayoutProps {
@@ -12,6 +13,7 @@ export function Layout({ children }: LayoutProps) {
   const [opened, { toggle, close }] = useDisclosure();
   const navigate = useNavigate();
   const location = useLocation();
+  const { currentPalette } = useTheme();
 
   const mainNavItems = [
     { label: 'Dashboard', icon: IconDashboard, path: '/' },
@@ -53,7 +55,7 @@ export function Layout({ children }: LayoutProps) {
             size="sm" 
             c="dimmed" 
             visibleFrom="md"
-            style={{ color: 'var(--color-text)', opacity: 0.7 }}
+            style={{ color: currentPalette.text, opacity: 0.7 }}
           >
             Zarządzanie praktyką psychologiczną
           </Text>
@@ -66,7 +68,7 @@ export function Layout({ children }: LayoutProps) {
           tt="uppercase" 
           fw={700} 
           mb="md"
-          style={{ color: 'var(--color-text)', opacity: 0.6 }}
+          style={{ color: currentPalette.text, opacity: 0.6 }}
         >
           Główne
         </Text>
@@ -81,13 +83,13 @@ export function Layout({ children }: LayoutProps) {
             mb={4}
           />
         ))}
-        <Divider my="md" style={{ borderColor: 'var(--color-primary)' }} />
+        <Divider my="md" style={{ borderColor: currentPalette.primary }} />
         <Text 
           size="xs" 
           tt="uppercase" 
           fw={700} 
           mb="md"
-          style={{ color: 'var(--color-text)', opacity: 0.6 }}
+          style={{ color: currentPalette.text, opacity: 0.6 }}
         >
           Aplikacja
         </Text>

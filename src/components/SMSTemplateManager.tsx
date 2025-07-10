@@ -27,8 +27,22 @@ import {
     IconInfoCircle,
 } from '@tabler/icons-react';
 import { useState } from 'react';
+import { useTheme } from '../hooks/useTheme';
 import { useSettingsStore } from '../stores/useSettingsStore';
 import { DEFAULT_SMS_TEMPLATES, type SMSTemplate } from '../utils/sms';
+
+// Available variables for SMS templates
+const availableVariables = [
+    'imię',
+    'nazwisko',
+    'data',
+    'godzina',
+    'terapeuta',
+    'tytuł',
+    'dzień',
+    'miesiąc',
+    'rok'
+];
 
 interface SMSTemplateFormData {
     name: string;
@@ -44,6 +58,7 @@ export function SMSTemplateManager() {
         deleteSMSTemplate, 
         resetSMSTemplates 
     } = useSettingsStore();
+    const { currentPalette } = useTheme();
 
     const [opened, { open, close }] = useDisclosure(false);
     const [editingTemplate, setEditingTemplate] = useState<SMSTemplate | null>(null);
@@ -54,11 +69,6 @@ export function SMSTemplateManager() {
         content: '',
         description: ''
     });
-
-    const availableVariables = [
-        'patientName', 'patientFirstName', 'date', 'time', 
-        'practitionerName', 'practitionerTitle', 'appointmentType', 'duration'
-    ];
 
     const handleOpenModal = (template?: SMSTemplate) => {
         if (template) {
@@ -268,10 +278,11 @@ export function SMSTemplateManager() {
                                 
                                 <Text size="xs" style={{ 
                                     fontFamily: 'monospace',
-                                    backgroundColor: 'var(--color-surface)',
+                                    backgroundColor: currentPalette.surface,
                                     padding: '8px',
                                     borderRadius: '4px',
-                                    border: '1px solid var(--color-primary)'
+                                    border: `1px solid ${currentPalette.primary}`,
+                                    color: currentPalette.text
                                 }}>
                                     {template.content}
                                 </Text>

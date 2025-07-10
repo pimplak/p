@@ -2,6 +2,7 @@ import { ActionIcon, Stack, Affix, Transition, Paper, Group, Text } from '@manti
 import { IconPlus, IconX } from '@tabler/icons-react';
 import { useState } from 'react';
 import type { ReactNode } from 'react';
+import { useTheme } from '../hooks/useTheme';
 
 export interface FABAction {
   id: string;
@@ -21,6 +22,7 @@ export function FloatingActionButton({
   position = { bottom: 100, right: 20 }
 }: FloatingActionButtonProps) {
   const [opened, setOpened] = useState(false);
+  const { currentPalette } = useTheme();
 
   if (actions.length === 0) return null;
 
@@ -33,13 +35,14 @@ export function FloatingActionButton({
           size="xl"
           radius="xl"
           variant="filled"
-          color={action.color || 'yellowGreen'}
-          onClick={action.onClick}
           style={{
+            backgroundColor: currentPalette.primary,
+            color: currentPalette.surface,
             boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
-            border: '1px solid var(--color-primary)',
+            border: `1px solid ${currentPalette.primary}`,
             zIndex: 1001,
           }}
+          onClick={action.onClick}
         >
           {action.icon}
         </ActionIcon>
@@ -65,8 +68,10 @@ export function FloatingActionButton({
                   key={action.id}
                   p="xs"
                   style={{
+                    backgroundColor: currentPalette.surface,
+                    color: currentPalette.text,
                     boxShadow: '0 2px 8px rgba(0, 0, 0, 0.2)',
-                    border: '1px solid var(--color-primary)',
+                    border: `1px solid ${currentPalette.primary}`,
                     zIndex: 1001,
                   }}
                 >
@@ -78,7 +83,10 @@ export function FloatingActionButton({
                       size="lg"
                       radius="xl"
                       variant="filled"
-                      color={action.color || 'yellowGreen'}
+                      style={{
+                        backgroundColor: currentPalette.primary,
+                        color: currentPalette.surface,
+                      }}
                     >
                       {action.icon}
                     </ActionIcon>
@@ -94,11 +102,12 @@ export function FloatingActionButton({
           size="xl"
           radius="xl"
           variant="filled"
-          color="yellowGreen"
           onClick={() => setOpened(!opened)}
           style={{
+            backgroundColor: currentPalette.primary,
+            color: currentPalette.surface,
             boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
-            border: '1px solid var(--color-primary)',
+            border: `1px solid ${currentPalette.primary}`,
             transform: opened ? 'rotate(45deg)' : 'rotate(0deg)',
             transition: 'transform 200ms ease',
             zIndex: 1001,

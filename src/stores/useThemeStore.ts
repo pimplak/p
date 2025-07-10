@@ -23,7 +23,7 @@ const getStoredPaletteId = (): PaletteId => {
     } catch {
         // ignore
     }
-    return 'darkpro'; // default - Dark Professional palette
+    return 'springblush'; // default - Spring Blush (różowa paleta)
 };
 
 const savePaletteId = (paletteId: PaletteId) => {

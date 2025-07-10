@@ -29,7 +29,7 @@ export const StatsCard: React.FC<StatsCardProps> = ({
   variant = 'default',
   onClick
 }) => {
-  const { currentPalette } = useTheme();
+  const { currentPalette, utilityColors } = useTheme();
 
   const getTrendIcon = () => {
     if (!trend) return null;
@@ -47,9 +47,9 @@ export const StatsCard: React.FC<StatsCardProps> = ({
     if (!trend) return currentPalette.text;
     
     if (trend.value > 0) {
-      return '#10b981'; // Green
+      return utilityColors.success;
     } else if (trend.value < 0) {
-      return '#ef4444'; // Red
+      return utilityColors.error;
     } else {
       return currentPalette.text;
     }

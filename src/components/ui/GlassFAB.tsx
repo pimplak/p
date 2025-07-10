@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { ActionIcon, Tooltip } from '@mantine/core';
 import type { Icon } from '@tabler/icons-react';
+import { useTheme } from '../../hooks/useTheme';
 
 interface GlassFABProps {
   icon: Icon;
@@ -22,6 +23,7 @@ export const GlassFAB: React.FC<GlassFABProps> = ({
   animate = true
 }) => {
   const [isHovered, setIsHovered] = useState(false);
+  const { currentPalette } = useTheme();
 
   const getPositionStyles = () => {
     const baseSpacing = '24px';
@@ -41,14 +43,14 @@ export const GlassFAB: React.FC<GlassFABProps> = ({
   const getVariantStyles = () => {
     const variants = {
       primary: {
-        background: 'var(--gradient-therapeutic)',
-        shadow: '0 8px 24px rgba(99, 102, 241, 0.3)',
-        hoverShadow: '0 12px 32px rgba(99, 102, 241, 0.4)',
+        background: `linear-gradient(135deg, ${currentPalette.primary} 0%, ${currentPalette.accent} 100%)`,
+        shadow: `0 8px 24px ${currentPalette.primary}50`,
+        hoverShadow: `0 12px 32px ${currentPalette.primary}60`,
       },
       secondary: {
-        background: 'var(--gradient-primary)',
-        shadow: '0 8px 24px rgba(102, 126, 234, 0.3)',
-        hoverShadow: '0 12px 32px rgba(102, 126, 234, 0.4)',
+        background: `linear-gradient(135deg, ${currentPalette.accent} 0%, ${currentPalette.primary} 100%)`,
+        shadow: `0 8px 24px ${currentPalette.accent}50`,
+        hoverShadow: `0 12px 32px ${currentPalette.accent}60`,
       },
       success: {
         background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',

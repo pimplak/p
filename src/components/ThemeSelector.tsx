@@ -89,7 +89,16 @@ export function ThemeSelector() {
             checked={isDark}
             onChange={(event) => toggleDarkMode(event.currentTarget.checked)}
             size="md"
-            color="blue"
+            styles={{
+              track: {
+                backgroundColor: isDark ? currentPalette.primary : `${currentPalette.primary}40`,
+                borderColor: currentPalette.primary,
+              },
+              thumb: {
+                backgroundColor: currentPalette.surface,
+                borderColor: currentPalette.primary,
+              },
+            }}
           />
         </Group>
         <Text size="sm" fw={500} c="dimmed">

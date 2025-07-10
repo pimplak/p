@@ -11,7 +11,7 @@ export const Textarea: React.FC<CustomTextareaProps> = ({
   styles,
   ...props 
 }) => {
-  const { currentPalette, mantineTheme } = useTheme();
+  const { currentPalette, mantineTheme, utilityColors } = useTheme();
 
   const getVariantStyles = () => {
     const baseStyles = {
@@ -52,7 +52,7 @@ export const Textarea: React.FC<CustomTextareaProps> = ({
         marginTop: mantineTheme.spacing?.xs,
       },
       error: {
-        color: '#ef4444', // Red for errors
+        color: utilityColors.error,
         fontSize: mantineTheme.fontSizes?.sm,
         marginTop: mantineTheme.spacing?.xs,
       },
