@@ -7,8 +7,6 @@ export function ThemeSelector() {
   const { currentPaletteId, setPalette, getAllPalettes, isDark } = useTheme();
   
   const palettes = getAllPalettes();
-  const darkPalettes = palettes.filter((p: ColorPalette) => isDarkPalette(p.id as PaletteId));
-  const lightPalettes = palettes.filter((p: ColorPalette) => !isDarkPalette(p.id as PaletteId));
   
   // Prepare select data with custom rendering
   const selectData = palettes.map((palette: ColorPalette) => ({
@@ -23,17 +21,15 @@ export function ThemeSelector() {
     }
   };
 
-  // Random theme selection based on dark/light mode
-  const getRandomTheme = (isDark: boolean) => {
-    const availablePalettes = isDark ? darkPalettes : lightPalettes;
-    const randomIndex = Math.floor(Math.random() * availablePalettes.length);
-    return availablePalettes[randomIndex].id as PaletteId;
-  };
-
-  // Quick dark/light mode toggle with random theme
+  // Smart dark/light mode toggle - zachowuje preferencje użytkownika
   const toggleDarkMode = (checked: boolean) => {
-    const randomPaletteId = getRandomTheme(checked);
-    setPalette(randomPaletteId);
+    if (checked) {
+      // Przełącz na tryb ciemny - użyj darkpro (jedyna ciemna paleta)
+      setPalette('darkpro');
+    } else {
+      // Przełącz na tryb jasny - użyj arctic jako default (najładniejszy jasny motyw)
+      setPalette('arctic');
+    }
   };
   
   return (
