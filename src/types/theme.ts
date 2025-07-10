@@ -42,11 +42,11 @@ export const COLOR_PALETTES: Record<string, ColorPalette> = {
     darkpro: {
         name: 'Dark Professional',
         id: 'darkpro',
-        background: '#0a0e1a',  // professional dark blue
-        surface: '#1e293b',     // slate surface
-        primary: '#3b82f6',     // professional blue
-        accent: '#60a5fa',      // bright blue
-        text: '#f1f5f9',        // crisp white text
+        background: '#0f1419',  // deep slate background - spójny z primary
+        surface: '#1a202c',     // slate surface - harmonia z tłem
+        primary: '#4f46e5',     // professional indigo (bardziej neutral)
+        accent: '#6366f1',      // bright indigo accent
+        text: '#e2e8f0',        // soft white text (lepszy kontrast)
     },
 };
 
@@ -64,4 +64,19 @@ export interface MantineThemeColors {
     primary: string[];
     accent: string[];
     text: string;
-} 
+}
+
+// === FERRO'S MANTINE 8 TYPES AUGMENTATION ===
+// Rozszerzenie Mantine theme types dla lepszego TypeScript support
+
+// Custom sizes for extended spacing and radius
+export type ExtendedSpacing = 'xxs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl';
+export type ExtendedRadius = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'round';
+
+// Module augmentation for Mantine theme
+declare module '@mantine/core' {
+    export interface MantineThemeSizesOverride {
+        spacing: Record<ExtendedSpacing, string>;
+        radius: Record<ExtendedRadius, string>;
+    }
+}

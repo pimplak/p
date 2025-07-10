@@ -16,7 +16,13 @@ function ThemeProvider({ children }: { children: React.ReactNode }) {
   const { mantineTheme } = useTheme();
   
   return (
-    <MantineProvider theme={mantineTheme}>
+    <MantineProvider 
+      theme={mantineTheme}
+      defaultColorScheme="auto"
+      withCssVariables
+      withGlobalClasses
+      withStaticClasses
+    >
       {children}
     </MantineProvider>
   );

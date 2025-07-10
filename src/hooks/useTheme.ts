@@ -44,6 +44,13 @@ interface FerrroTheme extends MantineTheme {
             input: string;
             button: string;
         };
+        zIndex: {
+            app: number;
+            modal: number;
+            popover: number;
+            overlay: number;
+            max: number;
+        };
     };
 }
 
@@ -77,11 +84,13 @@ export const useTheme = () => {
             },
 
             spacing: {
+                xxs: '0.25rem',
                 xs: '0.5rem',
                 sm: '0.75rem',
                 md: '1rem',
                 lg: '1.5rem',
                 xl: '2rem',
+                xxl: '3rem',
             },
 
             radius: {
@@ -90,6 +99,7 @@ export const useTheme = () => {
                 md: '0.5rem',
                 lg: '0.75rem',
                 xl: '1rem',
+                round: '50%',
             },
 
             // === FERRO'S GUARANTEED THEME EXTENSIONS ===
@@ -115,6 +125,15 @@ export const useTheme = () => {
                 defaultSizes: {
                     input: 'sm',
                     button: 'sm',
+                },
+
+                // Mantine 8 z-index CSS variables
+                zIndex: {
+                    app: 100,
+                    modal: 200,
+                    popover: 300,
+                    overlay: 400,
+                    max: 9999,
                 },
             },
 
