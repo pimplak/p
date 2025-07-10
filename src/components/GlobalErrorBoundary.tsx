@@ -38,7 +38,7 @@ function ErrorFallback({ error, resetErrorBoundary }: {
                   wordBreak: 'break-all',
                   fontFamily: 'monospace',
                   padding: '0.5rem',
-                  background: 'var(--mantine-color-gray-1)',
+                  background: 'var(--color-surface)',
                   borderRadius: '4px'
                 }}
               >

@@ -179,6 +179,16 @@ function Calendar() {
     }
   };
 
+  const getStatusBackgroundColor = (status: string) => {
+    switch (status) {
+      case 'scheduled': return 'color-mix(in srgb, var(--color-primary) 20%, transparent)';
+      case 'completed': return 'color-mix(in srgb, var(--color-accent) 20%, transparent)';
+      case 'cancelled': return 'color-mix(in srgb, #ef4444 20%, transparent)';
+      case 'no_show': return 'color-mix(in srgb, #f59e0b 20%, transparent)';
+      default: return 'color-mix(in srgb, var(--color-text) 15%, transparent)';
+    }
+  };
+
   const getStatusLabel = (status: string) => {
     switch (status) {
       case 'scheduled': return 'Zaplanowana';
@@ -331,6 +341,7 @@ function Calendar() {
             onDeleteAppointment={handleDeleteAppointment}
             onAddAppointment={handleAddAppointment}
             getStatusColor={getStatusColor}
+            getStatusBackgroundColor={getStatusBackgroundColor}
             getStatusLabel={getStatusLabel}
           />
         )}
@@ -343,6 +354,7 @@ function Calendar() {
             onDeleteAppointment={handleDeleteAppointment}
             onAddAppointment={handleAddAppointment}
             getStatusColor={getStatusColor}
+            getStatusBackgroundColor={getStatusBackgroundColor}
             getStatusLabel={getStatusLabel}
             hideWeekends={hideWeekends}
           />
@@ -357,6 +369,7 @@ function Calendar() {
             onAddAppointment={handleAddAppointment}
             onDateClick={setSelectedDate}
             getStatusColor={getStatusColor}
+            getStatusBackgroundColor={getStatusBackgroundColor}
             getStatusLabel={getStatusLabel}
           />
         )}
@@ -389,6 +402,7 @@ interface CalendarViewProps {
   onDeleteAppointment: (id: number) => void;
   onAddAppointment: (date?: Date) => void;
   getStatusColor: (status: string) => string;
+  getStatusBackgroundColor: (status: string) => string;
   getStatusLabel: (status: string) => string;
   hideWeekends?: boolean;
 }
@@ -552,7 +566,7 @@ function WeekView({
   appointments, 
   onEditAppointment, 
   onAddAppointment,
-  getStatusColor,
+  getStatusBackgroundColor,
   hideWeekends = false
 }: CalendarViewProps) {
   const weekStart = startOfWeek(date, { weekStartsOn: 1 });
@@ -672,7 +686,7 @@ function WeekView({
                         key={appointment.id}
                         p="2px"
                         style={{ 
-                          backgroundColor: `var(--mantine-color-${getStatusColor(appointment.status)}-light)`,
+                          backgroundColor: getStatusBackgroundColor(appointment.status),
                           cursor: 'pointer',
                           borderRadius: '4px'
                         }}
@@ -710,7 +724,7 @@ function MonthView({
   appointments, 
   onEditAppointment, 
   onDateClick,
-  getStatusColor
+  getStatusBackgroundColor
 }: MonthViewProps) {
   const monthStart = startOfMonth(date);
   const monthEnd = endOfMonth(date);
@@ -782,7 +796,7 @@ function MonthView({
                     key={appointment.id}
                     p="2px"
                     style={{
-                      backgroundColor: `var(--mantine-color-${getStatusColor(appointment.status)}-light)`,
+                      backgroundColor: getStatusBackgroundColor(appointment.status),
                       cursor: 'pointer'
                     }}
                     onClick={(e) => {

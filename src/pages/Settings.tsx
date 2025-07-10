@@ -105,7 +105,7 @@ function Settings() {
                     <Card shadow="sm" padding="lg" radius="md" withBorder>
                         <Stack gap="md">
                             <Group align="center" gap="sm">
-                                <IconPalette size={20} color="var(--mantine-color-indigo-6)" />
+                                <IconPalette size={20} color="var(--color-primary)" />
                                 <Text fw={600} size="lg">Wygląd i interfejs</Text>
                             </Group>
                             
@@ -119,7 +119,7 @@ function Settings() {
                     <Card shadow="sm" padding="lg" radius="md" withBorder>
                         <Stack gap="md">
                             <Group align="center" gap="sm">
-                                <IconMessage size={20} color="var(--mantine-color-blue-6)" />
+                                <IconMessage size={20} color="var(--color-accent)" />
                                 <Text fw={600} size="lg">Przypomnienia SMS</Text>
                             </Group>
                             
@@ -161,7 +161,7 @@ function Settings() {
                     <Card shadow="sm" padding="lg" radius="md" withBorder>
                         <Stack gap="md">
                             <Group align="center" gap="sm">
-                                <IconDatabase size={20} color="var(--mantine-color-blue-6)" />
+                                <IconDatabase size={20} color="var(--color-primary)" />
                                 <Text fw={600} size="lg">Aplikacja i dane</Text>
                             </Group>
                             
@@ -237,7 +237,7 @@ function Settings() {
                     <Card shadow="sm" padding="lg" radius="md" withBorder>
                         <Stack gap="md">
                             <Group align="center" gap="sm">
-                                <IconShield size={20} color="var(--mantine-color-green-6)" />
+                                <IconShield size={20} color="var(--color-accent)" />
                                 <Text fw={600} size="lg">Prywatność i bezpieczeństwo</Text>
                             </Group>
                             
@@ -272,7 +272,7 @@ function Settings() {
                     <Card shadow="sm" padding="lg" radius="md" withBorder>
                         <Stack gap="md">
                             <Group align="center" gap="sm">
-                                <IconInfoCircle size={20} color="var(--mantine-color-gray-6)" />
+                                <IconInfoCircle size={20} color="var(--color-text)" />
                                 <Text fw={600} size="lg">O aplikacji</Text>
                             </Group>
                             

@@ -268,10 +268,10 @@ export function SMSTemplateManager() {
                                 
                                 <Text size="xs" style={{ 
                                     fontFamily: 'monospace',
-                                    backgroundColor: 'var(--mantine-color-gray-0)',
+                                    backgroundColor: 'var(--color-surface)',
                                     padding: '8px',
                                     borderRadius: '4px',
-                                    border: '1px solid var(--mantine-color-gray-3)'
+                                    border: '1px solid var(--color-primary)'
                                 }}>
                                     {template.content}
                                 </Text>

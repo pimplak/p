@@ -37,14 +37,14 @@ export function ThemeSelector() {
       {/* Quick Dark/Light Toggle */}
       <Group justify="space-between" align="center">
         <Group gap="sm">
-          <IconSun size={18} color="var(--mantine-color-yellow-6)" />
+          <IconSun size={18} color="var(--color-accent)" />
           <Switch 
             checked={isDark}
             onChange={(event) => toggleDarkMode(event.currentTarget.checked)}
             size="md"
             color="indigo"
           />
-          <IconMoon size={18} color="var(--mantine-color-blue-6)" />
+          <IconMoon size={18} color="var(--color-primary)" />
         </Group>
         <Text size="sm" fw={500} c="dimmed">
           {isDark ? 'Tryb ciemny' : 'Tryb jasny'}
