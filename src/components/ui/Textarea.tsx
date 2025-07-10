@@ -1,160 +1,123 @@
 import { Textarea as MantineTextarea, type TextareaProps } from '@mantine/core';
-import { forwardRef } from 'react';
+import { useTheme } from '../../hooks/useTheme';
 
 interface CustomTextareaProps extends TextareaProps {
   variant?: 'default' | 'filled' | 'unstyled';
-  hasError?: boolean;
-  hasSuccess?: boolean;
-  showAutoSave?: boolean;
 }
 
-export const Textarea = forwardRef<HTMLTextAreaElement, CustomTextareaProps>(
-  ({ variant = 'default', hasError, hasSuccess, showAutoSave, style, styles, ...props }, ref) => {
-    const getVariantStyles = () => {
-      const baseStyles = {
-        minHeight: '88px', // Double the input height for textarea
-        fontSize: '1rem',
-        fontWeight: 400,
-        borderRadius: '8px',
-        transition: 'all 200ms ease-out',
-        lineHeight: '1.6',
-        resize: 'vertical' as const,
-      };
+export const Textarea: React.FC<CustomTextareaProps> = ({ 
+  variant = 'default',
+  style,
+  styles,
+  ...props 
+}) => {
+  const { currentPalette, mantineTheme } = useTheme();
 
-      if (hasError) {
-        return {
-          ...baseStyles,
-          backgroundColor: 'var(--color-surface)',
-          border: '1px solid var(--danger)',
-          '&:focus, &:focus-within': {
-            borderColor: 'var(--danger)',
-            boxShadow: '0 0 0 1px var(--danger)',
-            outline: 'none',
-          }
-        };
-      }
-
-      if (hasSuccess) {
-        return {
-          ...baseStyles,
-          backgroundColor: 'var(--color-surface)',
-          border: '1px solid var(--success)',
-          '&:focus, &:focus-within': {
-            borderColor: 'var(--success)',
-            boxShadow: '0 0 0 1px var(--success)',
-            outline: 'none',
-          }
-        };
-      }
-
-      switch (variant) {
-        case 'filled':
-          return {
-            ...baseStyles,
-            backgroundColor: 'var(--color-surface)',
-            border: '1px solid var(--color-primary)',
-            color: 'var(--color-text)',
-            '&:focus, &:focus-within': {
-              backgroundColor: 'var(--color-surface)',
-              borderColor: 'var(--color-primary)',
-              boxShadow: '0 0 0 1px var(--color-primary)',
-              outline: 'none',
-            },
-            '&:hover:not(:focus):not(:focus-within)': {
-              borderColor: 'var(--color-primary-light)',
-            }
-          };
-
-        case 'unstyled':
-          return {
-            ...baseStyles,
-            backgroundColor: 'transparent',
-            border: 'none',
-            borderBottom: '2px solid var(--color-text-muted)',
-            borderRadius: '0',
-            '&:focus, &:focus-within': {
-              borderBottomColor: 'var(--color-primary)',
-              outline: 'none',
-            }
-          };
-
-        default:
-          return {
-            ...baseStyles,
-            backgroundColor: 'var(--color-surface)',
-            border: '1px solid var(--color-primary)',
-            color: 'var(--color-text)',
-            '&:focus, &:focus-within': {
-              borderColor: 'var(--color-primary)',
-              boxShadow: '0 0 0 1px var(--color-primary)',
-              outline: 'none',
-            },
-            '&:hover:not(:focus):not(:focus-within)': {
-              borderColor: 'var(--color-primary-light)',
-            }
-          };
-      }
+  const getVariantStyles = () => {
+    const baseStyles = {
+      input: {
+        backgroundColor: currentPalette.surface,
+        color: currentPalette.text,
+        borderColor: `${currentPalette.primary}60`,
+        borderRadius: mantineTheme.radius?.md,
+        fontFamily: mantineTheme.fontFamily,
+        fontSize: mantineTheme.fontSizes?.md,
+        minHeight: '88px',
+        padding: mantineTheme.spacing?.sm,
+        lineHeight: 1.5,
+        '&:focus': {
+          borderColor: currentPalette.primary,
+          boxShadow: `0 0 0 1px ${currentPalette.primary}`,
+          backgroundColor: currentPalette.surface,
+          outline: 'none',
+        },
+        '&:hover': {
+          borderColor: `${currentPalette.primary}80`,
+        },
+        '&::placeholder': {
+          color: `${currentPalette.text}60`,
+          opacity: 1,
+        },
+        resize: 'vertical',
+      },
+      label: {
+        color: currentPalette.text,
+        fontWeight: 500,
+        fontSize: mantineTheme.fontSizes?.sm,
+        marginBottom: mantineTheme.spacing?.xs,
+      },
+      description: {
+        color: `${currentPalette.text}70`,
+        fontSize: mantineTheme.fontSizes?.sm,
+        marginTop: mantineTheme.spacing?.xs,
+      },
+      error: {
+        color: '#ef4444', // Red for errors
+        fontSize: mantineTheme.fontSizes?.sm,
+        marginTop: mantineTheme.spacing?.xs,
+      },
     };
 
-    return (
-      <div style={{ position: 'relative' }}>
-        <MantineTextarea
-          ref={ref}
-          radius="md"
-          size="md"
-          style={style}
-          styles={{
-            input: getVariantStyles(),
-                      label: {
-            fontSize: '0.875rem',
-            fontWeight: 500,
-            color: 'var(--color-text)',
-            marginBottom: '6px',
+    switch (variant) {
+      case 'filled':
+        return {
+          ...baseStyles,
+          input: {
+            ...baseStyles.input,
+            backgroundColor: `${currentPalette.primary}10`,
+            border: 'none',
+            '&:focus': {
+              backgroundColor: currentPalette.surface,
+              boxShadow: `0 0 0 2px ${currentPalette.primary}`,
+              outline: 'none',
+            },
           },
-            error: {
-              fontSize: '0.875rem',
-              color: 'var(--danger)',
-              marginTop: '4px',
+        };
+      
+      case 'unstyled':
+        return {
+          ...baseStyles,
+          input: {
+            ...baseStyles.input,
+            backgroundColor: 'transparent',
+            border: 'none',
+            borderBottom: `2px solid ${currentPalette.text}40`,
+            borderRadius: '0',
+            '&:focus': {
+              borderBottomColor: currentPalette.primary,
+              backgroundColor: 'transparent',
+              boxShadow: 'none',
+              outline: 'none',
             },
-            description: {
-              fontSize: '0.875rem',
-              color: 'var(--color-text-muted)',
-              marginTop: '4px',
-            },
-            ...styles,
-          }}
-          {...props}
-        />
-        
-        {/* Auto-save indicator */}
-        {showAutoSave && (
-          <div
-            style={{
-              position: 'absolute',
-              bottom: '8px',
-              right: '12px',
-              fontSize: '0.75rem',
-              color: 'var(--color-text-muted)',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '4px',
-            }}
-          >
-            <div
-              style={{
-                width: '6px',
-                height: '6px',
-                borderRadius: '50%',
-                backgroundColor: 'var(--success)',
-                animation: 'pulse 2s infinite',
-              }}
-            />
-            Zapisano automatycznie
-          </div>
-        )}
-      </div>
-    );
-  }
-);
+          },
+        };
+      
+      default:
+        return baseStyles;
+    }
+  };
 
-Textarea.displayName = 'Textarea'; 
+  const variantStyles = getVariantStyles();
+
+  return (
+    <MantineTextarea
+      radius={mantineTheme.radius?.md}
+      size="md"
+      autosize={{
+        minRows: 3,
+        maxRows: 8,
+      }}
+      style={{
+        ...style
+      }}
+      styles={{
+        input: variantStyles.input,
+        label: variantStyles.label,
+        description: variantStyles.description,
+        error: variantStyles.error,
+        ...styles,
+      }}
+      {...props}
+    />
+  );
+};

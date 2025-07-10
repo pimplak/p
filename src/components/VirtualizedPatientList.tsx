@@ -4,6 +4,7 @@ import { format } from 'date-fns';
 import { pl } from 'date-fns/locale';
 import { memo, useMemo } from 'react';
 import { FixedSizeList as List } from 'react-window';
+import { useTheme } from '../hooks/useTheme';
 import { getPatientDisplayName } from '../utils/dates';
 import type { PatientWithAppointments , Patient } from '../types/Patient';
 
@@ -27,6 +28,7 @@ interface PatientCardProps {
 const PatientCard = memo(({ index, style, data }: PatientCardProps) => {
   const { patients, onEdit, onDelete } = data;
   const patient = patients[index];
+  const { currentPalette } = useTheme();
 
   if (!patient) return null;
 
@@ -38,8 +40,9 @@ const PatientCard = memo(({ index, style, data }: PatientCardProps) => {
         radius="md"
         style={{ 
           margin: '0 16px 16px 16px',
-          background: 'var(--color-surface)',
-          border: '1px solid var(--color-primary)'
+          backgroundColor: currentPalette.surface,
+          border: `1px solid ${currentPalette.primary}`,
+          color: currentPalette.text
         }}
       >
         <Stack gap="md">

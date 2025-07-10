@@ -67,7 +67,6 @@ export const useTheme = () => {
             },
 
             // === ESSENTIAL COMPONENT OVERRIDES ===
-            // Tylko najważniejsze - reszta przez CSS variables w globalStyles.ts
             components: {
                 Button: {
                     defaultProps: {
@@ -88,6 +87,13 @@ export const useTheme = () => {
                         radius: 'md',
                         shadow: 'sm',
                         padding: 'xl',
+                    },
+                    styles: {
+                        root: {
+                            backgroundColor: currentPalette.surface,
+                            color: currentPalette.text,
+                            borderColor: `${currentPalette.primary}40`,
+                        },
                     },
                 },
 
@@ -118,13 +124,13 @@ export const useTheme = () => {
         setPalette,
         getAllPalettes,
 
-        // CSS utilities
+        // CSS utilities - deprecated, use Mantine theme instead
         cssVars: {
-            background: 'var(--color-background)',
-            surface: 'var(--color-surface)',
-            primary: 'var(--color-primary)',
-            accent: 'var(--color-accent)',
-            text: 'var(--color-text)',
+            background: currentPalette.background,
+            surface: currentPalette.surface,
+            primary: currentPalette.primary,
+            accent: currentPalette.accent,
+            text: currentPalette.text,
         },
     };
 }; 

@@ -13,6 +13,7 @@ import { pl } from 'date-fns/locale';
 import { PATIENT_STATUS, PATIENT_STATUS_LABELS } from '../constants/status';
 import { formatDate, getPatientDisplayName } from '../utils/dates';
 import type { PatientWithAppointments, Patient } from '../types/Patient';
+import { useTheme } from '../hooks/useTheme';
 
 interface PatientsCardListProps {
   patients: PatientWithAppointments[];
@@ -29,6 +30,18 @@ export function PatientsCardList({
   onArchive,
   onRestore
 }: PatientsCardListProps) {
+  const { currentPalette } = useTheme();
+
+  if (patients.length === 0) {
+    return (
+      <Card padding="xl">
+        <Text ta="center" c="dimmed">
+          Brak pacjentów do wyświetlenia
+        </Text>
+      </Card>
+    );
+  }
+
   return (
     <Stack gap="md" hiddenFrom="md">
       {patients.map((patient) => (
@@ -38,12 +51,13 @@ export function PatientsCardList({
           p="lg"
           radius="md"
           style={{ 
-            background: patient.status === PATIENT_STATUS.ARCHIVED
-              ? 'var(--color-surface)' 
-              : 'var(--color-surface)',
-            border: '1px solid var(--color-primary)',
+            cursor: 'pointer',
+            transition: 'all 200ms ease-out',
+            backgroundColor: patient.status === PATIENT_STATUS.ACTIVE 
+              ? currentPalette.surface
+              : currentPalette.surface,
+            border: `1px solid ${currentPalette.primary}`,
             opacity: patient.status === PATIENT_STATUS.ARCHIVED ? 0.7 : 1,
-            cursor: 'pointer'
           }}
           onClick={() => onView(patient)}
         >

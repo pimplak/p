@@ -10,6 +10,7 @@ import {
   type Icon
 } from '@tabler/icons-react';
 import { useAppointmentStore } from '../../stores/useAppointmentStore';
+import { useTheme } from '../../hooks/useTheme';
 
 interface NavigationItem {
   id: string;
@@ -30,6 +31,7 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
   const navigate = useNavigate();
   const location = useLocation();
   const { appointments } = useAppointmentStore();
+  const { currentPalette } = useTheme();
 
   // Liczenie dzisiejszych wizyt które jeszcze się nie odbyły - reactive na appointments
   const todaysPendingAppointments = useMemo(() => {
@@ -96,10 +98,10 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
         left: 0,
         right: 0,
         zIndex: 1000,
-        background: 'var(--color-surface)',
+        backgroundColor: currentPalette.surface,
         backdropFilter: 'blur(20px)',
         WebkitBackdropFilter: 'blur(20px)',
-        borderTop: '1px solid var(--color-primary)',
+        borderTop: `1px solid ${currentPalette.primary}`,
         boxShadow: '0 -4px 24px rgba(0, 0, 0, 0.05)',
         padding: '8px 0 calc(8px + env(safe-area-inset-bottom))',
         willChange: 'backdrop-filter',
@@ -126,9 +128,9 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
                 transition: 'all 200ms cubic-bezier(0.34, 1.56, 0.64, 1)',
                 transform: `scale(${isPressed ? '0.95' : '1'})`,
                 backgroundColor: isActive 
-                  ? 'var(--color-primary-light)' 
+                  ? `${currentPalette.primary}20` 
                   : isPressed 
-                    ? 'var(--color-accent-light)'
+                    ? `${currentPalette.accent}30`
                     : 'transparent',
               }}
             >
@@ -142,11 +144,11 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
                   size={24}
                   stroke={1.5}
                   style={{
-                    color: isActive ? 'var(--color-primary)' : 'var(--color-text)',
+                    color: isActive ? currentPalette.primary : currentPalette.text,
                     transition: 'all 200ms ease-out',
                     transform: `translateY(${isActive ? '-1px' : '0'})`,
                     filter: isActive 
-                      ? 'drop-shadow(0 2px 4px var(--color-primary))' 
+                      ? `drop-shadow(0 2px 4px ${currentPalette.primary})` 
                       : 'none',
                   }}
                 />
@@ -161,14 +163,14 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
                       minWidth: '18px',
                       height: '18px',
                       borderRadius: '9px',
-                      background: 'var(--gradient-therapeutic)',
-                      color: 'white',
+                      backgroundColor: currentPalette.accent,
+                      color: currentPalette.surface,
                       fontSize: '0.75rem',
                       fontWeight: 600,
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      boxShadow: '0 2px 8px rgba(99, 102, 241, 0.3)',
+                      boxShadow: `0 2px 8px ${currentPalette.accent}30`,
                       animation: 'liquid-float 3s ease-in-out infinite',
                     }}
                   >
@@ -181,7 +183,7 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
                 size="xs"
                 fw={isActive ? 600 : 500}
                 style={{
-                  color: isActive ? 'var(--color-primary)' : 'var(--color-text)',
+                  color: isActive ? currentPalette.primary : currentPalette.text,
                   transition: 'all 200ms ease-out',
                   fontSize: '0.75rem',
                   lineHeight: '1',
@@ -205,7 +207,7 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
           transform: 'translateX(-50%)',
           width: '134px',
           height: '5px',
-          backgroundColor: 'var(--color-text)',
+          backgroundColor: currentPalette.text,
           opacity: 0.3,
           borderRadius: '2.5px',
         }}

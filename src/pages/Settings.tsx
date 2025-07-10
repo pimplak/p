@@ -29,6 +29,7 @@ import { useAppointmentStore } from '../stores/useAppointmentStore';
 import { usePatientStore } from '../stores/usePatientStore';
 import { useSettingsStore } from '../stores/useSettingsStore';
 import { insertSampleData, clearAllData } from '../utils/sampleData';
+import { useTheme } from '../hooks/useTheme';
 
 function Settings() {
     const { fetchPatients } = usePatientStore();
@@ -39,6 +40,7 @@ function Settings() {
         setPractitionerName,
         setPractitionerTitle 
     } = useSettingsStore();
+    const { currentPalette } = useTheme();
 
     const handleAddDemoData = async () => {
         try {
@@ -89,14 +91,16 @@ function Settings() {
     };
 
     return (
-        <Container size="md">
-            <Stack gap="xl">
-                {/* Header Section */}
-                <Group align="center" gap="md">
-                    <ThemeIcon size="xl" variant="light" color="indigo">
-                        <IconSettings size={24} />
-                    </ThemeIcon>
-                    <Title order={1}>Ustawienia</Title>
+        <Container size="md" px={{ base: 'md', sm: 'xl' }}>
+            <Stack gap="xl" py="xl">
+                {/* Header */}
+                <Group justify="space-between" align="flex-start">
+                    <Stack gap="xs">
+                        <Title order={1}>Ustawienia</Title>
+                        <Text size="lg" c="dimmed">
+                            Konfiguruj aplikację według swoich potrzeb
+                        </Text>
+                    </Stack>
                 </Group>
 
                 {/* Settings Sections */}
@@ -105,7 +109,7 @@ function Settings() {
                     <Card shadow="sm" padding="lg" radius="md" withBorder>
                         <Stack gap="md">
                             <Group align="center" gap="sm">
-                                <IconPalette size={20} color="var(--color-primary)" />
+                                <IconPalette size={20} color={currentPalette.primary} />
                                 <Text fw={600} size="lg">Wygląd i interfejs</Text>
                             </Group>
                             
@@ -119,7 +123,7 @@ function Settings() {
                     <Card shadow="sm" padding="lg" radius="md" withBorder>
                         <Stack gap="md">
                             <Group align="center" gap="sm">
-                                <IconMessage size={20} color="var(--color-accent)" />
+                                <IconMessage size={20} color={currentPalette.accent} />
                                 <Text fw={600} size="lg">Przypomnienia SMS</Text>
                             </Group>
                             
@@ -155,13 +159,11 @@ function Settings() {
                         </Stack>
                     </Card>
 
-
-
                     {/* Aplikacja i dane */}
                     <Card shadow="sm" padding="lg" radius="md" withBorder>
                         <Stack gap="md">
                             <Group align="center" gap="sm">
-                                <IconDatabase size={20} color="var(--color-primary)" />
+                                <IconDatabase size={20} color={currentPalette.primary} />
                                 <Text fw={600} size="lg">Aplikacja i dane</Text>
                             </Group>
                             
@@ -237,7 +239,7 @@ function Settings() {
                     <Card shadow="sm" padding="lg" radius="md" withBorder>
                         <Stack gap="md">
                             <Group align="center" gap="sm">
-                                <IconShield size={20} color="var(--color-accent)" />
+                                <IconShield size={20} color={currentPalette.accent} />
                                 <Text fw={600} size="lg">Prywatność i bezpieczeństwo</Text>
                             </Group>
                             
@@ -272,7 +274,7 @@ function Settings() {
                     <Card shadow="sm" padding="lg" radius="md" withBorder>
                         <Stack gap="md">
                             <Group align="center" gap="sm">
-                                <IconInfoCircle size={20} color="var(--color-text)" />
+                                <IconInfoCircle size={20} color={currentPalette.text} />
                                 <Text fw={600} size="lg">O aplikacji</Text>
                             </Group>
                             

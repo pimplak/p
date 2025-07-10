@@ -1,10 +1,10 @@
-import { Select, Group, Text, ColorSwatch, Stack, Switch } from '@mantine/core';
+import { Select, Group, Text, ColorSwatch, Stack, Switch, ActionIcon, Tooltip } from '@mantine/core';
 import { IconPalette, IconSun, IconMoon } from '@tabler/icons-react';
 import { useTheme } from '../hooks/useTheme';
 import { isDarkPalette, type ColorPalette, type PaletteId } from '../types/theme';
 
 export function ThemeSelector() {
-  const { currentPaletteId, setPalette, getAllPalettes, isDark } = useTheme();
+  const { currentPaletteId, setPalette, getAllPalettes, isDark, currentPalette } = useTheme();
   
   const palettes = getAllPalettes();
   
@@ -16,35 +16,81 @@ export function ThemeSelector() {
   }));
   
   const handlePaletteChange = (value: string | null) => {
-    if (value && value in palettes.reduce((acc: Record<string, ColorPalette>, p: ColorPalette) => ({ ...acc, [p.id]: p }), {})) {
-      setPalette(value as PaletteId);
+    if (value) {
+      const validPalette = palettes.find((p: ColorPalette) => p.id === value);
+      if (validPalette) {
+        setPalette(value as PaletteId);
+      }
     }
   };
 
-  // Smart dark/light mode toggle - zachowuje preferencje użytkownika
+  // Smart dark/light mode toggle
   const toggleDarkMode = (checked: boolean) => {
     if (checked) {
-      // Przełącz na tryb ciemny - użyj darkpro (jedyna ciemna paleta)
       setPalette('darkpro');
     } else {
-      // Przełącz na tryb jasny - użyj arctic jako default (najładniejszy jasny motyw)
       setPalette('arctic');
     }
   };
-  
+
+  const handleNextTheme = () => {
+    const currentIndex = palettes.findIndex((p: ColorPalette) => p.id === currentPaletteId);
+    const nextIndex = (currentIndex + 1) % palettes.length;
+    setPalette(palettes[nextIndex].id as PaletteId);
+  };
+
+  const getThemeIcon = () => {
+    switch (currentPaletteId) {
+      case 'arctic':
+        return <IconSun size={18} color={currentPalette.accent} />;
+      case 'springblush':
+        return <IconPalette size={18} color={currentPalette.primary} />;
+      case 'darkpro':
+        return <IconMoon size={18} color={currentPalette.primary} />;
+      default:
+        return <IconPalette size={18} color={currentPalette.primary} />;
+    }
+  };
+
+  const getTooltipText = () => {
+    const currentIndex = palettes.findIndex((p: ColorPalette) => p.id === currentPaletteId);
+    const nextIndex = (currentIndex + 1) % palettes.length;
+    const nextPalette = palettes[nextIndex];
+    return `Zmień na: ${nextPalette.name}`;
+  };
+
   return (
     <Stack gap="md">
       {/* Quick Dark/Light Toggle */}
       <Group justify="space-between" align="center">
         <Group gap="sm">
-          <IconSun size={18} color="var(--color-accent)" />
+          <Tooltip label={getTooltipText()} withArrow>
+            <ActionIcon
+              onClick={handleNextTheme}
+              size="lg"
+              variant="subtle"
+              style={{
+                backgroundColor: `${currentPalette.primary}20`,
+                color: currentPalette.primary,
+              }}
+              styles={{
+                root: {
+                  '&:hover': {
+                    backgroundColor: `${currentPalette.accent}30`,
+                    color: currentPalette.accent,
+                  }
+                }
+              }}
+            >
+              {getThemeIcon()}
+            </ActionIcon>
+          </Tooltip>
           <Switch 
             checked={isDark}
             onChange={(event) => toggleDarkMode(event.currentTarget.checked)}
             size="md"
-            color="indigo"
+            color="blue"
           />
-          <IconMoon size={18} color="var(--color-primary)" />
         </Group>
         <Text size="sm" fw={500} c="dimmed">
           {isDark ? 'Tryb ciemny' : 'Tryb jasny'}

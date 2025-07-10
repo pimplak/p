@@ -1,6 +1,7 @@
 import { Button, Container, Stack, Text, Alert, Group } from '@mantine/core';
 import { IconAlertTriangle, IconRefresh } from '@tabler/icons-react';
 import { ErrorBoundary } from 'react-error-boundary';
+import { useTheme } from '../hooks/useTheme';
 import type { ReactNode } from 'react';
 
 interface GlobalErrorBoundaryProps {
@@ -11,6 +12,8 @@ function ErrorFallback({ error, resetErrorBoundary }: {
   error: Error; 
   resetErrorBoundary: () => void; 
 }) {
+  const { currentPalette } = useTheme();
+
   return (
     <Container size="sm" mt="xl">
       <Stack gap="lg" align="center">
@@ -38,8 +41,9 @@ function ErrorFallback({ error, resetErrorBoundary }: {
                   wordBreak: 'break-all',
                   fontFamily: 'monospace',
                   padding: '0.5rem',
-                  background: 'var(--color-surface)',
-                  borderRadius: '4px'
+                  backgroundColor: currentPalette.surface,
+                  borderRadius: '4px',
+                  color: currentPalette.text
                 }}
               >
                 {error.message}

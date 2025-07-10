@@ -1,154 +1,126 @@
 import { Select as MantineSelect, type SelectProps } from '@mantine/core';
-import { forwardRef } from 'react';
+import { useTheme } from '../../hooks/useTheme';
 
 interface CustomSelectProps extends SelectProps {
   variant?: 'default' | 'filled' | 'unstyled';
-  hasError?: boolean;
-  hasSuccess?: boolean;
 }
 
-export const Select = forwardRef<HTMLInputElement, CustomSelectProps>(
-  ({ variant = 'default', hasError, hasSuccess, style, styles, ...props }, ref) => {
-    const getVariantStyles = () => {
-      const baseStyles = {
-        minHeight: '44px',
-        fontSize: '1rem',
-        fontWeight: 400,
-        borderRadius: '8px',
-        transition: 'all 200ms ease-out',
-      };
+export const Select: React.FC<CustomSelectProps> = ({ 
+  variant = 'default',
+  style,
+  styles,
+  ...props 
+}) => {
+  const { currentPalette, mantineTheme, isDark } = useTheme();
 
-      if (hasError) {
-        return {
-          ...baseStyles,
-          backgroundColor: 'var(--color-surface)',
-          border: '1px solid var(--danger)',
-          '&:focus, &:focus-within': {
-            borderColor: 'var(--danger)',
-            boxShadow: '0 0 0 1px var(--danger)',
-            outline: 'none',
-          }
-        };
-      }
-
-      if (hasSuccess) {
-        return {
-          ...baseStyles,
-          backgroundColor: 'var(--color-surface)',
-          border: '1px solid var(--success)',
-          '&:focus, &:focus-within': {
-            borderColor: 'var(--success)',
-            boxShadow: '0 0 0 1px var(--success)',
-            outline: 'none',
-          }
-        };
-      }
-
-      switch (variant) {
-        case 'filled':
-          return {
-            ...baseStyles,
-            backgroundColor: 'var(--color-surface)',
-            border: '1px solid var(--color-primary)',
-            '&:focus, &:focus-within': {
-              backgroundColor: 'var(--color-surface)',
-              borderColor: 'var(--color-primary)',
-              boxShadow: '0 0 0 1px var(--color-primary)',
-              outline: 'none',
-            },
-            '&:hover:not(:focus):not(:focus-within)': {
-              borderColor: 'var(--color-primary-light)',
-            }
-          };
-
-        case 'unstyled':
-          return {
-            ...baseStyles,
-            backgroundColor: 'transparent',
-            border: 'none',
-            borderBottom: '2px solid var(--color-text-muted)',
-            borderRadius: '0',
-            '&:focus, &:focus-within': {
-              borderBottomColor: 'var(--color-primary)',
-              outline: 'none',
-            }
-          };
-
-        default:
-          return {
-            ...baseStyles,
-            backgroundColor: 'var(--color-surface)',
-            border: '1px solid var(--color-primary)',
-            color: 'var(--color-text)',
-            '&:focus, &:focus-within': {
-              borderColor: 'var(--color-primary)',
-              boxShadow: '0 0 0 1px var(--color-primary)',
-              outline: 'none',
-            },
-            '&:hover:not(:focus):not(:focus-within)': {
-              borderColor: 'var(--color-primary-light)',
-            }
-          };
-      }
+  const getVariantStyles = () => {
+    const baseStyles = {
+      input: {
+        backgroundColor: currentPalette.surface,
+        color: currentPalette.text,
+        borderColor: `${currentPalette.primary}60`,
+        borderRadius: mantineTheme.radius?.md,
+        fontFamily: mantineTheme.fontFamily,
+        fontSize: mantineTheme.fontSizes?.md,
+        '&:focus': {
+          borderColor: currentPalette.primary,
+          boxShadow: `0 0 0 1px ${currentPalette.primary}`,
+          backgroundColor: currentPalette.surface,
+        },
+        '&:hover': {
+          borderColor: `${currentPalette.primary}80`,
+        },
+        '&::placeholder': {
+          color: `${currentPalette.text}60`,
+          opacity: 1,
+        },
+      },
+      label: {
+        color: currentPalette.text,
+        fontWeight: 500,
+        fontSize: mantineTheme.fontSizes?.sm,
+      },
+      dropdown: {
+        backgroundColor: currentPalette.surface,
+        border: `1px solid ${currentPalette.primary}`,
+        borderRadius: mantineTheme.radius?.md,
+        boxShadow: `0 4px 12px ${currentPalette.primary}20`,
+      },
+      option: {
+        color: currentPalette.text,
+        fontSize: mantineTheme.fontSizes?.sm,
+        padding: `${mantineTheme.spacing?.sm} ${mantineTheme.spacing?.md}`,
+        '&:hover': {
+          backgroundColor: `${currentPalette.accent}30`,
+        },
+        '&[data-selected]': {
+          backgroundColor: currentPalette.primary,
+          color: isDark ? currentPalette.background : currentPalette.surface,
+          '&:hover': {
+            backgroundColor: currentPalette.accent,
+          },
+        },
+      },
     };
 
-    return (
-      <MantineSelect
-        ref={ref}
-        radius="md"
-        size="md"
-        searchable
-        clearable
-        style={style}
-        styles={{
-          input: getVariantStyles(),
-          label: {
-            fontSize: '0.875rem',
-            fontWeight: 500,
-            color: 'var(--color-text)',
-            marginBottom: '6px',
-          },
-          error: {
-            fontSize: '0.875rem',
-            color: 'var(--danger)',
-            marginTop: '4px',
-          },
-          description: {
-            fontSize: '0.875rem',
-            color: 'var(--color-text-muted)',
-            marginTop: '4px',
-          },
-          dropdown: {
-            backgroundColor: 'var(--color-surface)',
-            border: '1px solid var(--color-primary)',
-            borderRadius: '8px',
-            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
-            padding: '4px',
-            color: 'var(--color-text)',
-          },
-          option: {
-            borderRadius: '6px',
-            padding: '8px 12px',
-            fontSize: '0.875rem',
-            transition: 'all 150ms ease-out',
-            color: 'var(--color-text)',
-            '&[data-hovered]': {
-              backgroundColor: 'var(--color-accent-light)',
+    switch (variant) {
+      case 'filled':
+        return {
+          ...baseStyles,
+          input: {
+            ...baseStyles.input,
+            backgroundColor: `${currentPalette.primary}10`,
+            border: 'none',
+            '&:focus': {
+              backgroundColor: currentPalette.surface,
+              boxShadow: `0 0 0 2px ${currentPalette.primary}`,
             },
-            '&[data-selected]': {
-              backgroundColor: 'var(--color-primary)',
-              color: 'var(--color-text-inverse)',
-              '&[data-hovered]': {
-                backgroundColor: 'var(--color-primary-hover)',
-              }
-            }
           },
-          ...styles,
-        }}
-        {...props}
-      />
-    );
-  }
-);
+        };
+      
+      case 'unstyled':
+        return {
+          ...baseStyles,
+          input: {
+            ...baseStyles.input,
+            backgroundColor: 'transparent',
+            border: 'none',
+            borderBottom: `2px solid ${currentPalette.text}40`,
+            borderRadius: '0',
+            '&:focus': {
+              borderBottomColor: currentPalette.primary,
+              backgroundColor: 'transparent',
+              boxShadow: 'none',
+            },
+          },
+        };
+      
+      default:
+        return baseStyles;
+    }
+  };
 
-Select.displayName = 'Select'; 
+  const variantStyles = getVariantStyles();
+
+  return (
+    <MantineSelect
+      radius={mantineTheme.radius?.md}
+      size="md"
+      comboboxProps={{
+        shadow: 'sm',
+        radius: mantineTheme.radius?.md,
+      }}
+      style={{
+        ...style
+      }}
+      styles={{
+        input: variantStyles.input,
+        label: variantStyles.label,
+        dropdown: variantStyles.dropdown,
+        option: variantStyles.option,
+        ...styles,
+      }}
+      {...props}
+    />
+  );
+}; 

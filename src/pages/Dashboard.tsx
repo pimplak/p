@@ -18,11 +18,13 @@ import { useAppointmentStore } from '../stores/useAppointmentStore';
 import { usePatientStore } from '../stores/usePatientStore';
 import { PRESETS, DESIGN_SYSTEM, getIconSize } from '../theme/designSystem';
 import { AppointmentStatus } from '../types/Appointment';
+import { useTheme } from '../hooks/useTheme';
 
 function Dashboard() {
   const navigate = useNavigate();
   const { patients, fetchPatients } = usePatientStore();
   const { appointments, fetchAppointments, getTodaysAppointments, getUpcomingAppointments } = useAppointmentStore();
+  const { currentPalette } = useTheme();
 
   // Fetch data on mount
   useEffect(() => {
@@ -33,8 +35,8 @@ function Dashboard() {
   // Calculate real stats
   const stats = useMemo(() => {
     const activePatients = patients.filter(p => p.status === 'active').length;
-    const todaysAppointments = getTodaysAppointments();
-    const upcomingAppointments = getUpcomingAppointments();
+    const todaysAppointments = getTodaysAppointments().length;
+    const upcomingAppointments = getUpcomingAppointments().length;
     
     // Calculate this week's appointments
     const now = new Date();
@@ -67,18 +69,19 @@ function Dashboard() {
       ? Math.round((completedAppointments.length / totalScheduled) * 100)
       : 0;
 
+    const nextAppointment = getUpcomingAppointments()[0];
+
     return {
       totalPatients: activePatients,
       sessionsThisWeek: thisWeekAppointments.length,
       avgSessionDuration: avgDuration,
       completionRate: completionRate,
       totalNotes: 0, // TODO: Implement notes counting when notes feature is added
-      todaysAppointments: todaysAppointments.length,
-      nextAppointment: upcomingAppointments[0] ? {
-        patient: upcomingAppointments[0].patient ? `${upcomingAppointments[0].patient.firstName} ${upcomingAppointments[0].patient.lastName}` : 'Nieznany pacjent',
-        time: new Date(upcomingAppointments[0].date).toLocaleString('pl-PL', { 
-          month: 'short', 
-          day: 'numeric',
+      todaysAppointments: todaysAppointments,
+      upcomingAppointments: upcomingAppointments,
+      nextAppointment: nextAppointment ? {
+        patient: patients.find(p => p.id === nextAppointment.patientId)?.firstName + ' ' + (patients.find(p => p.id === nextAppointment.patientId)?.lastName || '') || 'Nieznany',
+        time: new Date(nextAppointment.date).toLocaleTimeString('pl-PL', {
           hour: '2-digit',
           minute: '2-digit'
         })
@@ -97,7 +100,7 @@ function Dashboard() {
               style={{
                 fontSize: '2rem',
                 fontWeight: 700,
-                color: 'var(--color-text)',
+                color: currentPalette.text,
                 letterSpacing: '-0.02em',
                 lineHeight: '2.5rem'
               }}
@@ -106,7 +109,10 @@ function Dashboard() {
             </Title>
             <Text 
               size={DESIGN_SYSTEM.text.lg}
-              style={{ lineHeight: '1.6', color: 'var(--color-text)', opacity: 0.7 }}
+              style={{ 
+                lineHeight: '1.6', 
+                color: `${currentPalette.text}B3`,
+              }}
             >
               Witaj ponownie! Oto przegląd Twojej praktyki terapeutycznej.
             </Text>
@@ -143,7 +149,7 @@ function Dashboard() {
             style={{
               fontSize: '1.25rem',
               fontWeight: 600,
-              color: 'var(--color-text)',
+              color: currentPalette.text,
               letterSpacing: '-0.01em'
             }}
           >
@@ -154,19 +160,19 @@ function Dashboard() {
             <Card
               {...PRESETS.card}
               style={{
-                backgroundColor: 'var(--color-surface)',
-                border: '1px solid var(--color-primary)',
+                backgroundColor: currentPalette.surface,
+                border: `1px solid ${currentPalette.primary}`,
                 cursor: 'pointer',
                 transition: 'all 200ms ease-out',
-                color: 'var(--color-text)'
+                color: currentPalette.text
               }}
               onClick={() => navigate('/calendar')}
             >
               <Stack gap={DESIGN_SYSTEM.spacing.md}>
-                <Title order={4} style={{ color: 'var(--color-text)' }}>
+                <Title order={4} style={{ color: currentPalette.text }}>
                   Kalendarz sesji
                 </Title>
-                <Text size={DESIGN_SYSTEM.text.sm} style={{ color: 'var(--color-text)', opacity: 0.7 }}>
+                <Text size={DESIGN_SYSTEM.text.sm} style={{ color: `${currentPalette.text}B3` }}>
                   Zarządzaj terminami i planuj spotkania
                 </Text>
                 <Button variant="secondary" style={{ alignSelf: 'flex-start' }}>
@@ -178,19 +184,19 @@ function Dashboard() {
             <Card
               {...PRESETS.card}
               style={{
-                backgroundColor: 'var(--color-surface)',
-                border: '1px solid var(--color-primary)',
+                backgroundColor: currentPalette.surface,
+                border: `1px solid ${currentPalette.primary}`,
                 cursor: 'pointer',
                 transition: 'all 200ms ease-out',
-                color: 'var(--color-text)'
+                color: currentPalette.text
               }}
               onClick={() => navigate('/patients')}
             >
               <Stack gap={DESIGN_SYSTEM.spacing.md}>
-                <Title order={4} style={{ color: 'var(--color-text)' }}>
+                <Title order={4} style={{ color: currentPalette.text }}>
                   Lista pacjentów
                 </Title>
-                <Text size={DESIGN_SYSTEM.text.sm} style={{ color: 'var(--color-text)', opacity: 0.7 }}>
+                <Text size={DESIGN_SYSTEM.text.sm} style={{ color: `${currentPalette.text}B3` }}>
                   Przeglądaj profile i historie terapii
                 </Text>
                 <Button variant="secondary" style={{ alignSelf: 'flex-start' }}>
@@ -202,19 +208,19 @@ function Dashboard() {
             <Card
               {...PRESETS.card}
               style={{
-                backgroundColor: 'var(--color-surface)',
-                border: '1px solid var(--color-primary)',
+                backgroundColor: currentPalette.surface,
+                border: `1px solid ${currentPalette.primary}`,
                 cursor: 'pointer',
                 transition: 'all 200ms ease-out',
-                color: 'var(--color-text)'
+                color: currentPalette.text
               }}
               onClick={() => navigate('/settings')}
             >
               <Stack gap={DESIGN_SYSTEM.spacing.md}>
-                <Title order={4} style={{ color: 'var(--color-text)' }}>
+                <Title order={4} style={{ color: currentPalette.text }}>
                   Ustawienia
                 </Title>
-                <Text size={DESIGN_SYSTEM.text.sm} style={{ color: 'var(--color-text)', opacity: 0.7 }}>
+                <Text size={DESIGN_SYSTEM.text.sm} style={{ color: `${currentPalette.text}B3` }}>
                   Konfiguruj aplikację i eksportuj dane
                 </Text>
                 <Button variant="secondary" style={{ alignSelf: 'flex-start' }}>
@@ -233,7 +239,7 @@ function Dashboard() {
               style={{
                 fontSize: '1.25rem',
                 fontWeight: 600,
-                color: 'var(--color-text)',
+                color: currentPalette.text,
                 letterSpacing: '-0.01em'
               }}
             >
@@ -243,13 +249,13 @@ function Dashboard() {
             <Card
               {...PRESETS.card}
               style={{
-                backgroundColor: 'var(--color-surface)',
-                border: '1px solid var(--color-primary)',
-                color: 'var(--color-text)'
+                backgroundColor: currentPalette.surface,
+                border: `1px solid ${currentPalette.primary}`,
+                color: currentPalette.text
               }}
             >
               <Stack gap={DESIGN_SYSTEM.spacing.md}>
-                <Text size={DESIGN_SYSTEM.text.lg} fw={600} style={{ color: 'var(--color-text)' }}>
+                <Text size={DESIGN_SYSTEM.text.lg} fw={600} style={{ color: currentPalette.text }}>
                   {stats.todaysAppointments} {stats.todaysAppointments === 1 ? 'wizyta' : 'wizyt'} na dziś
                 </Text>
                 <div onClick={() => navigate('/calendar')} style={{ cursor: 'pointer' }}>

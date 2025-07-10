@@ -57,8 +57,9 @@ import { SMSReminderButton } from '../components/SMSReminderButton';
 import { ExpandableAppointmentRow } from '../components/ui/ExpandableAppointmentRow';
 import { useAppointmentStore } from '../stores/useAppointmentStore';
 import { usePatientStore } from '../stores/usePatientStore';
-import { useSettingsStore } from '../stores/useSettingsStore';
+
 import type { Appointment, AppointmentWithPatient } from '../types/Appointment';
+import { useTheme } from '../hooks/useTheme';
 
 type CalendarView = 'day' | 'week' | 'month';
 
@@ -68,6 +69,7 @@ function Calendar() {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [view, setView] = useState<CalendarView>('day');
+  const [hideWeekends, setHideWeekends] = useState(false);
   
   const { 
     fetchAppointments, 
@@ -77,7 +79,7 @@ function Calendar() {
   } = useAppointmentStore();
 
   const { fetchPatients } = usePatientStore();
-  const { hideWeekends, toggleHideWeekends } = useSettingsStore();
+  const { currentPalette } = useTheme();
 
   useEffect(() => {
     fetchAppointments();
@@ -134,6 +136,10 @@ function Calendar() {
     setSelectedDate(new Date());
   };
 
+  const toggleHideWeekends = () => {
+    setHideWeekends(!hideWeekends);
+  };
+
   // Get appointments for current view
   const currentPeriodAppointments = useMemo(() => {
     let startDate: Date;
@@ -171,21 +177,21 @@ function Calendar() {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'scheduled': return 'blue';
-      case 'completed': return 'green';
-      case 'cancelled': return 'red';
-      case 'no_show': return 'orange';
-      default: return 'gray';
+      case 'scheduled': return currentPalette.primary;
+      case 'completed': return currentPalette.accent;
+      case 'cancelled': return '#ef4444';
+      case 'no_show': return '#f59e0b';
+      default: return currentPalette.text;
     }
   };
 
   const getStatusBackgroundColor = (status: string) => {
     switch (status) {
-      case 'scheduled': return 'color-mix(in srgb, var(--color-primary) 20%, transparent)';
-      case 'completed': return 'color-mix(in srgb, var(--color-accent) 20%, transparent)';
-      case 'cancelled': return 'color-mix(in srgb, #ef4444 20%, transparent)';
-      case 'no_show': return 'color-mix(in srgb, #f59e0b 20%, transparent)';
-      default: return 'color-mix(in srgb, var(--color-text) 15%, transparent)';
+      case 'scheduled': return `${currentPalette.primary}33`;
+      case 'completed': return `${currentPalette.accent}33`;
+      case 'cancelled': return '#ef444433';
+      case 'no_show': return '#f59e0b33';
+      default: return `${currentPalette.text}26`;
     }
   };
 
@@ -405,6 +411,7 @@ interface CalendarViewProps {
   getStatusBackgroundColor: (status: string) => string;
   getStatusLabel: (status: string) => string;
   hideWeekends?: boolean;
+  currentPalette: any;
 }
 
 function DayView({ 
@@ -613,7 +620,7 @@ function WeekView({
               p="xs"
               style={{ 
                 textAlign: 'center',
-                backgroundColor: isToday(day) ? 'var(--color-primary-light)' : 'var(--color-surface)',
+                backgroundColor: isToday(day) ? `${currentPalette.primary}20` : currentPalette.surface,
                 cursor: 'pointer',
                 display: 'flex',
                 flexDirection: 'column',
@@ -668,9 +675,9 @@ function WeekView({
                     p="2px"
                     style={{ 
                       minHeight: dayAppointments.length > 0 ? 'auto' : cellMinHeight,
-                      backgroundColor: 'var(--color-surface)',
+                      backgroundColor: currentPalette.surface,
                       cursor: 'pointer',
-                      border: '1px solid var(--color-input-border)',
+                      border: `1px solid ${currentPalette.primary}40`,
                       display: 'flex',
                       flexDirection: 'column',
                       gap: '2px'
@@ -772,10 +779,10 @@ function MonthView({
               style={{
                 minHeight: dayAppointments.length > 0 ? 'auto' : cellMinHeight,
                 backgroundColor: isTodayDay 
-                  ? 'var(--color-primary-light)' 
+                  ? `${currentPalette.primary}20` 
                   : isCurrentMonth 
-                    ? 'var(--color-surface)' 
-                    : 'var(--color-background)',
+                    ? currentPalette.surface 
+                    : currentPalette.background,
                 opacity: isCurrentMonth ? 1 : 0.6,
                 cursor: 'pointer',
                 border: '1px solid var(--color-input-border)'

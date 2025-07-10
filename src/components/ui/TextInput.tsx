@@ -1,5 +1,6 @@
 import { TextInput as MantineTextInput, type TextInputProps } from '@mantine/core';
 import { forwardRef } from 'react';
+import { useTheme } from '../../hooks/useTheme';
 
 interface CustomTextInputProps extends TextInputProps {
   variant?: 'default' | 'filled' | 'unstyled';
@@ -9,6 +10,8 @@ interface CustomTextInputProps extends TextInputProps {
 
 export const TextInput = forwardRef<HTMLInputElement, CustomTextInputProps>(
   ({ variant = 'default', hasError, hasSuccess, style, styles, ...props }, ref) => {
+    const { currentPalette } = useTheme();
+
     const getVariantStyles = () => {
       const baseStyles = {
         minHeight: '44px',
@@ -21,11 +24,12 @@ export const TextInput = forwardRef<HTMLInputElement, CustomTextInputProps>(
       if (hasError) {
         return {
           ...baseStyles,
-          backgroundColor: 'var(--color-surface)',
-          border: '1px solid var(--danger)',
+          backgroundColor: currentPalette.surface,
+          border: `1px solid #ef4444`,
+          color: currentPalette.text,
           '&:focus, &:focus-within': {
-            borderColor: 'var(--danger)',
-            boxShadow: '0 0 0 1px var(--danger)',
+            borderColor: '#ef4444',
+            boxShadow: '0 0 0 1px #ef4444',
             outline: 'none',
           }
         };
@@ -34,11 +38,12 @@ export const TextInput = forwardRef<HTMLInputElement, CustomTextInputProps>(
       if (hasSuccess) {
         return {
           ...baseStyles,
-          backgroundColor: 'var(--color-surface)',
-          border: '1px solid var(--success)',
+          backgroundColor: currentPalette.surface,
+          border: `1px solid #10b981`,
+          color: currentPalette.text,
           '&:focus, &:focus-within': {
-            borderColor: 'var(--success)',
-            boxShadow: '0 0 0 1px var(--success)',
+            borderColor: '#10b981',
+            boxShadow: '0 0 0 1px #10b981',
             outline: 'none',
           }
         };
@@ -48,18 +53,18 @@ export const TextInput = forwardRef<HTMLInputElement, CustomTextInputProps>(
         case 'filled':
           return {
             ...baseStyles,
-            backgroundColor: 'var(--color-surface)',
-            border: '1px solid var(--color-primary)',
-            color: 'var(--color-text)',
+            backgroundColor: currentPalette.surface,
+            border: `1px solid ${currentPalette.primary}`,
+            color: currentPalette.text,
             '&:focus, &:focus-within': {
-              backgroundColor: 'var(--color-surface)',
-              borderColor: 'var(--color-primary)',
-              boxShadow: '0 0 0 3px var(--color-primary-light)',
-              outline: '2px solid var(--color-primary)',
+              backgroundColor: currentPalette.surface,
+              borderColor: currentPalette.primary,
+              boxShadow: `0 0 0 3px ${currentPalette.primary}20`,
+              outline: `2px solid ${currentPalette.primary}`,
               outlineOffset: '2px',
             },
             '&:hover:not(:focus):not(:focus-within)': {
-              borderColor: 'var(--color-primary-light)',
+              borderColor: `${currentPalette.primary}80`,
             }
           };
 
@@ -68,10 +73,10 @@ export const TextInput = forwardRef<HTMLInputElement, CustomTextInputProps>(
             ...baseStyles,
             backgroundColor: 'transparent',
             border: 'none',
-            borderBottom: '2px solid var(--color-text-muted)',
+            borderBottom: `2px solid ${currentPalette.text}40`,
             borderRadius: '0',
             '&:focus, &:focus-within': {
-              borderBottomColor: 'var(--color-primary)',
+              borderBottomColor: currentPalette.primary,
               outline: 'none',
             }
           };
@@ -79,17 +84,17 @@ export const TextInput = forwardRef<HTMLInputElement, CustomTextInputProps>(
         default:
           return {
             ...baseStyles,
-            backgroundColor: 'var(--color-surface)',
-            border: '1px solid var(--color-primary)',
-            color: 'var(--color-text)',
+            backgroundColor: currentPalette.surface,
+            border: `1px solid ${currentPalette.primary}`,
+            color: currentPalette.text,
             '&:focus, &:focus-within': {
-              borderColor: 'var(--color-primary)',
-              boxShadow: '0 0 0 3px var(--color-primary-light)',
-              outline: '2px solid var(--color-primary)',
+              borderColor: currentPalette.primary,
+              boxShadow: `0 0 0 3px ${currentPalette.primary}20`,
+              outline: `2px solid ${currentPalette.primary}`,
               outlineOffset: '2px',
             },
             '&:hover:not(:focus):not(:focus-within)': {
-              borderColor: 'var(--color-primary-light)',
+              borderColor: `${currentPalette.primary}80`,
             }
           };
       }
@@ -106,17 +111,17 @@ export const TextInput = forwardRef<HTMLInputElement, CustomTextInputProps>(
           label: {
             fontSize: '0.875rem',
             fontWeight: 500,
-            color: 'var(--color-text)',
+            color: currentPalette.text,
             marginBottom: '6px',
           },
           error: {
             fontSize: '0.875rem',
-            color: 'var(--danger)',
+            color: '#ef4444',
             marginTop: '4px',
           },
           description: {
             fontSize: '0.875rem',
-            color: 'var(--gray-600)',
+            color: `${currentPalette.text}80`,
             marginTop: '4px',
           },
           ...styles,

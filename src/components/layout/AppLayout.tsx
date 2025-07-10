@@ -10,8 +10,9 @@ import {
   IconLogout
 } from '@tabler/icons-react';
 import { Link, useLocation } from 'react-router-dom';
-import { MobileNavigation } from './MobileNavigation';
 import type { ReactNode } from 'react';
+import { useTheme } from '../../hooks/useTheme';
+import { MobileNavigation } from './MobileNavigation';
 
 interface AppLayoutProps {
   children: ReactNode;
@@ -63,6 +64,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
   const [opened, { toggle }] = useDisclosure();
   const isMobile = useMediaQuery('(max-width: 768px)');
   const location = useLocation();
+  const { currentPalette, isDark, mantineTheme } = useTheme();
 
   return (
     <>
@@ -83,12 +85,12 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
       {/* Header */}
       <AppShell.Header
         style={{
-          backgroundColor: 'var(--color-surface)',
-          borderBottom: '1px solid var(--color-primary)',
+          backgroundColor: currentPalette.surface,
+          borderBottom: `1px solid ${currentPalette.primary}`,
           padding: '0 24px',
           display: 'flex',
           alignItems: 'center',
-          color: 'var(--color-text)',
+          color: currentPalette.text,
         }}
       >
         <Group h="100%" justify="space-between" w="100%">
@@ -98,12 +100,12 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
               onClick={toggle}
               hiddenFrom="sm"
               size="sm"
-              style={{ color: 'var(--gray-600)' }}
+              color={currentPalette.text}
             />
             <Text 
               size="xl" 
               fw={700}
-              style={{ color: 'var(--color-text)' }}
+              style={{ color: currentPalette.text }}
               visibleFrom="sm"
             >
               P
@@ -111,7 +113,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
           </Group>
           
           <Group gap="md">
-            <Text size="sm" style={{ color: 'var(--color-text)', opacity: 0.7 }}>
+            <Text size="sm" style={{ color: `${currentPalette.text}B3` }}>
               Dr Anna Terapeutka
             </Text>
           </Group>
@@ -121,10 +123,10 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
       {/* Sidebar */}
       <AppShell.Navbar
         style={{
-          backgroundColor: 'var(--color-surface)',
-          borderRight: '1px solid var(--color-primary)',
+          backgroundColor: currentPalette.surface,
+          borderRight: `1px solid ${currentPalette.primary}`,
           padding: '24px 16px',
-          color: 'var(--color-text)',
+          color: currentPalette.text,
         }}
       >
         <ScrollArea style={{ height: '100%' }}>
@@ -135,19 +137,19 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
                 style={{
                   width: '32px',
                   height: '32px',
-                  background: 'var(--color-primary)',
-                  borderRadius: '8px',
+                  background: currentPalette.primary,
+                  borderRadius: mantineTheme.radius?.md,
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
+                  boxShadow: `0 2px 8px ${currentPalette.primary}30`,
                   transition: 'all 200ms ease-out',
                 }}
               >
                 <Text 
                   fw={700} 
                   size="sm"
-                  style={{ color: 'var(--color-button-text)' }}
+                  style={{ color: isDark ? currentPalette.background : currentPalette.surface }}
                 >
                   P
                 </Text>
@@ -155,7 +157,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
               <Text 
                 size="lg" 
                 fw={600}
-                style={{ letterSpacing: '-0.01em', color: 'var(--color-text)' }}
+                style={{ letterSpacing: '-0.01em', color: currentPalette.text }}
               >
                 P
               </Text>
@@ -165,38 +167,40 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
             <Stack gap="xs" style={{ flex: 1 }}>
               {navigationItems.map((item) => {
                 const Icon = item.icon;
+                const isActive = location.pathname === item.href;
+                
                 return (
-                                    <NavLink
+                  <NavLink
                     key={item.href}
                     component={Link}
                     to={item.href}
                     label={item.label}
                     leftSection={<Icon size={20} stroke={1.5} />}
-                    active={location.pathname === item.href}
+                    active={isActive}
                     onClick={() => {
                       if (isMobile) {
                         toggle();
                       }
                     }}
                     style={{
-                      borderRadius: '8px',
+                      borderRadius: mantineTheme.radius?.md,
                       fontWeight: 500,
-                      fontSize: '14px',
+                      fontSize: mantineTheme.fontSizes?.sm,
                       padding: '12px 16px',
                       transition: 'all 200ms ease-out',
+                      backgroundColor: isActive 
+                        ? currentPalette.primary 
+                        : 'transparent',
+                      color: isActive 
+                        ? (isDark ? currentPalette.background : currentPalette.surface)
+                        : currentPalette.text,
                     }}
                     styles={{
                       root: {
-                        color: 'var(--color-text)',
-                        '&[data-active]': {
-                          backgroundColor: 'var(--color-primary)',
-                          color: 'var(--color-button-text)',
-                          '&:hover': {
-                            backgroundColor: 'var(--color-primary-hover)',
-                          }
-                        },
-                        '&:not([data-active]):hover': {
-                          backgroundColor: 'var(--color-accent-light)',
+                        '&:hover': {
+                          backgroundColor: isActive 
+                            ? currentPalette.accent 
+                            : `${currentPalette.accent}30`,
                         }
                       }
                     }}
@@ -206,9 +210,11 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
             </Stack>
 
             {/* Bottom Navigation */}
-            <Stack gap="xs" style={{ borderTop: '1px solid var(--gray-100)', paddingTop: '16px' }}>
+            <Stack gap="xs" style={{ borderTop: `1px solid ${currentPalette.primary}40`, paddingTop: '16px' }}>
               {bottomItems.map((item) => {
                 const Icon = item.icon;
+                const isRed = item.color === 'red';
+                
                 return (
                   <NavLink
                     key={item.href}
@@ -222,18 +228,19 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
                       }
                     }}
                     style={{
-                      borderRadius: '8px',
+                      borderRadius: mantineTheme.radius?.md,
                       fontWeight: 500,
-                      fontSize: '14px',
+                      fontSize: mantineTheme.fontSizes?.sm,
                       padding: '12px 16px',
                       transition: 'all 200ms ease-out',
-                      color: item.color === 'red' ? 'var(--danger)' : 'var(--gray-600)',
+                      color: isRed ? '#ef4444' : currentPalette.text,
                     }}
                     styles={{
                       root: {
-                        color: item.color === 'red' ? 'var(--danger)' : 'var(--color-text)',
                         '&:hover': {
-                          backgroundColor: item.color === 'red' ? 'var(--color-accent-light)' : 'var(--color-accent-light)',
+                          backgroundColor: isRed 
+                            ? '#ef444420' 
+                            : `${currentPalette.accent}30`,
                         }
                       }
                     }}
@@ -248,10 +255,10 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
       {/* Main Content */}
       <AppShell.Main
         style={{
-          backgroundColor: 'var(--color-background)',
+          backgroundColor: currentPalette.background,
           minHeight: 'calc(100vh - 70px)',
           paddingBottom: isMobile ? '80px' : '0', // Space for mobile navigation
-          color: 'var(--color-text)',
+          color: currentPalette.text,
         }}
       >
         {children}

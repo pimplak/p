@@ -1,17 +1,21 @@
-import { Card, Text, Group, Stack, ThemeIcon } from '@mantine/core';
-import React from 'react';
-import type { Icon } from '@tabler/icons-react';
+import { Card, Group, Text, RingProgress, Badge, ActionIcon, Stack, Tooltip } from '@mantine/core';
+import { IconTrendingUp, IconTrendingDown, IconMinus, IconEye } from '@tabler/icons-react';
+import { useTheme } from '../../hooks/useTheme';
 
-interface StatsCardProps {
+export interface StatsCardProps {
   title: string;
   value: string | number;
   description?: string;
-  icon: Icon;
-  color?: 'indigo' | 'green' | 'yellow' | 'red';
   trend?: {
     value: number;
-    period: string;
+    label: string;
   };
+  progress?: {
+    value: number;
+    label: string;
+  };
+  icon?: React.ReactNode;
+  variant?: 'default' | 'compact';
   onClick?: () => void;
 }
 
@@ -19,116 +23,144 @@ export const StatsCard: React.FC<StatsCardProps> = ({
   title,
   value,
   description,
-  icon: Icon,
-  color = 'indigo',
   trend,
+  progress,
+  icon,
+  variant = 'default',
   onClick
 }) => {
-  const getColorScheme = (colorName: string) => {
-    const colors = {
-      indigo: { bg: '#F0F2FF', iconBg: '#6366F1' },
-      green: { bg: '#F0FDF4', iconBg: '#10B981' },
-      yellow: { bg: '#FFFBEB', iconBg: '#F59E0B' },
-      red: { bg: '#FEF2F2', iconBg: '#EF4444' }
-    };
-    return colors[colorName as keyof typeof colors] || colors.indigo;
+  const { currentPalette } = useTheme();
+
+  const getTrendIcon = () => {
+    if (!trend) return null;
+    
+    if (trend.value > 0) {
+      return <IconTrendingUp size={16} />;
+    } else if (trend.value < 0) {
+      return <IconTrendingDown size={16} />;
+    } else {
+      return <IconMinus size={16} />;
+    }
   };
 
-  const colorScheme = getColorScheme(color);
+  const getTrendColor = () => {
+    if (!trend) return currentPalette.text;
+    
+    if (trend.value > 0) {
+      return '#10b981'; // Green
+    } else if (trend.value < 0) {
+      return '#ef4444'; // Red
+    } else {
+      return currentPalette.text;
+    }
+  };
+
+  if (variant === 'compact') {
+    return (
+      <Card
+        padding="md"
+        radius="md"
+        withBorder
+        style={{
+          backgroundColor: currentPalette.surface,
+          border: `1px solid ${currentPalette.primary}`,
+          cursor: onClick ? 'pointer' : 'default',
+          transition: 'all 200ms ease-out',
+          color: currentPalette.text
+        }}
+        onClick={onClick}
+      >
+        <Group justify="space-between" align="center" wrap="nowrap">
+          <Stack gap="xs" style={{ flex: 1 }}>
+            <Text size="sm" c="dimmed" style={{ color: `${currentPalette.text}80` }}>
+              {title}
+            </Text>
+            <Text size="xl" fw={700} style={{ color: currentPalette.text }}>
+              {value}
+            </Text>
+          </Stack>
+          
+          {icon && (
+            <ActionIcon size="lg" variant="light" color="gray">
+              {icon}
+            </ActionIcon>
+          )}
+        </Group>
+      </Card>
+    );
+  }
 
   return (
     <Card
-      shadow="sm"
-      padding="xl"
+      padding="lg"
       radius="md"
-      onClick={onClick}
+      withBorder
       style={{
-        backgroundColor: 'var(--color-surface)',
-        border: '1px solid var(--color-primary)',
+        backgroundColor: currentPalette.surface,
+        border: `1px solid ${currentPalette.primary}`,
+        cursor: onClick ? 'pointer' : 'default',
         transition: 'all 200ms ease-out',
-        height: '100%',
-        cursor: 'pointer',
-        color: 'var(--color-text)'
+        color: currentPalette.text
       }}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.transform = 'translateY(-2px)';
-        e.currentTarget.style.boxShadow = 'var(--card-hover-shadow)';
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.transform = 'translateY(0)';
-        e.currentTarget.style.boxShadow = '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)';
-      }}
+      onClick={onClick}
     >
-      <Group justify="space-between" align="flex-start" mb="md">
-        <Stack gap="xs" style={{ flex: 1 }}>
-          <Text 
-            size="sm" 
-            fw={500}
-            style={{ 
-              color: 'var(--color-text)',
-              opacity: 0.7,
-              letterSpacing: '-0.01em',
-              textTransform: 'uppercase',
-              fontSize: '0.75rem'
-            }}
-          >
-            {title}
-          </Text>
-          
-          <Text 
-            size="xl" 
-            fw={700} 
-            style={{ 
-              color: 'var(--color-text)',
-              fontSize: '2rem',
-              lineHeight: '2.5rem',
-              letterSpacing: '-0.02em'
-            }}
-          >
-            {value}
-          </Text>
-          
-          {description && (
-            <Text 
-              size="sm" 
-              style={{ 
-                color: 'var(--color-text)', 
-                opacity: 0.7,
-                lineHeight: '1.5' 
-              }}
-            >
-              {description}
-            </Text>
-          )}
-          
-          {trend && (
-            <Group gap="xs">
-              <Text 
-                size="sm" 
-                c={trend.value > 0 ? 'var(--success)' : 'var(--danger)'}
-                fw={500}
-              >
-                {trend.value > 0 ? '+' : ''}{trend.value}%
-              </Text>
-              <Text size="sm" c="var(--gray-500)">
-                {trend.period}
-              </Text>
-            </Group>
-          )}
-        </Stack>
-        
-        <ThemeIcon
-          size="lg"
-          radius="md"
-          style={{
-            backgroundColor: colorScheme.bg,
-            color: colorScheme.iconBg,
-            border: 'none'
-          }}
-        >
-          <Icon size={24} stroke={1.5} />
-        </ThemeIcon>
+      <Group justify="space-between" align="flex-start" mb="xs">
+        <Text size="sm" c="dimmed" fw={500} style={{ color: `${currentPalette.text}80` }}>
+          {title}
+        </Text>
+        {onClick && (
+          <Tooltip label="Zobacz szczegóły">
+            <ActionIcon size="sm" variant="subtle" color="gray">
+              <IconEye size={14} />
+            </ActionIcon>
+          </Tooltip>
+        )}
       </Group>
+
+      <Group align="flex-end" gap="xs" mb={description || progress ? "xs" : 0}>
+        <Text size="2rem" fw={700} lh={1} style={{ color: currentPalette.text }}>
+          {value}
+        </Text>
+        
+        {trend && (
+          <Badge
+            size="sm"
+            variant="light"
+            leftSection={getTrendIcon()}
+            color={trend.value > 0 ? 'green' : trend.value < 0 ? 'red' : 'gray'}
+            style={{ 
+              color: getTrendColor(),
+              backgroundColor: `${getTrendColor()}20`
+            }}
+          >
+            {trend.label}
+          </Badge>
+        )}
+      </Group>
+
+      {description && (
+        <Text size="xs" c="dimmed" style={{ color: `${currentPalette.text}60` }}>
+          {description}
+        </Text>
+      )}
+
+      {progress && (
+        <Group mt="md" gap="xs">
+          <RingProgress
+            size={40}
+            thickness={4}
+            sections={[
+              { 
+                value: progress.value, 
+                color: currentPalette.primary
+              }
+            ]}
+          />
+          <Text size="xs" style={{ color: currentPalette.text }}>
+            {progress.label}
+          </Text>
+        </Group>
+      )}
     </Card>
   );
 }; 

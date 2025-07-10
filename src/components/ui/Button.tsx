@@ -1,4 +1,5 @@
 import { Button as MantineButton, type ButtonProps } from '@mantine/core';
+import { useTheme } from '../../hooks/useTheme';
 
 interface CustomButtonProps extends ButtonProps {
   variant?: 'primary' | 'secondary' | 'ghost';
@@ -10,24 +11,26 @@ export const Button: React.FC<CustomButtonProps> = ({
   style,
   ...props 
 }) => {
+  const { currentPalette, mantineTheme, isDark } = useTheme();
+
   const getVariantStyles = () => {
     switch (variant) {
       case 'primary':
         return {
-          backgroundColor: 'var(--color-primary)',
+          backgroundColor: currentPalette.primary,
           border: 'none',
-          color: 'var(--color-button-text)',
+          color: isDark ? currentPalette.background : currentPalette.surface,
           fontWeight: 500,
           transition: 'all 200ms ease-out',
           '&:hover': {
-            backgroundColor: 'var(--color-primary-hover)',
+            backgroundColor: currentPalette.accent,
             transform: 'translateY(-1px)',
-            boxShadow: '0 4px 12px rgba(99, 102, 241, 0.15)',
+            boxShadow: `0 4px 12px ${currentPalette.primary}40`,
           },
           '&:focus-visible': {
-            outline: '2px solid var(--color-primary)',
+            outline: `2px solid ${currentPalette.primary}`,
             outlineOffset: '2px',
-            boxShadow: '0 0 0 4px var(--color-primary-light), 0 4px 12px rgba(0, 0, 0, 0.15)',
+            boxShadow: `0 0 0 4px ${currentPalette.primary}30, 0 4px 12px rgba(0, 0, 0, 0.15)`,
             transform: 'translateY(-1px)',
           }
         };
@@ -35,21 +38,21 @@ export const Button: React.FC<CustomButtonProps> = ({
       case 'secondary':
         return {
           backgroundColor: 'transparent',
-          border: '1px solid var(--color-input-border)',
-          color: 'var(--color-text)',
+          border: `1px solid ${currentPalette.primary}60`,
+          color: currentPalette.text,
           fontWeight: 500,
           transition: 'all 200ms ease-out',
           '&:hover': {
-            backgroundColor: 'var(--color-primary-light)',
-            borderColor: 'var(--color-primary)',
+            backgroundColor: `${currentPalette.primary}20`,
+            borderColor: currentPalette.primary,
             transform: 'translateY(-1px)',
           },
           '&:focus-visible': {
-            outline: '2px solid var(--color-primary)',
+            outline: `2px solid ${currentPalette.primary}`,
             outlineOffset: '2px',
-            boxShadow: '0 0 0 4px var(--color-primary-light)',
-            backgroundColor: 'var(--color-primary-light)',
-            borderColor: 'var(--color-primary)',
+            boxShadow: `0 0 0 4px ${currentPalette.primary}30`,
+            backgroundColor: `${currentPalette.primary}20`,
+            borderColor: currentPalette.primary,
           }
         };
       
@@ -57,19 +60,19 @@ export const Button: React.FC<CustomButtonProps> = ({
         return {
           backgroundColor: 'transparent',
           border: 'none',
-          color: 'var(--color-text-muted)',
+          color: `${currentPalette.text}80`,
           fontWeight: 500,
           transition: 'all 200ms ease-out',
           '&:hover': {
-            backgroundColor: 'var(--color-accent-light)',
-            color: 'var(--color-text)',
+            backgroundColor: `${currentPalette.accent}30`,
+            color: currentPalette.text,
           },
           '&:focus-visible': {
-            outline: '2px solid var(--color-primary)',
+            outline: `2px solid ${currentPalette.primary}`,
             outlineOffset: '2px',
-            boxShadow: '0 0 0 4px var(--color-primary-light)',
-            backgroundColor: 'var(--color-accent-light)',
-            color: 'var(--color-text)',
+            boxShadow: `0 0 0 4px ${currentPalette.primary}30`,
+            backgroundColor: `${currentPalette.accent}30`,
+            color: currentPalette.text,
           }
         };
       
@@ -80,7 +83,7 @@ export const Button: React.FC<CustomButtonProps> = ({
 
   return (
     <MantineButton
-      radius="md"
+      radius={mantineTheme.radius?.md}
       size="md"
       style={{
         ...getVariantStyles(),

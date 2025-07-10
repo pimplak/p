@@ -7,6 +7,7 @@ import { formatDate, formatDateTime } from '../utils/dates';
 import { exportToExcel } from '../utils/export';
 import type { Appointment, AppointmentWithPatient } from '../types/Appointment';
 import type { Patient } from '../types/Patient';
+import { useTheme } from '../hooks/useTheme';
 
 interface PatientProfileTabsProps {
   patient: Patient;
@@ -17,6 +18,7 @@ export function PatientProfileTabs({ patient }: PatientProfileTabsProps) {
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [selectedAppointments, setSelectedAppointments] = useState<number[]>([]);
   const { getAppointmentsByPatient } = useAppointmentStore();
+  const { currentPalette } = useTheme();
 
   useEffect(() => {
     const loadAppointments = async () => {
@@ -77,20 +79,20 @@ export function PatientProfileTabs({ patient }: PatientProfileTabsProps) {
       onChange={(value) => value && setActiveTab(value)}
       styles={{
         tab: {
-          color: 'var(--color-text)',
-          borderColor: 'var(--color-input-border)',
+          color: currentPalette.text,
+          borderColor: `${currentPalette.primary}40`,
           '&:hover': {
-            backgroundColor: 'var(--color-accent-light)',
-            borderColor: 'var(--color-primary)',
+            backgroundColor: `${currentPalette.accent}20`,
+            borderColor: currentPalette.primary,
           },
           '&[data-active]': {
-            color: 'var(--color-primary)',
-            borderColor: 'var(--color-primary)',
+            color: currentPalette.primary,
+            borderColor: currentPalette.primary,
           },
         },
         panel: {
-          backgroundColor: 'var(--color-background)',
-          color: 'var(--color-text)',
+          backgroundColor: currentPalette.background,
+          color: currentPalette.text,
         }
       }}
     >

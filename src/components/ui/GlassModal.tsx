@@ -1,8 +1,7 @@
 import { Modal, type ModalProps } from '@mantine/core';
-import type { ReactNode } from 'react';
+import { useTheme } from '../../hooks/useTheme';
 
-interface GlassModalProps extends Omit<ModalProps, 'overlayProps'> {
-  children: ReactNode;
+interface GlassModalProps extends ModalProps {
   variant?: 'default' | 'strong' | 'dark';
 }
 
@@ -13,6 +12,8 @@ export const GlassModal: React.FC<GlassModalProps> = ({
   styles,
   ...props
 }) => {
+  const { currentPalette } = useTheme();
+
   const getModalStyles = () => {
     const baseStyles = {
       borderRadius: '12px',
@@ -33,71 +34,42 @@ export const GlassModal: React.FC<GlassModalProps> = ({
       case 'dark':
         return {
           ...baseStyles,
-          background: 'var(--color-surface)',
+          backgroundColor: currentPalette.surface,
           backdropFilter: 'blur(15px)',
           WebkitBackdropFilter: 'blur(15px)',
-          border: '1px solid var(--glass-border-dark-theme)',
-          color: 'var(--color-text)',
+          border: `1px solid ${currentPalette.primary}40`,
+          color: currentPalette.text,
         };
 
       default:
         return {
           ...baseStyles,
-          background: 'var(--color-surface)',
+          backgroundColor: currentPalette.surface,
           backdropFilter: 'blur(10px)',
           WebkitBackdropFilter: 'blur(10px)',
-          border: '1px solid var(--glass-border-dark-theme)',
-          color: 'var(--color-text)',
+          border: `1px solid ${currentPalette.primary}40`,
+          color: currentPalette.text,
         };
     }
   };
 
+  const overlayStyles = {
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+    backdropFilter: 'blur(4px)',
+    WebkitBackdropFilter: 'blur(4px)',
+  };
+
   return (
     <Modal
-      centered
-      radius="lg"
-      overlayProps={{
-        style: {
-          background: 'rgba(0, 0, 0, 0.2)',
-          backdropFilter: 'blur(8px)',
-          WebkitBackdropFilter: 'blur(8px)',
-        }
-      }}
-      transitionProps={{
-        transition: 'fade',
-        duration: 300,
-        timingFunction: 'ease-out'
-      }}
       style={style}
       styles={{
-        content: {
-          ...getModalStyles(),
-          padding: 0,
-        },
-        header: {
-          background: 'transparent',
-          borderBottom: `1px solid var(--glass-border-dark-theme)`,
-          padding: '24px 24px 16px',
-          borderRadius: '12px 12px 0 0',
-          color: 'var(--color-text)',
-        },
-        body: {
-          padding: '16px 24px 24px',
-          background: 'transparent',
-        },
-        close: {
-          color: 'var(--color-text)',
-          '&:hover': {
-            backgroundColor: 'var(--glass-bg-dark-theme)',
-          }
-        },
-        title: {
-          fontSize: '1.25rem',
-          fontWeight: 600,
-          color: 'var(--color-text)',
-          letterSpacing: '-0.01em',
-        },
+        content: getModalStyles(),
+        overlay: overlayStyles,
         ...styles,
+      }}
+      overlayProps={{
+        opacity: 0.6,
+        ...props.overlayProps,
       }}
       {...props}
     >
