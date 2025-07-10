@@ -66,6 +66,32 @@ export const useTheme = () => {
                 xl: '1rem',
             },
 
+            // === FERRO'S CUSTOM THEME EXTENSIONS ===
+            other: {
+                // Icon sizes (replacing DESIGN_SYSTEM.iconSizes)
+                iconSizes: {
+                    xs: 14,
+                    sm: 16,
+                    md: 18,
+                    lg: 20,
+                    xl: 24,
+                },
+
+                // Layout constants (replacing DESIGN_SYSTEM.layout)
+                layout: {
+                    containerSize: 'md',
+                    headerHeight: 70,
+                    sidebarWidth: 280,
+                    mobileNavHeight: 80,
+                },
+
+                // Component sizes (replacing DESIGN_SYSTEM.sizes)
+                defaultSizes: {
+                    input: 'sm',
+                    button: 'sm',
+                },
+            },
+
             // === ESSENTIAL COMPONENT OVERRIDES ===
             components: {
                 Button: {

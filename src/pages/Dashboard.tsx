@@ -14,17 +14,16 @@ import { BulkSMSReminders } from '../components/BulkSMSReminders';
 import { DashboardStats } from '../components/dashboard/DashboardStats';
 import { Button } from '../components/ui/Button';
 import { GlassFAB } from '../components/ui/GlassFAB';
+import { useTheme } from '../hooks/useTheme';
 import { useAppointmentStore } from '../stores/useAppointmentStore';
 import { usePatientStore } from '../stores/usePatientStore';
-import { PRESETS, DESIGN_SYSTEM, getIconSize } from '../theme/designSystem';
 import { AppointmentStatus } from '../types/Appointment';
-import { useTheme } from '../hooks/useTheme';
 
 function Dashboard() {
   const navigate = useNavigate();
   const { patients, fetchPatients } = usePatientStore();
   const { appointments, fetchAppointments, getTodaysAppointments, getUpcomingAppointments } = useAppointmentStore();
-  const { currentPalette } = useTheme();
+  const { currentPalette, mantineTheme } = useTheme();
 
   // Fetch data on mount
   useEffect(() => {
@@ -36,7 +35,6 @@ function Dashboard() {
   const stats = useMemo(() => {
     const activePatients = patients.filter(p => p.status === 'active').length;
     const todaysAppointments = getTodaysAppointments().length;
-    const upcomingAppointments = getUpcomingAppointments().length;
     
     // Calculate this week's appointments
     const now = new Date();
@@ -75,26 +73,22 @@ function Dashboard() {
       totalPatients: activePatients,
       sessionsThisWeek: thisWeekAppointments.length,
       avgSessionDuration: avgDuration,
-      completionRate: completionRate,
-      totalNotes: 0, // TODO: Implement notes counting when notes feature is added
-      todaysAppointments: todaysAppointments,
-      upcomingAppointments: upcomingAppointments,
+      completionRate,
+      totalNotes: 0, // TODO: Implement notes
+      todaysAppointments,
       nextAppointment: nextAppointment ? {
-        patient: patients.find(p => p.id === nextAppointment.patientId)?.firstName + ' ' + (patients.find(p => p.id === nextAppointment.patientId)?.lastName || '') || 'Nieznany',
-        time: new Date(nextAppointment.date).toLocaleTimeString('pl-PL', {
-          hour: '2-digit',
-          minute: '2-digit'
-        })
-      } : null
+        time: new Date(nextAppointment.date).toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' }),
+        patient: `${nextAppointment.patient?.firstName} ${nextAppointment.patient?.lastName}`,
+      } : null,
     };
   }, [patients, appointments, getTodaysAppointments, getUpcomingAppointments]);
 
   return (
-    <Container size={DESIGN_SYSTEM.layout.containerSize} px={{ base: 'md', sm: 'xl' }}>
-      <Stack gap={DESIGN_SYSTEM.spacing.xl} py={DESIGN_SYSTEM.spacing.xl}>
+    <Container size={mantineTheme?.other?.layout?.containerSize || 'md'} px={{ base: 'md', sm: 'xl' }}>
+      <Stack gap={mantineTheme?.spacing?.xl || 'xl'} py={mantineTheme?.spacing?.xl || 'xl'}>
         {/* Header */}
         <Group justify="space-between" align="flex-start">
-          <Stack gap={DESIGN_SYSTEM.spacing.xs}>
+          <Stack gap={mantineTheme?.spacing?.xs || 'xs'}>
             <Title 
               order={1}
               style={{
@@ -108,7 +102,7 @@ function Dashboard() {
               Dashboard
             </Title>
             <Text 
-              size={DESIGN_SYSTEM.text.lg}
+              size={mantineTheme?.fontSizes?.lg || 'lg'}
               style={{ 
                 lineHeight: '1.6', 
                 color: `${currentPalette.text}B3`,
@@ -130,7 +124,7 @@ function Dashboard() {
               <Button 
                 variant="primary"
               >
-                <IconPlus size={getIconSize('md')} style={{ marginRight: '8px' }} />
+                <IconPlus size={mantineTheme?.other?.iconSizes?.md || 18} style={{ marginRight: '8px' }} />
                 Nowa sesja
               </Button>
             </div>
@@ -143,7 +137,7 @@ function Dashboard() {
         />
 
         {/* Quick Actions - tylko najważniejsze */}
-        <Stack gap={DESIGN_SYSTEM.spacing.lg}>
+        <Stack gap={mantineTheme.spacing.lg}>
           <Title 
             order={3}
             style={{
@@ -156,9 +150,12 @@ function Dashboard() {
             Szybkie akcje
           </Title>
           
-          <SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }} spacing={DESIGN_SYSTEM.spacing.xl}>
+          <SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }} spacing={mantineTheme.spacing.xl}>
             <Card
-              {...PRESETS.card}
+              shadow="sm"
+              padding="lg"
+              radius="md"
+              withBorder
               style={{
                 backgroundColor: currentPalette.surface,
                 border: `1px solid ${currentPalette.primary}`,
@@ -168,11 +165,11 @@ function Dashboard() {
               }}
               onClick={() => navigate('/calendar')}
             >
-              <Stack gap={DESIGN_SYSTEM.spacing.md}>
+              <Stack gap={mantineTheme.spacing.md}>
                 <Title order={4} style={{ color: currentPalette.text }}>
                   Kalendarz sesji
                 </Title>
-                <Text size={DESIGN_SYSTEM.text.sm} style={{ color: `${currentPalette.text}B3` }}>
+                <Text size={mantineTheme.fontSizes.sm} style={{ color: `${currentPalette.text}B3` }}>
                   Zarządzaj terminami i planuj spotkania
                 </Text>
                 <Button variant="secondary" style={{ alignSelf: 'flex-start' }}>
@@ -182,7 +179,10 @@ function Dashboard() {
             </Card>
 
             <Card
-              {...PRESETS.card}
+              shadow="sm"
+              padding="lg"
+              radius="md"
+              withBorder
               style={{
                 backgroundColor: currentPalette.surface,
                 border: `1px solid ${currentPalette.primary}`,
@@ -192,11 +192,11 @@ function Dashboard() {
               }}
               onClick={() => navigate('/patients')}
             >
-              <Stack gap={DESIGN_SYSTEM.spacing.md}>
+              <Stack gap={mantineTheme.spacing.md}>
                 <Title order={4} style={{ color: currentPalette.text }}>
                   Lista pacjentów
                 </Title>
-                <Text size={DESIGN_SYSTEM.text.sm} style={{ color: `${currentPalette.text}B3` }}>
+                <Text size={mantineTheme.fontSizes.sm} style={{ color: `${currentPalette.text}B3` }}>
                   Przeglądaj profile i historie terapii
                 </Text>
                 <Button variant="secondary" style={{ alignSelf: 'flex-start' }}>
@@ -206,7 +206,10 @@ function Dashboard() {
             </Card>
 
             <Card
-              {...PRESETS.card}
+              shadow="sm"
+              padding="lg"
+              radius="md"
+              withBorder
               style={{
                 backgroundColor: currentPalette.surface,
                 border: `1px solid ${currentPalette.primary}`,
@@ -216,11 +219,11 @@ function Dashboard() {
               }}
               onClick={() => navigate('/settings')}
             >
-              <Stack gap={DESIGN_SYSTEM.spacing.md}>
+              <Stack gap={mantineTheme.spacing.md}>
                 <Title order={4} style={{ color: currentPalette.text }}>
                   Ustawienia
                 </Title>
-                <Text size={DESIGN_SYSTEM.text.sm} style={{ color: `${currentPalette.text}B3` }}>
+                <Text size={mantineTheme.fontSizes.sm} style={{ color: `${currentPalette.text}B3` }}>
                   Konfiguruj aplikację i eksportuj dane
                 </Text>
                 <Button variant="secondary" style={{ alignSelf: 'flex-start' }}>
@@ -233,7 +236,7 @@ function Dashboard() {
 
         {/* Today's Appointments */}
         {stats.todaysAppointments > 0 && (
-          <Stack gap={DESIGN_SYSTEM.spacing.lg}>
+          <Stack gap={mantineTheme.spacing.lg}>
             <Title 
               order={3}
               style={{
@@ -247,15 +250,18 @@ function Dashboard() {
             </Title>
             
             <Card
-              {...PRESETS.card}
+              shadow="sm"
+              padding="lg"
+              radius="md"
+              withBorder
               style={{
                 backgroundColor: currentPalette.surface,
                 border: `1px solid ${currentPalette.primary}`,
                 color: currentPalette.text
               }}
             >
-              <Stack gap={DESIGN_SYSTEM.spacing.md}>
-                <Text size={DESIGN_SYSTEM.text.lg} fw={600} style={{ color: currentPalette.text }}>
+              <Stack gap={mantineTheme.spacing.md}>
+                <Text size={mantineTheme.fontSizes.lg} fw={600} style={{ color: currentPalette.text }}>
                   {stats.todaysAppointments} {stats.todaysAppointments === 1 ? 'wizyta' : 'wizyt'} na dziś
                 </Text>
                 <div onClick={() => navigate('/calendar')} style={{ cursor: 'pointer' }}>
@@ -263,7 +269,7 @@ function Dashboard() {
                     variant="secondary" 
                     style={{ alignSelf: 'flex-start' }}
                   >
-                    <IconCalendar size={getIconSize('sm')} style={{ marginRight: '8px' }} />
+                    <IconCalendar size={mantineTheme.other.iconSizes.sm} style={{ marginRight: '8px' }} />
                     Zobacz szczegóły
                   </Button>
                 </div>

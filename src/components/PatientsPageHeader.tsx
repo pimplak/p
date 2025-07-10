@@ -1,6 +1,6 @@
 import { Title, Group, Button, Switch } from '@mantine/core';
 import { IconPlus, IconDownload, IconArchive, IconArchiveOff } from '@tabler/icons-react';
-import { DESIGN_SYSTEM, getIconSize } from '../theme/designSystem';
+import { useTheme } from '../hooks/useTheme';
 
 interface PatientsPageHeaderProps {
   showArchived: boolean;
@@ -15,34 +15,36 @@ export function PatientsPageHeader({
   onExport,
   onAddPatient
 }: PatientsPageHeaderProps) {
+  const { mantineTheme } = useTheme();
+
   return (
     <Group justify="space-between" wrap="wrap">
       <Title order={1}>Pacjenci</Title>
-      <Group gap={DESIGN_SYSTEM.spacing.sm} visibleFrom="md">
+      <Group gap={mantineTheme?.spacing?.sm || 'sm'} visibleFrom="md">
         <Switch
           label="Pokaż zarchiwizowanych"
           checked={showArchived}
           onChange={onToggleArchived}
-          size={DESIGN_SYSTEM.sizes.input}
+          size={mantineTheme?.other?.defaultSizes?.input || 'sm'}
           thumbIcon={
             showArchived ? (
-              <IconArchiveOff size={getIconSize('xs')} stroke={3} />
+              <IconArchiveOff size={mantineTheme?.other?.iconSizes?.xs || 14} stroke={3} />
             ) : (
-              <IconArchive size={getIconSize('xs')} stroke={3} />
+              <IconArchive size={mantineTheme?.other?.iconSizes?.xs || 14} stroke={3} />
             )
           }
         />
         <Button 
-          leftSection={<IconDownload size={getIconSize('sm')} />} 
+          leftSection={<IconDownload size={mantineTheme?.other?.iconSizes?.sm || 16} />} 
           variant="light"
-          size={DESIGN_SYSTEM.sizes.button}
+          size={mantineTheme?.other?.defaultSizes?.button || 'sm'}
           onClick={onExport}
         >
           Eksport
         </Button>
         <Button 
-          leftSection={<IconPlus size={getIconSize('sm')} />} 
-          size={DESIGN_SYSTEM.sizes.button}
+          leftSection={<IconPlus size={mantineTheme?.other?.iconSizes?.sm || 16} />} 
+          size={mantineTheme?.other?.defaultSizes?.button || 'sm'}
           onClick={onAddPatient}
         >
           Dodaj pacjenta
