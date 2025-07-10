@@ -58,8 +58,7 @@ export const DashboardStats: React.FC<DashboardStatsProps> = ({
           title="Aktywni pacjenci"
           value={stats.totalPatients}
           description="Łącznie w systemie"
-          icon={IconUsers}
-          color="indigo"
+          icon={<IconUsers size={20} />}
           onClick={() => navigate('/patients')}
         />
         
@@ -67,8 +66,7 @@ export const DashboardStats: React.FC<DashboardStatsProps> = ({
           title="Sesje w tym tygodniu"
           value={stats.sessionsThisWeek}
           description="Zaplanowane spotkania"
-          icon={IconCalendar}
-          color="green"
+          icon={<IconCalendar size={20} />}
           onClick={() => navigate('/calendar')}
         />
       </SimpleGrid>
@@ -82,16 +80,14 @@ export const DashboardStats: React.FC<DashboardStatsProps> = ({
           title="Dzisiejsze wizyty"
           value={stats.todaysAppointments}
           description="Zaplanowane na dziś"
-          icon={IconCalendar}
-          color="indigo"
+          icon={<IconCalendar size={20} />}
         />
         
         <StatsCard
           title="Najbliższa sesja"
           value={stats.nextAppointment ? stats.nextAppointment.time : 'Brak'}
           description={stats.nextAppointment ? stats.nextAppointment.patient : 'Brak zaplanowanych wizyt'}
-          icon={IconCalendar}
-          color="yellow"
+          icon={<IconCalendar size={20} />}
         />
       </SimpleGrid>
     </Stack>

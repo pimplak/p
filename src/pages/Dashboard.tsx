@@ -84,11 +84,11 @@ function Dashboard() {
   }, [patients, appointments, getTodaysAppointments, getUpcomingAppointments]);
 
   return (
-    <Container size={mantineTheme?.other?.layout?.containerSize || 'md'} px={{ base: 'md', sm: 'xl' }}>
-      <Stack gap={mantineTheme?.spacing?.xl || 'xl'} py={mantineTheme?.spacing?.xl || 'xl'}>
+    <Container size={mantineTheme.other.layout.containerSize} px={{ base: 'md', sm: 'xl' }}>
+      <Stack gap={mantineTheme.spacing.xl} py={mantineTheme.spacing.xl}>
         {/* Header */}
         <Group justify="space-between" align="flex-start">
-          <Stack gap={mantineTheme?.spacing?.xs || 'xs'}>
+          <Stack gap={mantineTheme.spacing.xs}>
             <Title 
               order={1}
               style={{
@@ -102,7 +102,7 @@ function Dashboard() {
               Dashboard
             </Title>
             <Text 
-              size={mantineTheme?.fontSizes?.lg || 'lg'}
+              size={mantineTheme.fontSizes.lg}
               style={{ 
                 lineHeight: '1.6', 
                 color: `${currentPalette.text}B3`,
@@ -124,7 +124,7 @@ function Dashboard() {
               <Button 
                 variant="primary"
               >
-                <IconPlus size={mantineTheme?.other?.iconSizes?.md || 18} style={{ marginRight: '8px' }} />
+                <IconPlus size={mantineTheme.other.iconSizes.md} style={{ marginRight: '8px' }} />
                 Nowa sesja
               </Button>
             </div>

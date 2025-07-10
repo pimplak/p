@@ -38,7 +38,7 @@ export const Textarea: React.FC<CustomTextareaProps> = ({
           color: `${currentPalette.text}60`,
           opacity: 1,
         },
-        resize: 'vertical',
+        resize: 'vertical' as const,
       },
       label: {
         color: currentPalette.text,
@@ -103,10 +103,9 @@ export const Textarea: React.FC<CustomTextareaProps> = ({
     <MantineTextarea
       radius={mantineTheme.radius?.md}
       size="md"
-      autosize={{
-        minRows: 3,
-        maxRows: 8,
-      }}
+      autosize
+      minRows={3}
+      maxRows={8}
       style={{
         ...style
       }}

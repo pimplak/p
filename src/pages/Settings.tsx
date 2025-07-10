@@ -7,14 +7,12 @@ import {
   Card,
   Divider,
   Button,
-  ThemeIcon,
   Badge,
   TextInput,
   Select,
 } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import {
-  IconSettings,
   IconPalette,
   IconDatabase,
   IconTestPipe,
@@ -25,11 +23,11 @@ import {
 } from '@tabler/icons-react';
 import { SMSTemplateManager } from '../components/SMSTemplateManager';
 import { ThemeSelector } from '../components/ThemeSelector';
+import { useTheme } from '../hooks/useTheme';
 import { useAppointmentStore } from '../stores/useAppointmentStore';
 import { usePatientStore } from '../stores/usePatientStore';
 import { useSettingsStore } from '../stores/useSettingsStore';
 import { insertSampleData, clearAllData } from '../utils/sampleData';
-import { useTheme } from '../hooks/useTheme';
 
 function Settings() {
     const { fetchPatients } = usePatientStore();

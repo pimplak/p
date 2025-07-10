@@ -1,42 +1,68 @@
-import { createTheme, type MantineColorsTuple } from '@mantine/core';
+import { createTheme, type MantineColorsTuple, type MantineTheme } from '@mantine/core';
 import { useMemo } from 'react';
 import { useThemeStore } from '../stores/useThemeStore';
 import { isDarkPalette } from '../types/theme';
 
-// === FERRO'S OPTIMIZED COLOR GENERATOR ===
+// === FERRO'S ENHANCED COLOR GENERATOR ===
 const createMantineColorTuple = (baseColor: string): MantineColorsTuple => {
     const hex = baseColor.replace('#', '');
     const r = parseInt(hex.substr(0, 2), 16);
     const g = parseInt(hex.substr(2, 2), 16);
     const b = parseInt(hex.substr(4, 2), 16);
 
-    const shades: string[] = [];
+    // Enhanced color scaling for better contrast and visual hierarchy
+    const scalingFactors = [0.95, 0.85, 0.75, 0.6, 0.4, 0.2, 0.1, 0.05, 0.02, 0.0];
 
-    for (let i = 0; i < 10; i++) {
-        const factor = 0.9 - (i * 0.1); // Od 0.9 do 0.0
+    const shades = scalingFactors.map((factor) => {
         const newR = Math.round(r + (255 - r) * factor);
         const newG = Math.round(g + (255 - g) * factor);
         const newB = Math.round(b + (255 - b) * factor);
 
-        const newHex = `#${newR.toString(16).padStart(2, '0')}${newG.toString(16).padStart(2, '0')}${newB.toString(16).padStart(2, '0')}`;
-        shades.push(newHex);
-    }
+        return `#${newR.toString(16).padStart(2, '0')}${newG.toString(16).padStart(2, '0')}${newB.toString(16).padStart(2, '0')}`;
+    });
 
     return shades as [string, string, string, string, string, string, string, string, string, string];
 };
 
+// === FERRO'S ENHANCED THEME TYPE ===
+interface FerrroTheme extends MantineTheme {
+    other: {
+        iconSizes: {
+            xs: number;
+            sm: number;
+            md: number;
+            lg: number;
+            xl: number;
+        };
+        layout: {
+            containerSize: string;
+            headerHeight: number;
+            sidebarWidth: number;
+            mobileNavHeight: number;
+        };
+        defaultSizes: {
+            input: string;
+            button: string;
+        };
+    };
+}
+
 export const useTheme = () => {
     const { currentPalette, currentPaletteId, setPalette, getAllPalettes } = useThemeStore();
 
-    // === FERRO'S LEAN MANTINE THEME ===
-    const mantineTheme = useMemo(() => {
+    // === FERRO'S ENHANCED MANTINE THEME ===
+    const mantineTheme = useMemo((): FerrroTheme => {
         return createTheme({
             primaryColor: 'primary',
 
+            // Enhanced color system with better palette integration
             colors: {
                 primary: createMantineColorTuple(currentPalette.primary),
                 accent: createMantineColorTuple(currentPalette.accent),
                 gray: createMantineColorTuple(currentPalette.surface),
+                // Add background and text as color tuples for better Mantine integration
+                background: createMantineColorTuple(currentPalette.background),
+                surface: createMantineColorTuple(currentPalette.surface),
             },
 
             fontFamily: 'Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
@@ -66,9 +92,9 @@ export const useTheme = () => {
                 xl: '1rem',
             },
 
-            // === FERRO'S CUSTOM THEME EXTENSIONS ===
+            // === FERRO'S GUARANTEED THEME EXTENSIONS ===
             other: {
-                // Icon sizes (replacing DESIGN_SYSTEM.iconSizes)
+                // Icon sizes (guaranteed non-null)
                 iconSizes: {
                     xs: 14,
                     sm: 16,
@@ -77,7 +103,7 @@ export const useTheme = () => {
                     xl: 24,
                 },
 
-                // Layout constants (replacing DESIGN_SYSTEM.layout)
+                // Layout constants (guaranteed non-null)
                 layout: {
                     containerSize: 'md',
                     headerHeight: 70,
@@ -85,14 +111,14 @@ export const useTheme = () => {
                     mobileNavHeight: 80,
                 },
 
-                // Component sizes (replacing DESIGN_SYSTEM.sizes)
+                // Component sizes (guaranteed non-null)
                 defaultSizes: {
                     input: 'sm',
                     button: 'sm',
                 },
             },
 
-            // === ESSENTIAL COMPONENT OVERRIDES ===
+            // === ENHANCED COMPONENT OVERRIDES ===
             components: {
                 Button: {
                     defaultProps: {
@@ -118,7 +144,7 @@ export const useTheme = () => {
                         root: {
                             backgroundColor: currentPalette.surface,
                             color: currentPalette.text,
-                            borderColor: `${currentPalette.primary}40`,
+                            borderColor: `${currentPalette.primary}20`,
                         },
                     },
                 },
@@ -133,8 +159,14 @@ export const useTheme = () => {
                         },
                     },
                 },
+
+                Container: {
+                    defaultProps: {
+                        size: 'md',
+                    },
+                },
             },
-        });
+        }) as FerrroTheme;
     }, [currentPalette]);
 
     return {
@@ -143,20 +175,11 @@ export const useTheme = () => {
         currentPaletteId,
         isDark: isDarkPalette(currentPaletteId),
 
-        // Mantine integration
+        // Enhanced Mantine integration (guaranteed non-null)
         mantineTheme,
 
         // Actions
         setPalette,
         getAllPalettes,
-
-        // CSS utilities - deprecated, use Mantine theme instead
-        cssVars: {
-            background: currentPalette.background,
-            surface: currentPalette.surface,
-            primary: currentPalette.primary,
-            accent: currentPalette.accent,
-            text: currentPalette.text,
-        },
     };
 }; 

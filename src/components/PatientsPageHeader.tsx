@@ -20,31 +20,31 @@ export function PatientsPageHeader({
   return (
     <Group justify="space-between" wrap="wrap">
       <Title order={1}>Pacjenci</Title>
-      <Group gap={mantineTheme?.spacing?.sm || 'sm'} visibleFrom="md">
+      <Group gap={mantineTheme.spacing.sm} visibleFrom="md">
         <Switch
           label="Pokaż zarchiwizowanych"
           checked={showArchived}
           onChange={onToggleArchived}
-          size={mantineTheme?.other?.defaultSizes?.input || 'sm'}
+          size={mantineTheme.other.defaultSizes.input}
           thumbIcon={
             showArchived ? (
-              <IconArchiveOff size={mantineTheme?.other?.iconSizes?.xs || 14} stroke={3} />
+              <IconArchiveOff size={mantineTheme.other.iconSizes.xs} stroke={3} />
             ) : (
-              <IconArchive size={mantineTheme?.other?.iconSizes?.xs || 14} stroke={3} />
+              <IconArchive size={mantineTheme.other.iconSizes.xs} stroke={3} />
             )
           }
         />
         <Button 
-          leftSection={<IconDownload size={mantineTheme?.other?.iconSizes?.sm || 16} />} 
+          leftSection={<IconDownload size={mantineTheme.other.iconSizes.sm} />} 
           variant="light"
-          size={mantineTheme?.other?.defaultSizes?.button || 'sm'}
+          size={mantineTheme.other.defaultSizes.button}
           onClick={onExport}
         >
           Eksport
         </Button>
         <Button 
-          leftSection={<IconPlus size={mantineTheme?.other?.iconSizes?.sm || 16} />} 
-          size={mantineTheme?.other?.defaultSizes?.button || 'sm'}
+          leftSection={<IconPlus size={mantineTheme.other.iconSizes.sm} />} 
+          size={mantineTheme.other.defaultSizes.button}
           onClick={onAddPatient}
         >
           Dodaj pacjenta

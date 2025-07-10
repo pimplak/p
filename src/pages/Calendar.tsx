@@ -55,11 +55,11 @@ import { BulkSMSReminders } from '../components/BulkSMSReminders';
 import { FloatingActionButton, type FABAction } from '../components/FloatingActionButton';
 import { SMSReminderButton } from '../components/SMSReminderButton';
 import { ExpandableAppointmentRow } from '../components/ui/ExpandableAppointmentRow';
+import { useTheme } from '../hooks/useTheme';
 import { useAppointmentStore } from '../stores/useAppointmentStore';
 import { usePatientStore } from '../stores/usePatientStore';
-
 import type { Appointment, AppointmentWithPatient } from '../types/Appointment';
-import { useTheme } from '../hooks/useTheme';
+import type { ColorPalette } from '../types/theme';
 
 type CalendarView = 'day' | 'week' | 'month';
 
@@ -349,6 +349,7 @@ function Calendar() {
             getStatusColor={getStatusColor}
             getStatusBackgroundColor={getStatusBackgroundColor}
             getStatusLabel={getStatusLabel}
+            currentPalette={currentPalette}
           />
         )}
 
@@ -363,6 +364,7 @@ function Calendar() {
             getStatusBackgroundColor={getStatusBackgroundColor}
             getStatusLabel={getStatusLabel}
             hideWeekends={hideWeekends}
+            currentPalette={currentPalette}
           />
         )}
 
@@ -377,6 +379,7 @@ function Calendar() {
             getStatusColor={getStatusColor}
             getStatusBackgroundColor={getStatusBackgroundColor}
             getStatusLabel={getStatusLabel}
+            currentPalette={currentPalette}
           />
         )}
       </Card>
@@ -411,7 +414,7 @@ interface CalendarViewProps {
   getStatusBackgroundColor: (status: string) => string;
   getStatusLabel: (status: string) => string;
   hideWeekends?: boolean;
-  currentPalette: any;
+  currentPalette: ColorPalette;
 }
 
 function DayView({ 
@@ -574,7 +577,8 @@ function WeekView({
   onEditAppointment, 
   onAddAppointment,
   getStatusBackgroundColor,
-  hideWeekends = false
+  hideWeekends = false,
+  currentPalette
 }: CalendarViewProps) {
   const weekStart = startOfWeek(date, { weekStartsOn: 1 });
   const allWeekDays = eachDayOfInterval({
@@ -731,7 +735,8 @@ function MonthView({
   appointments, 
   onEditAppointment, 
   onDateClick,
-  getStatusBackgroundColor
+  getStatusBackgroundColor,
+  currentPalette
 }: MonthViewProps) {
   const monthStart = startOfMonth(date);
   const monthEnd = endOfMonth(date);
