@@ -1,18 +1,13 @@
 import { Stack, Card, Text, Group, Badge, Button, ThemeIcon } from '@mantine/core';
 import { IconMoon, IconSun, IconPalette, IconCheck } from '@tabler/icons-react';
 import { useTheme } from '../hooks/useTheme';
-import type { PaletteId } from '../types/theme';
+import { isDarkPalette, type ColorPalette, type PaletteId } from '../types/theme';
 
 export function DarkThemeDemo() {
   const { isDark, currentPalette, setPalette, getAllPalettes } = useTheme();
 
-  const darkPalettes = getAllPalettes().filter(p => 
-    ['darkpro', 'darkslate', 'darkgray', 'darkcarbon', 'forest', 'midnight', 'neonnight', 'mysticdusk'].includes(p.id)
-  );
-
-  const lightPalettes = getAllPalettes().filter(p => 
-    !['darkpro', 'darkslate', 'darkgray', 'darkcarbon', 'forest', 'midnight', 'neonnight', 'mysticdusk'].includes(p.id)
-  );
+  const darkPalettes = getAllPalettes().filter((p: ColorPalette) => isDarkPalette(p.id as PaletteId));
+  const lightPalettes = getAllPalettes().filter((p: ColorPalette) => !isDarkPalette(p.id as PaletteId));
 
   return (
     <Stack gap="lg">
@@ -61,7 +56,7 @@ export function DarkThemeDemo() {
             Motywy ciemne
           </Text>
           <Stack gap="xs">
-            {darkPalettes.map((palette) => (
+            {darkPalettes.map((palette: ColorPalette) => (
               <Button
                 key={palette.id}
                 variant={currentPalette.id === palette.id ? 'filled' : 'light'}
@@ -85,7 +80,7 @@ export function DarkThemeDemo() {
             Motywy jasne
           </Text>
           <Stack gap="xs">
-            {lightPalettes.map((palette) => (
+            {lightPalettes.map((palette: ColorPalette) => (
               <Button
                 key={palette.id}
                 variant={currentPalette.id === palette.id ? 'filled' : 'light'}

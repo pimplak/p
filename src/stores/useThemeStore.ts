@@ -113,7 +113,7 @@ const getStoredPaletteId = (): PaletteId => {
     } catch {
         // ignore
     }
-    return 'darkgray'; // default - Dark Gray palette (professional)
+    return 'darkpro'; // default - Dark Professional palette
 };
 
 const savePaletteId = (paletteId: PaletteId) => {

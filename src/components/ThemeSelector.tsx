@@ -1,29 +1,24 @@
 import { Select, Group, Text, ColorSwatch, Stack, Switch } from '@mantine/core';
 import { IconPalette, IconSun, IconMoon } from '@tabler/icons-react';
 import { useTheme } from '../hooks/useTheme';
-import { isDarkPalette } from '../types/theme';
-import type { PaletteId } from '../types/theme';
+import { isDarkPalette, type ColorPalette, type PaletteId } from '../types/theme';
 
 export function ThemeSelector() {
   const { currentPaletteId, setPalette, getAllPalettes, isDark } = useTheme();
   
   const palettes = getAllPalettes();
-  const darkPalettes = palettes.filter(p => 
-    ['darkpro', 'darkslate', 'darkgray', 'darkcarbon', 'forest', 'midnight', 'neonnight', 'mysticdusk'].includes(p.id)
-  );
-  const lightPalettes = palettes.filter(p => 
-    !['darkpro', 'darkslate', 'darkgray', 'darkcarbon', 'forest', 'midnight', 'neonnight', 'mysticdusk'].includes(p.id)
-  );
+  const darkPalettes = palettes.filter((p: ColorPalette) => isDarkPalette(p.id as PaletteId));
+  const lightPalettes = palettes.filter((p: ColorPalette) => !isDarkPalette(p.id as PaletteId));
   
   // Prepare select data with custom rendering
-  const selectData = palettes.map(palette => ({
+  const selectData = palettes.map((palette: ColorPalette) => ({
     value: palette.id,
     label: palette.name,
     palette: palette,
   }));
   
   const handlePaletteChange = (value: string | null) => {
-    if (value && value in palettes.reduce((acc, p) => ({ ...acc, [p.id]: p }), {})) {
+    if (value && value in palettes.reduce((acc: Record<string, ColorPalette>, p: ColorPalette) => ({ ...acc, [p.id]: p }), {})) {
       setPalette(value as PaletteId);
     }
   };
@@ -73,7 +68,7 @@ export function ThemeSelector() {
           allowDeselect={false}
           size="sm"
           renderOption={({ option }) => {
-            const palette = selectData.find(p => p.value === option.value)?.palette;
+            const palette = selectData.find((p: { value: string; label: string; palette: ColorPalette }) => p.value === option.value)?.palette;
             if (!palette) return null;
             const isPaletteDark = isDarkPalette(palette.id as PaletteId);
             
