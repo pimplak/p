@@ -12,14 +12,17 @@ import {
   IconChartLine,
   IconClock,
 } from '@tabler/icons-react';
+import { useTheme } from '../hooks/useTheme';
 
 function Analytics() {
+  const { currentPalette } = useTheme();
+
   return (
     <Container size="md">
       <Stack gap="xl">
         {/* Header Section */}
         <Group align="center" gap="md">
-          <ThemeIcon size="xl" variant="light" color="teal">
+          <ThemeIcon size="xl" variant="light" color={currentPalette.primary}>
             <IconChartLine size={24} />
           </ThemeIcon>
           <div>
@@ -35,7 +38,7 @@ function Analytics() {
         {/* Coming Soon Card */}
         <Card shadow="sm" padding="xl" radius="md" withBorder>
           <Stack gap="lg" align="center" ta="center">
-            <ThemeIcon size={80} variant="light" color="yellow">
+            <ThemeIcon size={80} variant="light" color={currentPalette.accent}>
               <IconClock size={40} />
             </ThemeIcon>
             
@@ -48,7 +51,7 @@ function Analytics() {
               </Text>
             </Stack>
 
-            <Badge size="lg" variant="light" color="teal">
+            <Badge size="lg" variant="light" color={currentPalette.primary}>
               W przygotowaniu
             </Badge>
           </Stack>

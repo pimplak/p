@@ -30,6 +30,7 @@ import { useState, useMemo, useEffect } from 'react';
 import { useAppointmentStore } from '../stores/useAppointmentStore';
 import { usePatientStore } from '../stores/usePatientStore';
 import { useSettingsStore } from '../stores/useSettingsStore';
+import { useTheme } from '../hooks/useTheme';
 import type { AppointmentWithPatient } from '../types/Appointment';
 import type { Patient } from '../types/Patient';
 import {
@@ -65,15 +66,17 @@ export function BulkSMSReminders({
   appointments,
   onRemindersSent,
 }: BulkSMSRemindersProps) {
+  const { smsTemplates } = useSettingsStore();
+  const { currentPalette, utilityColors } = useTheme();
   const [opened, { open, close }] = useDisclosure(false);
-  const [selectedTemplateId, setSelectedTemplateId] = useState<string>('appointment_reminder');
+  const [selectedTemplateId, setSelectedTemplateId] = useState('appointment_reminder');
   const [reminderItems, setReminderItems] = useState<AppointmentReminderItem[]>([]);
   const [sending, setSending] = useState(false);
   const [sendingProgress, setSendingProgress] = useState(0);
 
   const { getAppointmentsNeedingReminders, updateAppointment } = useAppointmentStore();
   const { patients } = usePatientStore();
-  const { practitionerName, smsTemplates } = useSettingsStore();
+  const { practitionerName } = useSettingsStore();
 
   // Get appointments that need reminders
   const appointmentsNeedingReminders = useMemo(() => {
@@ -309,16 +312,16 @@ export function BulkSMSReminders({
                 </Text>
               </div>
               <Group gap="sm">
-                <Badge color="blue" variant="light">
+                <Badge color={currentPalette.primary} variant="light">
                   Do wysłania: {stats.canSend}
                 </Badge>
                 {stats.noPhone > 0 && (
-                  <Badge color="red" variant="light">
+                  <Badge color={utilityColors.error} variant="light">
                     Brak telefonu: {stats.noPhone}
                   </Badge>
                 )}
                 {stats.alreadySent > 0 && (
-                  <Badge color="green" variant="light">
+                  <Badge color={utilityColors.success} variant="light">
                     Już wysłane: {stats.alreadySent}
                   </Badge>
                 )}
@@ -408,19 +411,19 @@ export function BulkSMSReminders({
                     </Table.Td>
                     <Table.Td>
                       {item.appointment.reminderSent ? (
-                        <Badge color="green" variant="light" size="sm">
+                        <Badge color={utilityColors.success} variant="light" size="sm">
                           Wysłane
                         </Badge>
                       ) : item.canSendReminder ? (
-                        <Badge color="blue" variant="light" size="sm">
+                        <Badge color={currentPalette.primary} variant="light" size="sm">
                           {getReminderTiming(item.appointment)}
                         </Badge>
                       ) : !item.hasValidPhone ? (
-                        <Badge color="red" variant="light" size="sm">
+                        <Badge color={utilityColors.error} variant="light" size="sm">
                           Brak telefonu
                         </Badge>
                       ) : (
-                        <Badge color="yellow" variant="light" size="sm">
+                        <Badge color={utilityColors.warning} variant="light" size="sm">
                           Poza czasem
                         </Badge>
                       )}

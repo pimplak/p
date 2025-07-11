@@ -62,7 +62,7 @@ const PatientCard = memo(({ index, style, data }: PatientCardProps) => {
                 </Text>
               )}
             </div>
-            <Badge size="sm" variant="light" color="blue" style={{ flexShrink: 0 }}>
+            <Badge size="sm" variant="light" color={currentPalette.primary} style={{ flexShrink: 0 }}>
               {patient.appointmentCount} wizyt
             </Badge>
           </Group>
@@ -70,7 +70,7 @@ const PatientCard = memo(({ index, style, data }: PatientCardProps) => {
           <Stack gap="sm">
             {patient.phone && (
               <Group gap="sm" wrap="nowrap">
-                <ActionIcon size="sm" variant="subtle" color="gray" style={{ flexShrink: 0 }}>
+                <ActionIcon size="sm" variant="subtle" style={{ color: currentPalette.text, flexShrink: 0 }}>
                   <IconPhone size="1rem" />
                 </ActionIcon>
                 <Text size="sm" style={{ flex: 1 }}>{patient.phone}</Text>
@@ -78,7 +78,7 @@ const PatientCard = memo(({ index, style, data }: PatientCardProps) => {
             )}
             {patient.email && (
               <Group gap="sm" wrap="nowrap">
-                <ActionIcon size="sm" variant="subtle" color="gray" style={{ flexShrink: 0 }}>
+                <ActionIcon size="sm" variant="subtle" style={{ color: currentPalette.text, flexShrink: 0 }}>
                   <IconMail size="1rem" />
                 </ActionIcon>
                 <Text size="sm" c="dimmed" truncate style={{ flex: 1 }}>
@@ -88,10 +88,10 @@ const PatientCard = memo(({ index, style, data }: PatientCardProps) => {
             )}
             {patient.nextAppointment && (
               <Group gap="sm" wrap="nowrap">
-                <ActionIcon size="sm" variant="subtle" color="blue" style={{ flexShrink: 0 }}>
+                <ActionIcon size="sm" variant="subtle" style={{ color: currentPalette.primary, flexShrink: 0 }}>
                   <IconCalendar size="1rem" />
                 </ActionIcon>
-                <Text size="sm" c="blue" style={{ flex: 1 }}>
+                <Text size="sm" style={{ color: currentPalette.primary, flex: 1 }}>
                   Następna: {format(
                     typeof patient.nextAppointment === 'string' 
                       ? new Date(patient.nextAppointment) 
@@ -108,7 +108,7 @@ const PatientCard = memo(({ index, style, data }: PatientCardProps) => {
             <Button 
               size="sm"
               variant="light" 
-              color="blue"
+              color={currentPalette.primary}
               leftSection={<IconEdit size="1rem" />}
               onClick={() => onEdit(patient)}
               style={{ flex: 1 }}
@@ -118,7 +118,7 @@ const PatientCard = memo(({ index, style, data }: PatientCardProps) => {
             <Button 
               size="sm"
               variant="light" 
-              color="red"
+              color={currentPalette.accent}
               leftSection={<IconTrash size="1rem" />}
               onClick={() => patient.id && onDelete(patient.id)}
               style={{ flex: 1 }}

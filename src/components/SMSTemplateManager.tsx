@@ -58,7 +58,7 @@ export function SMSTemplateManager() {
         deleteSMSTemplate, 
         resetSMSTemplates 
     } = useSettingsStore();
-    const { currentPalette } = useTheme();
+    const { currentPalette, utilityColors } = useTheme();
 
     const [opened, { open, close }] = useDisclosure(false);
     const [editingTemplate, setEditingTemplate] = useState<SMSTemplate | null>(null);
@@ -196,7 +196,7 @@ export function SMSTemplateManager() {
                     <Button
                         leftSection={<IconRefresh size={16} />}
                         variant="light"
-                        color="orange"
+                        color={utilityColors.warning}
                         size="sm"
                         onClick={handleResetTemplates}
                     >
@@ -206,7 +206,7 @@ export function SMSTemplateManager() {
             </Group>
 
             {/* Info about variables */}
-            <Alert icon={<IconInfoCircle size={16} />} color="blue" variant="light">
+            <Alert icon={<IconInfoCircle size={16} />} color={currentPalette.primary} variant="light">
                 <Group justify="space-between" align="center">
                     <Text size="sm">
                         W szablonach możesz używać zmiennych, które zostaną automatycznie zastąpione danymi pacjenta.
@@ -243,7 +243,7 @@ export function SMSTemplateManager() {
                                                 {template.name}
                                             </Text>
                                             {isDefault && (
-                                                <Badge size="xs" variant="light" color="blue">
+                                                <Badge size="xs" variant="light" color={currentPalette.primary}>
                                                     Domyślny
                                                 </Badge>
                                             )}
@@ -257,7 +257,7 @@ export function SMSTemplateManager() {
                                     <Group gap="xs">
                                         <ActionIcon
                                             variant="light"
-                                            color="blue"
+                                            color={currentPalette.primary}
                                             size="sm"
                                             onClick={() => handleOpenModal(template)}
                                         >
@@ -266,7 +266,7 @@ export function SMSTemplateManager() {
                                         {!isDefault && (
                                             <ActionIcon
                                                 variant="light"
-                                                color="red"
+                                                color={utilityColors.error}
                                                 size="sm"
                                                 onClick={() => handleDeleteTemplate(template.id)}
                                             >

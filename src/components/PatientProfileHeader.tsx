@@ -7,6 +7,7 @@ import {
   IconArchive, 
   IconRestore 
 } from '@tabler/icons-react';
+import { useTheme } from '../hooks/useTheme';
 import { PATIENT_STATUS, PATIENT_STATUS_LABELS } from '../constants/status';
 import { getPatientDisplayName } from '../utils/dates';
 import type { Patient } from '../types/Patient';
@@ -24,6 +25,8 @@ export function PatientProfileHeader({
   onArchive,
   onRestore
 }: PatientProfileHeaderProps) {
+  const { utilityColors } = useTheme();
+
   return (
     <Paper p="md" withBorder>
       <Group justify="space-between" align="flex-start">
@@ -33,7 +36,7 @@ export function PatientProfileHeader({
               {getPatientDisplayName(patient)}
             </Title>
             <Badge
-              color={patient.status === PATIENT_STATUS.ACTIVE ? 'green' : 'gray'}
+              color={patient.status === PATIENT_STATUS.ACTIVE ? utilityColors.success : 'gray'}
               variant="light"
             >
               {PATIENT_STATUS_LABELS[patient.status]}
@@ -98,7 +101,7 @@ export function PatientProfileHeader({
               {patient.status === PATIENT_STATUS.ACTIVE ? (
                 <Menu.Item
                   leftSection={<IconArchive size="1rem" />}
-                  color="red"
+                  color={utilityColors.error}
                   onClick={onArchive}
                 >
                   Archiwizuj
@@ -106,7 +109,7 @@ export function PatientProfileHeader({
               ) : (
                 <Menu.Item
                   leftSection={<IconRestore size="1rem" />}
-                  color="green"
+                  color={utilityColors.success}
                   onClick={onRestore}
                 >
                   Przywróć

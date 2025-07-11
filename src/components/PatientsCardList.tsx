@@ -10,10 +10,10 @@ import {
 } from '@tabler/icons-react';
 import { format } from 'date-fns';
 import { pl } from 'date-fns/locale';
+import { useTheme } from '../hooks/useTheme';
 import { PATIENT_STATUS, PATIENT_STATUS_LABELS } from '../constants/status';
 import { formatDate, getPatientDisplayName } from '../utils/dates';
 import type { PatientWithAppointments, Patient } from '../types/Patient';
-import { useTheme } from '../hooks/useTheme';
 
 interface PatientsCardListProps {
   patients: PatientWithAppointments[];
@@ -30,7 +30,7 @@ export function PatientsCardList({
   onArchive,
   onRestore
 }: PatientsCardListProps) {
-  const { currentPalette } = useTheme();
+  const { currentPalette, utilityColors } = useTheme();
 
   if (patients.length === 0) {
     return (
@@ -70,7 +70,7 @@ export function PatientsCardList({
                   </Text>
                   <Badge
                     size="xs"
-                    color={patient.status === PATIENT_STATUS.ACTIVE ? 'green' : 'gray'}
+                    color={patient.status === PATIENT_STATUS.ACTIVE ? utilityColors.success : 'gray'}
                     variant="light"
                   >
                     {PATIENT_STATUS_LABELS[patient.status]}
@@ -100,7 +100,7 @@ export function PatientsCardList({
               </div>
               
               <Group>
-                <Badge size="sm" variant="light" color="blue" style={{ flexShrink: 0 }}>
+                <Badge size="sm" variant="light" color={currentPalette.primary} style={{ flexShrink: 0 }}>
                   {patient.appointmentCount} wizyt
                 </Badge>
                 <Menu shadow="md" width={180}>
@@ -128,7 +128,7 @@ export function PatientsCardList({
                     {patient.status === PATIENT_STATUS.ACTIVE ? (
                       <Menu.Item
                         leftSection={<IconArchive size="1rem" />}
-                        color="red"
+                        color={utilityColors.error}
                         onClick={(e) => {
                           e.stopPropagation();
                           if (patient.id) onArchive(patient.id);
@@ -139,7 +139,7 @@ export function PatientsCardList({
                     ) : (
                       <Menu.Item
                         leftSection={<IconRestore size="1rem" />}
-                        color="green"
+                        color={utilityColors.success}
                         onClick={(e) => {
                           e.stopPropagation();
                           if (patient.id) onRestore(patient.id);
@@ -156,7 +156,7 @@ export function PatientsCardList({
             <Stack gap="sm">
               {patient.phone && (
                 <Group gap="sm" wrap="nowrap">
-                  <ActionIcon size="sm" variant="subtle" color="gray" style={{ flexShrink: 0 }}>
+                  <ActionIcon size="sm" variant="subtle" style={{ color: currentPalette.text, flexShrink: 0 }}>
                     <IconPhone size="1rem" />
                   </ActionIcon>
                   <Text size="sm" style={{ flex: 1 }}>{patient.phone}</Text>
@@ -165,7 +165,7 @@ export function PatientsCardList({
               
               {patient.email && (
                 <Group gap="sm" wrap="nowrap">
-                  <ActionIcon size="sm" variant="subtle" color="gray" style={{ flexShrink: 0 }}>
+                  <ActionIcon size="sm" variant="subtle" style={{ color: currentPalette.text, flexShrink: 0 }}>
                     <IconMail size="1rem" />
                   </ActionIcon>
                   <Text size="sm" c="dimmed" truncate style={{ flex: 1 }}>
@@ -176,10 +176,10 @@ export function PatientsCardList({
               
               {patient.nextAppointment && (
                 <Group gap="sm" wrap="nowrap">
-                  <ActionIcon size="sm" variant="subtle" color="blue" style={{ flexShrink: 0 }}>
+                  <ActionIcon size="sm" variant="subtle" style={{ color: currentPalette.primary, flexShrink: 0 }}>
                     <IconCalendar size="1rem" />
                   </ActionIcon>
-                  <Text size="sm" c="blue" style={{ flex: 1 }}>
+                  <Text size="sm" style={{ color: currentPalette.primary, flex: 1 }}>
                     Następna: {format(
                       typeof patient.nextAppointment === 'string' 
                         ? new Date(patient.nextAppointment) 

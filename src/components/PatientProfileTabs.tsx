@@ -18,7 +18,7 @@ export function PatientProfileTabs({ patient }: PatientProfileTabsProps) {
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [selectedAppointments, setSelectedAppointments] = useState<number[]>([]);
   const { getAppointmentsByPatient } = useAppointmentStore();
-  const { currentPalette } = useTheme();
+  const { currentPalette, utilityColors } = useTheme();
 
   useEffect(() => {
     const loadAppointments = async () => {
@@ -71,6 +71,19 @@ export function PatientProfileTabs({ patient }: PatientProfileTabsProps) {
       appointments: true,
       selectedPatients: patient.id ? [patient.id] : []
     });
+  };
+
+  const getStatusBadgeColor = (status: AppointmentStatus) => {
+    switch (status) {
+      case AppointmentStatus.COMPLETED:
+        return utilityColors.success;
+      case AppointmentStatus.CANCELLED:
+        return utilityColors.error;
+      case AppointmentStatus.NO_SHOW:
+        return utilityColors.warning;
+      default:
+        return currentPalette.primary;
+    }
   };
 
   return (
@@ -156,7 +169,7 @@ export function PatientProfileTabs({ patient }: PatientProfileTabsProps) {
             <Group gap="md">
               <Title order={4}>Wizyty ({appointments.length})</Title>
               {selectedAppointments.length > 0 && (
-                <Badge color="blue" variant="light">
+                <Badge color={currentPalette.primary} variant="light">
                   {selectedAppointments.length} zaznaczonych
                 </Badge>
               )}
@@ -226,12 +239,7 @@ export function PatientProfileTabs({ patient }: PatientProfileTabsProps) {
                             {formatDateTime(appointment.date)}
                           </Text>
                           <Badge
-                            color={
-                              appointment.status === AppointmentStatus.COMPLETED ? 'green' :
-                              appointment.status === AppointmentStatus.CANCELLED ? 'red' :
-                              appointment.status === AppointmentStatus.NO_SHOW ? 'orange' :
-                              'blue'
-                            }
+                            color={getStatusBadgeColor(appointment.status)}
                             variant="light"
                             size="sm"
                           >
@@ -281,7 +289,7 @@ export function PatientProfileTabs({ patient }: PatientProfileTabsProps) {
       <Tabs.Panel value="notes" pt="md">
         <Paper p="md" withBorder>
           <Stack gap="md" align="center" ta="center" py="xl">
-            <ThemeIcon size="lg" variant="light" color="yellow">
+            <ThemeIcon size="lg" variant="light" color={currentPalette.accent}>
               <IconClock size="1.5rem" />
             </ThemeIcon>
             <div>
@@ -299,7 +307,7 @@ export function PatientProfileTabs({ patient }: PatientProfileTabsProps) {
       <Tabs.Panel value="goals" pt="md">
         <Paper p="md" withBorder>
           <Stack gap="md" align="center" ta="center" py="xl">
-            <ThemeIcon size="lg" variant="light" color="yellow">
+            <ThemeIcon size="lg" variant="light" color={currentPalette.accent}>
               <IconClock size="1.5rem" />
             </ThemeIcon>
             <div>

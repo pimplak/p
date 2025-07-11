@@ -2,6 +2,7 @@ import { Table, Text, Badge, ActionIcon, Group, Menu } from '@mantine/core';
 import { IconEdit, IconArchive, IconRestore, IconDots } from '@tabler/icons-react';
 import { format } from 'date-fns';
 import { pl } from 'date-fns/locale';
+import { useTheme } from '../hooks/useTheme';
 import { getPatientDisplayName } from '../utils/dates';
 import type { PatientWithAppointments, Patient } from '../types/Patient';
 
@@ -14,6 +15,8 @@ interface PatientTableProps {
 }
 
 export function PatientTable({ patients, onEdit, onView, onArchive, onRestore }: PatientTableProps) {
+  const { currentPalette, utilityColors } = useTheme();
+
   return (
     <Table.ScrollContainer minWidth={900} visibleFrom="md">
       <Table>
@@ -55,7 +58,7 @@ export function PatientTable({ patients, onEdit, onView, onArchive, onRestore }:
               <Table.Td>
                 <div>
                   <Badge
-                    color={patient.status === 'active' ? 'green' : 'gray'}
+                    color={patient.status === 'active' ? utilityColors.success : 'gray'}
                     variant="light"
                     size="sm"
                   >
@@ -109,7 +112,7 @@ export function PatientTable({ patients, onEdit, onView, onArchive, onRestore }:
               </Table.Td>
               <Table.Td>
                 {patient.nextAppointment ? (
-                  <Text size="sm" c="blue">
+                  <Text size="sm" style={{ color: currentPalette.primary }}>
                     {format(
                       typeof patient.nextAppointment === 'string' 
                         ? new Date(patient.nextAppointment) 
@@ -148,22 +151,22 @@ export function PatientTable({ patients, onEdit, onView, onArchive, onRestore }:
                       {patient.status === 'active' ? (
                         <Menu.Item
                           leftSection={<IconArchive size="1rem" />}
-                          color="red"
-                                                  onClick={(e) => {
-                          e.stopPropagation();
-                          if (patient.id) onArchive(patient.id);
-                        }}
+                          color={utilityColors.error}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            if (patient.id) onArchive(patient.id);
+                          }}
                         >
                           Archiwizuj
                         </Menu.Item>
                       ) : (
                         <Menu.Item
                           leftSection={<IconRestore size="1rem" />}
-                          color="green"
-                                                  onClick={(e) => {
-                          e.stopPropagation();
-                          if (patient.id) onRestore(patient.id);
-                        }}
+                          color={utilityColors.success}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            if (patient.id) onRestore(patient.id);
+                          }}
                         >
                           Przywróć
                         </Menu.Item>

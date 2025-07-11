@@ -239,7 +239,7 @@ function Calendar() {
       </Group>
 
       {error && (
-        <Alert color="red" title="Błąd">
+        <Alert color={utilityColors.error} title="Błąd">
           {error}
         </Alert>
       )}
@@ -324,7 +324,7 @@ function Calendar() {
             {view === 'week' && (
               <ActionIcon
                 variant={hideWeekends ? 'filled' : 'light'}
-                color="blue"
+                color={currentPalette.primary}
                 size="sm"
                 onClick={toggleHideWeekends}
                 title={hideWeekends ? 'Pokaż weekendy' : 'Ukryj weekendy'}
@@ -430,7 +430,8 @@ function DayView({
   onAddAppointment,
   getStatusColor,
   getStatusLabel,
-  utilityColors
+  utilityColors,
+  currentPalette
 }: CalendarViewProps) {
   const isMobile = useMediaQuery('(max-width: 768px)');
   
@@ -469,6 +470,7 @@ function DayView({
             onDeleteAppointment={onDeleteAppointment}
             getStatusColor={getStatusColor}
             getStatusLabel={getStatusLabel}
+            utilityColors={utilityColors}
           />
         ))}
       </Stack>
@@ -554,14 +556,14 @@ function DayView({
                   )}
                   <ActionIcon 
                     variant="light" 
-                    color="blue"
+                    color={currentPalette.primary}
                     onClick={() => onEditAppointment(appointment)}
                   >
                     <IconEdit size="1rem" />
                   </ActionIcon>
                   <ActionIcon 
                     variant="light" 
-                    color="red"
+                    color={utilityColors?.error || 'red'}
                     onClick={() => appointment.id && onDeleteAppointment(appointment.id)}
                   >
                     <IconTrash size="1rem" />

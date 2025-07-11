@@ -38,7 +38,7 @@ function Settings() {
         setPractitionerName,
         setPractitionerTitle 
     } = useSettingsStore();
-    const { currentPalette } = useTheme();
+    const { currentPalette, utilityColors } = useTheme();
 
     const handleAddDemoData = async () => {
         try {
@@ -178,7 +178,7 @@ function Settings() {
                                 <Button
                                     leftSection={<IconTestPipe size={16} />}
                                     variant="light"
-                                    color="blue"
+                                    color={currentPalette.primary}
                                     size="sm"
                                     onClick={handleAddDemoData}
                                 >
@@ -199,7 +199,7 @@ function Settings() {
                                 <Button
                                     leftSection={<IconDownload size={16} />}
                                     variant="light"
-                                    color="green"
+                                    color={utilityColors.success}
                                     size="sm"
                                     onClick={() => {
                                         // TODO: Implementacja eksportu danych
@@ -223,7 +223,7 @@ function Settings() {
                                 <Button
                                     leftSection={<IconDatabase size={16} />}
                                     variant="light"
-                                    color="red"
+                                    color={utilityColors.error}
                                     size="sm"
                                     onClick={handleClearAllData}
                                 >
@@ -281,7 +281,7 @@ function Settings() {
                             <Stack gap="sm">
                                 <Group justify="space-between" align="center">
                                     <Text fw={500} size="sm">Wersja aplikacji</Text>
-                                    <Badge variant="light" color="indigo">1.0.0-BETA</Badge>
+                                    <Badge variant="light" color={currentPalette.primary}>1.0.0-BETA</Badge>
                                 </Group>
                                 
                                 <Group justify="space-between" align="center">

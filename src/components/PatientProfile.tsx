@@ -12,6 +12,7 @@ import { notifications } from '@mantine/notifications';
 import { IconAlertCircle } from '@tabler/icons-react';
 import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useTheme } from '../hooks/useTheme';
 import { usePatientStore } from '../stores/usePatientStore';
 import { getPatientDisplayName } from '../utils/dates';
 import { PatientForm } from './PatientForm';
@@ -23,6 +24,7 @@ import type { Patient } from '../types/Patient';
 function PatientProfile() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { utilityColors } = useTheme();
   const { getPatient, archivePatient, restorePatient, loading, error } = usePatientStore();
   
   const [patient, setPatient] = useState<Patient | null>(null);
@@ -113,7 +115,7 @@ function PatientProfile() {
       <Container size="lg">
         <LoadingOverlay visible={loading} />
         {error && (
-          <Alert icon={<IconAlertCircle size="1rem" />} title="Błąd" color="red">
+          <Alert icon={<IconAlertCircle size="1rem" />} title="Błąd" color={utilityColors.error}>
             {error}
           </Alert>
         )}
@@ -170,7 +172,7 @@ function PatientProfile() {
             <Button variant="light" onClick={() => setArchiveModalOpen(false)}>
               Anuluj
             </Button>
-            <Button color="red" onClick={handleArchive}>
+            <Button color={utilityColors.error} onClick={handleArchive}>
               Archiwizuj
             </Button>
           </Group>

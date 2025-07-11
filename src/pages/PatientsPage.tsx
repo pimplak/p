@@ -18,6 +18,7 @@ import { PatientsCardList } from '../components/PatientsCardList';
 import { PatientSearchBar } from '../components/PatientSearchBar';
 import { PatientsPageHeader } from '../components/PatientsPageHeader';
 import { PatientTable } from '../components/PatientTable';
+import { useTheme } from '../hooks/useTheme';
 import { useAppointmentStore } from '../stores/useAppointmentStore';
 import { usePatientStore } from '../stores/usePatientStore';
 import { exportToExcel } from '../utils/export';
@@ -25,6 +26,7 @@ import type { Patient } from '../types/Patient';
 
 function PatientsPage() {
   const navigate = useNavigate();
+  const { utilityColors } = useTheme();
   const { 
     patients, 
     fetchPatients, 
@@ -188,7 +190,7 @@ function PatientsPage() {
   if (error) {
     return (
       <Container fluid>
-        <Alert color="red" title="Błąd">
+        <Alert color={utilityColors.error} title="Błąd">
           {error}
         </Alert>
       </Container>

@@ -17,6 +17,7 @@ import {
 } from '@tabler/icons-react';
 import { format } from 'date-fns';
 import { useState } from 'react';
+import { useTheme } from '../../hooks/useTheme';
 import { SMSReminderButton } from '../SMSReminderButton';
 import type { AppointmentWithPatient } from '../../types/Appointment';
 
@@ -26,6 +27,11 @@ interface ExpandableAppointmentRowProps {
   onDeleteAppointment: (id: number) => void;
   getStatusColor: (status: string) => string;
   getStatusLabel: (status: string) => string;
+  utilityColors?: {
+    error: string;
+    success: string;
+    warning: string;
+  };
 }
 
 export function ExpandableAppointmentRow({
@@ -33,9 +39,14 @@ export function ExpandableAppointmentRow({
   onEditAppointment,
   onDeleteAppointment,
   getStatusColor,
-  getStatusLabel
+  getStatusLabel,
+  utilityColors
 }: ExpandableAppointmentRowProps) {
   const [expanded, setExpanded] = useState(false);
+  const { currentPalette, utilityColors: themeUtilityColors } = useTheme();
+
+  // Use passed utilityColors or fallback to theme's utilityColors
+  const colors = utilityColors || themeUtilityColors;
 
   return (
     <Card 
@@ -128,9 +139,9 @@ export function ExpandableAppointmentRow({
           <Group justify="space-between">
             <Text size="sm" c="dimmed">Płatność:</Text>
             {appointment.paymentInfo?.isPaid ? (
-              <Badge color="green" size="sm">Opłacono</Badge>
+              <Badge color={colors.success} size="sm">Opłacono</Badge>
             ) : (
-              <Badge color="red" size="sm">Nieopłacono</Badge>
+              <Badge color={colors.error} size="sm">Nieopłacono</Badge>
             )}
           </Group>
           
@@ -158,7 +169,7 @@ export function ExpandableAppointmentRow({
             )}
             <ActionIcon 
               variant="light" 
-              color="blue"
+              color={currentPalette.primary}
               size="lg"
               onClick={(e) => {
                 e.stopPropagation();
@@ -169,7 +180,7 @@ export function ExpandableAppointmentRow({
             </ActionIcon>
             <ActionIcon 
               variant="light" 
-              color="red"
+              color={colors.error}
               size="lg"
               onClick={(e) => {
                 e.stopPropagation();
