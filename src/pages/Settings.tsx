@@ -286,7 +286,7 @@ function Settings() {
                                 
                                 <Group justify="space-between" align="center">
                                     <Text fw={500} size="sm">Ostatnia aktualizacja</Text>
-                                    <Text size="sm" c="dimmed">Dziś</Text>
+                                    <Text size="sm" c="dimmed">12.07.2025 02:43:14</Text>
                                 </Group>
                             </Stack>
                             

@@ -250,6 +250,8 @@ function Calendar() {
           {/* View Selector */}
           <SegmentedControl
             value={view}
+            withItemsBorders={false}
+            transitionDuration={300}
             onChange={(value) => setView(value as CalendarView)}
             data={[
               { label: 'Dzień', value: 'day' },

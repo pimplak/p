@@ -221,7 +221,7 @@ export function SMSTemplateManager() {
                         <Text size="xs" fw={600}>Dostępne zmienne:</Text>
                         <Group gap="xs">
                             {availableVariables.map(variable => (
-                                <Code key={variable}>{`{${variable}}`}</Code>
+                                <Code key={variable}>{`{${variable}}`}</Code>   
                             ))}
                         </Group>
                     </Stack>

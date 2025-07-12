@@ -1,5 +1,5 @@
 import { Select, Group, Text, ColorSwatch, Stack, Switch, ActionIcon, Tooltip } from '@mantine/core';
-import { IconPalette, IconSun, IconMoon } from '@tabler/icons-react';
+import { IconPalette, IconSun, IconMoon, IconMoonStars } from '@tabler/icons-react';
 import { useTheme } from '../hooks/useTheme';
 import { isDarkPalette, type ColorPalette, type PaletteId } from '../types/theme';
 
@@ -88,17 +88,9 @@ export function ThemeSelector() {
           <Switch 
             checked={isDark}
             onChange={(event) => toggleDarkMode(event.currentTarget.checked)}
+            onLabel={<IconSun size={16} stroke={2.5} color={currentPalette.text} />}
+            offLabel={<IconMoonStars size={16} stroke={2.5} color={currentPalette.accent} />}
             size="md"
-            styles={{
-              track: {
-                backgroundColor: isDark ? currentPalette.primary : `${currentPalette.primary}40`,
-                borderColor: currentPalette.primary,
-              },
-              thumb: {
-                backgroundColor: currentPalette.surface,
-                borderColor: currentPalette.primary,
-              },
-            }}
           />
         </Group>
         <Text size="sm" fw={500} c="dimmed">

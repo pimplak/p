@@ -212,6 +212,52 @@ export const useTheme = () => {
                     },
                 },
 
+                Menu: {
+                    defaultProps: {
+                        radius: 'md',
+                    },
+                    styles: {
+                        root: {
+                            backgroundColor: currentPalette.surface,
+                            color: currentPalette.text,
+                            border: `1px solid ${currentPalette.primary}40`,
+                        },
+                        item: {
+                            color: currentPalette.text,
+                        },
+                        dropdown: {
+                            backgroundColor: currentPalette.surface,
+                            color: currentPalette.text,
+                            border: `1px solid ${currentPalette.primary}40`,
+                        },
+                        itemLabel: {
+                            color: currentPalette.text,
+                        },
+                    }
+                },
+
+                SegmentedControl: {
+                    defaultProps: {
+                        radius: 'sm',
+                        size: 'sm',
+                    },
+                    styles: {
+                        root: {
+                            backgroundColor: currentPalette.primary,
+                            color: currentPalette.text,
+                        },
+                        label: {
+                            color: currentPalette.surface,
+                        },
+                        indicator: {
+                            backgroundColor: currentPalette.accent,
+                        },
+                        innerlabel: {
+                            color: currentPalette.primary,
+                        },
+                    },
+                },
+
                 DateInput: {
                     defaultProps: {
                         radius: 'md',
@@ -314,9 +360,6 @@ export const useTheme = () => {
                             backgroundColor: currentPalette.surface,
                             borderColor: currentPalette.primary,
                         },
-                        label: {
-                            color: currentPalette.text,
-                        },
                     },
                 },
 
@@ -340,6 +383,19 @@ export const useTheme = () => {
                         },
                     },
                 },
+
+                // Tabs: {
+                //     defaultProps: {
+                //         radius: 'md',
+                //         size: 'md',
+                //     },
+                //     styles: {
+                //         tab: {
+                //             backgroundColor: currentPalette.surface,
+                //             color: currentPalette.text,
+                //         },
+                //     },
+                // },
 
                 TagsInput: {
                     defaultProps: {
@@ -398,6 +454,57 @@ export const useTheme = () => {
                             borderColor: `${currentPalette.primary}20`,
                         },
                     },
+                },
+
+                Code: {
+                    defaultProps: {
+                        radius: 'md',
+                    },
+                    styles: {
+                        root: {
+                            backgroundColor: currentPalette.surface,
+                            color: currentPalette.text,
+                            border: `1px solid ${currentPalette.primary}40`,
+                        },
+                    }
+                },
+
+                Notification: {
+                    defaultProps: {
+                        radius: 'md',
+                    },
+                    styles: {
+                        root: {
+                            backgroundColor: currentPalette.surface,
+                            color: currentPalette.surface,
+                            border: `1px solid ${currentPalette.primary}`,
+                        },
+                        title: {
+                            color: currentPalette.text,
+                        },
+                        description: {
+                            color: currentPalette.text,
+                        },
+                        closeButton: {
+                            color: currentPalette.text,
+                            '&:hover': {
+                                backgroundColor: currentPalette.accent,
+                            },
+                        },
+                    }
+                },
+
+                Paper: {
+                    defaultProps: {
+                        radius: 'md',
+                    },
+                    styles: {
+                        root: {
+                            backgroundColor: currentPalette.surface,
+                            color: currentPalette.text,
+                            border: `1px solid ${currentPalette.primary}40`,
+                        },
+                    }
                 },
 
                 Modal: {

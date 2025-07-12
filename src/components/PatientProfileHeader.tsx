@@ -7,8 +7,8 @@ import {
   IconArchive, 
   IconRestore 
 } from '@tabler/icons-react';
-import { useTheme } from '../hooks/useTheme';
 import { PATIENT_STATUS, PATIENT_STATUS_LABELS } from '../constants/status';
+import { useTheme } from '../hooks/useTheme';
 import { getPatientDisplayName } from '../utils/dates';
 import type { Patient } from '../types/Patient';
 
@@ -25,7 +25,7 @@ export function PatientProfileHeader({
   onArchive,
   onRestore
 }: PatientProfileHeaderProps) {
-  const { utilityColors } = useTheme();
+  const { utilityColors, currentPalette } = useTheme();
 
   return (
     <Paper p="md" withBorder>
@@ -72,7 +72,8 @@ export function PatientProfileHeader({
               <Menu.Item
                 leftSection={<IconEdit size="1rem" />}
                 onClick={onEdit}
-              >
+                color={currentPalette.accent}
+                >
                 Edytuj dane
               </Menu.Item>
               
@@ -81,6 +82,7 @@ export function PatientProfileHeader({
                   leftSection={<IconPhone size="1rem" />}
                   component="a"
                   href={`tel:${patient.phone}`}
+                  color={currentPalette.accent}
                 >
                   Zadzwoń
                 </Menu.Item>
@@ -91,6 +93,7 @@ export function PatientProfileHeader({
                   leftSection={<IconMail size="1rem" />}
                   component="a"
                   href={`mailto:${patient.email}`}
+                  color={currentPalette.accent}
                 >
                   Wyślij email
                 </Menu.Item>

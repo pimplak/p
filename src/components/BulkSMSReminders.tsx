@@ -366,7 +366,7 @@ export function BulkSMSReminders({
 
           {/* Appointments table */}
           <ScrollArea h={400}>
-            <Table striped highlightOnHover>
+            <Table highlightOnHover withRowBorders={false}>
               <Table.Thead>
                 <Table.Tr>
                   <Table.Th>Wybierz</Table.Th>
@@ -379,7 +379,7 @@ export function BulkSMSReminders({
               </Table.Thead>
               <Table.Tbody>
                 {reminderItems.map((item, index) => (
-                  <Table.Tr key={item.appointment.id}>
+                  <Table.Tr key={item.appointment.id} onClick={() => handleItemToggle(index)}>
                     <Table.Td>
                       <Checkbox
                         checked={item.selected}

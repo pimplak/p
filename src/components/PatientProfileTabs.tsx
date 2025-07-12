@@ -90,24 +90,6 @@ export function PatientProfileTabs({ patient }: PatientProfileTabsProps) {
     <Tabs 
       value={activeTab} 
       onChange={(value) => value && setActiveTab(value)}
-      styles={{
-        tab: {
-          color: currentPalette.text,
-          borderColor: `${currentPalette.primary}40`,
-          '&:hover': {
-            backgroundColor: `${currentPalette.accent}20`,
-            borderColor: currentPalette.primary,
-          },
-          '&[data-active]': {
-            color: currentPalette.primary,
-            borderColor: currentPalette.primary,
-          },
-        },
-        panel: {
-          backgroundColor: currentPalette.background,
-          color: currentPalette.text,
-        }
-      }}
     >
       <Tabs.List>
         <Tabs.Tab value="overview" leftSection={<IconNotes size="1rem" />}>
