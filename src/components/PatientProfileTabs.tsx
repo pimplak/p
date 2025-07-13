@@ -1,5 +1,30 @@
-import { Tabs, Paper, Stack, Text, Divider, Badge, Group, Card, Title, Button, Checkbox, Menu, ActionIcon, ThemeIcon } from '@mantine/core';
-import { IconNotes, IconCalendar, IconTarget, IconPlus, IconDownload, IconCheck, IconX, IconFileExport, IconClock } from '@tabler/icons-react';
+import {
+  Tabs,
+  Paper,
+  Stack,
+  Text,
+  Divider,
+  Badge,
+  Group,
+  Card,
+  Title,
+  Button,
+  Checkbox,
+  Menu,
+  ActionIcon,
+  ThemeIcon,
+} from '@mantine/core';
+import {
+  IconNotes,
+  IconCalendar,
+  IconTarget,
+  IconPlus,
+  IconDownload,
+  IconCheck,
+  IconX,
+  IconFileExport,
+  IconClock,
+} from '@tabler/icons-react';
 import { useState, useEffect } from 'react';
 import { useAppointmentStore } from '../stores/useAppointmentStore';
 import { AppointmentStatus } from '../types/Appointment';
@@ -16,7 +41,9 @@ interface PatientProfileTabsProps {
 export function PatientProfileTabs({ patient }: PatientProfileTabsProps) {
   const [activeTab, setActiveTab] = useState<string>('overview');
   const [appointments, setAppointments] = useState<Appointment[]>([]);
-  const [selectedAppointments, setSelectedAppointments] = useState<number[]>([]);
+  const [selectedAppointments, setSelectedAppointments] = useState<number[]>(
+    []
+  );
   const { getAppointmentsByPatient } = useAppointmentStore();
   const { currentPalette, utilityColors } = useTheme();
 
@@ -27,11 +54,14 @@ export function PatientProfileTabs({ patient }: PatientProfileTabsProps) {
         setAppointments(patientAppointments);
       }
     };
-    
+
     loadAppointments();
   }, [patient.id, getAppointmentsByPatient]);
 
-  const handleAppointmentSelection = (appointmentId: number, checked: boolean) => {
+  const handleAppointmentSelection = (
+    appointmentId: number,
+    checked: boolean
+  ) => {
     if (checked) {
       setSelectedAppointments(prev => [...prev, appointmentId]);
     } else {
@@ -53,23 +83,24 @@ export function PatientProfileTabs({ patient }: PatientProfileTabsProps) {
     }
 
     // Convert selected appointments to AppointmentWithPatient format
-    const selectedAppointmentsWithPatient: AppointmentWithPatient[] = appointments
-      .filter(apt => selectedAppointments.includes(apt.id!))
-      .map(apt => ({
-        ...apt,
-        patient: {
-          ...patient,
-          id: patient.id!,
-          status: patient.status,
-          createdAt: patient.createdAt,
-          updatedAt: patient.updatedAt
-        }
-      }));
+    const selectedAppointmentsWithPatient: AppointmentWithPatient[] =
+      appointments
+        .filter(apt => selectedAppointments.includes(apt.id!))
+        .map(apt => ({
+          ...apt,
+          patient: {
+            ...patient,
+            id: patient.id!,
+            status: patient.status,
+            createdAt: patient.createdAt,
+            updatedAt: patient.updatedAt,
+          },
+        }));
 
     await exportToExcel([], selectedAppointmentsWithPatient, {
       patients: false,
       appointments: true,
-      selectedPatients: patient.id ? [patient.id] : []
+      selectedPatients: patient.id ? [patient.id] : [],
     });
   };
 
@@ -87,46 +118,50 @@ export function PatientProfileTabs({ patient }: PatientProfileTabsProps) {
   };
 
   return (
-    <Tabs 
-      value={activeTab} 
-      onChange={(value) => value && setActiveTab(value)}
-    >
+    <Tabs value={activeTab} onChange={value => value && setActiveTab(value)}>
       <Tabs.List>
-        <Tabs.Tab value="overview" leftSection={<IconNotes size="1rem" />}>
+        <Tabs.Tab value='overview' leftSection={<IconNotes size='1rem' />}>
           Przegląd
         </Tabs.Tab>
-        <Tabs.Tab value="appointments" leftSection={<IconCalendar size="1rem" />}>
+        <Tabs.Tab
+          value='appointments'
+          leftSection={<IconCalendar size='1rem' />}
+        >
           Wizyty
         </Tabs.Tab>
-        <Tabs.Tab value="notes" leftSection={<IconNotes size="1rem" />}>
+        <Tabs.Tab value='notes' leftSection={<IconNotes size='1rem' />}>
           Notatki
         </Tabs.Tab>
-        <Tabs.Tab value="goals" leftSection={<IconTarget size="1rem" />}>
+        <Tabs.Tab value='goals' leftSection={<IconTarget size='1rem' />}>
           Cele terapii
         </Tabs.Tab>
       </Tabs.List>
 
-      <Tabs.Panel value="overview" pt="md">
-        <Paper p="md" withBorder>
-          <Stack gap="md">
+      <Tabs.Panel value='overview' pt='md'>
+        <Paper p='md' withBorder>
+          <Stack gap='md'>
             {patient.address && (
               <div>
-                <Text size="sm" fw={500} mb="xs">Adres</Text>
-                <Text size="sm">{patient.address}</Text>
+                <Text size='sm' fw={500} mb='xs'>
+                  Adres
+                </Text>
+                <Text size='sm'>{patient.address}</Text>
               </div>
             )}
-            
+
             {patient.notes && (
               <div>
-                <Text size="sm" fw={500} mb="xs">Notatki</Text>
-                <Text size="sm" style={{ whiteSpace: 'pre-wrap' }}>
+                <Text size='sm' fw={500} mb='xs'>
+                  Notatki
+                </Text>
+                <Text size='sm' style={{ whiteSpace: 'pre-wrap' }}>
                   {patient.notes}
                 </Text>
               </div>
             )}
 
             {!patient.address && !patient.notes && (
-              <Text size="sm" c="dimmed">
+              <Text size='sm' c='dimmed'>
                 Brak dodatkowych informacji o pacjencie.
               </Text>
             )}
@@ -134,10 +169,10 @@ export function PatientProfileTabs({ patient }: PatientProfileTabsProps) {
             <Divider />
 
             <div>
-              <Text size="xs" c="dimmed">
+              <Text size='xs' c='dimmed'>
                 Utworzono: {formatDate(patient.createdAt)}
               </Text>
-              <Text size="xs" c="dimmed">
+              <Text size='xs' c='dimmed'>
                 Ostatnia aktualizacja: {formatDate(patient.updatedAt)}
               </Text>
             </div>
@@ -145,35 +180,37 @@ export function PatientProfileTabs({ patient }: PatientProfileTabsProps) {
         </Paper>
       </Tabs.Panel>
 
-      <Tabs.Panel value="appointments" pt="md">
-        <Paper p="md" withBorder>
-          <Group justify="space-between" align="center" mb="md">
-            <Group gap="md">
+      <Tabs.Panel value='appointments' pt='md'>
+        <Paper p='md' withBorder>
+          <Group justify='space-between' align='center' mb='md'>
+            <Group gap='md'>
               <Title order={4}>Wizyty ({appointments.length})</Title>
               {selectedAppointments.length > 0 && (
-                <Badge color={currentPalette.primary} variant="light">
+                <Badge color={currentPalette.primary} variant='light'>
                   {selectedAppointments.length} zaznaczonych
                 </Badge>
               )}
             </Group>
-            <Group gap="xs">
+            <Group gap='xs'>
               {appointments.length > 0 && (
                 <Menu>
                   <Menu.Target>
-                    <ActionIcon variant="light" size="sm">
-                      <IconDownload size="1rem" />
+                    <ActionIcon variant='light' size='sm'>
+                      <IconDownload size='1rem' />
                     </ActionIcon>
                   </Menu.Target>
                   <Menu.Dropdown>
                     <Menu.Item
-                      leftSection={<IconCheck size="1rem" />}
+                      leftSection={<IconCheck size='1rem' />}
                       onClick={selectAllAppointments}
-                      disabled={selectedAppointments.length === appointments.length}
+                      disabled={
+                        selectedAppointments.length === appointments.length
+                      }
                     >
                       Zaznacz wszystkie
                     </Menu.Item>
                     <Menu.Item
-                      leftSection={<IconX size="1rem" />}
+                      leftSection={<IconX size='1rem' />}
                       onClick={clearSelection}
                       disabled={selectedAppointments.length === 0}
                     >
@@ -181,7 +218,7 @@ export function PatientProfileTabs({ patient }: PatientProfileTabsProps) {
                     </Menu.Item>
                     <Menu.Divider />
                     <Menu.Item
-                      leftSection={<IconFileExport size="1rem" />}
+                      leftSection={<IconFileExport size='1rem' />}
                       onClick={handleExportSelected}
                       disabled={selectedAppointments.length === 0}
                     >
@@ -191,72 +228,89 @@ export function PatientProfileTabs({ patient }: PatientProfileTabsProps) {
                 </Menu>
               )}
               <Button
-                size="sm"
-                leftSection={<IconPlus size="1rem" />}
-                variant="light"
+                size='sm'
+                leftSection={<IconPlus size='1rem' />}
+                variant='light'
               >
                 Dodaj wizytę
               </Button>
             </Group>
           </Group>
-          
+
           {appointments.length === 0 ? (
-            <Text size="sm" c="dimmed">
+            <Text size='sm' c='dimmed'>
               Brak wizyt dla tego pacjenta.
             </Text>
           ) : (
-            <Stack gap="md">
-              {appointments.map((appointment) => (
-                <Card key={appointment.id} withBorder p="md">
-                  <Group justify="space-between" align="flex-start">
-                    <Group align="flex-start" gap="md">
+            <Stack gap='md'>
+              {appointments.map(appointment => (
+                <Card key={appointment.id} withBorder p='md'>
+                  <Group justify='space-between' align='flex-start'>
+                    <Group align='flex-start' gap='md'>
                       <Checkbox
                         checked={selectedAppointments.includes(appointment.id!)}
-                        onChange={(e) => handleAppointmentSelection(appointment.id!, e.currentTarget.checked)}
-                        mt="2px"
+                        onChange={e =>
+                          handleAppointmentSelection(
+                            appointment.id!,
+                            e.currentTarget.checked
+                          )
+                        }
+                        mt='2px'
                       />
                       <div>
-                        <Group gap="xs" mb="xs">
+                        <Group gap='xs' mb='xs'>
                           <Text fw={500}>
                             {formatDateTime(appointment.date)}
                           </Text>
                           <Badge
                             color={getStatusBadgeColor(appointment.status)}
-                            variant="light"
-                            size="sm"
+                            variant='light'
+                            size='sm'
                           >
-                            {appointment.status === AppointmentStatus.COMPLETED ? 'Zakończona' :
-                             appointment.status === AppointmentStatus.CANCELLED ? 'Anulowana' :
-                             appointment.status === AppointmentStatus.NO_SHOW ? 'Nieobecność' :
-                             appointment.status === AppointmentStatus.SCHEDULED ? 'Zaplanowana' :
-                             'Przełożona'}
+                            {appointment.status === AppointmentStatus.COMPLETED
+                              ? 'Zakończona'
+                              : appointment.status ===
+                                  AppointmentStatus.CANCELLED
+                                ? 'Anulowana'
+                                : appointment.status ===
+                                    AppointmentStatus.NO_SHOW
+                                  ? 'Nieobecność'
+                                  : appointment.status ===
+                                      AppointmentStatus.SCHEDULED
+                                    ? 'Zaplanowana'
+                                    : 'Przełożona'}
                           </Badge>
                         </Group>
-                        
-                        <Text size="sm" c="dimmed">
+
+                        <Text size='sm' c='dimmed'>
                           Czas trwania: {appointment.duration} min
                         </Text>
-                        
+
                         {appointment.type && (
-                          <Text size="sm" c="dimmed">
-                            Typ: {appointment.type === 'therapy' ? 'Terapia' :
-                                  appointment.type === 'initial' ? 'Wizyta początkowa' :
-                                  appointment.type === 'follow_up' ? 'Wizyta kontrolna' :
-                                  appointment.type === 'consultation' ? 'Konsultacja' :
-                                  'Ocena'}
+                          <Text size='sm' c='dimmed'>
+                            Typ:{' '}
+                            {appointment.type === 'therapy'
+                              ? 'Terapia'
+                              : appointment.type === 'initial'
+                                ? 'Wizyta początkowa'
+                                : appointment.type === 'follow_up'
+                                  ? 'Wizyta kontrolna'
+                                  : appointment.type === 'consultation'
+                                    ? 'Konsultacja'
+                                    : 'Ocena'}
                           </Text>
                         )}
-                        
+
                         {appointment.notes && (
-                          <Text size="sm" mt="xs">
+                          <Text size='sm' mt='xs'>
                             <strong>Notatki:</strong> {appointment.notes}
                           </Text>
                         )}
                       </div>
                     </Group>
-                    
+
                     {appointment.price && (
-                      <Text size="sm" fw={500} c="green">
+                      <Text size='sm' fw={500} c='green'>
                         {appointment.price} zł
                       </Text>
                     )}
@@ -268,17 +322,17 @@ export function PatientProfileTabs({ patient }: PatientProfileTabsProps) {
         </Paper>
       </Tabs.Panel>
 
-      <Tabs.Panel value="notes" pt="md">
-        <Paper p="md" withBorder>
-          <Stack gap="md" align="center" ta="center" py="xl">
-            <ThemeIcon size="lg" variant="light" color={currentPalette.accent}>
-              <IconClock size="1.5rem" />
+      <Tabs.Panel value='notes' pt='md'>
+        <Paper p='md' withBorder>
+          <Stack gap='md' align='center' ta='center' py='xl'>
+            <ThemeIcon size='lg' variant='light' color={currentPalette.accent}>
+              <IconClock size='1.5rem' />
             </ThemeIcon>
             <div>
-              <Text fw={500} size="lg" mb="xs">
+              <Text fw={500} size='lg' mb='xs'>
                 Feature będzie dostępny soon
               </Text>
-              <Text size="sm" c="dimmed">
+              <Text size='sm' c='dimmed'>
                 System notatek SOAP dla pacjentów jest w przygotowaniu
               </Text>
             </div>
@@ -286,17 +340,17 @@ export function PatientProfileTabs({ patient }: PatientProfileTabsProps) {
         </Paper>
       </Tabs.Panel>
 
-      <Tabs.Panel value="goals" pt="md">
-        <Paper p="md" withBorder>
-          <Stack gap="md" align="center" ta="center" py="xl">
-            <ThemeIcon size="lg" variant="light" color={currentPalette.accent}>
-              <IconClock size="1.5rem" />
+      <Tabs.Panel value='goals' pt='md'>
+        <Paper p='md' withBorder>
+          <Stack gap='md' align='center' ta='center' py='xl'>
+            <ThemeIcon size='lg' variant='light' color={currentPalette.accent}>
+              <IconClock size='1.5rem' />
             </ThemeIcon>
             <div>
-              <Text fw={500} size="lg" mb="xs">
+              <Text fw={500} size='lg' mb='xs'>
                 Feature będzie dostępny soon
               </Text>
-              <Text size="sm" c="dimmed">
+              <Text size='sm' c='dimmed'>
                 System śledzenia celów terapii jest w przygotowaniu
               </Text>
             </div>
@@ -305,4 +359,4 @@ export function PatientProfileTabs({ patient }: PatientProfileTabsProps) {
       </Tabs.Panel>
     </Tabs>
   );
-} 
+}

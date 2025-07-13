@@ -5,7 +5,14 @@
 
 /* Base typography and smoothing */
 html {
-  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family:
+    'Inter',
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    sans-serif;
   line-height: 1.6;
   font-weight: 400;
   font-synthesis: none;
@@ -22,16 +29,23 @@ body {
 }
 
 /* Headings with premium letter-spacing */
-h1, h2, h3 {
+h1,
+h2,
+h3 {
   letter-spacing: -0.02em;
 }
 
-h4, h5, h6 {
+h4,
+h5,
+h6 {
   letter-spacing: -0.01em;
 }
 
 /* Form elements base styling */
-button, input, select, textarea {
+button,
+input,
+select,
+textarea {
   font-family: inherit;
   font-size: inherit;
   line-height: inherit;
@@ -47,7 +61,7 @@ button {
 
 /* Smooth transitions for performance */
 * {
-  transition: 
+  transition:
     background-color 200ms ease-out,
     border-color 200ms ease-out,
     color 200ms ease-out,
@@ -57,7 +71,9 @@ button {
 
 /* Respect user preferences */
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
+  *,
+  *::before,
+  *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
@@ -70,9 +86,9 @@ button {
   html {
     font-size: 16px; /* Prevent zoom on iOS */
   }
-  
-  input, 
-  select, 
+
+  input,
+  select,
   textarea {
     font-size: 16px; /* Prevent zoom on iOS */
     border-radius: 0; /* Remove iOS styling */

@@ -5,11 +5,11 @@ interface CustomSelectProps extends SelectProps {
   variant?: 'default' | 'filled' | 'unstyled';
 }
 
-export const Select: React.FC<CustomSelectProps> = ({ 
+export const Select: React.FC<CustomSelectProps> = ({
   variant = 'default',
   style,
   styles,
-  ...props 
+  ...props
 }) => {
   const { currentPalette, mantineTheme, isDark } = useTheme();
 
@@ -77,7 +77,7 @@ export const Select: React.FC<CustomSelectProps> = ({
             },
           },
         };
-      
+
       case 'unstyled':
         return {
           ...baseStyles,
@@ -94,7 +94,7 @@ export const Select: React.FC<CustomSelectProps> = ({
             },
           },
         };
-      
+
       default:
         return baseStyles;
     }
@@ -105,13 +105,13 @@ export const Select: React.FC<CustomSelectProps> = ({
   return (
     <MantineSelect
       radius={mantineTheme.radius?.md}
-      size="md"
+      size='md'
       comboboxProps={{
         shadow: 'sm',
         radius: mantineTheme.radius?.md,
       }}
       style={{
-        ...style
+        ...style,
       }}
       styles={{
         input: variantStyles.input,
@@ -123,4 +123,4 @@ export const Select: React.FC<CustomSelectProps> = ({
       {...props}
     />
   );
-}; 
+};

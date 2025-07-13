@@ -20,14 +20,14 @@ export const GlassFAB: React.FC<GlassFABProps> = ({
   variant = 'primary',
   size = 'lg',
   position = 'bottom-right',
-  animate = true
+  animate = true,
 }) => {
   const [isHovered, setIsHovered] = useState(false);
   const { currentPalette } = useTheme();
 
   const getPositionStyles = () => {
     const baseSpacing = '24px';
-    
+
     switch (position) {
       case 'bottom-left':
         return { bottom: baseSpacing, left: baseSpacing };
@@ -63,7 +63,7 @@ export const GlassFAB: React.FC<GlassFABProps> = ({
         hoverShadow: '0 12px 32px rgba(245, 158, 11, 0.4)',
       },
     };
-    
+
     return variants[variant];
   };
 
@@ -73,7 +73,7 @@ export const GlassFAB: React.FC<GlassFABProps> = ({
       md: { width: '56px', height: '56px', iconSize: 24 },
       lg: { width: '64px', height: '64px', iconSize: 28 },
     };
-    
+
     return sizes[size];
   };
 
@@ -82,9 +82,9 @@ export const GlassFAB: React.FC<GlassFABProps> = ({
   const sizeStyles = getSizeStyles();
 
   return (
-    <Tooltip 
-      label={label} 
-      position="left" 
+    <Tooltip
+      label={label}
+      position='left'
       withArrow
       styles={{
         tooltip: {
@@ -95,12 +95,12 @@ export const GlassFAB: React.FC<GlassFABProps> = ({
           color: 'white',
           fontSize: '0.875rem',
           fontWeight: 500,
-        }
+        },
       }}
     >
       <ActionIcon
         size={sizeStyles.width}
-        radius="xl"
+        radius='xl'
         onClick={onClick}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
@@ -111,7 +111,9 @@ export const GlassFAB: React.FC<GlassFABProps> = ({
           backdropFilter: 'blur(10px)',
           WebkitBackdropFilter: 'blur(10px)',
           border: '1px solid rgba(255, 255, 255, 0.2)',
-          boxShadow: isHovered ? variantStyles.hoverShadow : variantStyles.shadow,
+          boxShadow: isHovered
+            ? variantStyles.hoverShadow
+            : variantStyles.shadow,
           color: 'white',
           cursor: 'pointer',
           zIndex: 1000,
@@ -134,18 +136,19 @@ export const GlassFAB: React.FC<GlassFABProps> = ({
               left: 0,
               right: 0,
               bottom: 0,
-              background: 'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent)',
+              background:
+                'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent)',
               backgroundSize: '200% 100%',
               borderRadius: 'inherit',
               opacity: isHovered ? 1 : 0,
               animation: isHovered ? 'glass-shimmer 2s infinite' : 'none',
               transition: 'opacity 300ms ease',
-            }
-          }
+            },
+          },
         }}
       >
-        <Icon 
-          size={sizeStyles.iconSize} 
+        <Icon
+          size={sizeStyles.iconSize}
           stroke={1.5}
           style={{
             position: 'relative',
@@ -156,4 +159,4 @@ export const GlassFAB: React.FC<GlassFABProps> = ({
       </ActionIcon>
     </Tooltip>
   );
-}; 
+};

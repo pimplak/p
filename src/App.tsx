@@ -14,11 +14,11 @@ import { useTheme } from './hooks/useTheme';
 // Ferro's Dynamic Theme Provider
 function ThemeProvider({ children }: { children: React.ReactNode }) {
   const { mantineTheme } = useTheme();
-  
+
   return (
-    <MantineProvider 
+    <MantineProvider
       theme={mantineTheme}
-      defaultColorScheme="auto"
+      defaultColorScheme='auto'
       withCssVariables
       withGlobalClasses
       withStaticClasses
@@ -32,7 +32,7 @@ function App() {
   return (
     <ThemeProvider>
       <ModalsProvider>
-        <Notifications position="top-right" />
+        <Notifications position='top-right' />
         <GlobalErrorBoundary>
           <BrowserRouter>
             <AppRouter />

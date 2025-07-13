@@ -1,4 +1,12 @@
-import { ActionIcon, Stack, Affix, Transition, Paper, Group, Text } from '@mantine/core';
+import {
+  ActionIcon,
+  Stack,
+  Affix,
+  Transition,
+  Paper,
+  Group,
+  Text,
+} from '@mantine/core';
 import { IconPlus, IconX } from '@tabler/icons-react';
 import { useState } from 'react';
 import type { ReactNode } from 'react';
@@ -17,9 +25,9 @@ interface FloatingActionButtonProps {
   position?: { bottom: number; right: number };
 }
 
-export function FloatingActionButton({ 
-  actions, 
-  position = { bottom: 100, right: 20 }
+export function FloatingActionButton({
+  actions,
+  position = { bottom: 100, right: 20 },
 }: FloatingActionButtonProps) {
   const [opened, setOpened] = useState(false);
   const { currentPalette } = useTheme();
@@ -30,11 +38,15 @@ export function FloatingActionButton({
   if (actions.length === 1) {
     const action = actions[0];
     return (
-      <Affix position={position} hiddenFrom="md" className="floating-action-button">
+      <Affix
+        position={position}
+        hiddenFrom='md'
+        className='floating-action-button'
+      >
         <ActionIcon
-          size="xl"
-          radius="xl"
-          variant="filled"
+          size='xl'
+          radius='xl'
+          variant='filled'
           style={{
             backgroundColor: currentPalette.primary,
             color: currentPalette.surface,
@@ -52,21 +64,25 @@ export function FloatingActionButton({
 
   // Jeśli więcej akcji, pokaż expandable menu
   return (
-    <Affix position={position} hiddenFrom="md" className="floating-action-button">
-      <Stack gap="sm" align="flex-end" style={{ zIndex: 1001 }}>
+    <Affix
+      position={position}
+      hiddenFrom='md'
+      className='floating-action-button'
+    >
+      <Stack gap='sm' align='flex-end' style={{ zIndex: 1001 }}>
         {/* Menu Actions */}
         <Transition
           mounted={opened}
-          transition="slide-up"
+          transition='slide-up'
           duration={200}
-          timingFunction="ease"
+          timingFunction='ease'
         >
-          {(styles) => (
-            <Stack gap="xs" style={{ ...styles, zIndex: 1001 }}>
-              {actions.map((action) => (
-                <Paper 
+          {styles => (
+            <Stack gap='xs' style={{ ...styles, zIndex: 1001 }}>
+              {actions.map(action => (
+                <Paper
                   key={action.id}
-                  p="xs"
+                  p='xs'
                   style={{
                     backgroundColor: currentPalette.surface,
                     color: currentPalette.text,
@@ -75,14 +91,23 @@ export function FloatingActionButton({
                     zIndex: 1001,
                   }}
                 >
-                  <Group gap="sm" wrap="nowrap" onClick={action.onClick} style={{ cursor: 'pointer' }}>
-                    <Text size="sm" fw={500} style={{ minWidth: 'max-content' }}>
+                  <Group
+                    gap='sm'
+                    wrap='nowrap'
+                    onClick={action.onClick}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <Text
+                      size='sm'
+                      fw={500}
+                      style={{ minWidth: 'max-content' }}
+                    >
                       {action.label}
                     </Text>
                     <ActionIcon
-                      size="lg"
-                      radius="xl"
-                      variant="filled"
+                      size='lg'
+                      radius='xl'
+                      variant='filled'
                       style={{
                         backgroundColor: currentPalette.primary,
                         color: currentPalette.surface,
@@ -99,9 +124,9 @@ export function FloatingActionButton({
 
         {/* Main FAB */}
         <ActionIcon
-          size="xl"
-          radius="xl"
-          variant="filled"
+          size='xl'
+          radius='xl'
+          variant='filled'
           onClick={() => setOpened(!opened)}
           style={{
             backgroundColor: currentPalette.primary,
@@ -113,9 +138,9 @@ export function FloatingActionButton({
             zIndex: 1001,
           }}
         >
-          {opened ? <IconX size="1.5rem" /> : <IconPlus size="1.5rem" />}
+          {opened ? <IconX size='1.5rem' /> : <IconPlus size='1.5rem' />}
         </ActionIcon>
       </Stack>
     </Affix>
   );
-} 
+}

@@ -1,8 +1,5 @@
 import { SimpleGrid, Stack, Title } from '@mantine/core';
-import { 
-  IconUsers, 
-  IconCalendar
-} from '@tabler/icons-react';
+import { IconUsers, IconCalendar } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
 import { StatsCard } from '../ui/StatsCard';
 
@@ -21,7 +18,7 @@ interface DashboardStatsProps {
   };
 }
 
-export const DashboardStats: React.FC<DashboardStatsProps> = ({ 
+export const DashboardStats: React.FC<DashboardStatsProps> = ({
   stats = {
     totalPatients: 0,
     sessionsThisWeek: 0,
@@ -29,67 +26,68 @@ export const DashboardStats: React.FC<DashboardStatsProps> = ({
     completionRate: 0,
     totalNotes: 0,
     todaysAppointments: 0,
-    nextAppointment: null
-  }
+    nextAppointment: null,
+  },
 }) => {
   const navigate = useNavigate();
 
   return (
-    <Stack gap="xl">
-      <Title 
+    <Stack gap='xl'>
+      <Title
         order={2}
         style={{
           fontSize: '1.5rem',
           fontWeight: 600,
           color: 'var(--gray-900)',
           letterSpacing: '-0.02em',
-          marginBottom: '0.5rem'
+          marginBottom: '0.5rem',
         }}
       >
         Przegląd praktyki
       </Title>
-      
+
       <SimpleGrid
         cols={{ base: 1, sm: 2 }}
-        spacing="xl"
+        spacing='xl'
         style={{ marginBottom: '2rem' }}
       >
         <StatsCard
-          title="Aktywni pacjenci"
+          title='Aktywni pacjenci'
           value={stats.totalPatients}
-          description="Łącznie w systemie"
+          description='Łącznie w systemie'
           icon={<IconUsers size={20} />}
           onClick={() => navigate('/patients')}
         />
-        
+
         <StatsCard
-          title="Sesje w tym tygodniu"
+          title='Sesje w tym tygodniu'
           value={stats.sessionsThisWeek}
-          description="Zaplanowane spotkania"
+          description='Zaplanowane spotkania'
           icon={<IconCalendar size={20} />}
           onClick={() => navigate('/calendar')}
         />
       </SimpleGrid>
-      
+
       {/* Secondary stats row */}
-      <SimpleGrid
-        cols={{ base: 1, sm: 2 }}
-        spacing="xl"
-      >
+      <SimpleGrid cols={{ base: 1, sm: 2 }} spacing='xl'>
         <StatsCard
-          title="Dzisiejsze wizyty"
+          title='Dzisiejsze wizyty'
           value={stats.todaysAppointments}
-          description="Zaplanowane na dziś"
+          description='Zaplanowane na dziś'
           icon={<IconCalendar size={20} />}
         />
-        
+
         <StatsCard
-          title="Najbliższa sesja"
+          title='Najbliższa sesja'
           value={stats.nextAppointment ? stats.nextAppointment.time : 'Brak'}
-          description={stats.nextAppointment ? stats.nextAppointment.patient : 'Brak zaplanowanych wizyt'}
+          description={
+            stats.nextAppointment
+              ? stats.nextAppointment.patient
+              : 'Brak zaplanowanych wizyt'
+          }
           icon={<IconCalendar size={20} />}
         />
       </SimpleGrid>
     </Stack>
   );
-}; 
+};

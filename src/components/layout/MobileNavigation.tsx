@@ -1,13 +1,13 @@
 import { useState, useMemo } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Group, Text, UnstyledButton } from '@mantine/core';
-import { 
+import {
   IconDashboard,
   IconUsers,
   IconCalendar,
   IconNotes,
   IconChartLine,
-  type Icon
+  type Icon,
 } from '@tabler/icons-react';
 import { useAppointmentStore } from '../../stores/useAppointmentStore';
 import { useTheme } from '../../hooks/useTheme';
@@ -25,7 +25,7 @@ interface MobileNavigationProps {
 }
 
 export const MobileNavigation: React.FC<MobileNavigationProps> = ({
-  onItemClick
+  onItemClick,
 }) => {
   const [pressedItem, setPressedItem] = useState<string | null>(null);
   const navigate = useNavigate();
@@ -36,50 +36,64 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
   // Liczenie dzisiejszych wizyt które jeszcze się nie odbyły - reactive na appointments
   const todaysPendingAppointments = useMemo(() => {
     const today = new Date();
-    const startOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-    const endOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23, 59, 59);
+    const startOfDay = new Date(
+      today.getFullYear(),
+      today.getMonth(),
+      today.getDate()
+    );
+    const endOfDay = new Date(
+      today.getFullYear(),
+      today.getMonth(),
+      today.getDate(),
+      23,
+      59,
+      59
+    );
     const now = new Date();
-    
+
     return appointments.filter(appointment => {
       const appointmentDate = new Date(appointment.date);
-      return appointmentDate >= startOfDay && 
-             appointmentDate <= endOfDay && 
-             appointmentDate > now && 
-             appointment.status === 'scheduled';
+      return (
+        appointmentDate >= startOfDay &&
+        appointmentDate <= endOfDay &&
+        appointmentDate > now &&
+        appointment.status === 'scheduled'
+      );
     }).length;
   }, [appointments]);
 
   const navigationItems: NavigationItem[] = [
-    { 
+    {
       id: 'dashboard',
-      label: 'Dashboard', 
-      icon: IconDashboard, 
-      href: '/' 
+      label: 'Dashboard',
+      icon: IconDashboard,
+      href: '/',
     },
-    { 
+    {
       id: 'patients',
-      label: 'Pacjenci', 
-      icon: IconUsers, 
-      href: '/patients'
+      label: 'Pacjenci',
+      icon: IconUsers,
+      href: '/patients',
     },
-    { 
+    {
       id: 'calendar',
-      label: 'Kalendarz', 
-      icon: IconCalendar, 
+      label: 'Kalendarz',
+      icon: IconCalendar,
       href: '/calendar',
-      badge: todaysPendingAppointments > 0 ? todaysPendingAppointments : undefined
+      badge:
+        todaysPendingAppointments > 0 ? todaysPendingAppointments : undefined,
     },
-    { 
+    {
       id: 'notes',
-      label: 'Notatki', 
-      icon: IconNotes, 
-      href: '/notes' 
+      label: 'Notatki',
+      icon: IconNotes,
+      href: '/notes',
     },
-    { 
+    {
       id: 'analytics',
-      label: 'Statystyki', 
-      icon: IconChartLine, 
-      href: '/analytics' 
+      label: 'Statystyki',
+      icon: IconChartLine,
+      href: '/analytics',
     },
   ];
 
@@ -107,17 +121,17 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
         willChange: 'backdrop-filter',
       }}
     >
-      <Group justify="space-around" gap={0}>
-        {navigationItems.map((item) => {
+      <Group justify='space-around' gap={0}>
+        {navigationItems.map(item => {
           const Icon = item.icon;
           const isActive = location.pathname === item.href;
           const isPressed = pressedItem === item.id;
-          
+
           return (
             <UnstyledButton
               key={item.id}
               onClick={() => handleItemPress(item)}
-              className="mobile-nav-item"
+              className='mobile-nav-item'
               style={{
                 display: 'flex',
                 flexDirection: 'column',
@@ -127,15 +141,15 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
                 minWidth: '60px',
                 transition: 'all 200ms cubic-bezier(0.34, 1.56, 0.64, 1)',
                 transform: `scale(${isPressed ? '0.95' : '1'})`,
-                backgroundColor: isActive 
-                  ? `${currentPalette.primary}20` 
-                  : isPressed 
+                backgroundColor: isActive
+                  ? `${currentPalette.primary}20`
+                  : isPressed
                     ? `${currentPalette.accent}30`
                     : 'transparent',
               }}
             >
-              <div 
-                style={{ 
+              <div
+                style={{
                   position: 'relative',
                   marginBottom: '4px',
                 }}
@@ -144,15 +158,17 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
                   size={24}
                   stroke={1.5}
                   style={{
-                    color: isActive ? currentPalette.primary : currentPalette.text,
+                    color: isActive
+                      ? currentPalette.primary
+                      : currentPalette.text,
                     transition: 'all 200ms ease-out',
                     transform: `translateY(${isActive ? '-1px' : '0'})`,
-                    filter: isActive 
-                      ? `drop-shadow(0 2px 4px ${currentPalette.primary})` 
+                    filter: isActive
+                      ? `drop-shadow(0 2px 4px ${currentPalette.primary})`
                       : 'none',
                   }}
                 />
-                
+
                 {/* Badge */}
                 {item.badge && (
                   <div
@@ -178,12 +194,14 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
                   </div>
                 )}
               </div>
-              
+
               <Text
-                size="xs"
+                size='xs'
                 fw={isActive ? 600 : 500}
                 style={{
-                  color: isActive ? currentPalette.primary : currentPalette.text,
+                  color: isActive
+                    ? currentPalette.primary
+                    : currentPalette.text,
                   transition: 'all 200ms ease-out',
                   fontSize: '0.75rem',
                   lineHeight: '1',
@@ -197,7 +215,7 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
           );
         })}
       </Group>
-      
+
       {/* iOS-style home indicator */}
       <div
         style={{
@@ -214,4 +232,4 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
       />
     </nav>
   );
-}; 
+};

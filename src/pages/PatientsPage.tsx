@@ -1,10 +1,4 @@
-import { 
-  Card, 
-  Alert,
-  Skeleton,
-  Container,
-  Modal
-} from '@mantine/core';
+import { Card, Alert, Skeleton, Container, Modal } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { notifications } from '@mantine/notifications';
 import { IconUser, IconPlus, IconDownload } from '@tabler/icons-react';
@@ -12,7 +6,10 @@ import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDebounce } from 'use-debounce';
 import { ExportModal } from '../components/ExportModal';
-import { FloatingActionButton, type FABAction } from '../components/FloatingActionButton';
+import {
+  FloatingActionButton,
+  type FABAction,
+} from '../components/FloatingActionButton';
 import { PatientForm } from '../components/PatientForm';
 import { PatientsCardList } from '../components/PatientsCardList';
 import { PatientSearchBar } from '../components/PatientSearchBar';
@@ -27,37 +24,39 @@ import type { Patient } from '../types/Patient';
 function PatientsPage() {
   const navigate = useNavigate();
   const { utilityColors } = useTheme();
-  const { 
-    patients, 
-    fetchPatients, 
+  const {
+    patients,
+    fetchPatients,
     archivePatient,
     restorePatient,
     showArchived,
     toggleShowArchived,
-    loading, 
-    error 
+    loading,
+    error,
   } = usePatientStore();
 
   const { appointments, fetchAppointments } = useAppointmentStore();
-  
+
   const [opened, { open, close }] = useDisclosure(false);
-  const [exportOpened, { open: openExport, close: closeExport }] = useDisclosure(false);
+  const [exportOpened, { open: openExport, close: closeExport }] =
+    useDisclosure(false);
   const [editingPatient, setEditingPatient] = useState<Patient | undefined>();
   const [searchQuery, setSearchQuery] = useState('');
-  
-  // Debounce search query - 300ms throttling  
+
+  // Debounce search query - 300ms throttling
   const [debouncedSearchQuery] = useDebounce(searchQuery, 300);
 
   const filteredPatients = useMemo(() => {
     if (!debouncedSearchQuery.trim()) return patients;
-    
+
     const query = debouncedSearchQuery.toLowerCase();
-    return patients.filter(patient => 
-      patient.firstName.toLowerCase().includes(query) ||
-      patient.lastName.toLowerCase().includes(query) ||
-      patient.email?.toLowerCase().includes(query) ||
-      patient.phone?.includes(query) ||
-      patient.tags?.some(tag => tag.toLowerCase().includes(query))
+    return patients.filter(
+      patient =>
+        patient.firstName.toLowerCase().includes(query) ||
+        patient.lastName.toLowerCase().includes(query) ||
+        patient.email?.toLowerCase().includes(query) ||
+        patient.phone?.includes(query) ||
+        patient.tags?.some(tag => tag.toLowerCase().includes(query))
     );
   }, [patients, debouncedSearchQuery]);
 
@@ -71,48 +70,60 @@ function PatientsPage() {
     open();
   }, [open]);
 
-  const handleEditPatient = useCallback((patient: Patient) => {
-    setEditingPatient(patient);
-    open();
-  }, [open]);
+  const handleEditPatient = useCallback(
+    (patient: Patient) => {
+      setEditingPatient(patient);
+      open();
+    },
+    [open]
+  );
 
-  const handleViewPatient = useCallback((patient: Patient) => {
-    navigate(`/patients/${patient.id}`);
-  }, [navigate]);
+  const handleViewPatient = useCallback(
+    (patient: Patient) => {
+      navigate(`/patients/${patient.id}`);
+    },
+    [navigate]
+  );
 
-  const handleArchivePatient = useCallback(async (id: number) => {
-    try {
-      await archivePatient(id);
-      notifications.show({
-        title: 'Sukces',
-        message: 'Pacjent został zarchiwizowany',
-        color: 'green',
-      });
-    } catch {
-      notifications.show({
-        title: 'Błąd',
-        message: 'Nie udało się zarchiwizować pacjenta',
-        color: 'red',
-      });
-    }
-  }, [archivePatient]);
+  const handleArchivePatient = useCallback(
+    async (id: number) => {
+      try {
+        await archivePatient(id);
+        notifications.show({
+          title: 'Sukces',
+          message: 'Pacjent został zarchiwizowany',
+          color: 'green',
+        });
+      } catch {
+        notifications.show({
+          title: 'Błąd',
+          message: 'Nie udało się zarchiwizować pacjenta',
+          color: 'red',
+        });
+      }
+    },
+    [archivePatient]
+  );
 
-  const handleRestorePatient = useCallback(async (id: number) => {
-    try {
-      await restorePatient(id);
-      notifications.show({
-        title: 'Sukces',
-        message: 'Pacjent został przywrócony',
-        color: 'green',
-      });
-    } catch {
-      notifications.show({
-        title: 'Błąd',
-        message: 'Nie udało się przywrócić pacjenta',
-        color: 'red',
-      });
-    }
-  }, [restorePatient]);
+  const handleRestorePatient = useCallback(
+    async (id: number) => {
+      try {
+        await restorePatient(id);
+        notifications.show({
+          title: 'Sukces',
+          message: 'Pacjent został przywrócony',
+          color: 'green',
+        });
+      } catch {
+        notifications.show({
+          title: 'Błąd',
+          message: 'Nie udało się przywrócić pacjenta',
+          color: 'red',
+        });
+      }
+    },
+    [restorePatient]
+  );
 
   const handleFormSuccess = () => {
     close();
@@ -131,22 +142,22 @@ function PatientsPage() {
     selectedPatients: number[];
   }) => {
     try {
-      const patientsToExport = options.selectedPatients.length > 0 
-        ? patients.filter(p => options.selectedPatients.includes(p.id!))
-        : patients;
+      const patientsToExport =
+        options.selectedPatients.length > 0
+          ? patients.filter(p => options.selectedPatients.includes(p.id!))
+          : patients;
 
       // Use the proper exportToExcel function that handles both patients and appointments
-      await exportToExcel(
-        patientsToExport,
-        appointments,
-        {
-          patients: options.exportPatients,
-          appointments: options.exportAppointments,
-          dateFrom: options.dateFrom || undefined,
-          dateTo: options.dateTo || undefined,
-          selectedPatients: options.selectedPatients.length > 0 ? options.selectedPatients : undefined
-        }
-      );
+      await exportToExcel(patientsToExport, appointments, {
+        patients: options.exportPatients,
+        appointments: options.exportAppointments,
+        dateFrom: options.dateFrom || undefined,
+        dateTo: options.dateTo || undefined,
+        selectedPatients:
+          options.selectedPatients.length > 0
+            ? options.selectedPatients
+            : undefined,
+      });
 
       closeExport();
     } catch (error) {
@@ -154,7 +165,7 @@ function PatientsPage() {
       notifications.show({
         title: 'Błąd',
         message: 'Nie udało się wyeksportować danych',
-        color: 'red'
+        color: 'red',
       });
     }
   };
@@ -163,14 +174,14 @@ function PatientsPage() {
   const fabActions: FABAction[] = [
     {
       id: 'add-patient',
-      icon: <IconPlus size="1.2rem" />,
+      icon: <IconPlus size='1.2rem' />,
       label: 'Dodaj pacjenta',
       color: 'yellowGreen',
       onClick: handleAddPatient,
     },
     {
       id: 'export',
-      icon: <IconDownload size="1.2rem" />,
+      icon: <IconDownload size='1.2rem' />,
       label: 'Eksport',
       color: 'blue',
       onClick: handleExport,
@@ -180,7 +191,7 @@ function PatientsPage() {
   if (loading) {
     return (
       <Container fluid>
-        {[1, 2, 3].map((i) => (
+        {[1, 2, 3].map(i => (
           <Skeleton key={i} height={120} />
         ))}
       </Container>
@@ -190,7 +201,7 @@ function PatientsPage() {
   if (error) {
     return (
       <Container fluid>
-        <Alert color={utilityColors.error} title="Błąd">
+        <Alert color={utilityColors.error} title='Błąd'>
           {error}
         </Alert>
       </Container>
@@ -207,19 +218,18 @@ function PatientsPage() {
       />
 
       <Card>
-        <PatientSearchBar 
+        <PatientSearchBar
           searchQuery={searchQuery}
           onSearchChange={setSearchQuery}
         />
 
         {filteredPatients.length === 0 ? (
-          <Alert icon={<IconUser size="1rem" />} title="Brak pacjentów">
-            {debouncedSearchQuery 
+          <Alert icon={<IconUser size='1rem' />} title='Brak pacjentów'>
+            {debouncedSearchQuery
               ? 'Nie znaleziono pacjentów pasujących do wyszukiwania.'
-              : showArchived 
+              : showArchived
                 ? 'Nie masz żadnych zarchiwizowanych pacjentów.'
-                : 'Nie masz jeszcze żadnych aktywnych pacjentów. Dodaj pierwszego!'
-            }
+                : 'Nie masz jeszcze żadnych aktywnych pacjentów. Dodaj pierwszego!'}
           </Alert>
         ) : (
           <>
@@ -243,14 +253,14 @@ function PatientsPage() {
       </Card>
 
       {/* Patient Form Modal */}
-      <Modal 
-        opened={opened} 
-        onClose={close} 
+      <Modal
+        opened={opened}
+        onClose={close}
         title={editingPatient ? 'Edytuj pacjenta' : 'Dodaj pacjenta'}
-        size="lg"
+        size='lg'
       >
-        <PatientForm 
-          patient={editingPatient} 
+        <PatientForm
+          patient={editingPatient}
           onSuccess={handleFormSuccess}
           onCancel={close}
         />
@@ -270,4 +280,4 @@ function PatientsPage() {
   );
 }
 
-export default PatientsPage; 
+export default PatientsPage;

@@ -2,56 +2,58 @@
  * Patient Status Constants
  */
 export const PATIENT_STATUS = {
-    ACTIVE: 'active',
-    ARCHIVED: 'archived'
+  ACTIVE: 'active',
+  ARCHIVED: 'archived',
 } as const;
 
-export type PatientStatus = typeof PATIENT_STATUS[keyof typeof PATIENT_STATUS];
+export type PatientStatus =
+  (typeof PATIENT_STATUS)[keyof typeof PATIENT_STATUS];
 
 /**
- * Goal Status Constants  
+ * Goal Status Constants
  */
 export const GOAL_STATUS = {
-    ACTIVE: 'active',
-    COMPLETED: 'completed',
-    PAUSED: 'paused',
-    CANCELLED: 'cancelled'
+  ACTIVE: 'active',
+  COMPLETED: 'completed',
+  PAUSED: 'paused',
+  CANCELLED: 'cancelled',
 } as const;
 
-export type GoalStatus = typeof GOAL_STATUS[keyof typeof GOAL_STATUS];
+export type GoalStatus = (typeof GOAL_STATUS)[keyof typeof GOAL_STATUS];
 
 /**
  * Appointment Status Constants
  */
 export const APPOINTMENT_STATUS = {
-    SCHEDULED: 'scheduled',
-    COMPLETED: 'completed',
-    CANCELLED: 'cancelled',
-    NO_SHOW: 'no_show',
-    RESCHEDULED: 'rescheduled'
+  SCHEDULED: 'scheduled',
+  COMPLETED: 'completed',
+  CANCELLED: 'cancelled',
+  NO_SHOW: 'no_show',
+  RESCHEDULED: 'rescheduled',
 } as const;
 
-export type AppointmentStatus = typeof APPOINTMENT_STATUS[keyof typeof APPOINTMENT_STATUS];
+export type AppointmentStatus =
+  (typeof APPOINTMENT_STATUS)[keyof typeof APPOINTMENT_STATUS];
 
 /**
  * Status Labels - Human-readable versions
  */
 export const PATIENT_STATUS_LABELS: Record<PatientStatus, string> = {
-    [PATIENT_STATUS.ACTIVE]: 'Aktywny',
-    [PATIENT_STATUS.ARCHIVED]: 'Zarchiwizowany'
+  [PATIENT_STATUS.ACTIVE]: 'Aktywny',
+  [PATIENT_STATUS.ARCHIVED]: 'Zarchiwizowany',
 };
 
 export const GOAL_STATUS_LABELS: Record<GoalStatus, string> = {
-    [GOAL_STATUS.ACTIVE]: 'Aktywny',
-    [GOAL_STATUS.COMPLETED]: 'Zakończony',
-    [GOAL_STATUS.PAUSED]: 'Wstrzymany',
-    [GOAL_STATUS.CANCELLED]: 'Anulowany'
+  [GOAL_STATUS.ACTIVE]: 'Aktywny',
+  [GOAL_STATUS.COMPLETED]: 'Zakończony',
+  [GOAL_STATUS.PAUSED]: 'Wstrzymany',
+  [GOAL_STATUS.CANCELLED]: 'Anulowany',
 };
 
 export const APPOINTMENT_STATUS_LABELS: Record<AppointmentStatus, string> = {
-    [APPOINTMENT_STATUS.SCHEDULED]: 'Zaplanowana',
-    [APPOINTMENT_STATUS.COMPLETED]: 'Zakończona',
-    [APPOINTMENT_STATUS.CANCELLED]: 'Anulowana',
-    [APPOINTMENT_STATUS.NO_SHOW]: 'Niestawienie się',
-    [APPOINTMENT_STATUS.RESCHEDULED]: 'Przełożona'
-}; 
+  [APPOINTMENT_STATUS.SCHEDULED]: 'Zaplanowana',
+  [APPOINTMENT_STATUS.COMPLETED]: 'Zakończona',
+  [APPOINTMENT_STATUS.CANCELLED]: 'Anulowana',
+  [APPOINTMENT_STATUS.NO_SHOW]: 'Niestawienie się',
+  [APPOINTMENT_STATUS.RESCHEDULED]: 'Przełożona',
+};

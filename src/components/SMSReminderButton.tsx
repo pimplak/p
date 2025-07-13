@@ -62,7 +62,7 @@ export function SMSReminderButton({
   const [selectedTemplateId, setSelectedTemplateId] = useState<string>('');
   const [customMessage, setCustomMessage] = useState('');
   const [previewMode, setPreviewMode] = useState(false);
-  
+
   const { practitionerName, smsTemplates } = useSettingsStore();
   const { updateAppointment } = useAppointmentStore();
 
@@ -79,7 +79,7 @@ export function SMSReminderButton({
     if (customMessage.trim()) {
       return customMessage;
     }
-    
+
     try {
       return generateSMSMessage(
         currentTemplateId,
@@ -92,7 +92,14 @@ export function SMSReminderButton({
       console.error('Error generating SMS message:', error);
       return 'Błąd generowania wiadomości';
     }
-  }, [currentTemplateId, patient, appointment, practitionerName, smsTemplates, customMessage]);
+  }, [
+    currentTemplateId,
+    patient,
+    appointment,
+    practitionerName,
+    smsTemplates,
+    customMessage,
+  ]);
 
   // Check if patient has valid phone number
   const hasValidPhone = patient.phone && validatePhoneNumber(patient.phone);
@@ -114,8 +121,14 @@ export function SMSReminderButton({
 
     try {
       // Open SMS app
-      sendSMSReminder(patient, appointment, currentTemplateId, practitionerName, smsTemplates);
-      
+      sendSMSReminder(
+        patient,
+        appointment,
+        currentTemplateId,
+        practitionerName,
+        smsTemplates
+      );
+
       // Update appointment with reminder status
       await updateAppointment(appointment.id!, {
         reminderSent: true,
@@ -141,7 +154,7 @@ export function SMSReminderButton({
   };
 
   // Template options for select
-  const templateOptions = smsTemplates.map((template) => ({
+  const templateOptions = smsTemplates.map(template => ({
     value: template.id,
     label: template.name,
   }));
@@ -159,8 +172,8 @@ export function SMSReminderButton({
               isDisabled
                 ? 'Brak numeru telefonu'
                 : reminderSent
-                ? 'Przypomnienie już wysłane'
-                : 'Wyślij przypomnienie SMS'
+                  ? 'Przypomnienie już wysłane'
+                  : 'Wyślij przypomnienie SMS'
             }
           >
             <ActionIcon
@@ -170,7 +183,11 @@ export function SMSReminderButton({
               disabled={isDisabled}
               onClick={open}
             >
-              {reminderSent ? <IconCheck size="1rem" /> : <IconMessage size="1rem" />}
+              {reminderSent ? (
+                <IconCheck size='1rem' />
+              ) : (
+                <IconMessage size='1rem' />
+              )}
             </ActionIcon>
           </Tooltip>
         );
@@ -178,11 +195,13 @@ export function SMSReminderButton({
       case 'menu-item':
         return (
           <Menu.Item
-            leftSection={<IconMessage size="1rem" />}
+            leftSection={<IconMessage size='1rem' />}
             disabled={isDisabled}
             onClick={open}
           >
-            {reminderSent ? 'Przypomnienie wysłane' : 'Wyślij przypomnienie SMS'}
+            {reminderSent
+              ? 'Przypomnienie wysłane'
+              : 'Wyślij przypomnienie SMS'}
           </Menu.Item>
         );
 
@@ -192,8 +211,16 @@ export function SMSReminderButton({
             size={size}
             variant={reminderSent ? 'filled' : 'light'}
             color={reminderSent ? 'green' : 'blue'}
-            leftSection={reminderSent ? <IconCheck size="1rem" /> : <IconMessage size="1rem" />}
-            rightSection={compact ? undefined : <IconChevronDown size="0.8rem" />}
+            leftSection={
+              reminderSent ? (
+                <IconCheck size='1rem' />
+              ) : (
+                <IconMessage size='1rem' />
+              )
+            }
+            rightSection={
+              compact ? undefined : <IconChevronDown size='0.8rem' />
+            }
             disabled={isDisabled}
             onClick={open}
           >
@@ -202,8 +229,8 @@ export function SMSReminderButton({
                 ? 'Wysłane'
                 : 'SMS'
               : reminderSent
-              ? 'Przypomnienie wysłane'
-              : 'Wyślij przypomnienie SMS'}
+                ? 'Przypomnienie wysłane'
+                : 'Wyślij przypomnienie SMS'}
           </Button>
         );
     }
@@ -216,25 +243,31 @@ export function SMSReminderButton({
       <Modal
         opened={opened}
         onClose={close}
-        title="Wyślij przypomnienie SMS"
-        size="md"
+        title='Wyślij przypomnienie SMS'
+        size='md'
         centered
       >
-        <Stack gap="md">
+        <Stack gap='md'>
           {/* Patient info */}
-          <Card withBorder p="sm">
-            <Group justify="space-between">
+          <Card withBorder p='sm'>
+            <Group justify='space-between'>
               <div>
-                <Text fw={500}>{patient.firstName} {patient.lastName}</Text>
-                <Text size="sm" c="dimmed">
-                  {hasValidPhone ? formatPhoneNumber(patient.phone!) : 'Brak numeru telefonu'}
+                <Text fw={500}>
+                  {patient.firstName} {patient.lastName}
+                </Text>
+                <Text size='sm' c='dimmed'>
+                  {hasValidPhone
+                    ? formatPhoneNumber(patient.phone!)
+                    : 'Brak numeru telefonu'}
                 </Text>
               </div>
               <div style={{ textAlign: 'right' }}>
-                <Text size="sm" fw={500}>
-                  {format(new Date(appointment.date), 'dd.MM.yyyy', { locale: pl })}
+                <Text size='sm' fw={500}>
+                  {format(new Date(appointment.date), 'dd.MM.yyyy', {
+                    locale: pl,
+                  })}
                 </Text>
-                <Text size="sm" c="dimmed">
+                <Text size='sm' c='dimmed'>
                   {format(new Date(appointment.date), 'HH:mm')}
                 </Text>
               </div>
@@ -245,29 +278,29 @@ export function SMSReminderButton({
           <Alert
             icon={
               appointment.reminderSent ? (
-                <IconCheck size="1rem" />
+                <IconCheck size='1rem' />
               ) : shouldSendReminder ? (
-                <IconClock size="1rem" />
+                <IconClock size='1rem' />
               ) : (
-                <IconAlertCircle size="1rem" />
+                <IconAlertCircle size='1rem' />
               )
             }
             color={
               appointment.reminderSent
                 ? 'green'
                 : shouldSendReminder
-                ? 'blue'
-                : 'yellow'
+                  ? 'blue'
+                  : 'yellow'
             }
             title={
               appointment.reminderSent
                 ? 'Przypomnienie już wysłane'
                 : shouldSendReminder
-                ? 'Zalecane wysłanie przypomnienia'
-                : 'Poza optymalnym czasem'
+                  ? 'Zalecane wysłanie przypomnienia'
+                  : 'Poza optymalnym czasem'
             }
           >
-            <Text size="sm">
+            <Text size='sm'>
               {appointment.reminderSent
                 ? `Wysłano: ${format(new Date(appointment.reminderSentAt!), 'dd.MM.yyyy HH:mm', { locale: pl })}`
                 : `Wizyta: ${reminderTiming}`}
@@ -276,24 +309,24 @@ export function SMSReminderButton({
 
           {/* Template selection */}
           <Select
-            label="Szablon wiadomości"
-            placeholder="Wybierz szablon"
+            label='Szablon wiadomości'
+            placeholder='Wybierz szablon'
             value={currentTemplateId}
-            onChange={(value) => setSelectedTemplateId(value || '')}
+            onChange={value => setSelectedTemplateId(value || '')}
             data={templateOptions}
             searchable
           />
 
           {/* Message preview/edit */}
           <div>
-            <Group justify="space-between" mb="xs">
-              <Text size="sm" fw={500}>
+            <Group justify='space-between' mb='xs'>
+              <Text size='sm' fw={500}>
                 {previewMode ? 'Podgląd wiadomości' : 'Edytuj wiadomość'}
               </Text>
               <Button
-                size="xs"
-                variant="subtle"
-                leftSection={<IconEye size="0.8rem" />}
+                size='xs'
+                variant='subtle'
+                leftSection={<IconEye size='0.8rem' />}
                 onClick={() => setPreviewMode(!previewMode)}
               >
                 {previewMode ? 'Edytuj' : 'Podgląd'}
@@ -301,36 +334,36 @@ export function SMSReminderButton({
             </Group>
 
             {previewMode ? (
-              <Card withBorder p="sm">
+              <Card withBorder p='sm'>
                 <ScrollArea h={120}>
-                  <Text size="sm" style={{ whiteSpace: 'pre-wrap' }}>
+                  <Text size='sm' style={{ whiteSpace: 'pre-wrap' }}>
                     {messagePreview}
                   </Text>
                 </ScrollArea>
               </Card>
             ) : (
               <Textarea
-                placeholder="Wpisz własną wiadomość lub zostaw puste aby użyć szablonu"
+                placeholder='Wpisz własną wiadomość lub zostaw puste aby użyć szablonu'
                 value={customMessage}
-                onChange={(e) => setCustomMessage(e.target.value)}
+                onChange={e => setCustomMessage(e.target.value)}
                 minRows={4}
                 maxRows={6}
                 autosize
               />
             )}
 
-            <Text size="xs" c="dimmed" mt="xs">
+            <Text size='xs' c='dimmed' mt='xs'>
               Długość: {messagePreview.length} znaków
             </Text>
           </div>
 
           {/* Actions */}
-          <Group justify="space-between" mt="md">
-            <Button variant="subtle" onClick={close}>
+          <Group justify='space-between' mt='md'>
+            <Button variant='subtle' onClick={close}>
               Anuluj
             </Button>
             <Button
-              leftSection={<IconSend size="1rem" />}
+              leftSection={<IconSend size='1rem' />}
               onClick={handleSendSMS}
               disabled={!hasValidPhone}
             >
@@ -341,4 +374,4 @@ export function SMSReminderButton({
       </Modal>
     </>
   );
-} 
+}

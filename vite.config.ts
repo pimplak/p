@@ -1,7 +1,7 @@
-import react from '@vitejs/plugin-react'
-import { defineConfig } from 'vite'
-import Inspect from 'vite-plugin-inspect'
-import { VitePWA } from 'vite-plugin-pwa'
+import react from '@vitejs/plugin-react';
+import { defineConfig } from 'vite';
+import Inspect from 'vite-plugin-inspect';
+import { VitePWA } from 'vite-plugin-pwa';
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -11,7 +11,7 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       workbox: {
-        globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}']
+        globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
       },
       manifest: {
         name: 'P',
@@ -23,9 +23,9 @@ export default defineConfig({
         orientation: 'portrait',
         scope: '/',
         start_url: '/',
-        categories: ['medical', 'productivity', 'business']
-      }
-    })
+        categories: ['medical', 'productivity', 'business'],
+      },
+    }),
   ],
   build: {
     rollupOptions: {
@@ -33,8 +33,15 @@ export default defineConfig({
         manualChunks: {
           // Core React chunk
           'react-vendor': ['react', 'react-dom', 'react-router-dom'],
-          // Mantine UI chunk  
-          'mantine-vendor': ['@mantine/core', '@mantine/hooks', '@mantine/notifications', '@mantine/dates', '@mantine/form', '@mantine/modals'],
+          // Mantine UI chunk
+          'mantine-vendor': [
+            '@mantine/core',
+            '@mantine/hooks',
+            '@mantine/notifications',
+            '@mantine/dates',
+            '@mantine/form',
+            '@mantine/modals',
+          ],
           // Icons chunk
           'icons-vendor': ['@tabler/icons-react'],
           // Database chunk
@@ -43,8 +50,8 @@ export default defineConfig({
           'state-vendor': ['zustand', 'immer'],
           // Utils chunk
           'utils-vendor': ['date-fns', 'dayjs', 'zod'],
-        }
-      }
-    }
-  }
-})
+        },
+      },
+    },
+  },
+});

@@ -1,19 +1,19 @@
-import { 
-  Card, 
-  Group, 
-  Text, 
-  Badge, 
-  ActionIcon, 
-  Collapse, 
+import {
+  Card,
+  Group,
+  Text,
+  Badge,
+  ActionIcon,
+  Collapse,
   Stack,
   Divider,
-  Box
+  Box,
 } from '@mantine/core';
-import { 
-  IconChevronDown, 
-  IconChevronUp, 
-  IconEdit, 
-  IconTrash 
+import {
+  IconChevronDown,
+  IconChevronUp,
+  IconEdit,
+  IconTrash,
 } from '@tabler/icons-react';
 import { format } from 'date-fns';
 import { useState } from 'react';
@@ -40,7 +40,7 @@ export function ExpandableAppointmentRow({
   onDeleteAppointment,
   getStatusColor,
   getStatusLabel,
-  utilityColors
+  utilityColors,
 }: ExpandableAppointmentRowProps) {
   const [expanded, setExpanded] = useState(false);
   const { currentPalette, utilityColors: themeUtilityColors } = useTheme();
@@ -49,55 +49,47 @@ export function ExpandableAppointmentRow({
   const colors = utilityColors || themeUtilityColors;
 
   return (
-    <Card 
-      shadow="sm" 
-      p="md" 
-      mb="sm"
-      style={{ cursor: 'pointer' }}
-    >
+    <Card shadow='sm' p='md' mb='sm' style={{ cursor: 'pointer' }}>
       {/* Main row - always visible */}
-      <Group 
-        justify="space-between" 
+      <Group
+        justify='space-between'
         onClick={() => setExpanded(!expanded)}
-        wrap="nowrap"
+        wrap='nowrap'
       >
         <Box style={{ flex: 1, minWidth: 0 }}>
-          <Group gap="sm" wrap="nowrap">
-            <Text fw={600} size="sm">
+          <Group gap='sm' wrap='nowrap'>
+            <Text fw={600} size='sm'>
               {format(new Date(appointment.date), 'HH:mm')}
             </Text>
-            <Text 
-              fw={500} 
-              size="sm" 
-              style={{ 
-                overflow: 'hidden', 
+            <Text
+              fw={500}
+              size='sm'
+              style={{
+                overflow: 'hidden',
                 textOverflow: 'ellipsis',
                 whiteSpace: 'nowrap',
-                flex: 1 
+                flex: 1,
               }}
             >
               {appointment.patient?.firstName} {appointment.patient?.lastName}
             </Text>
           </Group>
-          <Group gap="xs" mt="xs">
-            <Badge 
-              color={getStatusColor(appointment.status)}
-              size="sm"
-            >
+          <Group gap='xs' mt='xs'>
+            <Badge color={getStatusColor(appointment.status)} size='sm'>
               {getStatusLabel(appointment.status)}
             </Badge>
             {appointment.price && (
-              <Text size="xs" c="dimmed" fw={500}>
+              <Text size='xs' c='dimmed' fw={500}>
                 {appointment.price} zł
               </Text>
             )}
           </Group>
         </Box>
-        
-        <ActionIcon 
-          variant="subtle" 
-          size="sm"
-          onClick={(e) => {
+
+        <ActionIcon
+          variant='subtle'
+          size='sm'
+          onClick={e => {
             e.stopPropagation();
             setExpanded(!expanded);
           }}
@@ -108,90 +100,108 @@ export function ExpandableAppointmentRow({
 
       {/* Expanded details */}
       <Collapse in={expanded}>
-        <Divider my="md" />
-        <Stack gap="sm">
+        <Divider my='md' />
+        <Stack gap='sm'>
           {/* Patient details */}
           {appointment.patient?.phone && (
-            <Group justify="space-between">
-              <Text size="sm" c="dimmed">Telefon:</Text>
-              <Text size="sm">{appointment.patient.phone}</Text>
+            <Group justify='space-between'>
+              <Text size='sm' c='dimmed'>
+                Telefon:
+              </Text>
+              <Text size='sm'>{appointment.patient.phone}</Text>
             </Group>
           )}
-          
+
           {/* Appointment details */}
-          <Group justify="space-between">
-            <Text size="sm" c="dimmed">Typ wizyty:</Text>
-            <Text size="sm">{appointment.type || 'Wizyta'}</Text>
+          <Group justify='space-between'>
+            <Text size='sm' c='dimmed'>
+              Typ wizyty:
+            </Text>
+            <Text size='sm'>{appointment.type || 'Wizyta'}</Text>
           </Group>
-          
-          <Group justify="space-between">
-            <Text size="sm" c="dimmed">Czas trwania:</Text>
-            <Text size="sm">{appointment.duration} min</Text>
+
+          <Group justify='space-between'>
+            <Text size='sm' c='dimmed'>
+              Czas trwania:
+            </Text>
+            <Text size='sm'>{appointment.duration} min</Text>
           </Group>
-          
+
           {appointment.price && (
-            <Group justify="space-between">
-              <Text size="sm" c="dimmed">Cena:</Text>
-              <Text size="sm" fw={500}>{appointment.price} zł</Text>
+            <Group justify='space-between'>
+              <Text size='sm' c='dimmed'>
+                Cena:
+              </Text>
+              <Text size='sm' fw={500}>
+                {appointment.price} zł
+              </Text>
             </Group>
           )}
-          
-          <Group justify="space-between">
-            <Text size="sm" c="dimmed">Płatność:</Text>
+
+          <Group justify='space-between'>
+            <Text size='sm' c='dimmed'>
+              Płatność:
+            </Text>
             {appointment.paymentInfo?.isPaid ? (
-              <Badge color={colors.success} size="sm">Opłacono</Badge>
+              <Badge color={colors.success} size='sm'>
+                Opłacono
+              </Badge>
             ) : (
-              <Badge color={colors.error} size="sm">Nieopłacono</Badge>
+              <Badge color={colors.error} size='sm'>
+                Nieopłacono
+              </Badge>
             )}
           </Group>
-          
+
           {appointment.notes && (
             <>
-              <Text size="sm" c="dimmed">Notatki:</Text>
-              <Text size="sm">{appointment.notes}</Text>
+              <Text size='sm' c='dimmed'>
+                Notatki:
+              </Text>
+              <Text size='sm'>{appointment.notes}</Text>
             </>
           )}
-          
+
           {/* Actions */}
-          <Divider my="xs" />
-          <Group justify="flex-end" gap="xs">
+          <Divider my='xs' />
+          <Group justify='flex-end' gap='xs'>
             {appointment.patient && (
               <SMSReminderButton
                 patient={appointment.patient}
                 appointment={appointment}
-                variant="button"
-                size="sm"
+                variant='button'
+                size='sm'
                 onReminderSent={() => {
                   // Refresh appointments
                   window.location.reload();
                 }}
               />
             )}
-            <ActionIcon 
-              variant="light" 
+            <ActionIcon
+              variant='light'
               color={currentPalette.primary}
-              size="lg"
-              onClick={(e) => {
+              size='lg'
+              onClick={e => {
                 e.stopPropagation();
                 onEditAppointment(appointment);
               }}
             >
-              <IconEdit size="1.2rem" />
+              <IconEdit size='1.2rem' />
             </ActionIcon>
-            <ActionIcon 
-              variant="light" 
+            <ActionIcon
+              variant='light'
               color={colors.error}
-              size="lg"
-              onClick={(e) => {
+              size='lg'
+              onClick={e => {
                 e.stopPropagation();
                 if (appointment.id) onDeleteAppointment(appointment.id);
               }}
             >
-              <IconTrash size="1.2rem" />
+              <IconTrash size='1.2rem' />
             </ActionIcon>
           </Group>
         </Stack>
       </Collapse>
     </Card>
   );
-} 
+}

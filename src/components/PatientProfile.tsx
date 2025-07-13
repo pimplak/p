@@ -6,7 +6,7 @@ import {
   Alert,
   Text,
   Group,
-  Button
+  Button,
 } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { IconAlertCircle } from '@tabler/icons-react';
@@ -25,34 +25,38 @@ function PatientProfile() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { utilityColors } = useTheme();
-  const { getPatient, archivePatient, restorePatient, loading, error } = usePatientStore();
-  
+  const { getPatient, archivePatient, restorePatient, loading, error } =
+    usePatientStore();
+
   const [patient, setPatient] = useState<Patient | null>(null);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [archiveModalOpen, setArchiveModalOpen] = useState(false);
 
-  const loadPatient = useCallback(async (patientId: number) => {
-    try {
-      const patientData = await getPatient(patientId);
-      if (patientData) {
-        setPatient(patientData);
-      } else {
-        navigate('/patients', { replace: true });
+  const loadPatient = useCallback(
+    async (patientId: number) => {
+      try {
+        const patientData = await getPatient(patientId);
+        if (patientData) {
+          setPatient(patientData);
+        } else {
+          navigate('/patients', { replace: true });
+          notifications.show({
+            title: 'Błąd',
+            message: 'Nie znaleziono pacjenta',
+            color: 'red',
+          });
+        }
+      } catch (error) {
+        console.error('Błąd podczas ładowania pacjenta:', error);
         notifications.show({
           title: 'Błąd',
-          message: 'Nie znaleziono pacjenta',
+          message: 'Nie udało się załadować danych pacjenta',
           color: 'red',
         });
       }
-    } catch (error) {
-      console.error('Błąd podczas ładowania pacjenta:', error);
-      notifications.show({
-        title: 'Błąd',
-        message: 'Nie udało się załadować danych pacjenta',
-        color: 'red',
-      });
-    }
-  }, [getPatient, navigate]);
+    },
+    [getPatient, navigate]
+  );
 
   useEffect(() => {
     if (id) {
@@ -62,7 +66,7 @@ function PatientProfile() {
 
   const handleArchive = async () => {
     if (!patient?.id) return;
-    
+
     try {
       await archivePatient(patient.id);
       setArchiveModalOpen(false);
@@ -84,7 +88,7 @@ function PatientProfile() {
 
   const handleRestore = async () => {
     if (!patient?.id) return;
-    
+
     try {
       await restorePatient(patient.id);
       notifications.show({
@@ -112,10 +116,14 @@ function PatientProfile() {
 
   if (!patient) {
     return (
-      <Container size="lg">
+      <Container size='lg'>
         <LoadingOverlay visible={loading} />
         {error && (
-          <Alert icon={<IconAlertCircle size="1rem" />} title="Błąd" color={utilityColors.error}>
+          <Alert
+            icon={<IconAlertCircle size='1rem' />}
+            title='Błąd'
+            color={utilityColors.error}
+          >
             {error}
           </Alert>
         )}
@@ -124,8 +132,8 @@ function PatientProfile() {
   }
 
   return (
-    <Container size="lg">
-      <Stack gap="md">
+    <Container size='lg'>
+      <Stack gap='md'>
         <PatientProfileHeader
           patient={patient}
           onEdit={() => setEditModalOpen(true)}
@@ -142,8 +150,8 @@ function PatientProfile() {
       <Modal
         opened={editModalOpen}
         onClose={() => setEditModalOpen(false)}
-        title="Edytuj dane pacjenta"
-        size="lg"
+        title='Edytuj dane pacjenta'
+        size='lg'
       >
         <PatientForm
           patient={patient}
@@ -156,20 +164,20 @@ function PatientProfile() {
       <Modal
         opened={archiveModalOpen}
         onClose={() => setArchiveModalOpen(false)}
-        title="Potwierdź archiwizację"
-        size="sm"
+        title='Potwierdź archiwizację'
+        size='sm'
       >
-        <Stack gap="md">
+        <Stack gap='md'>
           <Text>
             Czy na pewno chcesz zarchiwizować pacjenta{' '}
             <strong>{getPatientDisplayName(patient)}</strong>?
           </Text>
-          <Text size="sm" c="dimmed">
-            Pacjent zostanie ukryty z głównej listy, ale wszystkie dane
-            będą zachowane i można będzie go przywrócić w każdej chwili.
+          <Text size='sm' c='dimmed'>
+            Pacjent zostanie ukryty z głównej listy, ale wszystkie dane będą
+            zachowane i można będzie go przywrócić w każdej chwili.
           </Text>
-          <Group justify="flex-end">
-            <Button variant="light" onClick={() => setArchiveModalOpen(false)}>
+          <Group justify='flex-end'>
+            <Button variant='light' onClick={() => setArchiveModalOpen(false)}>
               Anuluj
             </Button>
             <Button color={utilityColors.error} onClick={handleArchive}>
@@ -182,4 +190,4 @@ function PatientProfile() {
   );
 }
 
-export default PatientProfile; 
+export default PatientProfile;

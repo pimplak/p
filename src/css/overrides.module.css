@@ -1,0 +1,72 @@
+/* Menu */
+.mantine-Menu-item:hover {
+  background-color: var(---menu-item-hover);
+}
+
+/* Select */
+.mantine-Select-option {
+  color: var(--text-color);
+
+  &:hover {
+    background-color: var(--accent-color);
+  }
+}
+
+/* Tabs */
+.mantine-Tabs {
+  &-tab {
+    color: var(--tab-color);
+    background-color: var(--tab-background);
+    border-color: var(--tab-border);
+
+    &:hover {
+      background-color: var(--tab-hover);
+      border-color: var(--tab-hover-border);
+    }
+
+    &[data-active] {
+      color: var(--tab-active-color);
+      background-color: var(--tab-active-background);
+      border-color: var(--tab-active-border);
+    }
+  }
+
+  &-list {
+    &:before {
+      content: none;
+    }
+  }
+}
+
+/* Checkbox */
+.mantine-Checkbox-input {
+  background-color: var(--checkbox-background);
+  border-color: var(--checkbox-border);
+
+  &:checked {
+    background-color: var(--checkbox-checked-background);
+    border-color: var(--checkbox-checked-border);
+  }
+}
+
+/* Table */
+.mantine-Table {
+  &-tr {
+    &[data-striped]:nth-child(even) {
+      background-color: var(--table-striped-background);
+    }
+
+    &:hover, &:hover[data-striped]:nth-child(even) {
+      background-color: var(--table-hover-background);
+    }
+  }
+}
+
+/* CloseButton */
+.mantine-CloseButton {
+  color: var(--close-button-color);
+
+  &:hover {
+    background-color: var(--close-button-hover-background);
+  }
+}

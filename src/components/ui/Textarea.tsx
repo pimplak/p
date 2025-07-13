@@ -5,11 +5,11 @@ interface CustomTextareaProps extends TextareaProps {
   variant?: 'default' | 'filled' | 'unstyled';
 }
 
-export const Textarea: React.FC<CustomTextareaProps> = ({ 
+export const Textarea: React.FC<CustomTextareaProps> = ({
   variant = 'default',
   style,
   styles,
-  ...props 
+  ...props
 }) => {
   const { currentPalette, mantineTheme, utilityColors } = useTheme();
 
@@ -73,7 +73,7 @@ export const Textarea: React.FC<CustomTextareaProps> = ({
             },
           },
         };
-      
+
       case 'unstyled':
         return {
           ...baseStyles,
@@ -91,7 +91,7 @@ export const Textarea: React.FC<CustomTextareaProps> = ({
             },
           },
         };
-      
+
       default:
         return baseStyles;
     }
@@ -102,12 +102,12 @@ export const Textarea: React.FC<CustomTextareaProps> = ({
   return (
     <MantineTextarea
       radius={mantineTheme.radius?.md}
-      size="md"
+      size='md'
       autosize
       minRows={3}
       maxRows={8}
       style={{
-        ...style
+        ...style,
       }}
       styles={{
         input: variantStyles.input,

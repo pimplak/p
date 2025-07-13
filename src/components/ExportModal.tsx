@@ -1,11 +1,11 @@
-import { 
-  Modal, 
-  Stack, 
-  Text, 
-  Checkbox, 
-  Divider, 
-  Group, 
-  Button 
+import {
+  Modal,
+  Stack,
+  Text,
+  Checkbox,
+  Divider,
+  Group,
+  Button,
 } from '@mantine/core';
 import { DateInput } from '@mantine/dates';
 import { useState } from 'react';
@@ -25,11 +25,11 @@ interface ExportModalProps {
   }) => void;
 }
 
-export function ExportModal({ 
-  opened, 
-  onClose, 
-  filteredPatients, 
-  onExport 
+export function ExportModal({
+  opened,
+  onClose,
+  filteredPatients,
+  onExport,
 }: ExportModalProps) {
   const [exportPatients, setExportPatients] = useState(true);
   const [exportAppointments, setExportAppointments] = useState(true);
@@ -59,44 +59,44 @@ export function ExportModal({
       exportAppointments,
       dateFrom,
       dateTo,
-      selectedPatients
+      selectedPatients,
     });
   };
 
   return (
-    <Modal 
-      opened={opened} 
-      onClose={onClose} 
-      title="Eksport danych"
-      size="md"
-    >
+    <Modal opened={opened} onClose={onClose} title='Eksport danych' size='md'>
       <Stack>
         <div>
-          <Text fw={500} mb="xs">Co eksportować?</Text>
+          <Text fw={500} mb='xs'>
+            Co eksportować?
+          </Text>
           <Checkbox
-            label="Dane pacjentów"
+            label='Dane pacjentów'
             checked={exportPatients}
-            onChange={(e) => setExportPatients(e.currentTarget.checked)}
+            onChange={e => setExportPatients(e.currentTarget.checked)}
           />
           <Checkbox
-            label="Wizyty"
+            label='Wizyty'
             checked={exportAppointments}
-            onChange={(e) => setExportAppointments(e.currentTarget.checked)}
+            onChange={e => setExportAppointments(e.currentTarget.checked)}
           />
         </div>
 
         <Divider />
 
         <div>
-          <Text fw={500} mb="xs">Zakres dat (wizyty)</Text>
+          <Text fw={500} mb='xs'>
+            Zakres dat (wizyty)
+          </Text>
           <Group grow>
             <DateInput
-              label="Od"
-              placeholder="Wybierz datę"
+              label='Od'
+              placeholder='Wybierz datę'
               value={dateFrom}
-              onChange={(value) => {
+              onChange={value => {
                 if (value) {
-                  const date = typeof value === 'string' ? new Date(value) : value;
+                  const date =
+                    typeof value === 'string' ? new Date(value) : value;
                   setDateFrom(date);
                 } else {
                   setDateFrom(null);
@@ -104,12 +104,13 @@ export function ExportModal({
               }}
             />
             <DateInput
-              label="Do"
-              placeholder="Wybierz datę"
+              label='Do'
+              placeholder='Wybierz datę'
               value={dateTo}
-              onChange={(value) => {
+              onChange={value => {
                 if (value) {
-                  const date = typeof value === 'string' ? new Date(value) : value;
+                  const date =
+                    typeof value === 'string' ? new Date(value) : value;
                   setDateTo(date);
                 } else {
                   setDateTo(null);
@@ -122,41 +123,41 @@ export function ExportModal({
         <Divider />
 
         <div>
-          <Group justify="space-between" mb="xs">
+          <Group justify='space-between' mb='xs'>
             <Text fw={500}>Wybierz pacjentów</Text>
-            <Group gap="xs">
-              <Button size="xs" variant="light" onClick={selectAllPatients}>
+            <Group gap='xs'>
+              <Button size='xs' variant='light' onClick={selectAllPatients}>
                 Zaznacz wszystkich
               </Button>
-              <Button size="xs" variant="light" onClick={clearSelection}>
+              <Button size='xs' variant='light' onClick={clearSelection}>
                 Wyczyść
               </Button>
             </Group>
           </Group>
-          <Text size="sm" c="dimmed" mb="sm">
+          <Text size='sm' c='dimmed' mb='sm'>
             Pozostaw puste aby eksportować wszystkich
           </Text>
-          <Stack gap="xs" mah={200} style={{ overflowY: 'auto' }}>
-            {filteredPatients.map((patient) => (
+          <Stack gap='xs' mah={200} style={{ overflowY: 'auto' }}>
+            {filteredPatients.map(patient => (
               <Checkbox
                 key={patient.id}
                 label={getPatientDisplayName(patient)}
                 checked={selectedPatients.includes(patient.id!)}
-                onChange={(e) => handlePatientSelection(patient.id!, e.currentTarget.checked)}
+                onChange={e =>
+                  handlePatientSelection(patient.id!, e.currentTarget.checked)
+                }
               />
             ))}
           </Stack>
         </div>
 
-        <Group justify="flex-end" mt="md">
-          <Button variant="light" onClick={onClose}>
+        <Group justify='flex-end' mt='md'>
+          <Button variant='light' onClick={onClose}>
             Anuluj
           </Button>
-          <Button onClick={handleExport}>
-            Eksportuj
-          </Button>
+          <Button onClick={handleExport}>Eksportuj</Button>
         </Group>
       </Stack>
     </Modal>
   );
-} 
+}

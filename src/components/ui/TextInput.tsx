@@ -1,4 +1,7 @@
-import { TextInput as MantineTextInput, type TextInputProps } from '@mantine/core';
+import {
+  TextInput as MantineTextInput,
+  type TextInputProps,
+} from '@mantine/core';
 import { forwardRef } from 'react';
 import { useTheme } from '../../hooks/useTheme';
 
@@ -9,7 +12,10 @@ interface CustomTextInputProps extends TextInputProps {
 }
 
 export const TextInput = forwardRef<HTMLInputElement, CustomTextInputProps>(
-  ({ variant = 'default', hasError, hasSuccess, style, styles, ...props }, ref) => {
+  (
+    { variant = 'default', hasError, hasSuccess, style, styles, ...props },
+    ref
+  ) => {
     const { currentPalette, utilityColors } = useTheme();
 
     const getVariantStyles = () => {
@@ -31,7 +37,7 @@ export const TextInput = forwardRef<HTMLInputElement, CustomTextInputProps>(
             borderColor: utilityColors.error,
             boxShadow: `0 0 0 1px ${utilityColors.error}`,
             outline: 'none',
-          }
+          },
         };
       }
 
@@ -45,7 +51,7 @@ export const TextInput = forwardRef<HTMLInputElement, CustomTextInputProps>(
             borderColor: utilityColors.success,
             boxShadow: `0 0 0 1px ${utilityColors.success}`,
             outline: 'none',
-          }
+          },
         };
       }
 
@@ -65,7 +71,7 @@ export const TextInput = forwardRef<HTMLInputElement, CustomTextInputProps>(
             },
             '&:hover:not(:focus):not(:focus-within)': {
               borderColor: `${currentPalette.primary}80`,
-            }
+            },
           };
 
         case 'unstyled':
@@ -78,7 +84,7 @@ export const TextInput = forwardRef<HTMLInputElement, CustomTextInputProps>(
             '&:focus, &:focus-within': {
               borderBottomColor: currentPalette.primary,
               outline: 'none',
-            }
+            },
           };
 
         default:
@@ -95,7 +101,7 @@ export const TextInput = forwardRef<HTMLInputElement, CustomTextInputProps>(
             },
             '&:hover:not(:focus):not(:focus-within)': {
               borderColor: `${currentPalette.primary}80`,
-            }
+            },
           };
       }
     };
@@ -103,8 +109,8 @@ export const TextInput = forwardRef<HTMLInputElement, CustomTextInputProps>(
     return (
       <MantineTextInput
         ref={ref}
-        radius="md"
-        size="md"
+        radius='md'
+        size='md'
         style={style}
         styles={{
           input: getVariantStyles(),
@@ -132,4 +138,4 @@ export const TextInput = forwardRef<HTMLInputElement, CustomTextInputProps>(
   }
 );
 
-TextInput.displayName = 'TextInput'; 
+TextInput.displayName = 'TextInput';

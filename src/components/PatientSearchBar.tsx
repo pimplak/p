@@ -6,16 +6,19 @@ interface PatientSearchBarProps {
   onSearchChange: (query: string) => void;
 }
 
-export function PatientSearchBar({ searchQuery, onSearchChange }: PatientSearchBarProps) {
+export function PatientSearchBar({
+  searchQuery,
+  onSearchChange,
+}: PatientSearchBarProps) {
   return (
-    <Group mb="md">
+    <Group mb='md'>
       <TextInput
-        placeholder="Szukaj pacjentów..."
-        leftSection={<IconSearch size="1rem" />}
+        placeholder='Szukaj pacjentów...'
+        leftSection={<IconSearch size='1rem' />}
         value={searchQuery}
-        onChange={(e) => onSearchChange(e.target.value)}
+        onChange={e => onSearchChange(e.target.value)}
         style={{ flex: 1 }}
       />
     </Group>
   );
-} 
+}

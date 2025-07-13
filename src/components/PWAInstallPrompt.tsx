@@ -3,7 +3,13 @@ import { IconDownload, IconRefresh } from '@tabler/icons-react';
 import { usePWA } from '../hooks/usePWA';
 
 export function PWAInstallPrompt() {
-  const { isInstallable, installPWA, needRefresh, updatePWA, closeRefreshPrompt } = usePWA();
+  const {
+    isInstallable,
+    installPWA,
+    needRefresh,
+    updatePWA,
+    closeRefreshPrompt,
+  } = usePWA();
 
   if (!isInstallable && !needRefresh) {
     return null;
@@ -14,15 +20,15 @@ export function PWAInstallPrompt() {
       {isInstallable && (
         <Notification
           icon={<IconDownload size={rem(20)} />}
-          color="blue"
-          title="Install P"
+          color='blue'
+          title='Install P'
           onClose={() => {}} // Keep visible until user installs
           withCloseButton={false}
-          mb="md"
+          mb='md'
         >
-          <Group mt="sm">
+          <Group mt='sm'>
             <Button
-              size="xs"
+              size='xs'
               onClick={installPWA}
               leftSection={<IconDownload size={rem(16)} />}
             >
@@ -35,14 +41,14 @@ export function PWAInstallPrompt() {
       {needRefresh && (
         <Notification
           icon={<IconRefresh size={rem(20)} />}
-          color="green"
-          title="Update Available"
+          color='green'
+          title='Update Available'
           onClose={closeRefreshPrompt}
           withCloseButton
         >
-          <Group mt="sm">
+          <Group mt='sm'>
             <Button
-              size="xs"
+              size='xs'
               onClick={updatePWA}
               leftSection={<IconRefresh size={rem(16)} />}
             >
@@ -53,4 +59,4 @@ export function PWAInstallPrompt() {
       )}
     </div>
   );
-} 
+}

@@ -5,11 +5,11 @@ interface CustomButtonProps extends ButtonProps {
   variant?: 'primary' | 'secondary' | 'ghost';
 }
 
-export const Button: React.FC<CustomButtonProps> = ({ 
+export const Button: React.FC<CustomButtonProps> = ({
   variant = 'primary',
   children,
   style,
-  ...props 
+  ...props
 }) => {
   const { currentPalette, mantineTheme, isDark } = useTheme();
 
@@ -32,9 +32,9 @@ export const Button: React.FC<CustomButtonProps> = ({
             outlineOffset: '2px',
             boxShadow: `0 0 0 4px ${currentPalette.primary}30, 0 4px 12px rgba(0, 0, 0, 0.15)`,
             transform: 'translateY(-1px)',
-          }
+          },
         };
-      
+
       case 'secondary':
         return {
           backgroundColor: 'transparent',
@@ -53,9 +53,9 @@ export const Button: React.FC<CustomButtonProps> = ({
             boxShadow: `0 0 0 4px ${currentPalette.primary}30`,
             backgroundColor: `${currentPalette.primary}20`,
             borderColor: currentPalette.primary,
-          }
+          },
         };
-      
+
       case 'ghost':
         return {
           backgroundColor: 'transparent',
@@ -73,9 +73,9 @@ export const Button: React.FC<CustomButtonProps> = ({
             boxShadow: `0 0 0 4px ${currentPalette.primary}30`,
             backgroundColor: `${currentPalette.accent}30`,
             color: currentPalette.text,
-          }
+          },
         };
-      
+
       default:
         return {};
     }
@@ -84,15 +84,15 @@ export const Button: React.FC<CustomButtonProps> = ({
   return (
     <MantineButton
       radius={mantineTheme.radius?.md}
-      size="md"
+      size='md'
       style={{
         ...getVariantStyles(),
         minHeight: '44px', // Mobile-friendly touch target
-        ...style
+        ...style,
       }}
       {...props}
     >
       {children}
     </MantineButton>
   );
-}; 
+};

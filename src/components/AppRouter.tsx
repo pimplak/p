@@ -26,15 +26,15 @@ export function AppRouter() {
     <AppLayout>
       <Suspense fallback={<PageLoader />}>
         <Routes>
-          <Route path="/" element={<Dashboard />} />
-          <Route path="/patients" element={<PatientsPage />} />
-          <Route path="/patients/:id" element={<PatientProfile />} />
-          <Route path="/calendar" element={<Calendar />} />
-          <Route path="/notes" element={<Notes />} />
-          <Route path="/analytics" element={<Analytics />} />
-          <Route path="/settings" element={<Settings />} />
+          <Route path='/' element={<Dashboard />} />
+          <Route path='/patients' element={<PatientsPage />} />
+          <Route path='/patients/:id' element={<PatientProfile />} />
+          <Route path='/calendar' element={<Calendar />} />
+          <Route path='/notes' element={<Notes />} />
+          <Route path='/analytics' element={<Analytics />} />
+          <Route path='/settings' element={<Settings />} />
         </Routes>
       </Suspense>
     </AppLayout>
   );
-} 
+}

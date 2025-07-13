@@ -1,5 +1,10 @@
-import { createTheme, type MantineColorsTuple, type MantineTheme } from '@mantine/core';
+import {
+    createTheme,
+    type MantineColorsTuple,
+    type MantineTheme,
+} from '@mantine/core';
 import { useMemo } from 'react';
+import classes from '../css/overrides.module.css';
 import { useThemeStore } from '../stores/useThemeStore';
 import { isDarkPalette } from '../types/theme';
 
@@ -11,9 +16,11 @@ const createMantineColorTuple = (baseColor: string): MantineColorsTuple => {
     const b = parseInt(hex.substr(4, 2), 16);
 
     // Enhanced color scaling for better contrast and visual hierarchy
-    const scalingFactors = [0.95, 0.85, 0.75, 0.6, 0.4, 0.2, 0.1, 0.05, 0.02, 0.0];
+    const scalingFactors = [
+        0.95, 0.85, 0.75, 0.6, 0.4, 0.2, 0.1, 0.05, 0.02, 0.0,
+    ];
 
-    const shades = scalingFactors.map((factor) => {
+    const shades = scalingFactors.map(factor => {
         const newR = Math.round(r + (255 - r) * factor);
         const newG = Math.round(g + (255 - g) * factor);
         const newB = Math.round(b + (255 - b) * factor);
@@ -21,7 +28,18 @@ const createMantineColorTuple = (baseColor: string): MantineColorsTuple => {
         return `#${newR.toString(16).padStart(2, '0')}${newG.toString(16).padStart(2, '0')}${newB.toString(16).padStart(2, '0')}`;
     });
 
-    return shades as [string, string, string, string, string, string, string, string, string, string];
+    return shades as [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+    ];
 };
 
 // === FERRO'S ENHANCED THEME TYPE ===
@@ -55,7 +73,8 @@ interface FerrroTheme extends MantineTheme {
 }
 
 export const useTheme = () => {
-    const { currentPalette, currentPaletteId, setPalette, getAllPalettes } = useThemeStore();
+    const { currentPalette, currentPaletteId, setPalette, getAllPalettes } =
+        useThemeStore();
 
     // === FERRO'S ENHANCED MANTINE THEME ===
     const mantineTheme = useMemo((): FerrroTheme => {
@@ -72,7 +91,8 @@ export const useTheme = () => {
                 surface: createMantineColorTuple(currentPalette.surface),
             },
 
-            fontFamily: 'Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+            fontFamily:
+                'Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
 
             // Mobile-optimized sizing
             fontSizes: {
@@ -144,14 +164,19 @@ export const useTheme = () => {
                         radius: 'md',
                         size: 'md',
                     },
+                    // vars: () => ({
+                    //     root: {
+                    //         '--button-hover': currentPalette.accent,
+                    //     },
+                    // }),
                     styles: {
                         root: {
                             backgroundColor: currentPalette.primary,
                             color: currentPalette.surface,
                             border: `1px solid ${currentPalette.primary}`,
-                            '&:hover': {
-                                backgroundColor: currentPalette.accent,
-                            },
+                            // '&:hover': {
+                            //     backgroundColor: currentPalette.accent,
+                            // },
                         },
                     },
                 },
@@ -187,28 +212,19 @@ export const useTheme = () => {
                             backgroundColor: currentPalette.surface,
                             color: currentPalette.text,
                             border: `1px solid ${currentPalette.primary}60`,
-                            '&:focus': {
-                                borderColor: currentPalette.primary,
-                                boxShadow: `0 0 0 1px ${currentPalette.primary}`,
-                            },
                         },
                         label: {
                             color: currentPalette.text,
                         },
                         dropdown: {
+                            '--text-color': currentPalette.text,
+                            '--accent-color': currentPalette.accent,
                             backgroundColor: currentPalette.surface,
                             border: `1px solid ${currentPalette.primary}60`,
                         },
-                        option: {
-                            color: currentPalette.text,
-                            '&[data-selected="true"]': {
-                                backgroundColor: currentPalette.primary,
-                                color: currentPalette.surface,
-                            },
-                            '&:hover': {
-                                backgroundColor: `${currentPalette.primary}20`,
-                            },
-                        },
+                    },
+                    classNames: {
+                        option: classes['mantine-Select-option'],
                     },
                 },
 
@@ -216,6 +232,11 @@ export const useTheme = () => {
                     defaultProps: {
                         radius: 'md',
                     },
+                    vars: () => ({
+                        root: {
+                            '--menu-item-hover': currentPalette.surface,
+                        },
+                    }),
                     styles: {
                         root: {
                             backgroundColor: currentPalette.surface,
@@ -233,7 +254,7 @@ export const useTheme = () => {
                         itemLabel: {
                             color: currentPalette.text,
                         },
-                    }
+                    },
                 },
 
                 SegmentedControl: {
@@ -333,16 +354,40 @@ export const useTheme = () => {
                     },
                     styles: {
                         input: {
-                            backgroundColor: currentPalette.surface,
-                            border: `1px solid ${currentPalette.primary}60`,
-                            '&:checked': {
-                                backgroundColor: currentPalette.primary,
-                                borderColor: currentPalette.primary,
-                            },
+                            '--checkbox-background': currentPalette.surface,
+                            '--checkbox-border': `${currentPalette.primary}60`,
+                            '--checkbox-checked-background': currentPalette.primary,
+                            '--checkbox-checked-border': currentPalette.primary,
                         },
                         label: {
                             color: currentPalette.text,
                         },
+                    },
+                    classNames: {
+                        input: classes['mantine-Checkbox-input'],
+                    },
+                },
+
+                Table: {
+                    defaultProps: {
+                        radius: 'md',
+                        size: 'md',
+                    },
+                    styles: {
+                        root: {
+                            backgroundColor: currentPalette.surface,
+                            color: currentPalette.text,
+                        },
+                        tr: {
+                            '--table-hover-background': `${currentPalette.primary}30`,
+                            '--table-striped-background': `${currentPalette.primary}10`,
+                        },
+                        th: {
+                            backgroundColor: currentPalette.surface,
+                        },
+                    },
+                    classNames: {
+                        tr: classes['mantine-Table-tr'],
                     },
                 },
 
@@ -384,18 +429,28 @@ export const useTheme = () => {
                     },
                 },
 
-                // Tabs: {
-                //     defaultProps: {
-                //         radius: 'md',
-                //         size: 'md',
-                //     },
-                //     styles: {
-                //         tab: {
-                //             backgroundColor: currentPalette.surface,
-                //             color: currentPalette.text,
-                //         },
-                //     },
-                // },
+                Tabs: {
+                    defaultProps: {
+                        radius: 'md',
+                        size: 'md',
+                    },
+                    styles: {
+                        root: {
+                            '--tab-color': currentPalette.text,
+                            '--tab-background': currentPalette.surface,
+                            '--tab-border': `${currentPalette.primary}40`,
+                            '--tab-hover': `${currentPalette.accent}20`,
+                            '--tab-hover-border': `${currentPalette.accent}`,
+                            '--tab-active-color': currentPalette.primary,
+                            '--tab-active-background': currentPalette.surface,
+                            '--tab-active-border': `${currentPalette.primary}`,
+                        },
+                    },
+                    classNames: {
+                        tab: classes['mantine-Tabs-tab'],
+                        list: classes['mantine-Tabs-list'],
+                    },
+                },
 
                 TagsInput: {
                     defaultProps: {
@@ -466,7 +521,7 @@ export const useTheme = () => {
                             color: currentPalette.text,
                             border: `1px solid ${currentPalette.primary}40`,
                         },
-                    }
+                    },
                 },
 
                 Notification: {
@@ -491,7 +546,22 @@ export const useTheme = () => {
                                 backgroundColor: currentPalette.accent,
                             },
                         },
-                    }
+                    },
+                },
+
+                CloseButton: {
+                    defaultProps: {
+                        radius: 'md',
+                    },
+                    styles: {
+                        root: {
+                            color: currentPalette.text,
+                            '--close-button-hover-background': currentPalette.accent,
+                        },
+                    },
+                    classNames: {
+                        root: classes['mantine-CloseButton'],
+                    },
                 },
 
                 Paper: {
@@ -504,7 +574,7 @@ export const useTheme = () => {
                             color: currentPalette.text,
                             border: `1px solid ${currentPalette.primary}40`,
                         },
-                    }
+                    },
                 },
 
                 Modal: {
@@ -566,4 +636,4 @@ export const useTheme = () => {
         setPalette,
         getAllPalettes,
     };
-}; 
+};

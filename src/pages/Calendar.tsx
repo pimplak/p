@@ -1,7 +1,7 @@
-import { 
-  Title, 
-  Button, 
-  Group, 
+import {
+  Title,
+  Button,
+  Group,
   Card,
   Modal,
   Stack,
@@ -15,27 +15,27 @@ import {
   Box,
   Paper,
   Divider,
-  ScrollArea
+  ScrollArea,
 } from '@mantine/core';
 import { DateInput } from '@mantine/dates';
 import { useDisclosure, useMediaQuery } from '@mantine/hooks';
-import { 
-  IconPlus, 
-  IconCalendarEvent, 
-  IconEdit, 
-  IconTrash, 
-  IconChevronLeft, 
+import {
+  IconPlus,
+  IconCalendarEvent,
+  IconEdit,
+  IconTrash,
+  IconChevronLeft,
   IconChevronRight,
   IconEye,
-  IconEyeOff
+  IconEyeOff,
 } from '@tabler/icons-react';
-import { 
-  format, 
-  startOfDay, 
-  endOfDay, 
-  startOfWeek, 
-  endOfWeek, 
-  startOfMonth, 
+import {
+  format,
+  startOfDay,
+  endOfDay,
+  startOfWeek,
+  endOfWeek,
+  startOfMonth,
   endOfMonth,
   addDays,
   addWeeks,
@@ -46,13 +46,16 @@ import {
   isSameDay,
   isSameMonth,
   isToday,
-  eachDayOfInterval
+  eachDayOfInterval,
 } from 'date-fns';
 import { pl } from 'date-fns/locale';
 import { useState, useEffect, useMemo } from 'react';
 import { AppointmentForm } from '../components/AppointmentForm';
 import { BulkSMSReminders } from '../components/BulkSMSReminders';
-import { FloatingActionButton, type FABAction } from '../components/FloatingActionButton';
+import {
+  FloatingActionButton,
+  type FABAction,
+} from '../components/FloatingActionButton';
 import { SMSReminderButton } from '../components/SMSReminderButton';
 import { ExpandableAppointmentRow } from '../components/ui/ExpandableAppointmentRow';
 import { useTheme } from '../hooks/useTheme';
@@ -65,17 +68,18 @@ type CalendarView = 'day' | 'week' | 'month';
 
 function Calendar() {
   const [opened, { open, close }] = useDisclosure(false);
-  const [editingAppointment, setEditingAppointment] = useState<Appointment | null>(null);
+  const [editingAppointment, setEditingAppointment] =
+    useState<Appointment | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [view, setView] = useState<CalendarView>('day');
   const [hideWeekends, setHideWeekends] = useState(false);
-  
-  const { 
-    fetchAppointments, 
+
+  const {
+    fetchAppointments,
     deleteAppointment,
     getAppointmentsByDateRange,
-    error 
+    error,
   } = useAppointmentStore();
 
   const { fetchPatients } = usePatientStore();
@@ -157,7 +161,7 @@ function Calendar() {
     }
 
     const appointments = getAppointmentsByDateRange(startDate, endDate);
-    return statusFilter === 'all' 
+    return statusFilter === 'all'
       ? appointments
       : appointments.filter(apt => apt.status === statusFilter);
   }, [selectedDate, view, getAppointmentsByDateRange, statusFilter]);
@@ -177,31 +181,46 @@ function Calendar() {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'scheduled': return currentPalette.primary;
-      case 'completed': return currentPalette.accent;
-      case 'cancelled': return utilityColors.error;
-      case 'no_show': return utilityColors.warning;
-      default: return currentPalette.text;
+      case 'scheduled':
+        return currentPalette.primary;
+      case 'completed':
+        return currentPalette.accent;
+      case 'cancelled':
+        return utilityColors.error;
+      case 'no_show':
+        return utilityColors.warning;
+      default:
+        return currentPalette.text;
     }
   };
 
   const getStatusBackgroundColor = (status: string) => {
     switch (status) {
-      case 'scheduled': return `${currentPalette.primary}33`;
-      case 'completed': return `${currentPalette.accent}33`;
-      case 'cancelled': return `${utilityColors.error}33`;
-      case 'no_show': return `${utilityColors.warning}33`;
-      default: return `${currentPalette.text}26`;
+      case 'scheduled':
+        return `${currentPalette.primary}33`;
+      case 'completed':
+        return `${currentPalette.accent}33`;
+      case 'cancelled':
+        return `${utilityColors.error}33`;
+      case 'no_show':
+        return `${utilityColors.warning}33`;
+      default:
+        return `${currentPalette.text}26`;
     }
   };
 
   const getStatusLabel = (status: string) => {
     switch (status) {
-      case 'scheduled': return 'Zaplanowana';
-      case 'completed': return 'Zakończona';
-      case 'cancelled': return 'Anulowana';
-      case 'no_show': return 'Nieobecność';
-      default: return status;
+      case 'scheduled':
+        return 'Zaplanowana';
+      case 'completed':
+        return 'Zakończona';
+      case 'cancelled':
+        return 'Anulowana';
+      case 'no_show':
+        return 'Nieobecność';
+      default:
+        return status;
     }
   };
 
@@ -209,7 +228,7 @@ function Calendar() {
   const fabActions: FABAction[] = [
     {
       id: 'add-appointment',
-      icon: <IconPlus size="1.2rem" />,
+      icon: <IconPlus size='1.2rem' />,
       label: 'Dodaj wizytę',
       onClick: () => handleAddAppointment(),
     },
@@ -218,20 +237,20 @@ function Calendar() {
   return (
     <Stack>
       {/* Header */}
-      <Group justify="space-between">
+      <Group justify='space-between'>
         <Title order={1}>Kalendarz</Title>
-        <Group gap="sm">
-          <BulkSMSReminders 
-            size="sm" 
+        <Group gap='sm'>
+          <BulkSMSReminders
+            size='sm'
             onRemindersSent={() => {
               // Refresh appointments after sending reminders
               fetchAppointments();
             }}
           />
-          <Button 
-            leftSection={<IconPlus size="1rem" />} 
+          <Button
+            leftSection={<IconPlus size='1rem' />}
             onClick={() => handleAddAppointment()}
-            visibleFrom="md"
+            visibleFrom='md'
           >
             Dodaj wizytę
           </Button>
@@ -239,20 +258,20 @@ function Calendar() {
       </Group>
 
       {error && (
-        <Alert color={utilityColors.error} title="Błąd">
+        <Alert color={utilityColors.error} title='Błąd'>
           {error}
         </Alert>
       )}
 
       {/* Calendar Controls */}
       <Card>
-        <Group justify="space-between" mb="md">
+        <Group justify='space-between' mb='md'>
           {/* View Selector */}
           <SegmentedControl
             value={view}
             withItemsBorders={false}
             transitionDuration={300}
-            onChange={(value) => setView(value as CalendarView)}
+            onChange={value => setView(value as CalendarView)}
             data={[
               { label: 'Dzień', value: 'day' },
               { label: 'Tydzień', value: 'week' },
@@ -262,55 +281,44 @@ function Calendar() {
 
           {/* Navigation */}
           <Group>
-            <ActionIcon 
-              variant="light" 
-              onClick={handlePrevious}
-              size="lg"
-            >
-              <IconChevronLeft size="1.2rem" />
+            <ActionIcon variant='light' onClick={handlePrevious} size='lg'>
+              <IconChevronLeft size='1.2rem' />
             </ActionIcon>
-            
-            <Button 
-              variant="light" 
-              onClick={handleToday}
-              size="sm"
-            >
+
+            <Button variant='light' onClick={handleToday} size='sm'>
               Dzisiaj
             </Button>
-            
-            <ActionIcon 
-              variant="light" 
-              onClick={handleNext}
-              size="lg"
-            >
-              <IconChevronRight size="1.2rem" />
+
+            <ActionIcon variant='light' onClick={handleNext} size='lg'>
+              <IconChevronRight size='1.2rem' />
             </ActionIcon>
           </Group>
         </Group>
 
         {/* Period Title */}
-        <Group justify="space-between" mb="md">
-          <Text size="xl" fw={600}>
+        <Group justify='space-between' mb='md'>
+          <Text size='xl' fw={600}>
             {getCurrentPeriodTitle()}
           </Text>
-          
+
           <Group>
             <DateInput
-              placeholder="Przejdź do daty"
+              placeholder='Przejdź do daty'
               value={selectedDate}
-              onChange={(value) => {
+              onChange={value => {
                 if (value) {
-                  const date = typeof value === 'string' ? new Date(value) : value;
+                  const date =
+                    typeof value === 'string' ? new Date(value) : value;
                   setSelectedDate(date);
                 }
               }}
-              size="sm"
+              size='sm'
               w={180}
             />
             <Select
-              placeholder="Status"
+              placeholder='Status'
               value={statusFilter}
-              onChange={(value) => setStatusFilter(value || 'all')}
+              onChange={value => setStatusFilter(value || 'all')}
               data={[
                 { value: 'all', label: 'Wszystkie' },
                 { value: 'scheduled', label: 'Zaplanowane' },
@@ -318,30 +326,34 @@ function Calendar() {
                 { value: 'cancelled', label: 'Anulowane' },
                 { value: 'no_show', label: 'Nieobecności' },
               ]}
-              size="sm"
+              size='sm'
               w={140}
             />
-            
+
             {/* Calendar View Options */}
             {view === 'week' && (
               <ActionIcon
                 variant={hideWeekends ? 'filled' : 'light'}
                 color={currentPalette.primary}
-                size="sm"
+                size='sm'
                 onClick={toggleHideWeekends}
                 title={hideWeekends ? 'Pokaż weekendy' : 'Ukryj weekendy'}
               >
-                {hideWeekends ? <IconEyeOff size="1rem" /> : <IconEye size="1rem" />}
+                {hideWeekends ? (
+                  <IconEyeOff size='1rem' />
+                ) : (
+                  <IconEye size='1rem' />
+                )}
               </ActionIcon>
             )}
           </Group>
         </Group>
 
-        <Divider mb="md" />
+        <Divider mb='md' />
 
         {/* Calendar View */}
         {view === 'day' && (
-          <DayView 
+          <DayView
             date={selectedDate}
             appointments={currentPeriodAppointments}
             onEditAppointment={handleEditAppointment}
@@ -356,7 +368,7 @@ function Calendar() {
         )}
 
         {view === 'week' && (
-          <WeekView 
+          <WeekView
             date={selectedDate}
             appointments={currentPeriodAppointments}
             onEditAppointment={handleEditAppointment}
@@ -371,7 +383,7 @@ function Calendar() {
         )}
 
         {view === 'month' && (
-          <MonthView 
+          <MonthView
             date={selectedDate}
             appointments={currentPeriodAppointments}
             onEditAppointment={handleEditAppointment}
@@ -386,14 +398,14 @@ function Calendar() {
         )}
       </Card>
 
-      <Modal 
-        opened={opened} 
-        onClose={close} 
+      <Modal
+        opened={opened}
+        onClose={close}
         title={editingAppointment ? 'Edytuj wizytę' : 'Dodaj wizytę'}
-        size="lg"
+        size='lg'
       >
-        <AppointmentForm 
-          appointment={editingAppointment} 
+        <AppointmentForm
+          appointment={editingAppointment}
           onSuccess={handleFormSuccess}
           onCancel={close}
         />
@@ -424,31 +436,31 @@ interface CalendarViewProps {
   };
 }
 
-function DayView({ 
-  date, 
-  appointments, 
-  onEditAppointment, 
-  onDeleteAppointment, 
+function DayView({
+  date,
+  appointments,
+  onEditAppointment,
+  onDeleteAppointment,
   onAddAppointment,
   getStatusColor,
   getStatusLabel,
   utilityColors,
-  currentPalette
+  currentPalette,
 }: CalendarViewProps) {
   const isMobile = useMediaQuery('(max-width: 768px)');
-  
-  const dayAppointments = appointments.filter(apt => 
+
+  const dayAppointments = appointments.filter(apt =>
     isSameDay(new Date(apt.date), date)
   );
 
   if (dayAppointments.length === 0) {
     return (
-      <Alert icon={<IconCalendarEvent size="1rem" />} title="Brak wizyt">
+      <Alert icon={<IconCalendarEvent size='1rem' />} title='Brak wizyt'>
         Brak wizyt na ten dzień.
-        <Button 
-          variant="light" 
-          size="sm" 
-          mt="sm"
+        <Button
+          variant='light'
+          size='sm'
+          mt='sm'
           onClick={() => onAddAppointment(date)}
         >
           Dodaj wizytę
@@ -457,14 +469,15 @@ function DayView({
     );
   }
 
-  const sortedAppointments = dayAppointments
-    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+  const sortedAppointments = dayAppointments.sort(
+    (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+  );
 
   // Mobile view with expandable cards
   if (isMobile) {
     return (
-      <Stack gap="sm">
-        {sortedAppointments.map((appointment) => (
+      <Stack gap='sm'>
+        {sortedAppointments.map(appointment => (
           <ExpandableAppointmentRow
             key={appointment.id}
             appointment={appointment}
@@ -496,7 +509,7 @@ function DayView({
           </Table.Tr>
         </Table.Thead>
         <Table.Tbody>
-          {sortedAppointments.map((appointment) => (
+          {sortedAppointments.map(appointment => (
             <Table.Tr key={appointment.id}>
               <Table.Td>
                 <Text fw={500}>
@@ -506,35 +519,36 @@ function DayView({
               <Table.Td>
                 <div>
                   <Text fw={500}>
-                    {appointment.patient?.firstName} {appointment.patient?.lastName}
+                    {appointment.patient?.firstName}{' '}
+                    {appointment.patient?.lastName}
                   </Text>
                   {appointment.patient?.phone && (
-                    <Text size="sm" c="dimmed">
+                    <Text size='sm' c='dimmed'>
                       {appointment.patient.phone}
                     </Text>
                   )}
                 </div>
               </Table.Td>
               <Table.Td>
-                <Text size="sm">
-                  {appointment.type || 'Wizyta'}
-                </Text>
+                <Text size='sm'>{appointment.type || 'Wizyta'}</Text>
               </Table.Td>
               <Table.Td>
-                <Text size="sm">
-                  {appointment.duration} min
-                </Text>
+                <Text size='sm'>{appointment.duration} min</Text>
               </Table.Td>
               <Table.Td>
-                <Text size="sm" fw={500}>
+                <Text size='sm' fw={500}>
                   {appointment.price ? `${appointment.price} zł` : '-'}
                 </Text>
               </Table.Td>
               <Table.Td>
                 {appointment.paymentInfo?.isPaid ? (
-                  <Badge color={utilityColors?.success || 'green'} size="sm">Opłacono</Badge>
+                  <Badge color={utilityColors?.success || 'green'} size='sm'>
+                    Opłacono
+                  </Badge>
                 ) : (
-                  <Badge color={utilityColors?.error || 'red'} size="sm">Nieopłacono</Badge>
+                  <Badge color={utilityColors?.error || 'red'} size='sm'>
+                    Nieopłacono
+                  </Badge>
                 )}
               </Table.Td>
               <Table.Td>
@@ -543,32 +557,34 @@ function DayView({
                 </Badge>
               </Table.Td>
               <Table.Td>
-                <Group gap="xs">
+                <Group gap='xs'>
                   {appointment.patient && (
                     <SMSReminderButton
                       patient={appointment.patient}
                       appointment={appointment}
-                      variant="icon"
-                      size="sm"
+                      variant='icon'
+                      size='sm'
                       onReminderSent={() => {
                         // Refresh appointments
                         window.location.reload();
                       }}
                     />
                   )}
-                  <ActionIcon 
-                    variant="light" 
+                  <ActionIcon
+                    variant='light'
                     color={currentPalette.primary}
                     onClick={() => onEditAppointment(appointment)}
                   >
-                    <IconEdit size="1rem" />
+                    <IconEdit size='1rem' />
                   </ActionIcon>
-                  <ActionIcon 
-                    variant="light" 
+                  <ActionIcon
+                    variant='light'
                     color={utilityColors?.error || 'red'}
-                    onClick={() => appointment.id && onDeleteAppointment(appointment.id)}
+                    onClick={() =>
+                      appointment.id && onDeleteAppointment(appointment.id)
+                    }
                   >
-                    <IconTrash size="1rem" />
+                    <IconTrash size='1rem' />
                   </ActionIcon>
                 </Group>
               </Table.Td>
@@ -581,10 +597,10 @@ function DayView({
 }
 
 // Week View Component
-function WeekView({ 
-  date, 
-  appointments, 
-  onEditAppointment, 
+function WeekView({
+  date,
+  appointments,
+  onEditAppointment,
   onAddAppointment,
   getStatusBackgroundColor,
   hideWeekends = false,
@@ -593,11 +609,11 @@ function WeekView({
   const weekStart = startOfWeek(date, { weekStartsOn: 1 });
   const allWeekDays = eachDayOfInterval({
     start: weekStart,
-    end: endOfWeek(date, { weekStartsOn: 1 })
+    end: endOfWeek(date, { weekStartsOn: 1 }),
   });
-  
+
   // Filter out weekends if hideWeekends is true
-  const weekDays = hideWeekends 
+  const weekDays = hideWeekends
     ? allWeekDays.filter(day => {
         const dayOfWeek = day.getDay();
         return dayOfWeek !== 0 && dayOfWeek !== 6; // 0 = Sunday, 6 = Saturday
@@ -613,40 +629,44 @@ function WeekView({
 
   return (
     <ScrollArea>
-      <Box style={{ 
-        minWidth: hideWeekends ? '500px' : '650px',
-        maxWidth: '100%'
-      }}>
+      <Box
+        style={{
+          minWidth: hideWeekends ? '500px' : '650px',
+          maxWidth: '100%',
+        }}
+      >
         {/* Days Header */}
-        <Box 
-          mb="md" 
-          style={{ 
-            display: 'grid', 
-            gridTemplateColumns: `${timeColumnWidth} repeat(${dayCount}, 1fr)`, 
+        <Box
+          mb='md'
+          style={{
+            display: 'grid',
+            gridTemplateColumns: `${timeColumnWidth} repeat(${dayCount}, 1fr)`,
             gap: cellPadding,
-            alignItems: 'stretch'
+            alignItems: 'stretch',
           }}
         >
           <Box></Box>
-          {weekDays.map((day) => (
-            <Paper 
-              key={day.toISOString()} 
-              p="xs"
-              style={{ 
+          {weekDays.map(day => (
+            <Paper
+              key={day.toISOString()}
+              p='xs'
+              style={{
                 textAlign: 'center',
-                backgroundColor: isToday(day) ? `${currentPalette.primary}20` : currentPalette.surface,
+                backgroundColor: isToday(day)
+                  ? `${currentPalette.primary}20`
+                  : currentPalette.surface,
                 cursor: 'pointer',
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'center',
-                minHeight: '50px'
+                minHeight: '50px',
               }}
               onClick={() => onAddAppointment(day)}
             >
-              <Text size="xs" c="dimmed">
+              <Text size='xs' c='dimmed'>
                 {format(day, 'EEE', { locale: pl })}
               </Text>
-              <Text fw={500} size="md">
+              <Text fw={500} size='md'>
                 {format(day, 'd')}
               </Text>
             </Paper>
@@ -654,47 +674,48 @@ function WeekView({
         </Box>
 
         {/* Time Grid */}
-        <Stack gap="2px">
-          {timeSlots.map((hour) => (
-            <Box 
-              key={hour} 
-              style={{ 
-                display: 'grid', 
-                gridTemplateColumns: `${timeColumnWidth} repeat(${dayCount}, 1fr)`, 
+        <Stack gap='2px'>
+          {timeSlots.map(hour => (
+            <Box
+              key={hour}
+              style={{
+                display: 'grid',
+                gridTemplateColumns: `${timeColumnWidth} repeat(${dayCount}, 1fr)`,
                 gap: cellPadding,
-                alignItems: 'stretch'
+                alignItems: 'stretch',
               }}
             >
-              <Text 
-                size="xs" 
-                c="dimmed" 
-                ta="right" 
-                pt="xs"
-                style={{ 
+              <Text
+                size='xs'
+                c='dimmed'
+                ta='right'
+                pt='xs'
+                style={{
                   alignSelf: 'flex-start',
-                  lineHeight: '1.2'
+                  lineHeight: '1.2',
                 }}
               >
                 {hour}:00
               </Text>
-              {weekDays.map((day) => {
+              {weekDays.map(day => {
                 const dayAppointments = appointments.filter(apt => {
                   const aptDate = new Date(apt.date);
                   return isSameDay(aptDate, day) && aptDate.getHours() === hour;
                 });
 
                 return (
-                  <Paper 
+                  <Paper
                     key={`${day.toISOString()}-${hour}`}
-                    p="2px"
-                    style={{ 
-                      minHeight: dayAppointments.length > 0 ? 'auto' : cellMinHeight,
+                    p='2px'
+                    style={{
+                      minHeight:
+                        dayAppointments.length > 0 ? 'auto' : cellMinHeight,
                       backgroundColor: currentPalette.surface,
                       cursor: 'pointer',
                       border: `1px solid ${currentPalette.primary}40`,
                       display: 'flex',
                       flexDirection: 'column',
-                      gap: '2px'
+                      gap: '2px',
                     }}
                     onClick={() => {
                       const appointmentDate = new Date(day);
@@ -702,25 +723,28 @@ function WeekView({
                       onAddAppointment(appointmentDate);
                     }}
                   >
-                    {dayAppointments.map((appointment) => (
+                    {dayAppointments.map(appointment => (
                       <Paper
                         key={appointment.id}
-                        p="2px"
-                        style={{ 
-                          backgroundColor: getStatusBackgroundColor(appointment.status),
+                        p='2px'
+                        style={{
+                          backgroundColor: getStatusBackgroundColor(
+                            appointment.status
+                          ),
                           cursor: 'pointer',
-                          borderRadius: '4px'
+                          borderRadius: '4px',
                         }}
-                        onClick={(e) => {
+                        onClick={e => {
                           e.stopPropagation();
                           onEditAppointment(appointment);
                         }}
                       >
-                        <Text size="xs" fw={500} style={{ lineHeight: '1.2' }}>
+                        <Text size='xs' fw={500} style={{ lineHeight: '1.2' }}>
                           {format(new Date(appointment.date), 'HH:mm')}
                         </Text>
-                        <Text size="xs" truncate style={{ lineHeight: '1.2' }}>
-                          {appointment.patient?.firstName} {appointment.patient?.lastName}
+                        <Text size='xs' truncate style={{ lineHeight: '1.2' }}>
+                          {appointment.patient?.firstName}{' '}
+                          {appointment.patient?.lastName}
                         </Text>
                       </Paper>
                     ))}
@@ -740,10 +764,10 @@ interface MonthViewProps extends CalendarViewProps {
   onDateClick: (date: Date) => void;
 }
 
-function MonthView({ 
-  date, 
-  appointments, 
-  onEditAppointment, 
+function MonthView({
+  date,
+  appointments,
+  onEditAppointment,
   onDateClick,
   getStatusBackgroundColor,
   currentPalette,
@@ -755,7 +779,7 @@ function MonthView({
 
   const calendarDays = eachDayOfInterval({
     start: calendarStart,
-    end: calendarEnd
+    end: calendarEnd,
   });
 
   const weekDays = ['Pon', 'Wt', 'Śr', 'Czw', 'Pt', 'Sob', 'Nie'];
@@ -769,21 +793,34 @@ function MonthView({
   return (
     <Box>
       {/* Days of Week Header */}
-      <Group mb="md" style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: cellGap }}>
-        {weekDays.map((day) => (
-          <Text key={day} ta="center" fw={500} c="dimmed" size="xs">
+      <Group
+        mb='md'
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(7, 1fr)',
+          gap: cellGap,
+        }}
+      >
+        {weekDays.map(day => (
+          <Text key={day} ta='center' fw={500} c='dimmed' size='xs'>
             {day}
           </Text>
         ))}
       </Group>
 
       {/* Calendar Grid */}
-      <Box style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: cellGap }}>
-        {calendarDays.map((day) => {
-          const dayAppointments = appointments.filter(apt => 
+      <Box
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(7, 1fr)',
+          gap: cellGap,
+        }}
+      >
+        {calendarDays.map(day => {
+          const dayAppointments = appointments.filter(apt =>
             isSameDay(new Date(apt.date), day)
           );
-          
+
           const isCurrentMonth = isSameMonth(day, date);
           const isTodayDay = isToday(day);
 
@@ -793,44 +830,48 @@ function MonthView({
               p={cellPadding}
               style={{
                 minHeight: dayAppointments.length > 0 ? 'auto' : cellMinHeight,
-                backgroundColor: isTodayDay 
-                  ? `${currentPalette.primary}20` 
-                  : isCurrentMonth 
-                    ? currentPalette.surface 
+                backgroundColor: isTodayDay
+                  ? `${currentPalette.primary}20`
+                  : isCurrentMonth
+                    ? currentPalette.surface
                     : currentPalette.background,
                 opacity: isCurrentMonth ? 1 : 0.6,
                 cursor: 'pointer',
-                border: `1px solid ${currentPalette.primary}40`
+                border: `1px solid ${currentPalette.primary}40`,
               }}
               onClick={() => onDateClick(day)}
             >
-              <Text 
-                size="xs" 
-                fw={isTodayDay ? 600 : 400}
-                mb="4px"
-              >
+              <Text size='xs' fw={isTodayDay ? 600 : 400} mb='4px'>
                 {format(day, 'd')}
               </Text>
-              
+
               <Stack gap={stackGap}>
-                {dayAppointments.map((appointment) => (
+                {dayAppointments.map(appointment => (
                   <Paper
                     key={appointment.id}
-                    p="2px"
+                    p='2px'
                     style={{
-                      backgroundColor: getStatusBackgroundColor(appointment.status),
-                      cursor: 'pointer'
+                      backgroundColor: getStatusBackgroundColor(
+                        appointment.status
+                      ),
+                      cursor: 'pointer',
                     }}
-                    onClick={(e) => {
+                    onClick={e => {
                       e.stopPropagation();
                       onEditAppointment(appointment);
                     }}
                   >
-                    <Text size="xs" fw={500} truncate style={{ lineHeight: '1.2' }}>
+                    <Text
+                      size='xs'
+                      fw={500}
+                      truncate
+                      style={{ lineHeight: '1.2' }}
+                    >
                       {format(new Date(appointment.date), 'HH:mm')}
                     </Text>
-                    <Text size="xs" truncate style={{ lineHeight: '1.2' }}>
-                      {appointment.patient?.firstName} {appointment.patient?.lastName}
+                    <Text size='xs' truncate style={{ lineHeight: '1.2' }}>
+                      {appointment.patient?.firstName}{' '}
+                      {appointment.patient?.lastName}
                     </Text>
                   </Paper>
                 ))}
@@ -843,4 +884,4 @@ function MonthView({
   );
 }
 
-export default Calendar; 
+export default Calendar;

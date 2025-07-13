@@ -1,14 +1,14 @@
-import { 
-  Button, 
-  Group, 
-  Stack, 
+import {
+  Button,
+  Group,
+  Stack,
   Select,
   NumberInput,
   Textarea,
   Checkbox,
   Text,
   Card,
-  Divider
+  Divider,
 } from '@mantine/core';
 import { DateTimePicker } from '@mantine/dates';
 import { useForm } from '@mantine/form';
@@ -18,7 +18,11 @@ import { APPOINTMENT_STATUS } from '../constants/status';
 import { type AppointmentFormData } from '../schemas';
 import { useAppointmentStore } from '../stores/useAppointmentStore';
 import { usePatientStore } from '../stores/usePatientStore';
-import { AppointmentStatus, AppointmentType, PaymentMethod } from '../types/Appointment';
+import {
+  AppointmentStatus,
+  AppointmentType,
+  PaymentMethod,
+} from '../types/Appointment';
 import type { Appointment } from '../types/Appointment';
 import { getPatientDisplayName } from '../utils/dates';
 
@@ -44,7 +48,11 @@ interface FormValues {
   };
 }
 
-export function AppointmentForm({ appointment, onSuccess, onCancel }: AppointmentFormProps) {
+export function AppointmentForm({
+  appointment,
+  onSuccess,
+  onCancel,
+}: AppointmentFormProps) {
   const { addAppointment, updateAppointment, loading } = useAppointmentStore();
   const { patients } = usePatientStore();
 
@@ -59,15 +67,21 @@ export function AppointmentForm({ appointment, onSuccess, onCancel }: Appointmen
       price: appointment?.price || DEFAULT_APPOINTMENT_PRICE,
       paymentInfo: {
         isPaid: appointment?.paymentInfo?.isPaid || false,
-        paidAt: appointment?.paymentInfo?.paidAt ? new Date(appointment.paymentInfo.paidAt) : undefined,
+        paidAt: appointment?.paymentInfo?.paidAt
+          ? new Date(appointment.paymentInfo.paidAt)
+          : undefined,
         paymentMethod: appointment?.paymentInfo?.paymentMethod || undefined,
         notes: appointment?.paymentInfo?.notes || '',
       },
     },
     validate: {
-      patientId: (value) => !value ? 'Wybierz pacjenta' : null,
-      duration: (value) => !value || value < 15 ? 'Czas trwania musi być co najmniej 15 minut' : null,
-      price: (value) => value !== undefined && value < 0 ? 'Cena nie może być ujemna' : null,
+      patientId: value => (!value ? 'Wybierz pacjenta' : null),
+      duration: value =>
+        !value || value < 15
+          ? 'Czas trwania musi być co najmniej 15 minut'
+          : null,
+      price: value =>
+        value !== undefined && value < 0 ? 'Cena nie może być ujemna' : null,
     },
   });
 
@@ -77,12 +91,30 @@ export function AppointmentForm({ appointment, onSuccess, onCancel }: Appointmen
       const appointmentData: AppointmentFormData = {
         ...values,
         patientId: parseInt(values.patientId, 10),
-        status: values.status as 'scheduled' | 'completed' | 'cancelled' | 'no_show' | 'rescheduled',
-        type: values.type as 'initial' | 'follow_up' | 'therapy' | 'consultation' | 'assessment' | undefined,
-        paymentInfo: values.paymentInfo ? {
-          ...values.paymentInfo,
-          paymentMethod: values.paymentInfo.paymentMethod as 'cash' | 'card' | 'transfer' | 'other' | undefined,
-        } : undefined,
+        status: values.status as
+          | 'scheduled'
+          | 'completed'
+          | 'cancelled'
+          | 'no_show'
+          | 'rescheduled',
+        type: values.type as
+          | 'initial'
+          | 'follow_up'
+          | 'therapy'
+          | 'consultation'
+          | 'assessment'
+          | undefined,
+        paymentInfo: values.paymentInfo
+          ? {
+              ...values.paymentInfo,
+              paymentMethod: values.paymentInfo.paymentMethod as
+                | 'cash'
+                | 'card'
+                | 'transfer'
+                | 'other'
+                | undefined,
+            }
+          : undefined,
       };
 
       if (appointment?.id) {
@@ -143,8 +175,8 @@ export function AppointmentForm({ appointment, onSuccess, onCancel }: Appointmen
     <form onSubmit={form.onSubmit(handleSubmit)}>
       <Stack>
         <Select
-          label="Pacjent"
-          placeholder="Wybierz pacjenta"
+          label='Pacjent'
+          placeholder='Wybierz pacjenta'
           required
           data={patientOptions}
           searchable
@@ -152,16 +184,16 @@ export function AppointmentForm({ appointment, onSuccess, onCancel }: Appointmen
         />
 
         <DateTimePicker
-          label="Data i godzina"
-          placeholder="Wybierz datę i godzinę"
+          label='Data i godzina'
+          placeholder='Wybierz datę i godzinę'
           required
           {...form.getInputProps('date')}
         />
 
         <Group grow>
           <NumberInput
-            label="Czas trwania (minuty)"
-            placeholder="50"
+            label='Czas trwania (minuty)'
+            placeholder='50'
             min={15}
             max={300}
             step={5}
@@ -169,35 +201,37 @@ export function AppointmentForm({ appointment, onSuccess, onCancel }: Appointmen
             {...form.getInputProps('duration')}
           />
           <Select
-            label="Typ wizyty"
-            placeholder="Wybierz typ"
+            label='Typ wizyty'
+            placeholder='Wybierz typ'
             data={typeOptions}
             {...form.getInputProps('type')}
           />
         </Group>
 
         <Select
-          label="Status"
-          placeholder="Wybierz status"
+          label='Status'
+          placeholder='Wybierz status'
           data={statusOptions}
           {...form.getInputProps('status')}
         />
 
         <Textarea
-          label="Notatki"
-          placeholder="Dodatkowe informacje o wizycie..."
+          label='Notatki'
+          placeholder='Dodatkowe informacje o wizycie...'
           minRows={3}
           {...form.getInputProps('notes')}
         />
 
-        <Divider my="md" />
+        <Divider my='md' />
 
-        <Card withBorder p="md">
-          <Text fw={600} mb="md">Płatność</Text>
-          
+        <Card withBorder p='md'>
+          <Text fw={600} mb='md'>
+            Płatność
+          </Text>
+
           <Group grow>
             <NumberInput
-              label="Cena (zł)"
+              label='Cena (zł)'
               placeholder={DEFAULT_APPOINTMENT_PRICE.toString()}
               min={0}
               step={10}
@@ -205,46 +239,48 @@ export function AppointmentForm({ appointment, onSuccess, onCancel }: Appointmen
               {...form.getInputProps('price')}
             />
             <Checkbox
-              label="Opłacono"
-              {...form.getInputProps('paymentInfo.isPaid', { type: 'checkbox' })}
+              label='Opłacono'
+              {...form.getInputProps('paymentInfo.isPaid', {
+                type: 'checkbox',
+              })}
             />
           </Group>
 
           {form.values.paymentInfo?.isPaid && (
             <>
-              <Group grow mt="md">
+              <Group grow mt='md'>
                 <DateTimePicker
-                  label="Data płatności"
-                  placeholder="Kiedy opłacono?"
+                  label='Data płatności'
+                  placeholder='Kiedy opłacono?'
                   {...form.getInputProps('paymentInfo.paidAt')}
                 />
                 <Select
-                  label="Sposób płatności"
-                  placeholder="Wybierz sposób"
+                  label='Sposób płatności'
+                  placeholder='Wybierz sposób'
                   data={paymentMethodOptions}
                   {...form.getInputProps('paymentInfo.paymentMethod')}
                 />
               </Group>
 
               <Textarea
-                label="Notatki do płatności"
-                placeholder="Dodatkowe informacje o płatności..."
-                mt="md"
+                label='Notatki do płatności'
+                placeholder='Dodatkowe informacje o płatności...'
+                mt='md'
                 {...form.getInputProps('paymentInfo.notes')}
               />
             </>
           )}
         </Card>
 
-        <Group justify="flex-end" mt="md">
-          <Button variant="light" onClick={onCancel}>
+        <Group justify='flex-end' mt='md'>
+          <Button variant='light' onClick={onCancel}>
             Anuluj
           </Button>
-          <Button type="submit" loading={loading}>
+          <Button type='submit' loading={loading}>
             {appointment ? 'Aktualizuj' : 'Dodaj'}
           </Button>
         </Group>
       </Stack>
     </form>
   );
-} 
+}

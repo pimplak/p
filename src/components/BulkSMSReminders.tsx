@@ -69,12 +69,17 @@ export function BulkSMSReminders({
   const { smsTemplates } = useSettingsStore();
   const { currentPalette, utilityColors } = useTheme();
   const [opened, { open, close }] = useDisclosure(false);
-  const [selectedTemplateId, setSelectedTemplateId] = useState('appointment_reminder');
-  const [reminderItems, setReminderItems] = useState<AppointmentReminderItem[]>([]);
+  const [selectedTemplateId, setSelectedTemplateId] = useState(
+    'appointment_reminder'
+  );
+  const [reminderItems, setReminderItems] = useState<AppointmentReminderItem[]>(
+    []
+  );
   const [sending, setSending] = useState(false);
   const [sendingProgress, setSendingProgress] = useState(0);
 
-  const { getAppointmentsNeedingReminders, updateAppointment } = useAppointmentStore();
+  const { getAppointmentsNeedingReminders, updateAppointment } =
+    useAppointmentStore();
   const { patients } = usePatientStore();
   const { practitionerName } = useSettingsStore();
 
@@ -86,36 +91,55 @@ export function BulkSMSReminders({
   // Initialize reminder items when modal opens
   useEffect(() => {
     if (opened) {
-      const items: AppointmentReminderItem[] = appointmentsNeedingReminders.map(appointment => {
-        const patient = patients.find(p => p.id === appointment.patientId);
-        const templateId = getRecommendedTemplate(appointment);
-        const hasValidPhone = patient?.phone ? validatePhoneNumber(patient.phone) : false;
-        const canSendReminder = needsReminder(appointment) && hasValidPhone && !appointment.reminderSent;
+      const items: AppointmentReminderItem[] = appointmentsNeedingReminders
+        .map(appointment => {
+          const patient = patients.find(p => p.id === appointment.patientId);
+          const templateId = getRecommendedTemplate(appointment);
+          const hasValidPhone = patient?.phone
+            ? validatePhoneNumber(patient.phone)
+            : false;
+          const canSendReminder =
+            needsReminder(appointment) &&
+            hasValidPhone &&
+            !appointment.reminderSent;
 
-        let message = '';
-        if (patient) {
-          try {
-            message = generateSMSMessage(templateId, patient, appointment, practitionerName, smsTemplates);
-          } catch (error) {
-            console.error('Error generating message:', error);
-            message = 'Błąd generowania wiadomości';
+          let message = '';
+          if (patient) {
+            try {
+              message = generateSMSMessage(
+                templateId,
+                patient,
+                appointment,
+                practitionerName,
+                smsTemplates
+              );
+            } catch (error) {
+              console.error('Error generating message:', error);
+              message = 'Błąd generowania wiadomości';
+            }
           }
-        }
 
-        return {
-          appointment,
-          patient: patient!,
-          selected: canSendReminder,
-          templateId,
-          message,
-          hasValidPhone,
-          canSendReminder,
-        };
-      }).filter(item => item.patient); // Filter out items without patient data
+          return {
+            appointment,
+            patient: patient!,
+            selected: canSendReminder,
+            templateId,
+            message,
+            hasValidPhone,
+            canSendReminder,
+          };
+        })
+        .filter(item => item.patient); // Filter out items without patient data
 
       setReminderItems(items);
     }
-  }, [opened, appointmentsNeedingReminders, patients, practitionerName, smsTemplates]);
+  }, [
+    opened,
+    appointmentsNeedingReminders,
+    patients,
+    practitionerName,
+    smsTemplates,
+  ]);
 
   // Update messages when template changes
   useEffect(() => {
@@ -152,7 +176,9 @@ export function BulkSMSReminders({
     const selected = reminderItems.filter(item => item.selected).length;
     const canSend = reminderItems.filter(item => item.canSendReminder).length;
     const noPhone = reminderItems.filter(item => !item.hasValidPhone).length;
-    const alreadySent = reminderItems.filter(item => item.appointment.reminderSent).length;
+    const alreadySent = reminderItems.filter(
+      item => item.appointment.reminderSent
+    ).length;
 
     return { total, selected, canSend, noPhone, alreadySent };
   }, [reminderItems]);
@@ -182,7 +208,7 @@ export function BulkSMSReminders({
   // Send bulk reminders
   const handleSendReminders = async () => {
     const selectedItems = reminderItems.filter(item => item.selected);
-    
+
     if (selectedItems.length === 0) {
       notifications.show({
         title: 'Brak wybranych przypomnieć',
@@ -200,7 +226,7 @@ export function BulkSMSReminders({
 
     for (let i = 0; i < selectedItems.length; i++) {
       const item = selectedItems[i];
-      
+
       try {
         // Open SMS app for this patient
         sendSMSReminder(
@@ -218,7 +244,7 @@ export function BulkSMSReminders({
         });
 
         sentCount++;
-        
+
         // Small delay between messages to prevent overwhelming the system
         if (i < selectedItems.length - 1) {
           await new Promise(resolve => setTimeout(resolve, 500));
@@ -262,15 +288,21 @@ export function BulkSMSReminders({
 
     if (variant === 'icon') {
       return (
-        <Tooltip label={isDisabled ? 'Brak przypomnieć do wysłania' : `Wyślij ${reminderCount} przypomnieć`}>
+        <Tooltip
+          label={
+            isDisabled
+              ? 'Brak przypomnieć do wysłania'
+              : `Wyślij ${reminderCount} przypomnieć`
+          }
+        >
           <ActionIcon
             size={size}
-            variant="light"
-            color="blue"
+            variant='light'
+            color='blue'
             disabled={isDisabled}
             onClick={open}
           >
-            <IconMessage size="1rem" />
+            <IconMessage size='1rem' />
           </ActionIcon>
         </Tooltip>
       );
@@ -279,9 +311,9 @@ export function BulkSMSReminders({
     return (
       <Button
         size={size}
-        variant="light"
-        color="blue"
-        leftSection={<IconMessage size="1rem" />}
+        variant='light'
+        color='blue'
+        leftSection={<IconMessage size='1rem' />}
         disabled={isDisabled}
         onClick={open}
       >
@@ -297,31 +329,33 @@ export function BulkSMSReminders({
       <Modal
         opened={opened}
         onClose={close}
-        title="Wyślij przypomnienia SMS"
-        size="xl"
+        title='Wyślij przypomnienia SMS'
+        size='xl'
         centered
       >
-        <Stack gap="md">
+        <Stack gap='md'>
           {/* Statistics */}
-          <Card withBorder p="sm">
-            <Group justify="space-between">
+          <Card withBorder p='sm'>
+            <Group justify='space-between'>
               <div>
-                <Text size="sm" fw={500}>Statystyki</Text>
-                <Text size="xs" c="dimmed">
+                <Text size='sm' fw={500}>
+                  Statystyki
+                </Text>
+                <Text size='xs' c='dimmed'>
                   Wybrano: {stats.selected} z {stats.total}
                 </Text>
               </div>
-              <Group gap="sm">
-                <Badge color={currentPalette.primary} variant="light">
+              <Group gap='sm'>
+                <Badge color={currentPalette.primary} variant='light'>
                   Do wysłania: {stats.canSend}
                 </Badge>
                 {stats.noPhone > 0 && (
-                  <Badge color={utilityColors.error} variant="light">
+                  <Badge color={utilityColors.error} variant='light'>
                     Brak telefonu: {stats.noPhone}
                   </Badge>
                 )}
                 {stats.alreadySent > 0 && (
-                  <Badge color={utilityColors.success} variant="light">
+                  <Badge color={utilityColors.success} variant='light'>
                     Już wysłane: {stats.alreadySent}
                   </Badge>
                 )}
@@ -331,42 +365,44 @@ export function BulkSMSReminders({
 
           {/* Template selection */}
           <Select
-            label="Szablon wiadomości"
-            placeholder="Wybierz szablon"
+            label='Szablon wiadomości'
+            placeholder='Wybierz szablon'
             value={selectedTemplateId}
-            onChange={(value) => setSelectedTemplateId(value || 'appointment_reminder')}
+            onChange={value =>
+              setSelectedTemplateId(value || 'appointment_reminder')
+            }
             data={templateOptions}
             searchable
           />
 
           {/* Bulk actions */}
-          <Group justify="space-between">
-            <Group gap="sm">
+          <Group justify='space-between'>
+            <Group gap='sm'>
               <Button
-                size="xs"
-                variant="subtle"
-                leftSection={<IconSelectAll size="0.8rem" />}
+                size='xs'
+                variant='subtle'
+                leftSection={<IconSelectAll size='0.8rem' />}
                 onClick={handleSelectAll}
               >
                 Zaznacz wszystkie
               </Button>
               <Button
-                size="xs"
-                variant="subtle"
-                leftSection={<IconX size="0.8rem" />}
+                size='xs'
+                variant='subtle'
+                leftSection={<IconX size='0.8rem' />}
                 onClick={handleSelectNone}
               >
                 Odznacz wszystkie
               </Button>
             </Group>
-            <Text size="sm" c="dimmed">
+            <Text size='sm' c='dimmed'>
               {stats.selected} zaznaczonych
             </Text>
           </Group>
 
           {/* Appointments table */}
           <ScrollArea h={400}>
-            <Table highlightOnHover withRowBorders={false}>
+            <Table highlightOnHover withRowBorders={false} striped='even'>
               <Table.Thead>
                 <Table.Tr>
                   <Table.Th>Wybierz</Table.Th>
@@ -379,7 +415,10 @@ export function BulkSMSReminders({
               </Table.Thead>
               <Table.Tbody>
                 {reminderItems.map((item, index) => (
-                  <Table.Tr key={item.appointment.id} onClick={() => handleItemToggle(index)}>
+                  <Table.Tr
+                    key={item.appointment.id}
+                    onClick={() => handleItemToggle(index)}
+                  >
                     <Table.Td>
                       <Checkbox
                         checked={item.selected}
@@ -389,50 +428,72 @@ export function BulkSMSReminders({
                     </Table.Td>
                     <Table.Td>
                       <div>
-                        <Text size="sm" fw={500}>
+                        <Text size='sm' fw={500}>
                           {item.patient.firstName} {item.patient.lastName}
                         </Text>
                       </div>
                     </Table.Td>
                     <Table.Td>
-                      <Text size="sm" c={item.hasValidPhone ? 'dark' : 'red'}>
-                        {item.patient.phone ? formatPhoneNumber(item.patient.phone) : 'Brak'}
+                      <Text size='sm' c={item.hasValidPhone ? 'dark' : 'red'}>
+                        {item.patient.phone
+                          ? formatPhoneNumber(item.patient.phone)
+                          : 'Brak'}
                       </Text>
                     </Table.Td>
                     <Table.Td>
                       <div>
-                        <Text size="sm">
-                          {format(new Date(item.appointment.date), 'dd.MM.yyyy', { locale: pl })}
+                        <Text size='sm'>
+                          {format(
+                            new Date(item.appointment.date),
+                            'dd.MM.yyyy',
+                            { locale: pl }
+                          )}
                         </Text>
-                        <Text size="xs" c="dimmed">
+                        <Text size='xs' c='dimmed'>
                           {format(new Date(item.appointment.date), 'HH:mm')}
                         </Text>
                       </div>
                     </Table.Td>
                     <Table.Td>
                       {item.appointment.reminderSent ? (
-                        <Badge color={utilityColors.success} variant="light" size="sm">
+                        <Badge
+                          color={utilityColors.success}
+                          variant='light'
+                          size='sm'
+                        >
                           Wysłane
                         </Badge>
                       ) : item.canSendReminder ? (
-                        <Badge color={currentPalette.primary} variant="light" size="sm">
+                        <Badge
+                          color={currentPalette.primary}
+                          variant='light'
+                          size='sm'
+                        >
                           {getReminderTiming(item.appointment)}
                         </Badge>
                       ) : !item.hasValidPhone ? (
-                        <Badge color={utilityColors.error} variant="light" size="sm">
+                        <Badge
+                          color={utilityColors.error}
+                          variant='light'
+                          size='sm'
+                        >
                           Brak telefonu
                         </Badge>
                       ) : (
-                        <Badge color={utilityColors.warning} variant="light" size="sm">
+                        <Badge
+                          color={utilityColors.warning}
+                          variant='light'
+                          size='sm'
+                        >
                           Poza czasem
                         </Badge>
                       )}
                     </Table.Td>
                     <Table.Td>
-                      <Tooltip label="Podgląd wiadomości">
+                      <Tooltip label='Podgląd wiadomości'>
                         <ActionIcon
-                          size="sm"
-                          variant="subtle"
+                          size='sm'
+                          variant='subtle'
                           onClick={() => {
                             notifications.show({
                               title: `Wiadomość dla ${item.patient.firstName} ${item.patient.lastName}`,
@@ -442,7 +503,7 @@ export function BulkSMSReminders({
                             });
                           }}
                         >
-                          <IconEye size="0.8rem" />
+                          <IconEye size='0.8rem' />
                         </ActionIcon>
                       </Tooltip>
                     </Table.Td>
@@ -454,10 +515,12 @@ export function BulkSMSReminders({
 
           {/* Sending progress */}
           {sending && (
-            <Card withBorder p="sm">
-              <Group justify="space-between" mb="xs">
-                <Text size="sm" fw={500}>Wysyłanie przypomnieć...</Text>
-                <Text size="sm">{Math.round(sendingProgress)}%</Text>
+            <Card withBorder p='sm'>
+              <Group justify='space-between' mb='xs'>
+                <Text size='sm' fw={500}>
+                  Wysyłanie przypomnieć...
+                </Text>
+                <Text size='sm'>{Math.round(sendingProgress)}%</Text>
               </Group>
               <Progress value={sendingProgress} animated />
             </Card>
@@ -465,12 +528,12 @@ export function BulkSMSReminders({
 
           {/* Actions */}
           <Divider />
-          <Group justify="space-between">
-            <Button variant="subtle" onClick={close} disabled={sending}>
+          <Group justify='space-between'>
+            <Button variant='subtle' onClick={close} disabled={sending}>
               Anuluj
             </Button>
             <Button
-              leftSection={<IconSend size="1rem" />}
+              leftSection={<IconSend size='1rem' />}
               onClick={handleSendReminders}
               disabled={stats.selected === 0 || sending}
               loading={sending}
@@ -482,4 +545,4 @@ export function BulkSMSReminders({
       </Modal>
     </>
   );
-} 
+}

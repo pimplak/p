@@ -3,7 +3,7 @@
 // APPOINTMENT PRICING
 export const DEFAULT_APPOINTMENT_PRICE = 150; // Domyślna cena wizyty w zł
 
-// EXPORT PROCESSING  
+// EXPORT PROCESSING
 export const EXPORT_CHUNK_SIZE = 500; // Chunk size dla eksportu danych
 
 // UI CONSTANTS
@@ -12,7 +12,7 @@ export const NOTIFICATION_TIMEOUT = 5000; // Timeout dla auto-close notyfikacji 
 
 // FONT WEIGHTS (często używane w UI)
 export const FONT_WEIGHT = {
-    NORMAL: 400,
-    MEDIUM: 500,
-    BOLD: 700,
-} as const; 
+  NORMAL: 400,
+  MEDIUM: 500,
+  BOLD: 700,
+} as const;

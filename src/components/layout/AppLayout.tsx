@@ -1,13 +1,21 @@
-import { AppShell, NavLink, Group, Text, Stack, Burger, ScrollArea } from '@mantine/core';
+import {
+  AppShell,
+  NavLink,
+  Group,
+  Text,
+  Stack,
+  Burger,
+  ScrollArea,
+} from '@mantine/core';
 import { useDisclosure, useMediaQuery } from '@mantine/hooks';
-import { 
+import {
   IconDashboard,
   IconUsers,
   IconCalendar,
   IconNotes,
   IconChartLine,
   IconSettings,
-  IconLogout
+  IconLogout,
 } from '@tabler/icons-react';
 import { Link, useLocation } from 'react-router-dom';
 import type { ReactNode } from 'react';
@@ -19,44 +27,44 @@ interface AppLayoutProps {
 }
 
 const navigationItems = [
-  { 
-    label: 'Dashboard', 
-    icon: IconDashboard, 
-    href: '/'
+  {
+    label: 'Dashboard',
+    icon: IconDashboard,
+    href: '/',
   },
-  { 
-    label: 'Pacjenci', 
-    icon: IconUsers, 
-    href: '/patients' 
+  {
+    label: 'Pacjenci',
+    icon: IconUsers,
+    href: '/patients',
   },
-  { 
-    label: 'Kalendarz', 
-    icon: IconCalendar, 
-    href: '/calendar' 
+  {
+    label: 'Kalendarz',
+    icon: IconCalendar,
+    href: '/calendar',
   },
-  { 
-    label: 'Notatki', 
-    icon: IconNotes, 
-    href: '/notes' 
+  {
+    label: 'Notatki',
+    icon: IconNotes,
+    href: '/notes',
   },
-  { 
-    label: 'Statystyki', 
-    icon: IconChartLine, 
-    href: '/analytics' 
+  {
+    label: 'Statystyki',
+    icon: IconChartLine,
+    href: '/analytics',
   },
 ];
 
 const bottomItems = [
-  { 
-    label: 'Ustawienia', 
-    icon: IconSettings, 
-    href: '/settings' 
+  {
+    label: 'Ustawienia',
+    icon: IconSettings,
+    href: '/settings',
   },
-  { 
-    label: 'Wyloguj', 
-    icon: IconLogout, 
+  {
+    label: 'Wyloguj',
+    icon: IconLogout,
     href: '/logout',
-    color: 'red'
+    color: 'red',
   },
 ];
 
@@ -70,200 +78,215 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
     <>
       {/* Mobile Navigation - shown only on mobile */}
       {isMobile && <MobileNavigation />}
-    <AppShell
-      header={{ height: 70 }}
-      navbar={{ 
-        width: 280, 
-        breakpoint: 'sm', 
-        collapsed: { mobile: !opened } 
-      }}
-      padding="md"
-      style={{
-        '--app-shell-navbar-width': '280px',
-      }}
-    >
-      {/* Header */}
-      <AppShell.Header
+      <AppShell
+        header={{ height: 70 }}
+        navbar={{
+          width: 280,
+          breakpoint: 'sm',
+          collapsed: { mobile: !opened },
+        }}
+        padding='md'
         style={{
-          backgroundColor: currentPalette.surface,
-          borderBottom: `1px solid ${currentPalette.primary}`,
-          padding: '0 24px',
-          display: 'flex',
-          alignItems: 'center',
-          color: currentPalette.text,
+          '--app-shell-navbar-width': '280px',
         }}
       >
-        <Group h="100%" justify="space-between" w="100%">
-          <Group>
-            <Burger
-              opened={opened}
-              onClick={toggle}
-              hiddenFrom="sm"
-              size="sm"
-              color={currentPalette.text}
-            />
-            <Text 
-              size="xl" 
-              fw={700}
-              style={{ color: currentPalette.text }}
-              visibleFrom="sm"
-            >
-              P
-            </Text>
-          </Group>
-          
-          <Group gap="md">
-            <Text size="sm" style={{ color: `${currentPalette.text}B3` }}>
-              Dr Anna Terapeutka
-            </Text>
-          </Group>
-        </Group>
-      </AppShell.Header>
-
-      {/* Sidebar */}
-      <AppShell.Navbar
-        style={{
-          backgroundColor: currentPalette.surface,
-          borderRight: `1px solid ${currentPalette.primary}`,
-          padding: '24px 16px',
-          color: currentPalette.text,
-        }}
-      >
-        <ScrollArea style={{ height: '100%' }}>
-          <Stack gap="lg" h="100%">
-            {/* Logo/Brand */}
-            <Group gap="md" style={{ padding: '0 8px' }}>
-              <div
-                style={{
-                  width: '32px',
-                  height: '32px',
-                  background: currentPalette.primary,
-                  borderRadius: mantineTheme.radius?.md,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  boxShadow: `0 2px 8px ${currentPalette.primary}30`,
-                  transition: 'all 200ms ease-out',
-                }}
-              >
-                <Text 
-                  fw={700} 
-                  size="sm"
-                  style={{ color: isDark ? currentPalette.background : currentPalette.surface }}
-                >
-                  P
-                </Text>
-              </div>
-              <Text 
-                size="lg" 
-                fw={600}
-                style={{ letterSpacing: '-0.01em', color: currentPalette.text }}
+        {/* Header */}
+        <AppShell.Header
+          style={{
+            backgroundColor: currentPalette.surface,
+            borderBottom: `1px solid ${currentPalette.primary}`,
+            padding: '0 24px',
+            display: 'flex',
+            alignItems: 'center',
+            color: currentPalette.text,
+          }}
+        >
+          <Group h='100%' justify='space-between' w='100%'>
+            <Group>
+              <Burger
+                opened={opened}
+                onClick={toggle}
+                hiddenFrom='sm'
+                size='sm'
+                color={currentPalette.text}
+              />
+              <Text
+                size='xl'
+                fw={700}
+                style={{ color: currentPalette.text }}
+                visibleFrom='sm'
               >
                 P
               </Text>
             </Group>
 
-            {/* Main Navigation */}
-            <Stack gap="xs" style={{ flex: 1 }}>
-              {navigationItems.map((item) => {
-                const Icon = item.icon;
-                const isActive = location.pathname === item.href;
-                
-                return (
-                  <NavLink
-                    key={item.href}
-                    component={Link}
-                    to={item.href}
-                    label={item.label}
-                    leftSection={<Icon size={20} stroke={1.5} />}
-                    active={isActive}
-                    onClick={() => {
-                      if (isMobile) {
-                        toggle();
-                      }
-                    }}
-                    style={{
-                      borderRadius: mantineTheme.radius?.md,
-                      fontWeight: 500,
-                      fontSize: mantineTheme.fontSizes?.sm,
-                      padding: '12px 16px',
-                      transition: 'all 200ms ease-out',
-                      backgroundColor: isActive 
-                        ? currentPalette.primary 
-                        : 'transparent',
-                      color: isActive 
-                        ? (isDark ? currentPalette.background : currentPalette.surface)
-                        : currentPalette.text,
-                    }}
-                    styles={{
-                      root: {
-                        '&:hover': {
-                          backgroundColor: isActive 
-                            ? currentPalette.accent 
-                            : `${currentPalette.accent}30`,
-                        }
-                      }
-                    }}
-                  />
-                );
-              })}
-            </Stack>
+            <Group gap='md'>
+              <Text size='sm' style={{ color: `${currentPalette.text}B3` }}>
+                Dr Anna Terapeutka
+              </Text>
+            </Group>
+          </Group>
+        </AppShell.Header>
 
-            {/* Bottom Navigation */}
-            <Stack gap="xs" style={{ borderTop: `1px solid ${currentPalette.primary}40`, paddingTop: '16px' }}>
-              {bottomItems.map((item) => {
-                const Icon = item.icon;
-                const isRed = item.color === 'red';
-                
-                return (
-                  <NavLink
-                    key={item.href}
-                    component={Link}
-                    to={item.href}
-                    label={item.label}
-                    leftSection={<Icon size={20} stroke={1.5} />}
-                    onClick={() => {
-                      if (isMobile) {
-                        toggle();
-                      }
-                    }}
+        {/* Sidebar */}
+        <AppShell.Navbar
+          style={{
+            backgroundColor: currentPalette.surface,
+            borderRight: `1px solid ${currentPalette.primary}`,
+            padding: '24px 16px',
+            color: currentPalette.text,
+          }}
+        >
+          <ScrollArea style={{ height: '100%' }}>
+            <Stack gap='lg' h='100%'>
+              {/* Logo/Brand */}
+              <Group gap='md' style={{ padding: '0 8px' }}>
+                <div
+                  style={{
+                    width: '32px',
+                    height: '32px',
+                    background: currentPalette.primary,
+                    borderRadius: mantineTheme.radius?.md,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    boxShadow: `0 2px 8px ${currentPalette.primary}30`,
+                    transition: 'all 200ms ease-out',
+                  }}
+                >
+                  <Text
+                    fw={700}
+                    size='sm'
                     style={{
-                      borderRadius: mantineTheme.radius?.md,
-                      fontWeight: 500,
-                      fontSize: mantineTheme.fontSizes?.sm,
-                      padding: '12px 16px',
-                      transition: 'all 200ms ease-out',
-                      color: isRed ? '#ef4444' : currentPalette.text,
+                      color: isDark
+                        ? currentPalette.background
+                        : currentPalette.surface,
                     }}
-                    styles={{
-                      root: {
-                        '&:hover': {
-                          backgroundColor: isRed 
-                            ? '#ef444420' 
-                            : `${currentPalette.accent}30`,
-                        }
-                      }
-                    }}
-                  />
-                );
-              })}
-            </Stack>
-          </Stack>
-        </ScrollArea>
-      </AppShell.Navbar>
+                  >
+                    P
+                  </Text>
+                </div>
+                <Text
+                  size='lg'
+                  fw={600}
+                  style={{
+                    letterSpacing: '-0.01em',
+                    color: currentPalette.text,
+                  }}
+                >
+                  P
+                </Text>
+              </Group>
 
-      {/* Main Content */}
-      <AppShell.Main
-        style={{
-          backgroundColor: currentPalette.background,
-          minHeight: 'calc(100vh - 70px)',
-          paddingBottom: isMobile ? '80px' : '0', // Space for mobile navigation
-          color: currentPalette.text,
-        }}
-      >
-        {children}
-      </AppShell.Main>
-    </AppShell>
+              {/* Main Navigation */}
+              <Stack gap='xs' style={{ flex: 1 }}>
+                {navigationItems.map(item => {
+                  const Icon = item.icon;
+                  const isActive = location.pathname === item.href;
+
+                  return (
+                    <NavLink
+                      key={item.href}
+                      component={Link}
+                      to={item.href}
+                      label={item.label}
+                      leftSection={<Icon size={20} stroke={1.5} />}
+                      active={isActive}
+                      onClick={() => {
+                        if (isMobile) {
+                          toggle();
+                        }
+                      }}
+                      style={{
+                        borderRadius: mantineTheme.radius?.md,
+                        fontWeight: 500,
+                        fontSize: mantineTheme.fontSizes?.sm,
+                        padding: '12px 16px',
+                        transition: 'all 200ms ease-out',
+                        backgroundColor: isActive
+                          ? currentPalette.primary
+                          : 'transparent',
+                        color: isActive
+                          ? isDark
+                            ? currentPalette.background
+                            : currentPalette.surface
+                          : currentPalette.text,
+                      }}
+                      styles={{
+                        root: {
+                          '&:hover': {
+                            backgroundColor: isActive
+                              ? currentPalette.accent
+                              : `${currentPalette.accent}30`,
+                          },
+                        },
+                      }}
+                    />
+                  );
+                })}
+              </Stack>
+
+              {/* Bottom Navigation */}
+              <Stack
+                gap='xs'
+                style={{
+                  borderTop: `1px solid ${currentPalette.primary}40`,
+                  paddingTop: '16px',
+                }}
+              >
+                {bottomItems.map(item => {
+                  const Icon = item.icon;
+                  const isRed = item.color === 'red';
+
+                  return (
+                    <NavLink
+                      key={item.href}
+                      component={Link}
+                      to={item.href}
+                      label={item.label}
+                      leftSection={<Icon size={20} stroke={1.5} />}
+                      onClick={() => {
+                        if (isMobile) {
+                          toggle();
+                        }
+                      }}
+                      style={{
+                        borderRadius: mantineTheme.radius?.md,
+                        fontWeight: 500,
+                        fontSize: mantineTheme.fontSizes?.sm,
+                        padding: '12px 16px',
+                        transition: 'all 200ms ease-out',
+                        color: isRed ? '#ef4444' : currentPalette.text,
+                      }}
+                      styles={{
+                        root: {
+                          '&:hover': {
+                            backgroundColor: isRed
+                              ? '#ef444420'
+                              : `${currentPalette.accent}30`,
+                          },
+                        },
+                      }}
+                    />
+                  );
+                })}
+              </Stack>
+            </Stack>
+          </ScrollArea>
+        </AppShell.Navbar>
+
+        {/* Main Content */}
+        <AppShell.Main
+          style={{
+            backgroundColor: currentPalette.background,
+            minHeight: 'calc(100vh - 70px)',
+            paddingBottom: isMobile ? '80px' : '0', // Space for mobile navigation
+            color: currentPalette.text,
+          }}
+        >
+          {children}
+        </AppShell.Main>
+      </AppShell>
     </>
   );
-}; 
+};

@@ -1,20 +1,44 @@
-import { Select, Group, Text, ColorSwatch, Stack, Switch, ActionIcon, Tooltip } from '@mantine/core';
-import { IconPalette, IconSun, IconMoon, IconMoonStars } from '@tabler/icons-react';
+import {
+  Select,
+  Group,
+  Text,
+  ColorSwatch,
+  Stack,
+  Switch,
+  ActionIcon,
+  Tooltip,
+} from '@mantine/core';
+import {
+  IconPalette,
+  IconSun,
+  IconMoon,
+  IconMoonStars,
+} from '@tabler/icons-react';
 import { useTheme } from '../hooks/useTheme';
-import { isDarkPalette, type ColorPalette, type PaletteId } from '../types/theme';
+import {
+  isDarkPalette,
+  type ColorPalette,
+  type PaletteId,
+} from '../types/theme';
 
 export function ThemeSelector() {
-  const { currentPaletteId, setPalette, getAllPalettes, isDark, currentPalette } = useTheme();
-  
+  const {
+    currentPaletteId,
+    setPalette,
+    getAllPalettes,
+    isDark,
+    currentPalette,
+  } = useTheme();
+
   const palettes = getAllPalettes();
-  
+
   // Prepare select data with custom rendering
   const selectData = palettes.map((palette: ColorPalette) => ({
     value: palette.id,
     label: palette.name,
     palette: palette,
   }));
-  
+
   const handlePaletteChange = (value: string | null) => {
     if (value) {
       const validPalette = palettes.find((p: ColorPalette) => p.id === value);
@@ -34,7 +58,9 @@ export function ThemeSelector() {
   };
 
   const handleNextTheme = () => {
-    const currentIndex = palettes.findIndex((p: ColorPalette) => p.id === currentPaletteId);
+    const currentIndex = palettes.findIndex(
+      (p: ColorPalette) => p.id === currentPaletteId
+    );
     const nextIndex = (currentIndex + 1) % palettes.length;
     setPalette(palettes[nextIndex].id as PaletteId);
   };
@@ -53,22 +79,24 @@ export function ThemeSelector() {
   };
 
   const getTooltipText = () => {
-    const currentIndex = palettes.findIndex((p: ColorPalette) => p.id === currentPaletteId);
+    const currentIndex = palettes.findIndex(
+      (p: ColorPalette) => p.id === currentPaletteId
+    );
     const nextIndex = (currentIndex + 1) % palettes.length;
     const nextPalette = palettes[nextIndex];
     return `Zmień na: ${nextPalette.name}`;
   };
 
   return (
-    <Stack gap="md">
+    <Stack gap='md'>
       {/* Quick Dark/Light Toggle */}
-      <Group justify="space-between" align="center">
-        <Group gap="sm">
+      <Group justify='space-between' align='center'>
+        <Group gap='sm'>
           <Tooltip label={getTooltipText()} withArrow>
             <ActionIcon
               onClick={handleNextTheme}
-              size="lg"
-              variant="subtle"
+              size='lg'
+              variant='subtle'
               style={{
                 backgroundColor: `${currentPalette.primary}20`,
                 color: currentPalette.primary,
@@ -78,46 +106,59 @@ export function ThemeSelector() {
                   '&:hover': {
                     backgroundColor: `${currentPalette.accent}30`,
                     color: currentPalette.accent,
-                  }
-                }
+                  },
+                },
               }}
             >
               {getThemeIcon()}
             </ActionIcon>
           </Tooltip>
-          <Switch 
+          <Switch
             checked={isDark}
-            onChange={(event) => toggleDarkMode(event.currentTarget.checked)}
-            onLabel={<IconSun size={16} stroke={2.5} color={currentPalette.text} />}
-            offLabel={<IconMoonStars size={16} stroke={2.5} color={currentPalette.accent} />}
-            size="md"
+            onChange={event => toggleDarkMode(event.currentTarget.checked)}
+            onLabel={
+              <IconSun size={16} stroke={2.5} color={currentPalette.text} />
+            }
+            offLabel={
+              <IconMoonStars
+                size={16}
+                stroke={2.5}
+                color={currentPalette.accent}
+              />
+            }
+            size='md'
           />
         </Group>
-        <Text size="sm" fw={500} c="dimmed">
+        <Text size='sm' fw={500} c='dimmed'>
           {isDark ? 'Tryb ciemny' : 'Tryb jasny'}
         </Text>
       </Group>
 
       {/* Full Theme Selector */}
-      <Stack gap="xs">
-        <Text size="sm" fw={500}>Motyw kolorystyczny</Text>
+      <Stack gap='xs'>
+        <Text size='sm' fw={500}>
+          Motyw kolorystyczny
+        </Text>
         <Select
-          placeholder="Wybierz paletę"
+          placeholder='Wybierz paletę'
           leftSection={<IconPalette size={16} />}
           value={currentPaletteId}
           onChange={handlePaletteChange}
           data={selectData}
           searchable={false}
           allowDeselect={false}
-          size="sm"
+          size='sm'
           renderOption={({ option }) => {
-            const palette = selectData.find((p: { value: string; label: string; palette: ColorPalette }) => p.value === option.value)?.palette;
+            const palette = selectData.find(
+              (p: { value: string; label: string; palette: ColorPalette }) =>
+                p.value === option.value
+            )?.palette;
             if (!palette) return null;
             const isPaletteDark = isDarkPalette(palette.id as PaletteId);
-            
+
             return (
-              <Group justify="space-between" wrap="nowrap">
-                <Group gap="sm">
+              <Group justify='space-between' wrap='nowrap'>
+                <Group gap='sm'>
                   <Group gap={2}>
                     <ColorSwatch color={palette.background} size={12} />
                     <ColorSwatch color={palette.surface} size={12} />
@@ -125,7 +166,7 @@ export function ThemeSelector() {
                     <ColorSwatch color={palette.accent} size={12} />
                     <ColorSwatch color={palette.text} size={12} />
                   </Group>
-                  <Text size="sm">{palette.name}</Text>
+                  <Text size='sm'>{palette.name}</Text>
                 </Group>
                 {isPaletteDark ? <IconMoon size={16} /> : <IconSun size={16} />}
               </Group>
@@ -135,10 +176,10 @@ export function ThemeSelector() {
             offset: 4,
             withinPortal: true,
             position: 'bottom',
-            middlewares: { flip: false, shift: true }
+            middlewares: { flip: false, shift: true },
           }}
         />
       </Stack>
     </Stack>
   );
-} 
+}

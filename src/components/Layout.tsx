@@ -1,6 +1,12 @@
 import { AppShell, NavLink, Group, Text, Burger, Divider } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { IconActivity, IconCalendar, IconDashboard, IconSettings, IconUsers } from '@tabler/icons-react';
+import {
+  IconActivity,
+  IconCalendar,
+  IconDashboard,
+  IconSettings,
+  IconUsers,
+} from '@tabler/icons-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useTheme } from '../hooks/useTheme';
 import type { ReactNode } from 'react';
@@ -38,23 +44,28 @@ export function Layout({ children }: LayoutProps) {
         breakpoint: 'sm',
         collapsed: { mobile: !opened },
       }}
-      padding="md"
+      padding='md'
     >
       <AppShell.Header>
-        <Group h="100%" px="md" justify="space-between">
+        <Group h='100%' px='md' justify='space-between'>
           <Group>
-            <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
+            <Burger
+              opened={opened}
+              onClick={toggle}
+              hiddenFrom='sm'
+              size='sm'
+            />
             <Group gap={8}>
               <IconActivity size={32} />
-              <Text size="xl" fw={700}>
+              <Text size='xl' fw={700}>
                 P
               </Text>
             </Group>
           </Group>
-          <Text 
-            size="sm" 
-            c="dimmed" 
-            visibleFrom="md"
+          <Text
+            size='sm'
+            c='dimmed'
+            visibleFrom='md'
             style={{ color: currentPalette.text, opacity: 0.7 }}
           >
             Zarządzanie praktyką psychologiczną
@@ -62,45 +73,45 @@ export function Layout({ children }: LayoutProps) {
         </Group>
       </AppShell.Header>
 
-      <AppShell.Navbar p="md">
-        <Text 
-          size="xs" 
-          tt="uppercase" 
-          fw={700} 
-          mb="md"
+      <AppShell.Navbar p='md'>
+        <Text
+          size='xs'
+          tt='uppercase'
+          fw={700}
+          mb='md'
           style={{ color: currentPalette.text, opacity: 0.6 }}
         >
           Główne
         </Text>
-        {mainNavItems.map((item) => (
+        {mainNavItems.map(item => (
           <NavLink
             key={item.path}
             active={location.pathname === item.path}
             label={item.label}
-            leftSection={<item.icon size="1rem" />}
+            leftSection={<item.icon size='1rem' />}
             onClick={() => handleNavigation(item.path)}
-            variant="filled"
+            variant='filled'
             mb={4}
           />
         ))}
-        <Divider my="md" style={{ borderColor: currentPalette.primary }} />
-        <Text 
-          size="xs" 
-          tt="uppercase" 
-          fw={700} 
-          mb="md"
+        <Divider my='md' style={{ borderColor: currentPalette.primary }} />
+        <Text
+          size='xs'
+          tt='uppercase'
+          fw={700}
+          mb='md'
           style={{ color: currentPalette.text, opacity: 0.6 }}
         >
           Aplikacja
         </Text>
-        {settingsNavItems.map((item) => (
+        {settingsNavItems.map(item => (
           <NavLink
             key={item.path}
             active={location.pathname === item.path}
             label={item.label}
-            leftSection={<item.icon size="1rem" />}
+            leftSection={<item.icon size='1rem' />}
             onClick={() => handleNavigation(item.path)}
-            variant="filled"
+            variant='filled'
             mb={4}
           />
         ))}
@@ -109,4 +120,4 @@ export function Layout({ children }: LayoutProps) {
       <AppShell.Main>{children}</AppShell.Main>
     </AppShell>
   );
-} 
+}

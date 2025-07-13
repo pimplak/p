@@ -1,11 +1,11 @@
-import { 
-  TextInput, 
-  Button, 
-  Group, 
-  Stack, 
+import {
+  TextInput,
+  Button,
+  Group,
+  Stack,
   Textarea,
   Select,
-  TagsInput
+  TagsInput,
 } from '@mantine/core';
 import { DateInput } from '@mantine/dates';
 import { useForm } from '@mantine/form';
@@ -22,7 +22,11 @@ interface PatientFormProps {
   onCancel: () => void;
 }
 
-export function PatientForm({ patient, onSuccess, onCancel }: PatientFormProps) {
+export function PatientForm({
+  patient,
+  onSuccess,
+  onCancel,
+}: PatientFormProps) {
   const { addPatient, updatePatient, loading } = usePatientStore();
 
   const form = useForm<PatientFormData>({
@@ -32,7 +36,11 @@ export function PatientForm({ patient, onSuccess, onCancel }: PatientFormProps) 
       nazwa: patient?.nazwa || '',
       email: patient?.email || '',
       phone: patient?.phone || '',
-      birthDate: patient?.birthDate ? (typeof patient.birthDate === 'string' ? new Date(patient.birthDate) : patient.birthDate) : undefined,
+      birthDate: patient?.birthDate
+        ? typeof patient.birthDate === 'string'
+          ? new Date(patient.birthDate)
+          : patient.birthDate
+        : undefined,
       address: patient?.address || '',
       emergencyContact: patient?.emergencyContact || '',
       emergencyPhone: patient?.emergencyPhone || '',
@@ -76,97 +84,103 @@ export function PatientForm({ patient, onSuccess, onCancel }: PatientFormProps) 
       <Stack>
         <Group grow>
           <TextInput
-            label="Imię"
-            placeholder="Wprowadź imię"
+            label='Imię'
+            placeholder='Wprowadź imię'
             required
             {...form.getInputProps('firstName')}
           />
           <TextInput
-            label="Nazwisko"
-            placeholder="Wprowadź nazwisko"
+            label='Nazwisko'
+            placeholder='Wprowadź nazwisko'
             required
             {...form.getInputProps('lastName')}
           />
         </Group>
 
         <TextInput
-          label="Nazwa wyświetlana (opcjonalnie)"
-          placeholder="Jeśli nie podano, będzie używane imię i nazwisko"
+          label='Nazwa wyświetlana (opcjonalnie)'
+          placeholder='Jeśli nie podano, będzie używane imię i nazwisko'
           {...form.getInputProps('nazwa')}
         />
 
         <Group grow>
           <TextInput
-            label="Email"
-            placeholder="email@example.com"
-            type="email"
+            label='Email'
+            placeholder='email@example.com'
+            type='email'
             {...form.getInputProps('email')}
           />
           <TextInput
-            label="Telefon"
-            placeholder="+48 123 456 789"
+            label='Telefon'
+            placeholder='+48 123 456 789'
             {...form.getInputProps('phone')}
           />
         </Group>
 
         <DateInput
-          label="Data urodzenia"
-          placeholder="Wybierz datę"
+          label='Data urodzenia'
+          placeholder='Wybierz datę'
           {...form.getInputProps('birthDate')}
         />
 
         <TextInput
-          label="Adres"
-          placeholder="Ulica, miasto, kod pocztowy"
+          label='Adres'
+          placeholder='Ulica, miasto, kod pocztowy'
           {...form.getInputProps('address')}
         />
 
         <Group grow>
           <TextInput
-            label="Kontakt awaryjny"
-            placeholder="Imię i nazwisko"
+            label='Kontakt awaryjny'
+            placeholder='Imię i nazwisko'
             {...form.getInputProps('emergencyContact')}
           />
           <TextInput
-            label="Telefon awaryjny"
-            placeholder="+48 123 456 789"
+            label='Telefon awaryjny'
+            placeholder='+48 123 456 789'
             {...form.getInputProps('emergencyPhone')}
           />
         </Group>
 
         <Group grow>
           <Select
-            label="Status"
-            placeholder="Wybierz status"
+            label='Status'
+            placeholder='Wybierz status'
             data={[
-              { value: PATIENT_STATUS.ACTIVE, label: PATIENT_STATUS_LABELS[PATIENT_STATUS.ACTIVE] },
-              { value: PATIENT_STATUS.ARCHIVED, label: PATIENT_STATUS_LABELS[PATIENT_STATUS.ARCHIVED] }
+              {
+                value: PATIENT_STATUS.ACTIVE,
+                label: PATIENT_STATUS_LABELS[PATIENT_STATUS.ACTIVE],
+              },
+              {
+                value: PATIENT_STATUS.ARCHIVED,
+                label: PATIENT_STATUS_LABELS[PATIENT_STATUS.ARCHIVED],
+              },
             ]}
             {...form.getInputProps('status')}
           />
           <TagsInput
-            label="Tagi"
-            placeholder="Dodaj tagi (np. terapia par, CBT)"
+            label='Tagi'
+            placeholder='Dodaj tagi (np. terapia par, CBT)'
             {...form.getInputProps('tags')}
           />
         </Group>
 
         <Textarea
-          label="Notatki"
-          placeholder="Dodatkowe informacje o pacjencie..."
+          label='Notatki'
+          placeholder='Dodatkowe informacje o pacjencie...'
           minRows={3}
           {...form.getInputProps('notes')}
         />
 
-        <Group justify="flex-end" mt="md">
-          <Button variant="light" onClick={onCancel}>
+        <Group justify='flex-end' mt='md'>
+          <Button variant='light' onClick={onCancel}>
             Anuluj
           </Button>
-          <Button type="submit" loading={loading}>
+          <Button type='submit' loading={loading}>
             {patient ? 'Aktualizuj' : 'Dodaj'}
           </Button>
         </Group>
       </Stack>
     </form>
   );
-} 
+}
