@@ -1,16 +1,14 @@
-import { useState, useMemo } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
 import { Group, Text, UnstyledButton } from '@mantine/core';
 import {
   IconDashboard,
   IconUsers,
   IconCalendar,
-  IconNotes,
-  IconChartLine,
   type Icon,
 } from '@tabler/icons-react';
-import { useAppointmentStore } from '../../stores/useAppointmentStore';
+import { useState, useMemo } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useTheme } from '../../hooks/useTheme';
+import { useAppointmentStore } from '../../stores/useAppointmentStore';
 
 interface NavigationItem {
   id: string;

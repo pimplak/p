@@ -312,7 +312,7 @@ function Settings() {
                     Ostatnia aktualizacja
                   </Text>
                   <Text size='sm' c='dimmed'>
-                    14.07.2025 01:54:23 AM
+                    15.07.2025 01:57:31 AM
                   </Text>
                 </Group>
               </Stack>

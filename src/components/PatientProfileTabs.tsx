@@ -12,27 +12,24 @@ import {
   Checkbox,
   Menu,
   ActionIcon,
-  ThemeIcon,
 } from '@mantine/core';
 import {
   IconNotes,
   IconCalendar,
-  IconTarget,
   IconPlus,
   IconDownload,
   IconCheck,
   IconX,
   IconFileExport,
-  IconClock,
 } from '@tabler/icons-react';
 import { useState, useEffect } from 'react';
+import { useTheme } from '../hooks/useTheme';
 import { useAppointmentStore } from '../stores/useAppointmentStore';
 import { AppointmentStatus } from '../types/Appointment';
 import { formatDate, formatDateTime } from '../utils/dates';
 import { exportToExcel } from '../utils/export';
 import type { Appointment, AppointmentWithPatient } from '../types/Appointment';
 import type { Patient } from '../types/Patient';
-import { useTheme } from '../hooks/useTheme';
 
 interface PatientProfileTabsProps {
   patient: Patient;

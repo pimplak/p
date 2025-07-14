@@ -6,6 +6,8 @@ import {
   Stack,
   Burger,
   ScrollArea,
+  Box,
+  Transition,
 } from '@mantine/core';
 import { useDisclosure, useMediaQuery } from '@mantine/hooks';
 import {
@@ -18,6 +20,7 @@ import {
   IconLogout,
 } from '@tabler/icons-react';
 import { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { Link, useLocation } from 'react-router-dom';
 import { useGestures } from '../../hooks/useGestures';
 import { useTheme } from '../../hooks/useTheme';
@@ -72,7 +75,7 @@ const bottomItems = [
 ];
 
 export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
-  const [opened, { toggle }] = useDisclosure();
+  const [opened, { toggle, close }] = useDisclosure();
   const [drawerProgress, setDrawerProgress] = useState(0);
   const isMobile = useMediaQuery('(max-width: 768px)');
   const location = useLocation();
@@ -81,6 +84,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
   // Dodaj gesty tylko na mobile
   useGestures({
     enableDrawer: isMobile,
+    isDrawerOpen: opened,
     onDrawerOpen: () => {
       if (isMobile) {
         toggle();
@@ -96,6 +100,35 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
 
   return (
     <>
+      {/* Overlay to close menu when clicking outside */}
+      {opened && isMobile &&
+        createPortal(
+          <Transition
+            mounted={opened}
+            transition='fade'
+            duration={200}
+            timingFunction='ease'
+          >
+            {styles => (
+              <Box
+                style={{
+                  ...styles,
+                  position: 'fixed',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  backgroundColor: 'rgba(0, 0, 0, 0.3)',
+                  zIndex: 9997, // Below navbar but above other content
+                  pointerEvents: 'auto',
+                }}
+                onClick={close}
+              />
+            )}
+          </Transition>,
+          document.body
+        )}
+
       {/* Drawer Overlay for gesture feedback */}
       {isMobile && (
         <DrawerOverlay 
@@ -163,6 +196,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
             borderRight: `1px solid ${currentPalette.primary}`,
             padding: '24px 16px',
             color: currentPalette.text,
+            zIndex: 9998, // Above overlay
           }}
         >
           <ScrollArea style={{ height: '100%' }}>

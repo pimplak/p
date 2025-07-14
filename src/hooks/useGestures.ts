@@ -8,6 +8,8 @@ interface GestureConfig {
     onDrawerOpen?: () => void;
     onDrawerClose?: () => void;
     onDrawerProgress?: (progress: number) => void;
+    onDrawerStateChange?: (isOpen: boolean) => void;
+    isDrawerOpen?: boolean;
 }
 
 interface TouchPoint {
@@ -24,6 +26,8 @@ export function useGestures(config: GestureConfig = {}) {
         onDrawerOpen,
         onDrawerClose,
         onDrawerProgress,
+        onDrawerStateChange,
+        isDrawerOpen: externalIsDrawerOpen,
     } = config;
 
     const navigate = useNavigate();
@@ -31,6 +35,12 @@ export function useGestures(config: GestureConfig = {}) {
     const touchEnd = useRef<TouchPoint | null>(null);
     const isDrawerOpen = useRef(false);
     const isDragging = useRef(false);
+
+    useEffect(() => {
+        if (externalIsDrawerOpen !== undefined) {
+            isDrawerOpen.current = externalIsDrawerOpen;
+        }
+    }, [externalIsDrawerOpen]);
 
     const onTouchStart = useCallback((e: TouchEvent) => {
         touchStart.current = {
@@ -85,12 +95,14 @@ export function useGestures(config: GestureConfig = {}) {
         if (enableDrawer && start.x < 50 && deltaX > minSwipeDistance) {
             if (!isDrawerOpen.current) {
                 isDrawerOpen.current = true;
+                onDrawerStateChange?.(true);
                 onDrawerOpen?.();
             }
         }
         // Zamknij drawer - swipe w prawo na otwartym drawerze
         else if (enableDrawer && isDrawerOpen.current && deltaX < -minSwipeDistance) {
             isDrawerOpen.current = false;
+            onDrawerStateChange?.(false);
             onDrawerClose?.();
         }
 
@@ -99,7 +111,7 @@ export function useGestures(config: GestureConfig = {}) {
         document.body.style.overflow = '';
         isDragging.current = false;
         onDrawerProgress?.(0); // Reset progress
-    }, [navigate, minSwipeDistance, maxSwipeTime, enableDrawer, onDrawerOpen, onDrawerClose, onDrawerProgress]);
+    }, [navigate, minSwipeDistance, maxSwipeTime, enableDrawer, onDrawerOpen, onDrawerClose, onDrawerProgress, onDrawerStateChange]);
 
     useEffect(() => {
         document.addEventListener('touchstart', onTouchStart, { passive: true });
