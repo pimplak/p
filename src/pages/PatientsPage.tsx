@@ -15,10 +15,10 @@ import { PatientsCardList } from '../components/PatientsCardList';
 import { PatientSearchBar } from '../components/PatientSearchBar';
 import { PatientsPageHeader } from '../components/PatientsPageHeader';
 import { PatientTable } from '../components/PatientTable';
+import { useExport } from '../hooks/useExport';
 import { useTheme } from '../hooks/useTheme';
 import { useAppointmentStore } from '../stores/useAppointmentStore';
 import { usePatientStore } from '../stores/usePatientStore';
-import { exportToExcel } from '../utils/export';
 import type { Patient } from '../types/Patient';
 
 function PatientsPage() {
@@ -38,9 +38,11 @@ function PatientsPage() {
   const { appointments, fetchAppointments } = useAppointmentStore();
 
   const [opened, { open, close }] = useDisclosure(false);
-  const [exportOpened, { open: openExport, close: closeExport }] =
-    useDisclosure(false);
   const [editingPatient, setEditingPatient] = useState<Patient | undefined>();
+  const { exportOpened, handleExport, handleExportData, closeExport } = useExport(
+    patients,
+    appointments
+  );
   const [searchQuery, setSearchQuery] = useState('');
 
   // Debounce search query - 300ms throttling
@@ -130,45 +132,7 @@ function PatientsPage() {
     setEditingPatient(undefined);
   };
 
-  const handleExport = () => {
-    openExport();
-  };
 
-  const handleExportData = async (options: {
-    exportPatients: boolean;
-    exportAppointments: boolean;
-    dateFrom: Date | null;
-    dateTo: Date | null;
-    selectedPatients: number[];
-  }) => {
-    try {
-      const patientsToExport =
-        options.selectedPatients.length > 0
-          ? patients.filter(p => options.selectedPatients.includes(p.id!))
-          : patients;
-
-      // Use the proper exportToExcel function that handles both patients and appointments
-      await exportToExcel(patientsToExport, appointments, {
-        patients: options.exportPatients,
-        appointments: options.exportAppointments,
-        dateFrom: options.dateFrom || undefined,
-        dateTo: options.dateTo || undefined,
-        selectedPatients:
-          options.selectedPatients.length > 0
-            ? options.selectedPatients
-            : undefined,
-      });
-
-      closeExport();
-    } catch (error) {
-      console.error('Export error:', error);
-      notifications.show({
-        title: 'Błąd',
-        message: 'Nie udało się wyeksportować danych',
-        color: 'red',
-      });
-    }
-  };
 
   // FAB Actions dla mobile
   const fabActions: FABAction[] = [

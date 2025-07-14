@@ -7,13 +7,15 @@ import {
   Card,
   SimpleGrid,
 } from '@mantine/core';
-import { IconPlus, IconCalendar } from '@tabler/icons-react';
+import { IconPlus, IconCalendar, IconDownload, IconNote } from '@tabler/icons-react';
 import { useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BulkSMSReminders } from '../components/BulkSMSReminders';
 import { DashboardStats } from '../components/dashboard/DashboardStats';
+import { ExportModal } from '../components/ExportModal';
 import { FloatingActionButton } from '../components/FloatingActionButton';
 import { Button } from '../components/ui/Button';
+import { useExport } from '../hooks/useExport';
 import { useTheme } from '../hooks/useTheme';
 import { useAppointmentStore } from '../stores/useAppointmentStore';
 import { usePatientStore } from '../stores/usePatientStore';
@@ -29,6 +31,10 @@ function Dashboard() {
     getUpcomingAppointments,
   } = useAppointmentStore();
   const { currentPalette, mantineTheme } = useTheme();
+  const { exportOpened, handleExport, handleExportData, closeExport } = useExport(
+    patients,
+    appointments
+  );
 
   // Fetch data on mount
   useEffect(() => {
@@ -329,10 +335,34 @@ function Dashboard() {
             {
               id: 'new-session',
               icon: <IconPlus size='1.5rem' />,
-              label: 'Dodaj nową sesję',
+              label: 'Dodaj sesję',
               onClick: () => navigate('/calendar'),
             },
+            {
+              id: 'export-excel',
+              icon: <IconDownload size='1.5rem' />,
+              label: 'Eksport',
+              onClick: handleExport,
+            },
+            {
+              id: 'add-note',
+              icon: <IconNote size='1.5rem' />,
+              label: 'Dodaj notatkę',
+              onClick: () => {
+                // TODO: Implementacja dodawania notatek
+                console.log('Add note clicked');
+              },
+              disabled: true, // Feature nieaktywny
+            },
           ]}
+        />
+
+        {/* Export Modal */}
+        <ExportModal
+          opened={exportOpened}
+          onClose={closeExport}
+          filteredPatients={patients}
+          onExport={handleExportData}
         />
       </Stack>
     </Container>
