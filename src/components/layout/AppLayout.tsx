@@ -17,10 +17,13 @@ import {
   IconSettings,
   IconLogout,
 } from '@tabler/icons-react';
+import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import type { ReactNode } from 'react';
+import { useGestures } from '../../hooks/useGestures';
 import { useTheme } from '../../hooks/useTheme';
+import { DrawerOverlay } from '../ui/DrawerOverlay';
 import { MobileNavigation } from './MobileNavigation';
+import type { ReactNode } from 'react';
 
 interface AppLayoutProps {
   children: ReactNode;
@@ -70,12 +73,37 @@ const bottomItems = [
 
 export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
   const [opened, { toggle }] = useDisclosure();
+  const [drawerProgress, setDrawerProgress] = useState(0);
   const isMobile = useMediaQuery('(max-width: 768px)');
   const location = useLocation();
   const { currentPalette, isDark, mantineTheme } = useTheme();
 
+  // Dodaj gesty tylko na mobile
+  useGestures({
+    enableDrawer: isMobile,
+    onDrawerOpen: () => {
+      if (isMobile) {
+        toggle();
+      }
+    },
+    onDrawerClose: () => {
+      if (isMobile && opened) {
+        toggle();
+      }
+    },
+    onDrawerProgress: setDrawerProgress,
+  });
+
   return (
     <>
+      {/* Drawer Overlay for gesture feedback */}
+      {isMobile && (
+        <DrawerOverlay 
+          isVisible={drawerProgress > 0} 
+          progress={drawerProgress} 
+        />
+      )}
+      
       {/* Mobile Navigation - shown only on mobile */}
       {isMobile && <MobileNavigation />}
       <AppShell
