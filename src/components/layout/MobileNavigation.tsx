@@ -83,18 +83,18 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
       badge:
         todaysPendingAppointments > 0 ? todaysPendingAppointments : undefined,
     },
-    {
-      id: 'notes',
-      label: 'Notatki',
-      icon: IconNotes,
-      href: '/notes',
-    },
-    {
-      id: 'analytics',
-      label: 'Statystyki',
-      icon: IconChartLine,
-      href: '/analytics',
-    },
+    // {
+    //   id: 'notes',
+    //   label: 'Notatki',
+    //   icon: IconNotes,
+    //   href: '/notes',
+    // },
+    // {
+    //   id: 'analytics',
+    //   label: 'Statystyki',
+    //   icon: IconChartLine,
+    //   href: '/analytics',
+    // },
   ];
 
   const handleItemPress = (item: NavigationItem) => {

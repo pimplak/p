@@ -12,8 +12,8 @@ import { useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BulkSMSReminders } from '../components/BulkSMSReminders';
 import { DashboardStats } from '../components/dashboard/DashboardStats';
+import { FloatingActionButton } from '../components/FloatingActionButton';
 import { Button } from '../components/ui/Button';
-import { GlassFAB } from '../components/ui/GlassFAB';
 import { useTheme } from '../hooks/useTheme';
 import { useAppointmentStore } from '../stores/useAppointmentStore';
 import { usePatientStore } from '../stores/usePatientStore';
@@ -324,12 +324,15 @@ function Dashboard() {
         )}
 
         {/* Floating Action Button - tylko na mobile */}
-        <GlassFAB
-          icon={IconPlus}
-          label='Dodaj nową sesję'
-          onClick={() => navigate('/calendar')}
-          variant='primary'
-          position='bottom-right'
+        <FloatingActionButton
+          actions={[
+            {
+              id: 'new-session',
+              icon: <IconPlus size='1.5rem' />,
+              label: 'Dodaj nową sesję',
+              onClick: () => navigate('/calendar'),
+            },
+          ]}
         />
       </Stack>
     </Container>

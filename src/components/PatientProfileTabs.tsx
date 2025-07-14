@@ -129,12 +129,12 @@ export function PatientProfileTabs({ patient }: PatientProfileTabsProps) {
         >
           Wizyty
         </Tabs.Tab>
-        <Tabs.Tab value='notes' leftSection={<IconNotes size='1rem' />}>
+        {/* <Tabs.Tab value='notes' leftSection={<IconNotes size='1rem' />}>
           Notatki
         </Tabs.Tab>
         <Tabs.Tab value='goals' leftSection={<IconTarget size='1rem' />}>
           Cele terapii
-        </Tabs.Tab>
+        </Tabs.Tab> */}
       </Tabs.List>
 
       <Tabs.Panel value='overview' pt='md'>
@@ -322,7 +322,7 @@ export function PatientProfileTabs({ patient }: PatientProfileTabsProps) {
         </Paper>
       </Tabs.Panel>
 
-      <Tabs.Panel value='notes' pt='md'>
+      {/* <Tabs.Panel value='notes' pt='md'>
         <Paper p='md' withBorder>
           <Stack gap='md' align='center' ta='center' py='xl'>
             <ThemeIcon size='lg' variant='light' color={currentPalette.accent}>
@@ -356,7 +356,7 @@ export function PatientProfileTabs({ patient }: PatientProfileTabsProps) {
             </div>
           </Stack>
         </Paper>
-      </Tabs.Panel>
+      </Tabs.Panel> */}
     </Tabs>
   );
 }
