@@ -6,7 +6,6 @@ import {
   Card,
   Badge,
   ActionIcon,
-  Modal,
   TextInput,
   Textarea,
   Divider,
@@ -30,6 +29,7 @@ import { useState } from 'react';
 import { useTheme } from '../hooks/useTheme';
 import { useSettingsStore } from '../stores/useSettingsStore';
 import { DEFAULT_SMS_TEMPLATES, type SMSTemplate } from '../utils/sms';
+import { BottomSheet } from './ui/BottomSheet';
 
 // Available variables for SMS templates
 const availableVariables = [
@@ -326,12 +326,11 @@ export function SMSTemplateManager() {
         })}
       </Stack>
 
-      {/* Template form modal */}
-      <Modal
+      {/* Template form bottom sheet */}
+      <BottomSheet
         opened={opened}
         onClose={handleCloseModal}
         title={editingTemplate ? 'Edytuj szablon' : 'Nowy szablon SMS'}
-        size='lg'
       >
         <Stack gap='md'>
           <TextInput
@@ -402,7 +401,7 @@ export function SMSTemplateManager() {
             </Button>
           </Group>
         </Stack>
-      </Modal>
+      </BottomSheet>
     </Stack>
   );
 }

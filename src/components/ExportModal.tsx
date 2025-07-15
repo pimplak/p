@@ -1,5 +1,4 @@
 import {
-  Modal,
   Stack,
   Text,
   Checkbox,
@@ -10,6 +9,7 @@ import {
 import { DateInput } from '@mantine/dates';
 import { useState } from 'react';
 import { getPatientDisplayName } from '../utils/dates';
+import { BottomSheet } from './ui/BottomSheet';
 import type { PatientWithAppointments } from '../types/Patient';
 
 interface ExportModalProps {
@@ -64,7 +64,7 @@ export function ExportModal({
   };
 
   return (
-    <Modal opened={opened} onClose={onClose} title='Eksport danych' size='md'>
+    <BottomSheet opened={opened} onClose={onClose} title='Eksport danych'>
       <Stack>
         <div>
           <Text fw={500} mb='xs'>
@@ -158,6 +158,6 @@ export function ExportModal({
           <Button onClick={handleExport}>Eksportuj</Button>
         </Group>
       </Stack>
-    </Modal>
+    </BottomSheet>
   );
 }

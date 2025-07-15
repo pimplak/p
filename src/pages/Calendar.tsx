@@ -3,7 +3,6 @@ import {
   Button,
   Group,
   Card,
-  Modal,
   Stack,
   Text,
   Badge,
@@ -57,6 +56,7 @@ import {
   type FABAction,
 } from '../components/FloatingActionButton';
 import { SMSReminderButton } from '../components/SMSReminderButton';
+import { BottomSheet } from '../components/ui/BottomSheet';
 import { ExpandableAppointmentRow } from '../components/ui/ExpandableAppointmentRow';
 import { useTheme } from '../hooks/useTheme';
 import { useAppointmentStore } from '../stores/useAppointmentStore';
@@ -398,18 +398,17 @@ function Calendar() {
         )}
       </Card>
 
-      <Modal
+      <BottomSheet
         opened={opened}
         onClose={close}
         title={editingAppointment ? 'Edytuj wizytę' : 'Dodaj wizytę'}
-        size='lg'
       >
         <AppointmentForm
           appointment={editingAppointment}
           onSuccess={handleFormSuccess}
           onCancel={close}
         />
-      </Modal>
+      </BottomSheet>
 
       {/* Floating Action Button for mobile */}
       <FloatingActionButton actions={fabActions} />

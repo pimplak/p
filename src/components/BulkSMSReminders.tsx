@@ -1,6 +1,5 @@
 import {
   Button,
-  Modal,
   Stack,
   Group,
   Text,
@@ -40,6 +39,7 @@ import {
   formatPhoneNumber,
   sendSMSReminder,
 } from '../utils/sms';
+import { BottomSheet } from './ui/BottomSheet';
 import type { AppointmentWithPatient } from '../types/Appointment';
 import type { Patient } from '../types/Patient';
 
@@ -326,12 +326,10 @@ export function BulkSMSReminders({
     <>
       {renderTrigger()}
 
-      <Modal
+      <BottomSheet
         opened={opened}
         onClose={close}
         title='Wyślij przypomnienia SMS'
-        size='xl'
-        centered
       >
         <Stack gap='md'>
           {/* Statistics */}
@@ -542,7 +540,7 @@ export function BulkSMSReminders({
             </Button>
           </Group>
         </Stack>
-      </Modal>
+      </BottomSheet>
     </>
   );
 }

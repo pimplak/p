@@ -22,9 +22,9 @@ export function BottomSheet({
     <Drawer
       opened={opened}
       onClose={onClose}
-      position="bottom"
+      position={isMobile ? "bottom" : "right"}
       title={title}
-      size={isMobile ? '100%' : '60%'}
+      size={isMobile ? '90%' : '40%'}
       overlayProps={{ opacity: 0.5, blur: 4 }}
       closeOnClickOutside={true}
       closeOnEscape={true}
@@ -34,8 +34,10 @@ export function BottomSheet({
           zIndex: 1000,
         },
         content: {
-          borderTopLeftRadius: '16px',
-          borderTopRightRadius: '16px',
+          borderTopLeftRadius: isMobile ? '16px' : '0',
+          borderTopRightRadius: isMobile ? '16px' : '0',
+          borderBottomLeftRadius: isMobile ? '0' : '16px',
+          borderBottomRightRadius: isMobile ? '0' : '16px',
         },
         header: {
           borderBottom: '1px solid var(--mantine-color-gray-3)',

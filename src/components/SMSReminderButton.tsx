@@ -1,7 +1,6 @@
 import {
   Button,
   Menu,
-  Modal,
   Stack,
   Group,
   Text,
@@ -38,6 +37,7 @@ import {
   validatePhoneNumber,
   formatPhoneNumber,
 } from '../utils/sms';
+import { BottomSheet } from './ui/BottomSheet';
 import type { Appointment } from '../types/Appointment';
 import type { Patient } from '../types/Patient';
 
@@ -240,12 +240,10 @@ export function SMSReminderButton({
     <>
       {renderTrigger()}
 
-      <Modal
+      <BottomSheet
         opened={opened}
         onClose={close}
         title='Wyślij przypomnienie SMS'
-        size='md'
-        centered
       >
         <Stack gap='md'>
           {/* Patient info */}
@@ -371,7 +369,7 @@ export function SMSReminderButton({
             </Button>
           </Group>
         </Stack>
-      </Modal>
+      </BottomSheet>
     </>
   );
 }
