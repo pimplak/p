@@ -577,6 +577,24 @@ export const useTheme = () => {
                     },
                 },
 
+                Drawer: {
+                    defaultProps: {
+                        radius: 'md',
+                    },
+                    styles: {
+                        content: {
+                            backgroundColor: currentPalette.surface,
+                            color: currentPalette.text,
+                            border: `1px solid ${currentPalette.primary}40`,
+                        },
+                        header: {
+                            backgroundColor: currentPalette.surface,
+                            color: currentPalette.text,
+                            borderBottom: `1px solid ${currentPalette.primary}40`,
+                        },
+                    },
+                },
+
                 Modal: {
                     defaultProps: {
                         centered: true,

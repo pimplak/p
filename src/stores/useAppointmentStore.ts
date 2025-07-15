@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { db } from '../utils/db';
-import type { Appointment, AppointmentWithPatient } from '../types/Appointment';
 import { needsReminder } from '../utils/sms';
+import type { Appointment, AppointmentWithPatient } from '../types/Appointment';
 
 interface AppointmentStore {
   appointments: AppointmentWithPatient[];

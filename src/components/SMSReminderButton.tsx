@@ -29,8 +29,6 @@ import { pl } from 'date-fns/locale';
 import { useState, useMemo } from 'react';
 import { useAppointmentStore } from '../stores/useAppointmentStore';
 import { useSettingsStore } from '../stores/useSettingsStore';
-import type { Appointment } from '../types/Appointment';
-import type { Patient } from '../types/Patient';
 import {
   sendSMSReminder,
   generateSMSMessage,
@@ -40,6 +38,8 @@ import {
   validatePhoneNumber,
   formatPhoneNumber,
 } from '../utils/sms';
+import type { Appointment } from '../types/Appointment';
+import type { Patient } from '../types/Patient';
 
 interface SMSReminderButtonProps {
   patient: Patient;

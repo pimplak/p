@@ -11,8 +11,8 @@ import {
 import { IconPlus, IconX } from '@tabler/icons-react';
 import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import type { ReactNode } from 'react';
 import { useTheme } from '../hooks/useTheme';
+import type { ReactNode } from 'react';
 
 export interface FABAction {
   id: string;

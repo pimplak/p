@@ -27,12 +27,10 @@ import {
 import { format } from 'date-fns';
 import { pl } from 'date-fns/locale';
 import { useState, useMemo, useEffect } from 'react';
+import { useTheme } from '../hooks/useTheme';
 import { useAppointmentStore } from '../stores/useAppointmentStore';
 import { usePatientStore } from '../stores/usePatientStore';
 import { useSettingsStore } from '../stores/useSettingsStore';
-import { useTheme } from '../hooks/useTheme';
-import type { AppointmentWithPatient } from '../types/Appointment';
-import type { Patient } from '../types/Patient';
 import {
   generateSMSMessage,
   getRecommendedTemplate,
@@ -42,6 +40,8 @@ import {
   formatPhoneNumber,
   sendSMSReminder,
 } from '../utils/sms';
+import type { AppointmentWithPatient } from '../types/Appointment';
+import type { Patient } from '../types/Patient';
 
 interface BulkSMSRemindersProps {
   variant?: 'button' | 'icon';

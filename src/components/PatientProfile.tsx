@@ -19,6 +19,7 @@ import { PatientForm } from './PatientForm';
 import { PatientProfileHeader } from './PatientProfileHeader';
 import { PatientProfileTabs } from './PatientProfileTabs';
 import { PatientQuickInfoCards } from './PatientQuickInfoCards';
+import { BottomSheet } from './ui/BottomSheet';
 import type { Patient } from '../types/Patient';
 
 function PatientProfile() {
@@ -146,19 +147,18 @@ function PatientProfile() {
         <PatientProfileTabs patient={patient} />
       </Stack>
 
-      {/* Edit Modal */}
-      <Modal
+      {/* Edit Bottom Sheet */}
+      <BottomSheet
         opened={editModalOpen}
         onClose={() => setEditModalOpen(false)}
         title='Edytuj dane pacjenta'
-        size='lg'
       >
         <PatientForm
           patient={patient}
           onSuccess={handleEditSuccess}
           onCancel={() => setEditModalOpen(false)}
         />
-      </Modal>
+      </BottomSheet>
 
       {/* Archive Confirmation Modal */}
       <Modal

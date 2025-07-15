@@ -1,4 +1,4 @@
-import { Card, Alert, Skeleton, Container, Modal } from '@mantine/core';
+import { Card, Alert, Skeleton, Container } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { notifications } from '@mantine/notifications';
 import { IconUser, IconPlus, IconDownload } from '@tabler/icons-react';
@@ -15,6 +15,7 @@ import { PatientsCardList } from '../components/PatientsCardList';
 import { PatientSearchBar } from '../components/PatientSearchBar';
 import { PatientsPageHeader } from '../components/PatientsPageHeader';
 import { PatientTable } from '../components/PatientTable';
+import { BottomSheet } from '../components/ui/BottomSheet';
 import { useExport } from '../hooks/useExport';
 import { useTheme } from '../hooks/useTheme';
 import { useAppointmentStore } from '../stores/useAppointmentStore';
@@ -216,19 +217,18 @@ function PatientsPage() {
         )}
       </Card>
 
-      {/* Patient Form Modal */}
-      <Modal
+      {/* Patient Form Bottom Sheet */}
+      <BottomSheet
         opened={opened}
         onClose={close}
         title={editingPatient ? 'Edytuj pacjenta' : 'Dodaj pacjenta'}
-        size='lg'
       >
         <PatientForm
           patient={editingPatient}
           onSuccess={handleFormSuccess}
           onCancel={close}
         />
-      </Modal>
+      </BottomSheet>
 
       {/* Export Modal */}
       <ExportModal

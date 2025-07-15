@@ -23,8 +23,8 @@ import {
   AppointmentType,
   PaymentMethod,
 } from '../types/Appointment';
-import type { Appointment } from '../types/Appointment';
 import { getPatientDisplayName } from '../utils/dates';
+import type { Appointment } from '../types/Appointment';
 
 interface AppointmentFormProps {
   appointment?: Appointment | null;
