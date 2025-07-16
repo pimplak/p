@@ -1,12 +1,8 @@
 import {
   Container,
   Stack,
-  Modal,
   LoadingOverlay,
   Alert,
-  Text,
-  Group,
-  Button,
 } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { IconAlertCircle } from '@tabler/icons-react';
@@ -14,11 +10,11 @@ import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTheme } from '../hooks/useTheme';
 import { usePatientStore } from '../stores/usePatientStore';
-import { getPatientDisplayName } from '../utils/dates';
 import { PatientForm } from './PatientForm';
 import { PatientProfileHeader } from './PatientProfileHeader';
 import { PatientProfileTabs } from './PatientProfileTabs';
 import { PatientQuickInfoCards } from './PatientQuickInfoCards';
+import { ArchiveConfirmationModal } from './ui/ArchiveConfirmationModal';
 import { BottomSheet } from './ui/BottomSheet';
 import type { Patient } from '../types/Patient';
 
@@ -161,31 +157,13 @@ function PatientProfile() {
       </BottomSheet>
 
       {/* Archive Confirmation Modal */}
-      <Modal
+      <ArchiveConfirmationModal
         opened={archiveModalOpen}
         onClose={() => setArchiveModalOpen(false)}
-        title='Potwierdź archiwizację'
-        size='sm'
-      >
-        <Stack gap='md'>
-          <Text>
-            Czy na pewno chcesz zarchiwizować pacjenta{' '}
-            <strong>{getPatientDisplayName(patient)}</strong>?
-          </Text>
-          <Text size='sm' c='dimmed'>
-            Pacjent zostanie ukryty z głównej listy, ale wszystkie dane będą
-            zachowane i można będzie go przywrócić w każdej chwili.
-          </Text>
-          <Group justify='flex-end'>
-            <Button variant='light' onClick={() => setArchiveModalOpen(false)}>
-              Anuluj
-            </Button>
-            <Button color={utilityColors.error} onClick={handleArchive}>
-              Archiwizuj
-            </Button>
-          </Group>
-        </Stack>
-      </Modal>
+        patient={patient}
+        onConfirm={handleArchive}
+        utilityColors={utilityColors}
+      />
     </Container>
   );
 }

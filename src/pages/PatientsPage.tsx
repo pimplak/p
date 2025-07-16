@@ -15,6 +15,7 @@ import { PatientsCardList } from '../components/PatientsCardList';
 import { PatientSearchBar } from '../components/PatientSearchBar';
 import { PatientsPageHeader } from '../components/PatientsPageHeader';
 import { PatientTable } from '../components/PatientTable';
+import { ArchiveConfirmationModal } from '../components/ui/ArchiveConfirmationModal';
 import { BottomSheet } from '../components/ui/BottomSheet';
 import { useExport } from '../hooks/useExport';
 import { useTheme } from '../hooks/useTheme';
@@ -40,6 +41,8 @@ function PatientsPage() {
 
   const [opened, { open, close }] = useDisclosure(false);
   const [editingPatient, setEditingPatient] = useState<Patient | undefined>();
+  const [archiveModalOpened, setArchiveModalOpened] = useState(false);
+  const [patientToArchive, setPatientToArchive] = useState<Patient | null>(null);
   const { exportOpened, handleExport, handleExportData, closeExport } = useExport(
     patients,
     appointments
@@ -89,14 +92,29 @@ function PatientsPage() {
   );
 
   const handleArchivePatient = useCallback(
-    async (id: number) => {
+    (id: number) => {
+      const patient = patients.find(p => p.id === id);
+      if (patient) {
+        setPatientToArchive(patient);
+        setArchiveModalOpened(true);
+      }
+    },
+    [patients]
+  );
+
+  const handleConfirmArchive = useCallback(
+    async () => {
+      if (!patientToArchive?.id) return;
+
       try {
-        await archivePatient(id);
+        await archivePatient(patientToArchive.id);
         notifications.show({
           title: 'Sukces',
           message: 'Pacjent został zarchiwizowany',
           color: 'green',
         });
+        setArchiveModalOpened(false);
+        setPatientToArchive(null);
       } catch {
         notifications.show({
           title: 'Błąd',
@@ -105,7 +123,7 @@ function PatientsPage() {
         });
       }
     },
-    [archivePatient]
+    [archivePatient, patientToArchive]
   );
 
   const handleRestorePatient = useCallback(
@@ -236,6 +254,18 @@ function PatientsPage() {
         onClose={closeExport}
         filteredPatients={filteredPatients}
         onExport={handleExportData}
+      />
+
+      {/* Archive Confirmation Modal */}
+      <ArchiveConfirmationModal
+        opened={archiveModalOpened}
+        onClose={() => {
+          setArchiveModalOpened(false);
+          setPatientToArchive(null);
+        }}
+        patient={patientToArchive}
+        onConfirm={handleConfirmArchive}
+        utilityColors={utilityColors}
       />
 
       {/* Floating Action Button for mobile */}
