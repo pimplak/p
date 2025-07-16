@@ -1,5 +1,7 @@
 import { Drawer } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
+import { useEffect } from 'react';
+import { useBottomSheetState } from '../../hooks/useBottomSheetState';
 import type { DrawerProps } from '@mantine/core';
 
 interface BottomSheetProps extends Omit<DrawerProps, 'position'> {
@@ -17,6 +19,16 @@ export function BottomSheet({
   ...props
 }: BottomSheetProps) {
   const isMobile = useMediaQuery('(max-width: 768px)');
+  const { openBottomSheet, closeBottomSheet } = useBottomSheetState();
+
+  // Synchronizuj stan z globalnym store
+  useEffect(() => {
+    if (opened) {
+      openBottomSheet();
+    } else {
+      closeBottomSheet();
+    }
+  }, [opened, openBottomSheet, closeBottomSheet]);
 
   return (
     <Drawer

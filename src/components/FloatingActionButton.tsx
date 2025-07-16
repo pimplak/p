@@ -11,6 +11,7 @@ import {
 import { IconPlus, IconX } from '@tabler/icons-react';
 import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
+import { useBottomSheetState } from '../hooks/useBottomSheetState';
 import { useTheme } from '../hooks/useTheme';
 import type { ReactNode } from 'react';
 
@@ -34,6 +35,7 @@ export function FloatingActionButton({
 }: FloatingActionButtonProps) {
   const [opened, setOpened] = useState(false);
   const { currentPalette } = useTheme();
+  const { isAnyBottomSheetOpen } = useBottomSheetState();
 
   // Blokuj scrollowanie gdy menu jest otwarte
   useEffect(() => {
@@ -50,6 +52,9 @@ export function FloatingActionButton({
   }, [opened]);
 
   if (actions.length === 0) return null;
+
+  // Ukryj FAB gdy bottom sheet jest otwarty
+  if (isAnyBottomSheetOpen) return null;
 
   // Jeśli tylko jedna akcja, pokaż jako prosty FAB
   if (actions.length === 1) {
