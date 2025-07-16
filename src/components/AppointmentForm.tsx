@@ -173,7 +173,7 @@ export function AppointmentForm({
 
   return (
     <form onSubmit={form.onSubmit(handleSubmit)}>
-      <Stack>
+      <Stack gap="md">
         <Select
           label='Pacjent'
           placeholder='Wybierz pacjenta'

@@ -81,7 +81,7 @@ export function PatientForm({
 
   return (
     <form onSubmit={form.onSubmit(handleSubmit)}>
-      <Stack>
+      <Stack gap="md">
         <Group grow>
           <TextInput
             label='Imię'

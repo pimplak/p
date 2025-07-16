@@ -342,7 +342,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
           style={{
             backgroundColor: currentPalette.background,
             minHeight: 'calc(100vh - 70px)',
-            paddingBottom: isMobile ? '80px' : '0', // Space for mobile navigation
+            paddingBottom: isMobile ? '100px' : '0', // Space for mobile navigation
             color: currentPalette.text,
           }}
         >

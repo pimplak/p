@@ -94,6 +94,16 @@ button {
     border-radius: 0; /* Remove iOS styling */
     appearance: none;
   }
+
+  /* Dodatkowy padding dla formularzy na mobile */
+  form {
+    padding-bottom: 20px;
+  }
+
+  /* Zapewnij że ostatni element w formularzu ma margines */
+  form > *:last-child {
+    margin-bottom: 20px;
+  }
 }
 
 /* Very small screens */

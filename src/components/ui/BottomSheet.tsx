@@ -45,6 +45,7 @@ export function BottomSheet({
         },
         body: {
           paddingTop: 'var(--mantine-spacing-md)',
+          paddingBottom: isMobile ? '100px' : 'var(--mantine-spacing-md)',
         },
       }}
       {...props}

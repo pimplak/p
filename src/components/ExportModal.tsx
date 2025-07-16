@@ -65,7 +65,7 @@ export function ExportModal({
 
   return (
     <BottomSheet opened={opened} onClose={onClose} title='Eksport danych'>
-      <Stack>
+      <Stack gap="md">
         <div>
           <Text fw={500} mb='xs'>
             Co eksportować?

@@ -117,6 +117,7 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
         boxShadow: '0 -4px 24px rgba(0, 0, 0, 0.05)',
         padding: '8px 0 calc(8px + env(safe-area-inset-bottom))',
         willChange: 'backdrop-filter',
+        minHeight: '80px', // Zapewnij minimalną wysokość
       }}
     >
       <Group justify='space-around' gap={0}>
