@@ -4,7 +4,6 @@ import {
   Group,
   Text,
   Checkbox,
-  Table,
   Badge,
   Select,
   Card,
@@ -30,6 +29,7 @@ import { useTheme } from '../hooks/useTheme';
 import { useAppointmentStore } from '../stores/useAppointmentStore';
 import { usePatientStore } from '../stores/usePatientStore';
 import { useSettingsStore } from '../stores/useSettingsStore';
+import { isDarkPalette } from '../types/theme';
 import {
   generateSMSMessage,
   getRecommendedTemplate,
@@ -67,7 +67,7 @@ export function BulkSMSReminders({
   onRemindersSent,
 }: BulkSMSRemindersProps) {
   const { smsTemplates } = useSettingsStore();
-  const { currentPalette, utilityColors } = useTheme();
+  const { currentPalette, currentPaletteId, utilityColors } = useTheme();
   const [opened, { open, close }] = useDisclosure(false);
   const [selectedTemplateId, setSelectedTemplateId] = useState(
     'appointment_reminder'
@@ -398,66 +398,59 @@ export function BulkSMSReminders({
             </Text>
           </Group>
 
-          {/* Appointments table */}
+          {/* Appointments list - mobile-friendly cards instead of table */}
           <ScrollArea h={400}>
-            <Table highlightOnHover withRowBorders={false} striped='even'>
-              <Table.Thead>
-                <Table.Tr>
-                  <Table.Th>Wybierz</Table.Th>
-                  <Table.Th>Pacjent</Table.Th>
-                  <Table.Th>Telefon</Table.Th>
-                  <Table.Th>Wizyta</Table.Th>
-                  <Table.Th>Status</Table.Th>
-                  <Table.Th>Podgląd</Table.Th>
-                </Table.Tr>
-              </Table.Thead>
-              <Table.Tbody>
-                {reminderItems.map((item, index) => (
-                  <Table.Tr
-                    key={item.appointment.id}
-                    onClick={() => handleItemToggle(index)}
-                  >
-                    <Table.Td>
+            <Stack gap='xs'>
+              {reminderItems.map((item, index) => (
+                <Card
+                  key={item.appointment.id}
+                  withBorder
+                  p='xs'
+                  style={{
+                    cursor: item.canSendReminder ? 'pointer' : 'default',
+                    opacity: item.canSendReminder ? 1 : 0.6,
+                  }}
+                  onClick={() => handleItemToggle(index)}
+                >
+                  <Group justify='space-between' align='flex-start' wrap='nowrap'>
+                    {/* Left side - checkbox and patient info */}
+                    <Group gap='xs' align='flex-start' style={{ flex: 1, minWidth: 0 }}>
                       <Checkbox
                         checked={item.selected}
                         disabled={!item.canSendReminder}
                         onChange={() => handleItemToggle(index)}
+                        style={{ flexShrink: 0 }}
                       />
-                    </Table.Td>
-                    <Table.Td>
-                      <div>
-                        <Text size='sm' fw={500}>
+                      
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        {/* Patient name */}
+                        <Text size='sm' fw={500} truncate>
                           {item.patient.firstName} {item.patient.lastName}
                         </Text>
-                      </div>
-                    </Table.Td>
-                    <Table.Td>
-                      <Text size='sm' c={item.hasValidPhone ? 'dark' : 'red'}>
-                        {item.patient.phone
-                          ? formatPhoneNumber(item.patient.phone)
-                          : 'Brak'}
-                      </Text>
-                    </Table.Td>
-                    <Table.Td>
-                      <div>
-                        <Text size='sm'>
-                          {format(
-                            new Date(item.appointment.date),
-                            'dd.MM.yyyy',
-                            { locale: pl }
-                          )}
+                        
+                        {/* Phone and date in separate lines */}
+                        <Text size='xs' c={item.hasValidPhone ? 'dimmed' : 'red'} truncate>
+                          {item.patient.phone ? formatPhoneNumber(item.patient.phone) : 'Brak telefonu'}
                         </Text>
-                        <Text size='xs' c='dimmed'>
-                          {format(new Date(item.appointment.date), 'HH:mm')}
+                        <Text 
+                          size='sm' 
+                          fw={600} 
+                          c={isDarkPalette(currentPaletteId) ? 'white' : 'dark'} 
+                          style={{ flexShrink: 0 }}
+                        >
+                          {format(new Date(item.appointment.date), 'dd.MM.yyyy HH:mm', { locale: pl })}
                         </Text>
                       </div>
-                    </Table.Td>
-                    <Table.Td>
+                    </Group>
+
+                    {/* Right side - status and actions */}
+                    <Group gap='xs' align='flex-start' style={{ flexShrink: 0 }}>
+                      {/* Status badge */}
                       {item.appointment.reminderSent ? (
                         <Badge
                           color={utilityColors.success}
                           variant='light'
-                          size='sm'
+                          size='xs'
                         >
                           Wysłane
                         </Badge>
@@ -465,7 +458,7 @@ export function BulkSMSReminders({
                         <Badge
                           color={currentPalette.primary}
                           variant='light'
-                          size='sm'
+                          size='xs'
                         >
                           {getReminderTiming(item.appointment)}
                         </Badge>
@@ -473,26 +466,27 @@ export function BulkSMSReminders({
                         <Badge
                           color={utilityColors.error}
                           variant='light'
-                          size='sm'
+                          size='xs'
                         >
-                          Brak telefonu
+                          Brak tel.
                         </Badge>
                       ) : (
                         <Badge
                           color={utilityColors.warning}
                           variant='light'
-                          size='sm'
+                          size='xs'
                         >
                           Poza czasem
                         </Badge>
                       )}
-                    </Table.Td>
-                    <Table.Td>
+
+                      {/* Preview button */}
                       <Tooltip label='Podgląd wiadomości'>
                         <ActionIcon
-                          size='sm'
+                          size='xs'
                           variant='subtle'
-                          onClick={() => {
+                          onClick={(e) => {
+                            e.stopPropagation();
                             notifications.show({
                               title: `Wiadomość dla ${item.patient.firstName} ${item.patient.lastName}`,
                               message: item.message,
@@ -501,14 +495,14 @@ export function BulkSMSReminders({
                             });
                           }}
                         >
-                          <IconEye size='0.8rem' />
+                          <IconEye size='0.7rem' />
                         </ActionIcon>
                       </Tooltip>
-                    </Table.Td>
-                  </Table.Tr>
-                ))}
-              </Table.Tbody>
-            </Table>
+                    </Group>
+                  </Group>
+                </Card>
+              ))}
+            </Stack>
           </ScrollArea>
 
           {/* Sending progress */}
