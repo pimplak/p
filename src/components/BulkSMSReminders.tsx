@@ -331,209 +331,219 @@ export function BulkSMSReminders({
         onClose={close}
         title='Wyślij przypomnienia SMS'
       >
-        <Stack gap='md'>
-          {/* Statistics */}
-          <Card withBorder p='sm'>
-            <Group justify='space-between'>
-              <div>
-                <Text size='sm' fw={500}>
-                  Statystyki
-                </Text>
-                <Text size='xs' c='dimmed'>
-                  Wybrano: {stats.selected} z {stats.total}
-                </Text>
-              </div>
-              <Group gap='sm'>
-                <Badge color={currentPalette.primary} variant='light'>
-                  Do wysłania: {stats.canSend}
-                </Badge>
-                {stats.noPhone > 0 && (
-                  <Badge color={utilityColors.error} variant='light'>
-                    Brak telefonu: {stats.noPhone}
-                  </Badge>
-                )}
-                {stats.alreadySent > 0 && (
-                  <Badge color={utilityColors.success} variant='light'>
-                    Już wysłane: {stats.alreadySent}
-                  </Badge>
-                )}
-              </Group>
-            </Group>
-          </Card>
-
-          {/* Template selection */}
-          <Select
-            label='Szablon wiadomości'
-            placeholder='Wybierz szablon'
-            value={selectedTemplateId}
-            onChange={value =>
-              setSelectedTemplateId(value || 'appointment_reminder')
-            }
-            data={templateOptions}
-            searchable
-          />
-
-          {/* Bulk actions */}
-          <Group justify='space-between'>
-            <Group gap='sm'>
-              <Button
-                size='xs'
-                variant='subtle'
-                leftSection={<IconSelectAll size='0.8rem' />}
-                onClick={handleSelectAll}
-              >
-                Zaznacz wszystkie
-              </Button>
-              <Button
-                size='xs'
-                variant='subtle'
-                leftSection={<IconX size='0.8rem' />}
-                onClick={handleSelectNone}
-              >
-                Odznacz wszystkie
-              </Button>
-            </Group>
-            <Text size='sm' c='dimmed'>
-              {stats.selected} zaznaczonych
-            </Text>
-          </Group>
-
-          {/* Appointments list - mobile-friendly cards instead of table */}
-          <ScrollArea h={400}>
-            <Stack gap='xs'>
-              {reminderItems.map((item, index) => (
-                <Card
-                  key={item.appointment.id}
-                  withBorder
-                  p='xs'
-                  style={{
-                    cursor: item.canSendReminder ? 'pointer' : 'default',
-                    opacity: item.canSendReminder ? 1 : 0.6,
-                  }}
-                  onClick={() => handleItemToggle(index)}
-                >
-                  <Group justify='space-between' align='flex-start' wrap='nowrap'>
-                    {/* Left side - checkbox and patient info */}
-                    <Group gap='xs' align='flex-start' style={{ flex: 1, minWidth: 0 }}>
-                      <Checkbox
-                        checked={item.selected}
-                        disabled={!item.canSendReminder}
-                        onChange={() => handleItemToggle(index)}
-                        style={{ flexShrink: 0 }}
-                      />
-                      
-                      <div style={{ flex: 1, minWidth: 0 }}>
-                        {/* Patient name */}
-                        <Text size='sm' fw={500} truncate>
-                          {item.patient.firstName} {item.patient.lastName}
-                        </Text>
-                        
-                        {/* Phone and date in separate lines */}
-                        <Text size='xs' c={item.hasValidPhone ? 'dimmed' : 'red'} truncate>
-                          {item.patient.phone ? formatPhoneNumber(item.patient.phone) : 'Brak telefonu'}
-                        </Text>
-                        <Text 
-                          size='sm' 
-                          fw={600} 
-                          c={isDarkPalette(currentPaletteId) ? 'white' : 'dark'} 
-                          style={{ flexShrink: 0 }}
-                        >
-                          {format(new Date(item.appointment.date), 'dd.MM.yyyy HH:mm', { locale: pl })}
-                        </Text>
-                      </div>
-                    </Group>
-
-                    {/* Right side - status and actions */}
-                    <Group gap='xs' align='flex-start' style={{ flexShrink: 0 }}>
-                      {/* Status badge */}
-                      {item.appointment.reminderSent ? (
-                        <Badge
-                          color={utilityColors.success}
-                          variant='light'
-                          size='xs'
-                        >
-                          Wysłane
-                        </Badge>
-                      ) : item.canSendReminder ? (
-                        <Badge
-                          color={currentPalette.primary}
-                          variant='light'
-                          size='xs'
-                        >
-                          {getReminderTiming(item.appointment)}
-                        </Badge>
-                      ) : !item.hasValidPhone ? (
-                        <Badge
-                          color={utilityColors.error}
-                          variant='light'
-                          size='xs'
-                        >
-                          Brak tel.
-                        </Badge>
-                      ) : (
-                        <Badge
-                          color={utilityColors.warning}
-                          variant='light'
-                          size='xs'
-                        >
-                          Poza czasem
-                        </Badge>
-                      )}
-
-                      {/* Preview button */}
-                      <Tooltip label='Podgląd wiadomości'>
-                        <ActionIcon
-                          size='xs'
-                          variant='subtle'
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            notifications.show({
-                              title: `Wiadomość dla ${item.patient.firstName} ${item.patient.lastName}`,
-                              message: item.message,
-                              color: 'blue',
-                              autoClose: false,
-                            });
-                          }}
-                        >
-                          <IconEye size='0.7rem' />
-                        </ActionIcon>
-                      </Tooltip>
-                    </Group>
+        <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+          {/* Content area - takes remaining space */}
+          <div style={{ flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+            <Stack gap='md' style={{ flex: 1, overflow: 'hidden' }}>
+              {/* Statistics */}
+              <Card withBorder p='sm'>
+                <Group justify='space-between'>
+                  <div>
+                    <Text size='sm' fw={500}>
+                      Statystyki
+                    </Text>
+                    <Text size='xs' c='dimmed'>
+                      Wybrano: {stats.selected} z {stats.total}
+                    </Text>
+                  </div>
+                  <Group gap='sm'>
+                    <Badge color={currentPalette.primary} variant='light'>
+                      Do wysłania: {stats.canSend}
+                    </Badge>
+                    {stats.noPhone > 0 && (
+                      <Badge color={utilityColors.error} variant='light'>
+                        Brak telefonu: {stats.noPhone}
+                      </Badge>
+                    )}
+                    {stats.alreadySent > 0 && (
+                      <Badge color={utilityColors.success} variant='light'>
+                        Już wysłane: {stats.alreadySent}
+                      </Badge>
+                    )}
                   </Group>
-                </Card>
-              ))}
-            </Stack>
-          </ScrollArea>
+                </Group>
+              </Card>
 
-          {/* Sending progress */}
-          {sending && (
-            <Card withBorder p='sm'>
-              <Group justify='space-between' mb='xs'>
-                <Text size='sm' fw={500}>
-                  Wysyłanie przypomnieć...
+              {/* Template selection */}
+              <Select
+                label='Szablon wiadomości'
+                placeholder='Wybierz szablon'
+                value={selectedTemplateId}
+                onChange={value =>
+                  setSelectedTemplateId(value || 'appointment_reminder')
+                }
+                data={templateOptions}
+                searchable
+              />
+
+              {/* Bulk actions */}
+              <Group justify='space-between'>
+                <Group gap='sm'>
+                  <Button
+                    size='xs'
+                    variant='subtle'
+                    leftSection={<IconSelectAll size='0.8rem' />}
+                    onClick={handleSelectAll}
+                  >
+                    Zaznacz wszystkie
+                  </Button>
+                  <Button
+                    size='xs'
+                    variant='subtle'
+                    leftSection={<IconX size='0.8rem' />}
+                    onClick={handleSelectNone}
+                  >
+                    Odznacz wszystkie
+                  </Button>
+                </Group>
+                <Text size='sm' c='dimmed'>
+                  {stats.selected} zaznaczonych
                 </Text>
-                <Text size='sm'>{Math.round(sendingProgress)}%</Text>
               </Group>
-              <Progress value={sendingProgress} animated />
-            </Card>
-          )}
 
-          {/* Actions */}
-          <Divider />
-          <Group justify='space-between'>
-            <Button variant='subtle' onClick={close} disabled={sending}>
-              Anuluj
-            </Button>
-            <Button
-              leftSection={<IconSend size='1rem' />}
-              onClick={handleSendReminders}
-              disabled={stats.selected === 0 || sending}
-              loading={sending}
-            >
-              Wyślij {stats.selected} przypomnieć
-            </Button>
-          </Group>
-        </Stack>
+              {/* Appointments list - takes remaining space */}
+              <div style={{ flex: 1, overflow: 'hidden' }}>
+                <ScrollArea h='100%'>
+                  <Stack gap='xs'>
+                    {reminderItems.map((item, index) => (
+                      <Card
+                        key={item.appointment.id}
+                        withBorder
+                        p='xs'
+                        style={{
+                          cursor: item.canSendReminder ? 'pointer' : 'default',
+                          opacity: item.canSendReminder ? 1 : 0.6,
+                        }}
+                        onClick={() => handleItemToggle(index)}
+                      >
+                        <Group justify='space-between' align='flex-start' wrap='nowrap'>
+                          {/* Left side - checkbox and patient info */}
+                          <Group gap='xs' align='flex-start' style={{ flex: 1, minWidth: 0 }}>
+                            <Checkbox
+                              checked={item.selected}
+                              disabled={!item.canSendReminder}
+                              onChange={() => handleItemToggle(index)}
+                              style={{ flexShrink: 0 }}
+                            />
+                            
+                            <div style={{ flex: 1, minWidth: 0 }}>
+                              {/* Patient name */}
+                              <Text size='sm' fw={500} truncate>
+                                {item.patient.firstName} {item.patient.lastName}
+                              </Text>
+                              
+                              {/* Phone and date in separate lines */}
+                              <Text size='xs' c={item.hasValidPhone ? 'dimmed' : 'red'} truncate>
+                                {item.patient.phone ? formatPhoneNumber(item.patient.phone) : 'Brak telefonu'}
+                              </Text>
+                              <Text 
+                                size='sm' 
+                                fw={600} 
+                                c={isDarkPalette(currentPaletteId) ? 'white' : 'dark'} 
+                                style={{ flexShrink: 0 }}
+                              >
+                                {format(new Date(item.appointment.date), 'dd.MM.yyyy HH:mm', { locale: pl })}
+                              </Text>
+                            </div>
+                          </Group>
+
+                          {/* Right side - status and actions */}
+                          <Group gap='xs' align='flex-start' style={{ flexShrink: 0 }}>
+                            {/* Status badge */}
+                            {item.appointment.reminderSent ? (
+                              <Badge
+                                color={utilityColors.success}
+                                variant='light'
+                                size='xs'
+                              >
+                                Wysłane
+                              </Badge>
+                            ) : item.canSendReminder ? (
+                              <Badge
+                                color={currentPalette.primary}
+                                variant='light'
+                                size='xs'
+                              >
+                                {getReminderTiming(item.appointment)}
+                              </Badge>
+                            ) : !item.hasValidPhone ? (
+                              <Badge
+                                color={utilityColors.error}
+                                variant='light'
+                                size='xs'
+                              >
+                                Brak tel.
+                              </Badge>
+                            ) : (
+                              <Badge
+                                color={utilityColors.warning}
+                                variant='light'
+                                size='xs'
+                              >
+                                Poza czasem
+                              </Badge>
+                            )}
+
+                            {/* Preview button */}
+                            <Tooltip label='Podgląd wiadomości'>
+                              <ActionIcon
+                                size='xs'
+                                variant='subtle'
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  notifications.show({
+                                    title: `Wiadomość dla ${item.patient.firstName} ${item.patient.lastName}`,
+                                    message: item.message,
+                                    color: 'blue',
+                                    autoClose: false,
+                                  });
+                                }}
+                              >
+                                <IconEye size='0.7rem' />
+                              </ActionIcon>
+                            </Tooltip>
+                          </Group>
+                        </Group>
+                      </Card>
+                    ))}
+                  </Stack>
+                </ScrollArea>
+              </div>
+            </Stack>
+          </div>
+
+          {/* Fixed bottom section with buttons */}
+          <div style={{ flexShrink: 0, marginTop: 'md' }}>
+            {/* Sending progress */}
+            {sending && (
+              <Card withBorder p='sm' mb='md'>
+                <Group justify='space-between' mb='xs'>
+                  <Text size='sm' fw={500}>
+                    Wysyłanie przypomnieć...
+                  </Text>
+                  <Text size='sm'>{Math.round(sendingProgress)}%</Text>
+                </Group>
+                <Progress value={sendingProgress} animated />
+              </Card>
+            )}
+
+            {/* Actions */}
+            <Divider mb='md' />
+            <Group justify='space-between'>
+              <Button variant='subtle' onClick={close} disabled={sending}>
+                Anuluj
+              </Button>
+              <Button
+                leftSection={<IconSend size='1rem' />}
+                onClick={handleSendReminders}
+                disabled={stats.selected === 0 || sending}
+                loading={sending}
+              >
+                Wyślij {stats.selected} przypomnieć
+              </Button>
+            </Group>
+          </div>
+        </div>
       </BottomSheet>
     </>
   );

@@ -279,6 +279,20 @@ export const useTheme = () => {
                     },
                 },
 
+                Popover: {
+                    defaultProps: {
+                        radius: 'md',
+                    },
+                    styles: {
+                        dropdown: {
+                            backgroundColor: currentPalette.surface,
+                            color: currentPalette.text,
+                            border: `1px solid ${currentPalette.primary}40`,
+                        },
+
+                    }
+                },
+
                 DateInput: {
                     defaultProps: {
                         radius: 'md',

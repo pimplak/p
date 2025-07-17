@@ -57,7 +57,10 @@ export function BottomSheet({
         },
         body: {
           paddingTop: 'var(--mantine-spacing-md)',
-          paddingBottom: isMobile ? '100px' : 'var(--mantine-spacing-md)',
+          paddingBottom: isMobile ? '140px' : 'var(--mantine-spacing-md)',
+          display: 'flex',
+          flexDirection: 'column',
+          height: '100%',
         },
       }}
       {...props}
