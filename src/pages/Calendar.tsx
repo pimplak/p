@@ -150,6 +150,11 @@ function Calendar() {
     setHideWeekends(!hideWeekends);
   };
 
+  const handleDateClick = (date: Date) => {
+    setSelectedDate(date);
+    setView('day');
+  };
+
   // Get appointments for current view
   const currentPeriodAppointments = useMemo(() => {
     let startDate: Date;
@@ -302,12 +307,12 @@ function Calendar() {
         </Group>
 
         {/* Period Title */}
-        <Group justify='space-between' mb='md'>
+        <Group justify='space-between' mb='md' wrap='wrap'>
           <Text size='xl' fw={600}>
             {getCurrentPeriodTitle()}
           </Text>
 
-          <Group>
+          <Group gap='sm' wrap='wrap'>
             <DateInput
               placeholder='Przejdź do daty'
               value={selectedDate}
@@ -319,7 +324,7 @@ function Calendar() {
                 }
               }}
               size='sm'
-              w={180}
+              w={{ base: 150, sm: 180 }}
             />
             <Select
               placeholder='Status'
@@ -333,7 +338,7 @@ function Calendar() {
                 { value: 'no_show', label: 'Nieobecności' },
               ]}
               size='sm'
-              w={140}
+              w={{ base: 120, sm: 140 }}
             />
 
             {/* Calendar View Options */}
@@ -395,7 +400,7 @@ function Calendar() {
             onEditAppointment={handleEditAppointment}
             onDeleteAppointment={handleDeleteAppointment}
             onAddAppointment={handleAddAppointment}
-            onDateClick={setSelectedDate}
+            onDateClick={handleDateClick}
             getStatusColor={getStatusColor}
             getStatusBackgroundColor={getStatusBackgroundColor}
             getStatusLabel={getStatusLabel}
@@ -639,6 +644,7 @@ function WeekView({
         style={{
           minWidth: hideWeekends ? '500px' : '650px',
           maxWidth: '100%',
+          overflowX: 'auto',
         }}
       >
         {/* Days Header */}
@@ -722,6 +728,8 @@ function WeekView({
                       display: 'flex',
                       flexDirection: 'column',
                       gap: '2px',
+                      minWidth: '80px',
+                      width: '100%',
                     }}
                     onClick={() => {
                       const appointmentDate = new Date(day);
@@ -739,6 +747,11 @@ function WeekView({
                           ),
                           cursor: 'pointer',
                           borderRadius: '4px',
+                          width: '100%',
+                          minWidth: '100%',
+                          maxWidth: '100%',
+                          flexShrink: 0,
+                          boxSizing: 'border-box',
                         }}
                         onClick={e => {
                           e.stopPropagation();
@@ -797,96 +810,98 @@ function MonthView({
   const stackGap = '2px';
 
   return (
-    <Box>
-      {/* Days of Week Header */}
-      <Group
-        mb='md'
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(7, 1fr)',
-          gap: cellGap,
-        }}
-      >
-        {weekDays.map(day => (
-          <Text key={day} ta='center' fw={500} c='dimmed' size='xs'>
-            {day}
-          </Text>
-        ))}
-      </Group>
+    <ScrollArea>
+      <Box style={{ minWidth: '600px' }}>
+        {/* Days of Week Header */}
+        <Group
+          mb='md'
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(7, 1fr)',
+            gap: cellGap,
+          }}
+        >
+          {weekDays.map(day => (
+            <Text key={day} ta='center' fw={500} c='dimmed' size='xs'>
+              {day}
+            </Text>
+          ))}
+        </Group>
 
-      {/* Calendar Grid */}
-      <Box
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(7, 1fr)',
-          gap: cellGap,
-        }}
-      >
-        {calendarDays.map(day => {
-          const dayAppointments = appointments.filter(apt =>
-            isSameDay(new Date(apt.date), day)
-          );
+        {/* Calendar Grid */}
+        <Box
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(7, 1fr)',
+            gap: cellGap,
+          }}
+        >
+          {calendarDays.map(day => {
+            const dayAppointments = appointments.filter(apt =>
+              isSameDay(new Date(apt.date), day)
+            );
 
-          const isCurrentMonth = isSameMonth(day, date);
-          const isTodayDay = isToday(day);
+            const isCurrentMonth = isSameMonth(day, date);
+            const isTodayDay = isToday(day);
 
-          return (
-            <Paper
-              key={day.toISOString()}
-              p={cellPadding}
-              style={{
-                minHeight: dayAppointments.length > 0 ? 'auto' : cellMinHeight,
-                backgroundColor: isTodayDay
-                  ? `${currentPalette.primary}20`
-                  : isCurrentMonth
-                    ? currentPalette.surface
-                    : currentPalette.background,
-                opacity: isCurrentMonth ? 1 : 0.6,
-                cursor: 'pointer',
-                border: `1px solid ${currentPalette.primary}40`,
-              }}
-              onClick={() => onDateClick(day)}
-            >
-              <Text size='xs' fw={isTodayDay ? 600 : 400} mb='4px'>
-                {format(day, 'd')}
-              </Text>
+            return (
+              <Paper
+                key={day.toISOString()}
+                p={cellPadding}
+                style={{
+                  minHeight: dayAppointments.length > 0 ? 'auto' : cellMinHeight,
+                  backgroundColor: isTodayDay
+                    ? `${currentPalette.primary}20`
+                    : isCurrentMonth
+                      ? currentPalette.surface
+                      : currentPalette.background,
+                  opacity: isCurrentMonth ? 1 : 0.6,
+                  cursor: 'pointer',
+                  border: `1px solid ${currentPalette.primary}40`,
+                }}
+                onClick={() => onDateClick(day)}
+              >
+                <Text size='xs' fw={isTodayDay ? 600 : 400} mb='4px'>
+                  {format(day, 'd')}
+                </Text>
 
-              <Stack gap={stackGap}>
-                {dayAppointments.map(appointment => (
-                  <Paper
-                    key={appointment.id}
-                    p='2px'
-                    style={{
-                      backgroundColor: getStatusBackgroundColor(
-                        appointment.status
-                      ),
-                      cursor: 'pointer',
-                    }}
-                    onClick={e => {
-                      e.stopPropagation();
-                      onEditAppointment(appointment);
-                    }}
-                  >
-                    <Text
-                      size='xs'
-                      fw={500}
-                      truncate
-                      style={{ lineHeight: '1.2' }}
+                <Stack gap={stackGap}>
+                  {dayAppointments.map(appointment => (
+                    <Paper
+                      key={appointment.id}
+                      p='2px'
+                      style={{
+                        backgroundColor: getStatusBackgroundColor(
+                          appointment.status
+                        ),
+                        cursor: 'pointer',
+                      }}
+                      onClick={e => {
+                        e.stopPropagation();
+                        onEditAppointment(appointment);
+                      }}
                     >
-                      {format(new Date(appointment.date), 'HH:mm')}
-                    </Text>
-                    <Text size='xs' truncate style={{ lineHeight: '1.2' }}>
-                      {appointment.patient?.firstName}{' '}
-                      {appointment.patient?.lastName}
-                    </Text>
-                  </Paper>
-                ))}
-              </Stack>
-            </Paper>
-          );
-        })}
+                      <Text
+                        size='xs'
+                        fw={500}
+                        truncate
+                        style={{ lineHeight: '1.2' }}
+                      >
+                        {format(new Date(appointment.date), 'HH:mm')}
+                      </Text>
+                      <Text size='xs' truncate style={{ lineHeight: '1.2' }}>
+                        {appointment.patient?.firstName}{' '}
+                        {appointment.patient?.lastName}
+                      </Text>
+                    </Paper>
+                  ))}
+                </Stack>
+              </Paper>
+            );
+          })}
+        </Box>
       </Box>
-    </Box>
+    </ScrollArea>
   );
 }
 

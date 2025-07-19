@@ -33,15 +33,14 @@ import { BottomSheet } from './ui/BottomSheet';
 
 // Available variables for SMS templates
 const availableVariables = [
-  'imię',
-  'nazwisko',
-  'data',
-  'godzina',
-  'terapeuta',
-  'tytuł',
-  'dzień',
-  'miesiąc',
-  'rok',
+  'patientName',
+  'patientFirstName',
+  'date',
+  'time',
+  'practitionerName',
+  'practitionerTitle',
+  'appointmentType',
+  'duration',
 ];
 
 interface SMSTemplateFormData {

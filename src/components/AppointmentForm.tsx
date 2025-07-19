@@ -233,22 +233,22 @@ export function AppointmentForm({
             Płatność
           </Text>
 
-          <Group grow>
-            <NumberInput
-              label='Cena (zł)'
-              placeholder={DEFAULT_APPOINTMENT_PRICE.toString()}
-              min={0}
-              step={10}
-              required
-              {...form.getInputProps('price')}
-            />
-            <Checkbox
-              label='Opłacono'
-              {...form.getInputProps('paymentInfo.isPaid', {
-                type: 'checkbox',
-              })}
-            />
-          </Group>
+          <NumberInput
+            label='Cena (zł)'
+            placeholder={DEFAULT_APPOINTMENT_PRICE.toString()}
+            min={0}
+            step={10}
+            required
+            {...form.getInputProps('price')}
+          />
+
+          <Checkbox
+            label='Opłacono'
+            mt='md'
+            {...form.getInputProps('paymentInfo.isPaid', {
+              type: 'checkbox',
+            })}
+          />
 
           {form.values.paymentInfo?.isPaid && (
             <>

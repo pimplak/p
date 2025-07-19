@@ -10,7 +10,9 @@ import {
   Badge,
   TextInput,
   Select,
+  Collapse,
 } from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
 import { notifications } from '@mantine/notifications';
 import {
   IconPalette,
@@ -20,6 +22,8 @@ import {
   IconShield,
   IconInfoCircle,
   IconMessage,
+  IconChevronDown,
+  IconChevronRight,
 } from '@tabler/icons-react';
 import { SMSTemplateManager } from '../components/SMSTemplateManager';
 import { ThemeSelector } from '../components/ThemeSelector';
@@ -39,6 +43,7 @@ function Settings() {
     setPractitionerTitle,
   } = useSettingsStore();
   const { currentPalette, utilityColors } = useTheme();
+  const [templatesOpened, { toggle: toggleTemplates }] = useDisclosure(false);
 
   const handleAddDemoData = async () => {
     try {
@@ -156,7 +161,24 @@ function Settings() {
 
                 <Divider variant='dashed' />
 
-                <SMSTemplateManager />
+                {/* Collapsible Templates Section */}
+                <Stack gap='xs'>
+                  <Button
+                    variant='subtle'
+                    leftSection={templatesOpened ? <IconChevronDown size={16} /> : <IconChevronRight size={16} />}
+                    onClick={toggleTemplates}
+                    style={{ alignSelf: 'flex-start', padding: 0 }}
+                    color={currentPalette.primary}
+                  >
+                    <Text size='sm' fw={500}>
+                      Szablony wiadomości SMS
+                    </Text>
+                  </Button>
+                  
+                  <Collapse in={templatesOpened}>
+                    <SMSTemplateManager />
+                  </Collapse>
+                </Stack>
               </Stack>
             </Stack>
           </Card>

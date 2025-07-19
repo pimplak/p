@@ -13,6 +13,8 @@ import {
   Menu,
   ActionIcon,
 } from '@mantine/core';
+import { DateInput } from '@mantine/dates';
+import { isSameDay } from 'date-fns';
 import {
   IconNotes,
   IconCalendar,
@@ -22,7 +24,7 @@ import {
   IconX,
   IconFileExport,
 } from '@tabler/icons-react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useTheme } from '../hooks/useTheme';
 import { useAppointmentStore } from '../stores/useAppointmentStore';
 import { usePatientStore } from '../stores/usePatientStore';
@@ -46,6 +48,7 @@ export function PatientProfileTabs({ patient }: PatientProfileTabsProps) {
   );
   const [appointmentModalOpen, setAppointmentModalOpen] = useState(false);
   const [editingAppointment, setEditingAppointment] = useState<Appointment | null>(null);
+  const [dateFilter, setDateFilter] = useState<Date | null>(null);
   const { getAppointmentsByPatient } = useAppointmentStore();
   const { fetchPatients } = usePatientStore();
   const { currentPalette, utilityColors } = useTheme();
@@ -144,6 +147,17 @@ export function PatientProfileTabs({ patient }: PatientProfileTabsProps) {
     }
   };
 
+  // Filter appointments by date if filter is set
+  const filteredAppointments = useMemo(() => {
+    if (!dateFilter) return appointments;
+    
+    return appointments.filter(appointment => {
+      const appointmentDate = new Date(appointment.date);
+      const filterDate = new Date(dateFilter);
+      return isSameDay(appointmentDate, filterDate);
+    });
+  }, [appointments, dateFilter]);
+
   return (
     <>
       <Tabs value={activeTab} onChange={value => value && setActiveTab(value)}>
@@ -212,7 +226,7 @@ export function PatientProfileTabs({ patient }: PatientProfileTabsProps) {
           <Paper p='md' withBorder>
             <Group justify='space-between' align='flex-start' mb='md'>
               <Stack gap='xs'>
-                <Title order={4}>Wizyty ({appointments.length})</Title>
+                <Title order={4}>Wizyty ({filteredAppointments.length})</Title>
                 {selectedAppointments.length > 0 && (
                   <Badge color={currentPalette.primary} variant='light'>
                     {selectedAppointments.length} zaznaczonych
@@ -220,6 +234,21 @@ export function PatientProfileTabs({ patient }: PatientProfileTabsProps) {
                 )}
               </Stack>
               <Group gap='xs'>
+                <DateInput
+                  placeholder='Filtruj po dacie'
+                  value={dateFilter}
+                  onChange={(value) => {
+                    if (value) {
+                      const date = typeof value === 'string' ? new Date(value) : value;
+                      setDateFilter(date);
+                    } else {
+                      setDateFilter(null);
+                    }
+                  }}
+                  clearable
+                  size='sm'
+                  w={150}
+                />
                 {appointments.length > 0 && (
                   <Menu>
                     <Menu.Target>
@@ -266,13 +295,15 @@ export function PatientProfileTabs({ patient }: PatientProfileTabsProps) {
               </Group>
             </Group>
 
-            {appointments.length === 0 ? (
+            {filteredAppointments.length === 0 ? (
               <Text size='sm' c='dimmed'>
-                Brak wizyt dla tego pacjenta.
+                {dateFilter 
+                  ? 'Brak wizyt w wybranym dniu.' 
+                  : 'Brak wizyt dla tego pacjenta.'}
               </Text>
             ) : (
               <Stack gap='md'>
-                {appointments.map(appointment => (
+                {filteredAppointments.map(appointment => (
                   <Card 
                     key={appointment.id} 
                     withBorder 
