@@ -6,6 +6,8 @@ import {
   Group,
   Card,
   SimpleGrid,
+  ActionIcon,
+  Tooltip,
 } from '@mantine/core';
 import { IconPlus, IconCalendar, IconDownload, IconNote } from '@tabler/icons-react';
 import { useEffect, useMemo } from 'react';
@@ -139,6 +141,20 @@ function Dashboard() {
           </Stack>
 
           <Group gap='sm'>
+            <Tooltip label='Eksportuj dane'>
+              <ActionIcon
+                size='lg'
+                variant='light'
+                color='blue'
+                onClick={handleExport}
+                style={{
+                  backgroundColor: currentPalette.surface,
+                  border: `1px solid ${currentPalette.primary}60`,
+                }}
+              >
+                <IconDownload size='1.2rem' />
+              </ActionIcon>
+            </Tooltip>
             <BulkSMSReminders
               size='sm'
               onRemindersSent={() => {

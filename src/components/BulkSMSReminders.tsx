@@ -85,8 +85,14 @@ export function BulkSMSReminders({
 
   // Get appointments that need reminders
   const appointmentsNeedingReminders = useMemo(() => {
-    return appointments || getAppointmentsNeedingReminders();
-  }, [appointments, getAppointmentsNeedingReminders]);
+    const allAppointments = appointments || getAppointmentsNeedingReminders();
+    
+    // Filter out appointments without valid patient data
+    return allAppointments.filter(appointment => {
+      const patient = patients.find(p => p.id === appointment.patientId);
+      return patient && patient.phone && validatePhoneNumber(patient.phone);
+    });
+  }, [appointments, getAppointmentsNeedingReminders, patients]);
 
   // Initialize reminder items when modal opens
   useEffect(() => {
@@ -381,7 +387,7 @@ export function BulkSMSReminders({
                 <Group gap='sm'>
                   <Button
                     size='xs'
-                    variant='subtle'
+                    variant='light'
                     leftSection={<IconSelectAll size='0.8rem' />}
                     onClick={handleSelectAll}
                   >
@@ -389,7 +395,7 @@ export function BulkSMSReminders({
                   </Button>
                   <Button
                     size='xs'
-                    variant='subtle'
+                    variant='light'
                     leftSection={<IconX size='0.8rem' />}
                     onClick={handleSelectNone}
                   >
@@ -530,7 +536,7 @@ export function BulkSMSReminders({
             {/* Actions */}
             <Divider mb='md' />
             <Group justify='space-between'>
-              <Button variant='subtle' onClick={close} disabled={sending}>
+              <Button variant='light' onClick={close} disabled={sending}>
                 Anuluj
               </Button>
               <Button
