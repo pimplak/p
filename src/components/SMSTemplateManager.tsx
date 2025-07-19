@@ -25,7 +25,7 @@ import {
   IconEyeOff,
   IconInfoCircle,
 } from '@tabler/icons-react';
-import { useState } from 'react';
+import { useState, useRef, useCallback } from 'react';
 import { useTheme } from '../hooks/useTheme';
 import { useSettingsStore } from '../stores/useSettingsStore';
 import { DEFAULT_SMS_TEMPLATES, type SMSTemplate } from '../utils/sms';
@@ -64,6 +64,7 @@ export function SMSTemplateManager() {
     null
   );
   const [previewOpened, { toggle: togglePreview }] = useDisclosure(false);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const [formData, setFormData] = useState<SMSTemplateFormData>({
     name: '',
@@ -176,12 +177,31 @@ export function SMSTemplateManager() {
     });
   };
 
-  const insertVariable = (variable: string) => {
+  const insertVariable = useCallback((variable: string) => {
+    const textarea = textareaRef.current;
+    if (!textarea) return;
+
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const currentValue = formData.content;
+    
+    const newValue = 
+      currentValue.substring(0, start) + 
+      `{${variable}}` + 
+      currentValue.substring(end);
+    
     setFormData(prev => ({
       ...prev,
-      content: prev.content + `{${variable}}`,
+      content: newValue,
     }));
-  };
+
+    // Przywróć focus i cursor position
+    setTimeout(() => {
+      textarea.focus();
+      const newCursorPos = start + `{${variable}}`.length;
+      textarea.setSelectionRange(newCursorPos, newCursorPos);
+    }, 0);
+  }, [formData.content]);
 
   return (
     <Stack gap='md'>
@@ -364,6 +384,7 @@ export function SMSTemplateManager() {
               minRows={4}
               maxRows={8}
               required
+              ref={textareaRef}
             />
             <Text size='xs' c='dimmed'>
               Maksymalnie 160 znaków dla pojedynczej wiadomości SMS
