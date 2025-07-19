@@ -51,10 +51,46 @@ export function ThemeSelector() {
   // Smart dark/light mode toggle
   const toggleDarkMode = (checked: boolean) => {
     if (checked) {
-      setPalette('darkpro');
+      // Przełącz na ciemną wersję obecnego motywu lub domyślną ciemną
+      const currentPalette = palettes.find(p => p.id === currentPaletteId);
+      if (currentPalette) {
+        const darkVersion = getDarkVersion(currentPaletteId);
+        setPalette(darkVersion);
+      } else {
+        setPalette('darkpro');
+      }
     } else {
-      setPalette('arctic');
+      // Przełącz na jasną wersję obecnego motywu lub domyślną jasną
+      const lightVersion = getLightVersion(currentPaletteId);
+      setPalette(lightVersion);
     }
+  };
+
+  // Helper do znajdowania ciemnej wersji motywu
+  const getDarkVersion = (paletteId: string): PaletteId => {
+    const darkMap: Record<string, PaletteId> = {
+      'earthy': 'earthyDark',
+      'ocean': 'oceanDark', 
+      'vibrant': 'vibrantDark',
+      'arctic': 'darkpro',
+      'springblush': 'darkpro',
+      'forest': 'darkpro',
+      'sunset': 'darkpro',
+      'pastel': 'darkpro',
+      'bold': 'darkpro',
+    };
+    return darkMap[paletteId] || 'darkpro';
+  };
+
+  // Helper do znajdowania jasnej wersji motywu
+  const getLightVersion = (paletteId: string): PaletteId => {
+    const lightMap: Record<string, PaletteId> = {
+      'earthyDark': 'earthy',
+      'oceanDark': 'ocean',
+      'vibrantDark': 'vibrant',
+      'darkpro': 'arctic',
+    };
+    return lightMap[paletteId] || 'arctic';
   };
 
   const handleNextTheme = () => {
@@ -72,6 +108,26 @@ export function ThemeSelector() {
       case 'springblush':
         return <IconPalette size={18} color={currentPalette.primary} />;
       case 'darkpro':
+        return <IconMoon size={18} color={currentPalette.primary} />;
+      case 'earthy':
+        return <IconPalette size={18} color={currentPalette.primary} />;
+      case 'forest':
+        return <IconPalette size={18} color={currentPalette.primary} />;
+      case 'sunset':
+        return <IconSun size={18} color={currentPalette.accent} />;
+      case 'ocean':
+        return <IconPalette size={18} color={currentPalette.primary} />;
+      case 'vibrant':
+        return <IconPalette size={18} color={currentPalette.primary} />;
+      case 'pastel':
+        return <IconPalette size={18} color={currentPalette.primary} />;
+      case 'bold':
+        return <IconPalette size={18} color={currentPalette.primary} />;
+      case 'earthyDark':
+        return <IconMoon size={18} color={currentPalette.primary} />;
+      case 'oceanDark':
+        return <IconMoon size={18} color={currentPalette.primary} />;
+      case 'vibrantDark':
         return <IconMoon size={18} color={currentPalette.primary} />;
       default:
         return <IconPalette size={18} color={currentPalette.primary} />;
