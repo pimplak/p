@@ -29,6 +29,7 @@ import type { Appointment } from '../types/Appointment';
 interface AppointmentFormProps {
   appointment?: Appointment | null;
   initialDate?: Date | null;
+  initialPatientId?: string;
   onSuccess: () => void;
   onCancel: () => void;
 }
@@ -52,6 +53,7 @@ interface FormValues {
 export function AppointmentForm({
   appointment,
   initialDate,
+  initialPatientId,
   onSuccess,
   onCancel,
 }: AppointmentFormProps) {
@@ -60,7 +62,7 @@ export function AppointmentForm({
 
   const form = useForm<FormValues>({
     initialValues: {
-      patientId: appointment?.patientId?.toString() || '',
+      patientId: appointment?.patientId?.toString() || initialPatientId || '',
       date: appointment?.date ? new Date(appointment.date) : (initialDate || new Date()),
       duration: appointment?.duration || 50,
       status: appointment?.status || APPOINTMENT_STATUS.SCHEDULED,
