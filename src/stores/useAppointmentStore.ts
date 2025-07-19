@@ -47,17 +47,15 @@ export const useAppointmentStore = create<AppointmentStore>((set, get) => ({
     try {
       const appointments = await db.appointments.orderBy('date').toArray();
 
-      // Get patient details for each appointment
-      const appointmentsWithPatients: AppointmentWithPatient[] =
-        await Promise.all(
-          appointments.map(async appointment => {
-            const patient = await db.patients.get(appointment.patientId);
-            return {
-              ...appointment,
-              patient: patient || undefined,
-            };
-          })
-        );
+      // Ferro Fix: Bulk fetch patients to avoid N+1 queries
+      const patientIds = [...new Set(appointments.map(apt => apt.patientId))];
+      const patients = await db.patients.where('id').anyOf(patientIds).toArray();
+      const patientMap = new Map(patients.map(p => [p.id, p]));
+
+      const appointmentsWithPatients: AppointmentWithPatient[] = appointments.map(appointment => ({
+        ...appointment,
+        patient: patientMap.get(appointment.patientId) || undefined,
+      }));
 
       set({ appointments: appointmentsWithPatients, loading: false });
     } catch (error) {
