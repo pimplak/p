@@ -71,6 +71,7 @@ function Calendar() {
   const [editingAppointment, setEditingAppointment] =
     useState<Appointment | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+  const [newAppointmentDate, setNewAppointmentDate] = useState<Date | null>(null);
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [view, setView] = useState<CalendarView>('day');
   const [hideWeekends, setHideWeekends] = useState(false);
@@ -79,6 +80,7 @@ function Calendar() {
     fetchAppointments,
     deleteAppointment,
     getAppointmentsByDateRange,
+    appointments,
     error,
   } = useAppointmentStore();
 
@@ -93,8 +95,11 @@ function Calendar() {
   const handleAddAppointment = (date?: Date) => {
     setEditingAppointment(null);
     if (date) {
-      // Można przekazać datę do formularza
-      setSelectedDate(date);
+      // Ustaw datę dla nowej wizyty
+      setNewAppointmentDate(date);
+    } else {
+      // Jeśli nie przekazano daty, użyj aktualnej
+      setNewAppointmentDate(new Date());
     }
     open();
   };
@@ -113,6 +118,7 @@ function Calendar() {
   const handleFormSuccess = () => {
     close();
     setEditingAppointment(null);
+    setNewAppointmentDate(null);
   };
 
   // Navigation handlers
@@ -164,7 +170,7 @@ function Calendar() {
     return statusFilter === 'all'
       ? appointments
       : appointments.filter(apt => apt.status === statusFilter);
-  }, [selectedDate, view, getAppointmentsByDateRange, statusFilter]);
+  }, [selectedDate, view, getAppointmentsByDateRange, statusFilter, appointments]);
 
   // Get current period title
   const getCurrentPeriodTitle = () => {
@@ -405,6 +411,7 @@ function Calendar() {
       >
         <AppointmentForm
           appointment={editingAppointment}
+          initialDate={newAppointmentDate}
           onSuccess={handleFormSuccess}
           onCancel={close}
         />
