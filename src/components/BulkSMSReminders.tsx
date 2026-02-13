@@ -44,7 +44,8 @@ import type { AppointmentWithPatient } from '../types/Appointment';
 import type { Patient } from '../types/Patient';
 
 interface BulkSMSRemindersProps {
-  variant?: 'button' | 'icon';
+  variant?: 'button' | 'icon' | 'custom';
+  children?: React.ReactNode;
   size?: 'xs' | 'sm' | 'md' | 'lg';
   appointments?: AppointmentWithPatient[];
   onRemindersSent?: (count: number) => void;
@@ -62,6 +63,7 @@ interface AppointmentReminderItem {
 
 export function BulkSMSReminders({
   variant = 'button',
+  children,
   size = 'sm',
   appointments,
   onRemindersSent,
@@ -292,6 +294,20 @@ export function BulkSMSReminders({
     const reminderCount = appointmentsNeedingReminders.length;
     const isDisabled = reminderCount === 0;
 
+    if (variant === 'custom' && children) {
+      return (
+        <div 
+          onClick={(e) => {
+            e.stopPropagation();
+            if (!isDisabled) open();
+          }}
+          style={{ cursor: isDisabled ? 'not-allowed' : 'pointer', height: '100%', display: 'contents' }}
+        >
+          {children}
+        </div>
+      );
+    }
+
     if (variant === 'icon') {
       return (
         <Tooltip
@@ -317,11 +333,20 @@ export function BulkSMSReminders({
     return (
       <Button
         size={size}
-        variant='light'
-        color='blue'
-        leftSection={<IconMessage size='1rem' />}
+        variant="filled"
+        fullWidth
+        style={{
+          backgroundColor: isDisabled ? `${currentPalette.primary}20` : currentPalette.primary,
+          color: currentPalette.surface,
+          borderRadius: 0,
+          borderTop: `1px solid ${currentPalette.primary}40`,
+        }}
+        leftSection={<IconMessage size="1rem" />}
         disabled={isDisabled}
-        onClick={open}
+        onClick={(e) => {
+          e.stopPropagation();
+          open();
+        }}
       >
         Wyślij przypomnienia ({reminderCount})
       </Button>
