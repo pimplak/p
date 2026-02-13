@@ -14,7 +14,6 @@ import {
   ActionIcon,
 } from '@mantine/core';
 import { DateInput } from '@mantine/dates';
-import { isSameDay } from 'date-fns';
 import {
   IconNotes,
   IconCalendar,
@@ -24,6 +23,7 @@ import {
   IconX,
   IconFileExport,
 } from '@tabler/icons-react';
+import { isSameDay } from 'date-fns';
 import { useState, useEffect, useMemo } from 'react';
 import { useTheme } from '../hooks/useTheme';
 import { useAppointmentStore } from '../stores/useAppointmentStore';

@@ -3,6 +3,8 @@ import { useTheme } from '../../hooks/useTheme';
 
 interface CustomButtonProps extends ButtonProps {
   variant?: 'primary' | 'secondary' | 'ghost';
+  onClick?: React.MouseEventHandler<HTMLButtonElement>;
+  leftSection?: React.ReactNode;
 }
 
 export const Button: React.FC<CustomButtonProps> = ({

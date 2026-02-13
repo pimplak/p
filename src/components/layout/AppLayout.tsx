@@ -24,6 +24,8 @@ import { createPortal } from 'react-dom';
 import { Link, useLocation } from 'react-router-dom';
 import { useGestures } from '../../hooks/useGestures';
 import { useTheme } from '../../hooks/useTheme';
+import { useHeaderStore } from '../../stores/useHeaderStore';
+import { useSettingsStore } from '../../stores/useSettingsStore';
 import { DrawerOverlay } from '../ui/DrawerOverlay';
 import { MobileNavigation } from './MobileNavigation';
 import type { ReactNode } from 'react';
@@ -80,6 +82,8 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
   const isMobile = useMediaQuery('(max-width: 768px)');
   const location = useLocation();
   const { currentPalette, isDark, mantineTheme } = useTheme();
+  const { title, leftSlot, rightSlot } = useHeaderStore();
+  const { practitionerName, practitionerTitle } = useSettingsStore();
 
   // Dodaj gesty tylko na mobile
   useGestures({
@@ -151,7 +155,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
           '--app-shell-navbar-width': '280px',
         }}
       >
-        {/* Header */}
+        {/* Dynamic Header: Left | Center | Right */}
         <AppShell.Header
           style={{
             backgroundColor: currentPalette.surface,
@@ -163,28 +167,45 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
           }}
         >
           <Group h='100%' justify='space-between' w='100%'>
-            <Group>
-              <Burger
-                opened={opened}
-                onClick={toggle}
-                hiddenFrom='sm'
-                size='sm'
-                color={currentPalette.text}
-              />
-              <Text
-                size='xl'
-                fw={700}
-                style={{ color: currentPalette.text }}
-                visibleFrom='sm'
-              >
-                P
-              </Text>
+            {/* Left slot: custom or default (Burger + Brand) */}
+            <Group style={{ minWidth: 0 }}>
+              {leftSlot !== null && leftSlot !== undefined ? (
+                leftSlot
+              ) : (
+                <>
+                  <Burger
+                    opened={opened}
+                    onClick={toggle}
+                    hiddenFrom='sm'
+                    size='sm'
+                    color={currentPalette.text}
+                  />
+                  <Text
+                    size='xl'
+                    fw={700}
+                    style={{ color: currentPalette.text }}
+                    visibleFrom='sm'
+                  >
+                    P
+                  </Text>
+                </>
+              )}
             </Group>
 
-            <Group gap='md'>
-              <Text size='sm' style={{ color: `${currentPalette.text}B3` }}>
-                Dr Anna Terapeutka
-              </Text>
+            {/* Center slot: screen title / context */}
+            <Group style={{ flex: 1, justifyContent: 'center', minWidth: 0 }}>
+              {title ?? null}
+            </Group>
+
+            {/* Right slot: custom or default (practitioner) */}
+            <Group gap='md' style={{ minWidth: 0 }}>
+              {rightSlot !== null && rightSlot !== undefined ? (
+                rightSlot
+              ) : (
+                <Text size='sm' style={{ color: `${currentPalette.text}B3` }}>
+                  {practitionerTitle} {practitionerName}
+                </Text>
+              )}
             </Group>
           </Group>
         </AppShell.Header>
