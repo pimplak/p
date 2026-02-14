@@ -65,13 +65,13 @@ export function AppointmentForm({
 }: AppointmentFormProps) {
   const { addAppointment, updateAppointment, loading } = useAppointmentStore();
   const { patients } = usePatientStore();
-  const { appointmentHours } = useSettingsStore();
+  const { appointmentHours, defaultAppointmentDuration } = useSettingsStore();
 
   const form = useForm<FormValues>({
     initialValues: {
       patientId: appointment?.patientId?.toString() || initialPatientId || '',
       date: appointment?.date ? new Date(appointment.date) : initialDate || new Date(),
-      duration: appointment?.duration || 50,
+      duration: appointment?.duration || defaultAppointmentDuration,
       status: appointment?.status || APPOINTMENT_STATUS.SCHEDULED,
       type: appointment?.type || AppointmentType.THERAPY,
       notes: appointment?.notes || '',

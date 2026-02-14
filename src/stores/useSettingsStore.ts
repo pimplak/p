@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { DEFAULT_APPOINTMENT_DURATION } from '../constants/business';
 import { DEFAULT_SMS_TEMPLATES, type SMSTemplate } from '../utils/sms';
 
 export type ColorPalette = 'naturalne' | 'magenta-rose';
@@ -10,6 +11,7 @@ interface SettingsStore {
   // Calendar settings
   hideWeekends: boolean;
   appointmentHours: string[];
+  defaultAppointmentDuration: number;
 
   // SMS settings
   practitionerName: string;
@@ -21,6 +23,7 @@ interface SettingsStore {
   toggleDarkMode: () => void;
   toggleHideWeekends: () => void;
   setAppointmentHours: (hours: string[]) => void;
+  setDefaultAppointmentDuration: (duration: number) => void;
 
   // SMS actions
   setPractitionerName: (name: string) => void;
@@ -65,6 +68,7 @@ export const useSettingsStore = create<SettingsStore>((set, get) => {
       darkMode: state.darkMode,
       hideWeekends: state.hideWeekends,
       appointmentHours: state.appointmentHours,
+      defaultAppointmentDuration: state.defaultAppointmentDuration,
       practitionerName: state.practitionerName,
       practitionerTitle: state.practitionerTitle,
       smsTemplates: state.smsTemplates,
@@ -91,6 +95,7 @@ export const useSettingsStore = create<SettingsStore>((set, get) => {
     darkMode: storedSettings.darkMode ?? true,
     hideWeekends: storedSettings.hideWeekends ?? false,
     appointmentHours: storedSettings.appointmentHours || generateDefaultHours(),
+    defaultAppointmentDuration: storedSettings.defaultAppointmentDuration || DEFAULT_APPOINTMENT_DURATION,
 
     // SMS settings
     practitionerName:
@@ -115,6 +120,11 @@ export const useSettingsStore = create<SettingsStore>((set, get) => {
 
     setAppointmentHours: hours => {
       set({ appointmentHours: hours });
+      saveAllSettings();
+    },
+
+    setDefaultAppointmentDuration: duration => {
+      set({ defaultAppointmentDuration: duration });
       saveAllSettings();
     },
 

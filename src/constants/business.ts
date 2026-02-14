@@ -2,6 +2,7 @@
 
 // APPOINTMENT PRICING
 export const DEFAULT_APPOINTMENT_PRICE = 150; // Domyślna cena wizyty w zł
+export const DEFAULT_APPOINTMENT_DURATION = 60; // Domyślny czas trwania wizyty w minutach
 
 // EXPORT PROCESSING
 export const EXPORT_CHUNK_SIZE = 500; // Chunk size dla eksportu danych

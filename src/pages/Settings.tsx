@@ -12,6 +12,7 @@ import {
   Select,
   Collapse,
   TagsInput,
+  NumberInput,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { notifications } from '@mantine/notifications';
@@ -45,6 +46,8 @@ function Settings() {
     setPractitionerTitle,
     appointmentHours,
     setAppointmentHours,
+    defaultAppointmentDuration,
+    setDefaultAppointmentDuration,
   } = useSettingsStore();
   const { currentPalette, utilityColors } = useTheme();
   const [templatesOpened, { toggle: toggleTemplates }] = useDisclosure(false);
@@ -200,6 +203,17 @@ function Settings() {
               <Divider />
 
               <Stack gap='md'>
+                <NumberInput
+                  label='Domyślny czas trwania wizyty (minuty)'
+                  placeholder='60'
+                  value={defaultAppointmentDuration}
+                  onChange={value => setDefaultAppointmentDuration(Number(value) || 60)}
+                  min={15}
+                  max={300}
+                  step={5}
+                  description='Domyślny czas trwania nowej wizyty'
+                />
+
                 <TagsInput
                   label='Predefiniowane godziny wizyt'
                   placeholder='Dodaj godzinę (np. 14:15)'
