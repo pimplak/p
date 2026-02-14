@@ -11,6 +11,7 @@ import {
   TextInput,
   Select,
   Collapse,
+  TagsInput,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { notifications } from '@mantine/notifications';
@@ -24,6 +25,7 @@ import {
   IconMessage,
   IconChevronDown,
   IconChevronRight,
+  IconClock,
 } from '@tabler/icons-react';
 import { SMSTemplateManager } from '../components/SMSTemplateManager';
 import { ThemeSelector } from '../components/ThemeSelector';
@@ -41,6 +43,8 @@ function Settings() {
     practitionerTitle,
     setPractitionerName,
     setPractitionerTitle,
+    appointmentHours,
+    setAppointmentHours,
   } = useSettingsStore();
   const { currentPalette, utilityColors } = useTheme();
   const [templatesOpened, { toggle: toggleTemplates }] = useDisclosure(false);
@@ -179,6 +183,34 @@ function Settings() {
                     <SMSTemplateManager />
                   </Collapse>
                 </Stack>
+              </Stack>
+            </Stack>
+          </Card>
+          
+          {/* Ustawienia wizyt */}
+          <Card shadow='sm' padding='lg' radius='md' withBorder>
+            <Stack gap='md'>
+              <Group align='center' gap='sm'>
+                <IconClock size={20} color={currentPalette.primary} />
+                <Text fw={600} size='lg'>
+                  Ustawienia wizyt
+                </Text>
+              </Group>
+
+              <Divider />
+
+              <Stack gap='md'>
+                <TagsInput
+                  label='Predefiniowane godziny wizyt'
+                  placeholder='Dodaj godzinę (np. 14:15)'
+                  value={appointmentHours}
+                  onChange={setAppointmentHours}
+                  description='Te godziny będą dostępne w dropdownie podczas dodawania nowej wizyty'
+                  clearable
+                />
+                <Text size='xs' c='dimmed'>
+                  Wpisz godzinę w formacie HH:mm i naciśnij Enter, aby dodać.
+                </Text>
               </Stack>
             </Stack>
           </Card>

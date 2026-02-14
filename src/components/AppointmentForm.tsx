@@ -9,21 +9,27 @@ import {
   Text,
   Card,
   Divider,
+  SegmentedControl,
+  Input,
+  Box,
+  ScrollArea,
 } from '@mantine/core';
-import { DateTimePicker } from '@mantine/dates';
+import { DatePickerInput } from '@mantine/dates';
 import { useForm } from '@mantine/form';
 import { notifications } from '@mantine/notifications';
+import dayjs from 'dayjs';
 import { DEFAULT_APPOINTMENT_PRICE } from '../constants/business';
 import { APPOINTMENT_STATUS } from '../constants/status';
 import { type AppointmentFormData } from '../schemas';
 import { useAppointmentStore } from '../stores/useAppointmentStore';
 import { usePatientStore } from '../stores/usePatientStore';
+import { useSettingsStore } from '../stores/useSettingsStore';
 import {
   AppointmentStatus,
   AppointmentType,
   PaymentMethod,
 } from '../types/Appointment';
-import { getPatientDisplayName } from '../utils/dates';
+import { getPatientDisplayName, toDate } from '../utils/dates';
 import type { Appointment } from '../types/Appointment';
 
 interface AppointmentFormProps {
@@ -59,11 +65,12 @@ export function AppointmentForm({
 }: AppointmentFormProps) {
   const { addAppointment, updateAppointment, loading } = useAppointmentStore();
   const { patients } = usePatientStore();
+  const { appointmentHours } = useSettingsStore();
 
   const form = useForm<FormValues>({
     initialValues: {
       patientId: appointment?.patientId?.toString() || initialPatientId || '',
-      date: appointment?.date ? new Date(appointment.date) : (initialDate || new Date()),
+      date: appointment?.date ? new Date(appointment.date) : initialDate || new Date(),
       duration: appointment?.duration || 50,
       status: appointment?.status || APPOINTMENT_STATUS.SCHEDULED,
       type: appointment?.type || AppointmentType.THERAPY,
@@ -74,20 +81,67 @@ export function AppointmentForm({
         paidAt: appointment?.paymentInfo?.paidAt
           ? new Date(appointment.paymentInfo.paidAt)
           : undefined,
-        paymentMethod: appointment?.paymentInfo?.paymentMethod || undefined,
+        paymentMethod: appointment?.paymentInfo?.paymentMethod || PaymentMethod.CASH,
         notes: appointment?.paymentInfo?.notes || '',
       },
     },
     validate: {
-      patientId: value => (!value ? 'Wybierz pacjenta' : null),
-      duration: value =>
-        !value || value < 15
-          ? 'Czas trwania musi być co najmniej 15 minut'
-          : null,
-      price: value =>
+      patientId: (value) => (!value ? 'Wybierz pacjenta' : null),
+      duration: (value) =>
+        !value || value < 15 ? 'Czas trwania musi być co najmniej 15 minut' : null,
+      price: (value) =>
         value !== undefined && value < 0 ? 'Cena nie może być ujemna' : null,
+      date: (value) => (!value ? 'Wybierz datę i godzinę' : null),
     },
   });
+
+  const handleDateChange = (value: Date | string | null) => {
+    if (!value) return;
+    const dateValue = typeof value === 'string' ? new Date(value) : value;
+    if (isNaN(dateValue.getTime())) return;
+
+    const currentFullDate = dayjs(form.values.date);
+    const newDate = dayjs(dateValue)
+      .hour(currentFullDate.hour())
+      .minute(currentFullDate.minute())
+      .second(0)
+      .toDate();
+    form.setFieldValue('date', newDate);
+  };
+
+  const handleTimeChange = (value: string) => {
+    const [hoursStr, minutesStr] = value.split(':');
+    const hours = parseInt(hoursStr, 10);
+    const minutes = parseInt(minutesStr, 10);
+
+    if (!isNaN(hours) && !isNaN(minutes)) {
+      const newDate = dayjs(form.values.date)
+        .hour(hours)
+        .minute(minutes)
+        .second(0)
+        .toDate();
+      form.setFieldValue('date', newDate);
+    }
+  };
+
+  const handlePaymentDateChange = (value: Date | string | null) => {
+    if (!value) {
+      form.setFieldValue('paymentInfo.paidAt', undefined);
+      return;
+    }
+    const dateValue = typeof value === 'string' ? new Date(value) : value;
+    if (isNaN(dateValue.getTime())) return;
+
+    const currentPaidAt = form.values.paymentInfo?.paidAt
+      ? dayjs(form.values.paymentInfo.paidAt)
+      : dayjs();
+    const newDate = dayjs(dateValue)
+      .hour(currentPaidAt.hour())
+      .minute(currentPaidAt.minute())
+      .second(0)
+      .toDate();
+    form.setFieldValue('paymentInfo.paidAt', newDate);
+  };
 
   const handleSubmit = async (values: FormValues) => {
     try {
@@ -187,12 +241,24 @@ export function AppointmentForm({
           {...form.getInputProps('patientId')}
         />
 
-        <DateTimePicker
-          label='Data i godzina'
-          placeholder='Wybierz datę i godzinę'
-          required
-          {...form.getInputProps('date')}
-        />
+        <Group grow>
+          <DatePickerInput
+            label='Data'
+            placeholder='Wybierz datę'
+            required
+            value={toDate(form.values.date)}
+            onChange={handleDateChange}
+            error={form.errors.date}
+          />
+          <Select
+            label='Godzina'
+            placeholder='Wybierz godzinę'
+            required
+            data={appointmentHours}
+            value={dayjs(form.values.date).format('HH:mm')}
+            onChange={(value) => value && handleTimeChange(value)}
+          />
+        </Group>
 
         <Group grow>
           <NumberInput
@@ -204,20 +270,31 @@ export function AppointmentForm({
             required
             {...form.getInputProps('duration')}
           />
-          <Select
-            label='Typ wizyty'
-            placeholder='Wybierz typ'
-            data={typeOptions}
-            {...form.getInputProps('type')}
-          />
         </Group>
 
-        <Select
-          label='Status'
-          placeholder='Wybierz status'
-          data={statusOptions}
-          {...form.getInputProps('status')}
-        />
+        <Input.Wrapper label='Typ wizyty'>
+          <ScrollArea scrollbars='x' type='never' mt='xs'>
+            <Box style={{ display: 'flex', width: 'max-content', minWidth: '100%' }}>
+              <SegmentedControl
+                data={typeOptions}
+                {...form.getInputProps('type')}
+                fullWidth
+              />
+            </Box>
+          </ScrollArea>
+        </Input.Wrapper>
+
+        <Input.Wrapper label='Status'>
+          <ScrollArea scrollbars='x' type='never' mt='xs'>
+            <Box style={{ display: 'flex', width: 'max-content', minWidth: '100%' }}>
+              <SegmentedControl
+                data={statusOptions}
+                {...form.getInputProps('status')}
+                fullWidth
+              />
+            </Box>
+          </ScrollArea>
+        </Input.Wrapper>
 
         <Textarea
           label='Notatki'
@@ -252,19 +329,25 @@ export function AppointmentForm({
 
           {form.values.paymentInfo?.isPaid && (
             <>
-              <Group grow mt='md'>
-                <DateTimePicker
+              <Stack gap='md' mt='md'>
+                <DatePickerInput
                   label='Data płatności'
                   placeholder='Kiedy opłacono?'
-                  {...form.getInputProps('paymentInfo.paidAt')}
+                  value={toDate(form.values.paymentInfo?.paidAt)}
+                  onChange={handlePaymentDateChange}
                 />
-                <Select
-                  label='Sposób płatności'
-                  placeholder='Wybierz sposób'
-                  data={paymentMethodOptions}
-                  {...form.getInputProps('paymentInfo.paymentMethod')}
-                />
-              </Group>
+                <Input.Wrapper label='Sposób płatności'>
+                  <ScrollArea scrollbars='x' type='never' mt='xs'>
+                    <Box style={{ display: 'flex', width: 'max-content', minWidth: '100%' }}>
+                      <SegmentedControl
+                        data={paymentMethodOptions}
+                        {...form.getInputProps('paymentInfo.paymentMethod')}
+                        fullWidth
+                      />
+                    </Box>
+                  </ScrollArea>
+                </Input.Wrapper>
+              </Stack>
 
               <Textarea
                 label='Notatki do płatności'

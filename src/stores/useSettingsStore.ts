@@ -9,6 +9,7 @@ interface SettingsStore {
 
   // Calendar settings
   hideWeekends: boolean;
+  appointmentHours: string[];
 
   // SMS settings
   practitionerName: string;
@@ -19,6 +20,7 @@ interface SettingsStore {
   setColorPalette: (palette: ColorPalette) => void;
   toggleDarkMode: () => void;
   toggleHideWeekends: () => void;
+  setAppointmentHours: (hours: string[]) => void;
 
   // SMS actions
   setPractitionerName: (name: string) => void;
@@ -62,16 +64,33 @@ export const useSettingsStore = create<SettingsStore>((set, get) => {
       colorPalette: state.colorPalette,
       darkMode: state.darkMode,
       hideWeekends: state.hideWeekends,
+      appointmentHours: state.appointmentHours,
       practitionerName: state.practitionerName,
       practitionerTitle: state.practitionerTitle,
       smsTemplates: state.smsTemplates,
     });
   };
 
+  const generateDefaultHours = () => {
+    const hours: string[] = [];
+    let current = 14 * 60 + 15; // 14:15 in minutes
+    const end = 21 * 60 + 30; // 21:30 in minutes
+    const interval = 75; // 1h 15m in minutes
+
+    while (current <= end) {
+      const h = Math.floor(current / 60);
+      const m = current % 60;
+      hours.push(`${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`);
+      current += interval;
+    }
+    return hours;
+  };
+
   return {
     colorPalette: storedSettings.colorPalette || 'naturalne',
     darkMode: storedSettings.darkMode ?? true,
     hideWeekends: storedSettings.hideWeekends ?? false,
+    appointmentHours: storedSettings.appointmentHours || generateDefaultHours(),
 
     // SMS settings
     practitionerName:
@@ -91,6 +110,11 @@ export const useSettingsStore = create<SettingsStore>((set, get) => {
 
     toggleHideWeekends: () => {
       set(state => ({ hideWeekends: !state.hideWeekends }));
+      saveAllSettings();
+    },
+
+    setAppointmentHours: hours => {
+      set({ appointmentHours: hours });
       saveAllSettings();
     },
 

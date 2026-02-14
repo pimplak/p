@@ -43,7 +43,7 @@ export function BottomSheet({
       withCloseButton={true}
       styles={{
         root: {
-          zIndex: 1000,
+          zIndex: 3000,
         },
         content: {
           borderTopLeftRadius: isMobile ? '16px' : '0',
@@ -57,10 +57,11 @@ export function BottomSheet({
         },
         body: {
           paddingTop: 'var(--mantine-spacing-md)',
-          paddingBottom: isMobile ? '140px' : 'var(--mantine-spacing-md)',
+          paddingBottom: isMobile 
+            ? 'calc(100px + env(safe-area-inset-bottom))' 
+            : 'var(--mantine-spacing-md)',
           display: 'flex',
           flexDirection: 'column',
-          height: '100%',
         },
       }}
       {...props}
