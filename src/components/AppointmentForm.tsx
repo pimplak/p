@@ -20,6 +20,7 @@ import { notifications } from '@mantine/notifications';
 import dayjs from 'dayjs';
 import { DEFAULT_APPOINTMENT_PRICE } from '../constants/business';
 import { APPOINTMENT_STATUS } from '../constants/status';
+import { useTheme } from '../hooks/useTheme';
 import { type AppointmentFormData } from '../schemas';
 import { useAppointmentStore } from '../stores/useAppointmentStore';
 import { usePatientStore } from '../stores/usePatientStore';
@@ -53,6 +54,7 @@ interface FormValues {
     paymentMethod?: string;
     notes?: string;
   };
+  newRescheduleDate?: Date | string;
 }
 
 export function AppointmentForm({
@@ -62,9 +64,18 @@ export function AppointmentForm({
   onSuccess,
   onCancel,
 }: AppointmentFormProps) {
-  const { addAppointment, updateAppointment, loading } = useAppointmentStore();
+  const { addAppointment, updateAppointment, rescheduleAppointment, loading } = useAppointmentStore();
   const { patients } = usePatientStore();
   const { appointmentHours, defaultAppointmentDuration, appointmentTypes } = useSettingsStore();
+  const { appointments } = useAppointmentStore();
+  const { currentPalette, isDark } = useTheme();
+
+  const rescheduledTo = appointment?.rescheduledToId 
+    ? appointments.find(a => a.id === appointment.rescheduledToId)
+    : null;
+  const rescheduledFrom = appointment?.rescheduledFromId
+    ? appointments.find(a => a.id === appointment.rescheduledFromId)
+    : null;
 
   const form = useForm<FormValues>({
     initialValues: {
@@ -83,6 +94,7 @@ export function AppointmentForm({
         paymentMethod: appointment?.paymentInfo?.paymentMethod || PaymentMethod.CASH,
         notes: appointment?.paymentInfo?.notes || '',
       },
+      newRescheduleDate: appointment?.date ? new Date(appointment.date) : new Date(),
     },
     validate: {
       patientId: (value) => (!value ? 'Wybierz pacjenta' : null),
@@ -91,6 +103,10 @@ export function AppointmentForm({
       price: (value) =>
         value !== undefined && value < 0 ? 'Cena nie może być ujemna' : null,
       date: (value) => (!value ? 'Wybierz datę i godzinę' : null),
+      newRescheduleDate: (value, values) =>
+        values.status === APPOINTMENT_STATUS.RESCHEDULED && !value
+          ? 'Wybierz datę nowej wizyty'
+          : null,
     },
   });
 
@@ -106,6 +122,35 @@ export function AppointmentForm({
       .second(0)
       .toDate();
     form.setFieldValue('date', newDate);
+  };
+
+  const handleRescheduleDateChange = (value: Date | string | null) => {
+    if (!value) return;
+    const dateValue = typeof value === 'string' ? new Date(value) : value;
+    if (isNaN(dateValue.getTime())) return;
+
+    const currentRescheduleDate = dayjs(form.values.newRescheduleDate);
+    const newDate = dayjs(dateValue)
+      .hour(currentRescheduleDate.hour())
+      .minute(currentRescheduleDate.minute())
+      .second(0)
+      .toDate();
+    form.setFieldValue('newRescheduleDate', newDate);
+  };
+
+  const handleRescheduleTimeChange = (value: string) => {
+    const [hoursStr, minutesStr] = value.split(':');
+    const hours = parseInt(hoursStr, 10);
+    const minutes = parseInt(minutesStr, 10);
+
+    if (!isNaN(hours) && !isNaN(minutes)) {
+      const newDate = dayjs(form.values.newRescheduleDate)
+        .hour(hours)
+        .minute(minutes)
+        .second(0)
+        .toDate();
+      form.setFieldValue('newRescheduleDate', newDate);
+    }
   };
 
   const handleTimeChange = (value: string) => {
@@ -169,12 +214,25 @@ export function AppointmentForm({
       };
 
       if (appointment?.id) {
-        await updateAppointment(appointment.id, appointmentData);
-        notifications.show({
-          title: 'Sukces',
-          message: 'Wizyta została zaktualizowana',
-          color: 'green',
-        });
+        if (values.status === APPOINTMENT_STATUS.RESCHEDULED && values.newRescheduleDate) {
+          await rescheduleAppointment(
+            appointment.id,
+            new Date(values.newRescheduleDate),
+            appointmentData
+          );
+          notifications.show({
+            title: 'Sukces',
+            message: 'Wizyta została przełożona i utworzono nową',
+            color: 'green',
+          });
+        } else {
+          await updateAppointment(appointment.id, appointmentData);
+          notifications.show({
+            title: 'Sukces',
+            message: 'Wizyta została zaktualizowana',
+            color: 'green',
+          });
+        }
       } else {
         await addAppointment(appointmentData);
         notifications.show({
@@ -204,7 +262,7 @@ export function AppointmentForm({
     { value: AppointmentStatus.COMPLETED, label: 'Zakończona' },
     { value: AppointmentStatus.CANCELLED, label: 'Anulowana' },
     { value: AppointmentStatus.NO_SHOW, label: 'Nieobecność' },
-    { value: AppointmentStatus.RESCHEDULED, label: 'Przełożona' },
+    ...(appointment ? [{ value: AppointmentStatus.RESCHEDULED, label: 'Przełożona' }] : []),
   ];
 
   const typeOptions = appointmentTypes.map(type => ({
@@ -222,6 +280,28 @@ export function AppointmentForm({
   return (
     <form onSubmit={form.onSubmit(handleSubmit)}>
       <Stack gap="md">
+        {(rescheduledTo || rescheduledFrom) && (
+          <Card withBorder p="sm" bg={isDark ? `${currentPalette.surface}` : 'gray.0'}>
+            <Stack gap="xs">
+              {rescheduledFrom && (
+                <Text size="sm">
+                  Ta wizyta została przełożona z dnia:{' '}
+                  <Text span fw={600}>
+                    {dayjs(rescheduledFrom.date).format('DD.MM.YYYY HH:mm')}
+                  </Text>
+                </Text>
+              )}
+              {rescheduledTo && (
+                <Text size="sm">
+                  Ta wizyta została przełożona na dzień:{' '}
+                  <Text span fw={600}>
+                    {dayjs(rescheduledTo.date).format('DD.MM.YYYY HH:mm')}
+                  </Text>
+                </Text>
+              )}
+            </Stack>
+          </Card>
+        )}
         <Select
           label='Pacjent'
           placeholder='Wybierz pacjenta'
@@ -285,6 +365,31 @@ export function AppointmentForm({
             </Box>
           </ScrollArea>
         </Input.Wrapper>
+
+        {form.values.status === APPOINTMENT_STATUS.RESCHEDULED && (
+          <Card withBorder p='md' bg={isDark ? `${currentPalette.primary}1A` : 'blue.0'}>
+            <Text fw={600} size='sm' mb='xs' c={isDark ? currentPalette.primary : 'blue.7'}>
+              Nowy termin wizyty
+            </Text>
+            <Group grow>
+              <DatePickerInput
+                label='Data nowej wizyty'
+                placeholder='Wybierz datę'
+                required
+                value={toDate(form.values.newRescheduleDate)}
+                onChange={handleRescheduleDateChange}
+              />
+              <Select
+                label='Godzina'
+                placeholder='Wybierz godzinę'
+                required
+                data={appointmentHours}
+                value={dayjs(form.values.newRescheduleDate).format('HH:mm')}
+                onChange={(value) => value && handleRescheduleTimeChange(value)}
+              />
+            </Group>
+          </Card>
+        )}
 
         <Textarea
           label='Notatki'

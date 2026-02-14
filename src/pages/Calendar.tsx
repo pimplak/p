@@ -16,7 +16,7 @@ import {
   Divider,
   ScrollArea,
 } from '@mantine/core';
-import { DateInput } from '@mantine/dates';
+import { DateInput, DatePickerInput } from '@mantine/dates';
 import { useDisclosure, useMediaQuery } from '@mantine/hooks';
 import {
   IconPlus,
@@ -27,6 +27,9 @@ import {
   IconChevronRight,
   IconEye,
   IconEyeOff,
+  IconCalendarShare,
+  IconArrowRight,
+  IconArrowLeft,
 } from '@tabler/icons-react';
 import {
   format,
@@ -48,6 +51,7 @@ import {
   eachDayOfInterval,
 } from 'date-fns';
 import { pl } from 'date-fns/locale';
+import dayjs from 'dayjs';
 import { useState, useEffect, useMemo } from 'react';
 import { AppointmentForm } from '../components/AppointmentForm';
 import { BulkSMSReminders } from '../components/BulkSMSReminders';
@@ -62,6 +66,7 @@ import { useTheme } from '../hooks/useTheme';
 import { useAppointmentStore } from '../stores/useAppointmentStore';
 import { usePatientStore } from '../stores/usePatientStore';
 import { useSettingsStore } from '../stores/useSettingsStore';
+import { toDate } from '../utils/dates';
 import type { Appointment, AppointmentWithPatient } from '../types/Appointment';
 import type { ColorPalette } from '../types/theme';
 
@@ -77,15 +82,25 @@ function Calendar() {
   const [view, setView] = useState<CalendarView>('day');
   const [hideWeekends, setHideWeekends] = useState(false);
 
+  // Reschedule state
+  const [rescheduleOpened, { open: openReschedule, close: closeReschedule }] =
+    useDisclosure(false);
+  const [appointmentToReschedule, setAppointmentToReschedule] =
+    useState<AppointmentWithPatient | null>(null);
+  const [newRescheduleDate, setNewRescheduleDate] = useState<Date | null>(null);
+
   const {
     fetchAppointments,
     deleteAppointment,
     getAppointmentsByDateRange,
+    rescheduleAppointment,
+    appointments,
     error,
   } = useAppointmentStore();
 
   const { fetchPatients } = usePatientStore();
   const { currentPalette, utilityColors } = useTheme();
+  const { appointmentHours } = useSettingsStore();
 
   useEffect(() => {
     fetchAppointments();
@@ -119,6 +134,64 @@ function Calendar() {
     close();
     setEditingAppointment(null);
     setNewAppointmentDate(null);
+  };
+
+  const handleRescheduleClick = (appointment: AppointmentWithPatient) => {
+    setAppointmentToReschedule(appointment);
+    setNewRescheduleDate(new Date(appointment.date));
+    openReschedule();
+  };
+
+  const handleConfirmReschedule = async () => {
+    if (appointmentToReschedule?.id && newRescheduleDate) {
+      await rescheduleAppointment(
+        appointmentToReschedule.id,
+        newRescheduleDate
+      );
+      closeReschedule();
+      setAppointmentToReschedule(null);
+      setNewRescheduleDate(null);
+    }
+  };
+
+  const handleRescheduleDateChange = (value: Date | string | null) => {
+    if (!value || !newRescheduleDate) return;
+    const dateValue = typeof value === 'string' ? new Date(value) : value;
+    if (isNaN(dateValue.getTime())) return;
+
+    const currentFullDate = dayjs(newRescheduleDate);
+    const newDate = dayjs(dateValue)
+      .hour(currentFullDate.hour())
+      .minute(currentFullDate.minute())
+      .second(0)
+      .toDate();
+    setNewRescheduleDate(newDate);
+  };
+
+  const handleRescheduleTimeChange = (value: string) => {
+    if (!newRescheduleDate) return;
+    const [hoursStr, minutesStr] = value.split(':');
+    const hours = parseInt(hoursStr, 10);
+    const minutes = parseInt(minutesStr, 10);
+
+    if (!isNaN(hours) && !isNaN(minutes)) {
+      const newDate = dayjs(newRescheduleDate)
+        .hour(hours)
+        .minute(minutes)
+        .second(0)
+        .toDate();
+      setNewRescheduleDate(newDate);
+    }
+  };
+
+  const handleJumpToAppointment = (appointmentId: number) => {
+    const target = appointments.find(a => a.id === appointmentId);
+    if (target) {
+      setSelectedDate(new Date(target.date));
+      if (view === 'month' && !isSameMonth(new Date(target.date), selectedDate)) {
+        // Month view handles itself via selectedDate
+      }
+    }
   };
 
   // Navigation handlers
@@ -200,6 +273,8 @@ function Calendar() {
         return utilityColors.error;
       case 'no_show':
         return utilityColors.warning;
+      case 'rescheduled':
+        return currentPalette.text;
       default:
         return currentPalette.text;
     }
@@ -215,6 +290,8 @@ function Calendar() {
         return `${utilityColors.error}33`;
       case 'no_show':
         return `${utilityColors.warning}33`;
+      case 'rescheduled':
+        return `${currentPalette.text}1A`;
       default:
         return `${currentPalette.text}26`;
     }
@@ -230,6 +307,8 @@ function Calendar() {
         return 'Anulowana';
       case 'no_show':
         return 'Nieobecność';
+      case 'rescheduled':
+        return 'Przełożona';
       default:
         return status;
     }
@@ -336,6 +415,7 @@ function Calendar() {
                 { value: 'completed', label: 'Zakończone' },
                 { value: 'cancelled', label: 'Anulowane' },
                 { value: 'no_show', label: 'Nieobecności' },
+                { value: 'rescheduled', label: 'Przełożone' },
               ]}
               size='sm'
               w={{ base: 120, sm: 140 }}
@@ -369,6 +449,8 @@ function Calendar() {
             appointments={currentPeriodAppointments}
             onEditAppointment={handleEditAppointment}
             onDeleteAppointment={handleDeleteAppointment}
+            onRescheduleAppointment={handleRescheduleClick}
+            onJumpToAppointment={handleJumpToAppointment}
             onAddAppointment={handleAddAppointment}
             getStatusColor={getStatusColor}
             getStatusBackgroundColor={getStatusBackgroundColor}
@@ -384,6 +466,8 @@ function Calendar() {
             appointments={currentPeriodAppointments}
             onEditAppointment={handleEditAppointment}
             onDeleteAppointment={handleDeleteAppointment}
+            onRescheduleAppointment={handleRescheduleClick}
+            onJumpToAppointment={handleJumpToAppointment}
             onAddAppointment={handleAddAppointment}
             getStatusColor={getStatusColor}
             getStatusBackgroundColor={getStatusBackgroundColor}
@@ -399,6 +483,8 @@ function Calendar() {
             appointments={currentPeriodAppointments}
             onEditAppointment={handleEditAppointment}
             onDeleteAppointment={handleDeleteAppointment}
+            onRescheduleAppointment={handleRescheduleClick}
+            onJumpToAppointment={handleJumpToAppointment}
             onAddAppointment={handleAddAppointment}
             onDateClick={handleDateClick}
             getStatusColor={getStatusColor}
@@ -422,6 +508,51 @@ function Calendar() {
         />
       </BottomSheet>
 
+      <BottomSheet
+        opened={rescheduleOpened}
+        onClose={closeReschedule}
+        title='Przełóż wizytę'
+      >
+        <Stack p='md'>
+          <Text size='sm'>
+            Wybierz nową datę i godzinę dla wizyty pacjenta:{' '}
+            <Text span fw={600}>
+              {appointmentToReschedule?.patient?.firstName}{' '}
+              {appointmentToReschedule?.patient?.lastName}
+            </Text>
+          </Text>
+          <Group grow>
+            <DatePickerInput
+              label='Data'
+              placeholder='Wybierz datę'
+              required
+              value={toDate(newRescheduleDate || undefined)}
+              onChange={handleRescheduleDateChange}
+            />
+            <Select
+              label='Godzina'
+              placeholder='Wybierz godzinę'
+              required
+              data={appointmentHours}
+              value={dayjs(newRescheduleDate).format('HH:mm')}
+              onChange={value => value && handleRescheduleTimeChange(value)}
+            />
+          </Group>
+          <Group justify='flex-end' mt='md'>
+            <Button variant='subtle' onClick={closeReschedule}>
+              Anuluj
+            </Button>
+            <Button
+              onClick={handleConfirmReschedule}
+              disabled={!newRescheduleDate}
+              leftSection={<IconCalendarShare size='1rem' />}
+            >
+              Potwierdź przełożenie
+            </Button>
+          </Group>
+        </Stack>
+      </BottomSheet>
+
       {/* Floating Action Button for mobile */}
       <FloatingActionButton actions={fabActions} />
     </Stack>
@@ -434,6 +565,8 @@ interface CalendarViewProps {
   appointments: AppointmentWithPatient[];
   onEditAppointment: (appointment: AppointmentWithPatient) => void;
   onDeleteAppointment: (id: number) => void;
+  onRescheduleAppointment: (appointment: AppointmentWithPatient) => void;
+  onJumpToAppointment: (id: number) => void;
   onAddAppointment: (date?: Date) => void;
   getStatusColor: (status: string) => string;
   getStatusBackgroundColor: (status: string) => string;
@@ -452,6 +585,8 @@ function DayView({
   appointments,
   onEditAppointment,
   onDeleteAppointment,
+  onRescheduleAppointment,
+  onJumpToAppointment,
   onAddAppointment,
   getStatusColor,
   getStatusLabel,
@@ -495,6 +630,8 @@ function DayView({
             appointment={appointment}
             onEditAppointment={onEditAppointment}
             onDeleteAppointment={onDeleteAppointment}
+            onRescheduleAppointment={onRescheduleAppointment}
+            onJumpToAppointment={onJumpToAppointment}
             getStatusColor={getStatusColor}
             getStatusLabel={getStatusLabel}
             utilityColors={utilityColors}
@@ -521,89 +658,134 @@ function DayView({
           </Table.Tr>
         </Table.Thead>
         <Table.Tbody>
-          {sortedAppointments.map(appointment => (
-            <Table.Tr key={appointment.id}>
-              <Table.Td>
-                <Text fw={500}>
-                  {format(new Date(appointment.date), 'HH:mm')}
-                </Text>
-              </Table.Td>
-              <Table.Td>
-                <div>
+          {sortedAppointments.map(appointment => {
+            const isRescheduled = appointment.status === 'rescheduled';
+            return (
+              <Table.Tr
+                key={appointment.id}
+                style={{ opacity: isRescheduled ? 0.6 : 1 }}
+              >
+                <Table.Td>
                   <Text fw={500}>
-                    {appointment.patient?.firstName}{' '}
-                    {appointment.patient?.lastName}
+                    {format(new Date(appointment.date), 'HH:mm')}
                   </Text>
-                  {appointment.patient?.phone && (
-                    <Text size='sm' c='dimmed'>
-                      {appointment.patient.phone}
+                </Table.Td>
+                <Table.Td>
+                  <div>
+                    <Text fw={500}>
+                      {appointment.patient?.firstName}{' '}
+                      {appointment.patient?.lastName}
                     </Text>
+                    {appointment.patient?.phone && (
+                      <Text size='sm' c='dimmed'>
+                        {appointment.patient.phone}
+                      </Text>
+                    )}
+                  </div>
+                </Table.Td>
+                <Table.Td>
+                  <Text size='sm'>
+                    {(appointment.type &&
+                      appointmentTypes.find(t => t.id === appointment.type)
+                        ?.label) ||
+                      'Wizyta'}
+                  </Text>
+                </Table.Td>
+                <Table.Td>
+                  <Text size='sm'>{appointment.duration} min</Text>
+                </Table.Td>
+                <Table.Td>
+                  <Text size='sm' fw={500}>
+                    {appointment.price ? `${appointment.price} zł` : '-'}
+                  </Text>
+                </Table.Td>
+                <Table.Td>
+                  {appointment.paymentInfo?.isPaid ? (
+                    <Badge color={utilityColors?.success || 'green'} size='sm'>
+                      Opłacono
+                    </Badge>
+                  ) : (
+                    <Badge color={utilityColors?.error || 'red'} size='sm'>
+                      Nieopłacono
+                    </Badge>
                   )}
-                </div>
-              </Table.Td>
-              <Table.Td>
-                <Text size='sm'>
-                  {(appointment.type && appointmentTypes.find(t => t.id === appointment.type)?.label) || 'Wizyta'}
-                </Text>
-              </Table.Td>
-              <Table.Td>
-                <Text size='sm'>{appointment.duration} min</Text>
-              </Table.Td>
-              <Table.Td>
-                <Text size='sm' fw={500}>
-                  {appointment.price ? `${appointment.price} zł` : '-'}
-                </Text>
-              </Table.Td>
-              <Table.Td>
-                {appointment.paymentInfo?.isPaid ? (
-                  <Badge color={utilityColors?.success || 'green'} size='sm'>
-                    Opłacono
-                  </Badge>
-                ) : (
-                  <Badge color={utilityColors?.error || 'red'} size='sm'>
-                    Nieopłacono
-                  </Badge>
-                )}
-              </Table.Td>
-              <Table.Td>
-                <Badge color={getStatusColor(appointment.status)}>
-                  {getStatusLabel(appointment.status)}
-                </Badge>
-              </Table.Td>
-              <Table.Td>
-                <Group gap='xs'>
-                  {appointment.patient && (
-                    <SMSReminderButton
-                      patient={appointment.patient}
-                      appointment={appointment}
-                      variant='icon'
-                      size='sm'
-                      onReminderSent={() => {
-                        // Refresh appointments
-                        window.location.reload();
-                      }}
-                    />
-                  )}
-                  <ActionIcon
-                    variant='light'
-                    color={currentPalette.primary}
-                    onClick={() => onEditAppointment(appointment)}
-                  >
-                    <IconEdit size='1rem' />
-                  </ActionIcon>
-                  <ActionIcon
-                    variant='light'
-                    color={utilityColors?.error || 'red'}
-                    onClick={() =>
-                      appointment.id && onDeleteAppointment(appointment.id)
-                    }
-                  >
-                    <IconTrash size='1rem' />
-                  </ActionIcon>
-                </Group>
-              </Table.Td>
-            </Table.Tr>
-          ))}
+                </Table.Td>
+                <Table.Td>
+                  <Stack gap={4}>
+                    <Badge color={getStatusColor(appointment.status)}>
+                      {getStatusLabel(appointment.status)}
+                    </Badge>
+                    {appointment.rescheduledToId && (
+                      <Button
+                        variant='subtle'
+                        size='compact-xs'
+                        leftSection={<IconArrowRight size='0.8rem' />}
+                        onClick={() =>
+                          onJumpToAppointment(appointment.rescheduledToId!)
+                        }
+                      >
+                        Do nowej
+                      </Button>
+                    )}
+                    {appointment.rescheduledFromId && (
+                      <Button
+                        variant='subtle'
+                        size='compact-xs'
+                        leftSection={<IconArrowLeft size='0.8rem' />}
+                        onClick={() =>
+                          onJumpToAppointment(appointment.rescheduledFromId!)
+                        }
+                      >
+                        Z poprzedniej
+                      </Button>
+                    )}
+                  </Stack>
+                </Table.Td>
+                <Table.Td>
+                  <Group gap='xs'>
+                    {appointment.patient && !isRescheduled && (
+                      <SMSReminderButton
+                        patient={appointment.patient}
+                        appointment={appointment}
+                        variant='icon'
+                        size='sm'
+                        onReminderSent={() => {
+                          // Refresh appointments
+                          window.location.reload();
+                        }}
+                      />
+                    )}
+                    {!isRescheduled && (
+                      <ActionIcon
+                        variant='light'
+                        color='blue'
+                        title='Przełóż'
+                        onClick={() => onRescheduleAppointment(appointment)}
+                      >
+                        <IconCalendarShare size='1rem' />
+                      </ActionIcon>
+                    )}
+                    <ActionIcon
+                      variant='light'
+                      color={currentPalette.primary}
+                      onClick={() => onEditAppointment(appointment)}
+                    >
+                      <IconEdit size='1rem' />
+                    </ActionIcon>
+                    <ActionIcon
+                      variant='light'
+                      color={utilityColors?.error || 'red'}
+                      onClick={() =>
+                        appointment.id && onDeleteAppointment(appointment.id)
+                      }
+                    >
+                      <IconTrash size='1rem' />
+                    </ActionIcon>
+                  </Group>
+                </Table.Td>
+              </Table.Tr>
+            );
+          })}
         </Table.Tbody>
       </Table>
     </Table.ScrollContainer>
@@ -615,6 +797,8 @@ function WeekView({
   date,
   appointments,
   onEditAppointment,
+  onRescheduleAppointment,
+  onJumpToAppointment,
   onAddAppointment,
   getStatusBackgroundColor,
   hideWeekends = false,
@@ -740,36 +924,88 @@ function WeekView({
                       onAddAppointment(appointmentDate);
                     }}
                   >
-                    {dayAppointments.map(appointment => (
-                      <Paper
-                        key={appointment.id}
-                        p='2px'
-                        style={{
-                          backgroundColor: getStatusBackgroundColor(
-                            appointment.status
-                          ),
-                          cursor: 'pointer',
-                          borderRadius: '4px',
-                          width: '100%',
-                          minWidth: '100%',
-                          maxWidth: '100%',
-                          flexShrink: 0,
-                          boxSizing: 'border-box',
-                        }}
-                        onClick={e => {
-                          e.stopPropagation();
-                          onEditAppointment(appointment);
-                        }}
-                      >
-                        <Text size='xs' fw={500} style={{ lineHeight: '1.2' }}>
-                          {format(new Date(appointment.date), 'HH:mm')}
-                        </Text>
-                        <Text size='xs' truncate style={{ lineHeight: '1.2' }}>
-                          {appointment.patient?.firstName}{' '}
-                          {appointment.patient?.lastName}
-                        </Text>
-                      </Paper>
-                    ))}
+                    {dayAppointments.map(appointment => {
+                      const isRescheduled = appointment.status === 'rescheduled';
+                      return (
+                        <Paper
+                          key={appointment.id}
+                          p='2px'
+                          style={{
+                            backgroundColor: getStatusBackgroundColor(
+                              appointment.status
+                            ),
+                            opacity: isRescheduled ? 0.6 : 1,
+                            cursor: 'pointer',
+                            borderRadius: '4px',
+                            width: '100%',
+                            minWidth: '100%',
+                            maxWidth: '100%',
+                            flexShrink: 0,
+                            boxSizing: 'border-box',
+                          }}
+                          onClick={e => {
+                            e.stopPropagation();
+                            onEditAppointment(appointment);
+                          }}
+                        >
+                          <Group justify='space-between' wrap='nowrap' gap={2}>
+                            <Text
+                              size='xs'
+                              fw={500}
+                              style={{ lineHeight: '1.2' }}
+                            >
+                              {format(new Date(appointment.date), 'HH:mm')}
+                            </Text>
+                            <Group gap={2}>
+                              {appointment.rescheduledToId && (
+                                <ActionIcon
+                                  size='xs'
+                                  variant='subtle'
+                                  onClick={e => {
+                                    e.stopPropagation();
+                                    onJumpToAppointment(
+                                      appointment.rescheduledToId!
+                                    );
+                                  }}
+                                >
+                                  <IconArrowRight size='0.7rem' />
+                                </ActionIcon>
+                              )}
+                              {appointment.rescheduledFromId && (
+                                <ActionIcon
+                                  size='xs'
+                                  variant='subtle'
+                                  onClick={e => {
+                                    e.stopPropagation();
+                                    onJumpToAppointment(
+                                      appointment.rescheduledFromId!
+                                    );
+                                  }}
+                                >
+                                  <IconArrowLeft size='0.7rem' />
+                                </ActionIcon>
+                              )}
+                              {!isRescheduled && (
+                                <ActionIcon
+                                  size='xs'
+                                  variant='subtle'
+                                  onClick={e => {
+                                    e.stopPropagation();
+                                    onRescheduleAppointment(appointment);
+                                  }}
+                                >
+                                  <IconCalendarShare size='0.7rem' />
+                                </ActionIcon>
+                              )}
+                            </Group>
+                          </Group>
+                          <Text size='xs' truncate style={{ lineHeight: '1.2' }}>
+                            {appointment.patient?.firstName}{' '}
+                            {appointment.patient?.lastName}
+                          </Text>
+                        </Paper>
+                      );
+                    })}
                   </Paper>
                 );
               })}
@@ -790,6 +1026,7 @@ function MonthView({
   date,
   appointments,
   onEditAppointment,
+  onJumpToAppointment,
   onDateClick,
   getStatusBackgroundColor,
   currentPalette,
@@ -869,35 +1106,71 @@ function MonthView({
                 </Text>
 
                 <Stack gap={stackGap}>
-                  {dayAppointments.map(appointment => (
-                    <Paper
-                      key={appointment.id}
-                      p='2px'
-                      style={{
-                        backgroundColor: getStatusBackgroundColor(
-                          appointment.status
-                        ),
-                        cursor: 'pointer',
-                      }}
-                      onClick={e => {
-                        e.stopPropagation();
-                        onEditAppointment(appointment);
-                      }}
-                    >
-                      <Text
-                        size='xs'
-                        fw={500}
-                        truncate
-                        style={{ lineHeight: '1.2' }}
+                  {dayAppointments.map(appointment => {
+                    const isRescheduled = appointment.status === 'rescheduled';
+                    return (
+                      <Paper
+                        key={appointment.id}
+                        p='2px'
+                        style={{
+                          backgroundColor: getStatusBackgroundColor(
+                            appointment.status
+                          ),
+                          opacity: isRescheduled ? 0.6 : 1,
+                          cursor: 'pointer',
+                        }}
+                        onClick={e => {
+                          e.stopPropagation();
+                          onEditAppointment(appointment);
+                        }}
                       >
-                        {format(new Date(appointment.date), 'HH:mm')}
-                      </Text>
-                      <Text size='xs' truncate style={{ lineHeight: '1.2' }}>
-                        {appointment.patient?.firstName}{' '}
-                        {appointment.patient?.lastName}
-                      </Text>
-                    </Paper>
-                  ))}
+                        <Group justify='space-between' wrap='nowrap' gap={2}>
+                          <Text
+                            size='xs'
+                            fw={500}
+                            truncate
+                            style={{ lineHeight: '1.2' }}
+                          >
+                            {format(new Date(appointment.date), 'HH:mm')}
+                          </Text>
+                          <Group gap={2}>
+                            {appointment.rescheduledToId && (
+                              <ActionIcon
+                                size='xs'
+                                variant='subtle'
+                                onClick={e => {
+                                  e.stopPropagation();
+                                  onJumpToAppointment(
+                                    appointment.rescheduledToId!
+                                  );
+                                }}
+                              >
+                                <IconArrowRight size='0.7rem' />
+                              </ActionIcon>
+                            )}
+                            {appointment.rescheduledFromId && (
+                              <ActionIcon
+                                size='xs'
+                                variant='subtle'
+                                onClick={e => {
+                                  e.stopPropagation();
+                                  onJumpToAppointment(
+                                    appointment.rescheduledFromId!
+                                  );
+                                }}
+                              >
+                                <IconArrowLeft size='0.7rem' />
+                              </ActionIcon>
+                            )}
+                          </Group>
+                        </Group>
+                        <Text size='xs' truncate style={{ lineHeight: '1.2' }}>
+                          {appointment.patient?.firstName}{' '}
+                          {appointment.patient?.lastName}
+                        </Text>
+                      </Paper>
+                    );
+                  })}
                 </Stack>
               </Paper>
             );

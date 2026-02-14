@@ -10,6 +10,8 @@ export interface Appointment {
   paymentInfo?: PaymentInfo; // Informacje o płatności
   reminderSent?: boolean;
   reminderSentAt?: Date | string;
+  rescheduledFromId?: number;
+  rescheduledToId?: number;
   createdAt: Date | string;
   updatedAt: Date | string;
 }

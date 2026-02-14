@@ -1,7 +1,8 @@
 import { create } from 'zustand';
+import { APPOINTMENT_STATUS } from '../constants/status';
+import { toDate } from '../utils/dates';
 import { db } from '../utils/db';
 import { needsReminder } from '../utils/sms';
-import { APPOINTMENT_STATUS } from '../constants/status';
 import type { Appointment, AppointmentWithPatient } from '../types/Appointment';
 
 interface AppointmentStore {
@@ -35,6 +36,11 @@ interface AppointmentStore {
   markPatientResponded: (
     appointmentId: number,
     response?: string
+  ) => Promise<void>;
+  rescheduleAppointment: (
+    originalId: number,
+    newDate: Date,
+    updatedOriginal?: Partial<Appointment>
   ) => Promise<void>;
 }
 
@@ -232,6 +238,66 @@ export const useAppointmentStore = create<AppointmentStore>((set, get) => ({
       await get().fetchAppointments();
     } catch (error) {
       console.error('Error marking patient response:', error);
+    }
+  },
+  rescheduleAppointment: async (originalId, newDate, updatedOriginal) => {
+    set({ loading: true, error: null });
+    try {
+      const original = await db.appointments.get(originalId);
+      if (!original) throw new Error('Nie znaleziono oryginalnej wizyty');
+
+      // Zabezpieczenie przed nieprawidłowym formatem daty
+      const targetDate = toDate(newDate);
+      if (!targetDate) throw new Error('Nieprawidłowa nowa data');
+
+      // 1. Utwórz nową wizytę (bazując na potencjalnie zaktualizowanych danych oryginału)
+      const baseData = updatedOriginal ? { ...original, ...updatedOriginal } : original;
+      const appointmentWithoutId = { ...baseData };
+      delete (appointmentWithoutId as Partial<Appointment>).id;
+
+      const newAppointment: Omit<Appointment, 'id'> = {
+        ...appointmentWithoutId,
+        date: targetDate.toISOString(),
+        status: APPOINTMENT_STATUS.SCHEDULED,
+        rescheduledFromId: originalId,
+        rescheduledToId: undefined,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        reminderSent: false,
+        reminderSentAt: undefined,
+      };
+
+      const newId = await db.appointments.add(newAppointment as Appointment);
+
+      // 2. Zaktualizuj oryginalną wizytę
+      const formatDateStr = (date: Date) => {
+        return date.toLocaleString('pl-PL', {
+          day: '2-digit',
+          month: '2-digit',
+          year: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit',
+        });
+      };
+
+      const rescheduleNote = `\n[System] Przełożona na: ${formatDateStr(targetDate)}`;
+      const originalUpdate = {
+        ...(updatedOriginal || {}),
+        status: APPOINTMENT_STATUS.RESCHEDULED,
+        rescheduledToId: newId as number,
+        notes: (baseData.notes || '') + rescheduleNote,
+        updatedAt: new Date().toISOString(),
+      };
+
+      await db.appointments.update(originalId, originalUpdate);
+
+      await get().fetchAppointments();
+    } catch (error) {
+      console.error('Błąd podczas przekładania wizyty:', error);
+      set({
+        error: error instanceof Error ? error.message : 'Błąd podczas przekładania wizyty',
+        loading: false,
+      });
     }
   },
 }));

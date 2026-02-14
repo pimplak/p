@@ -1,19 +1,24 @@
 import {
+  Button,
   Card,
   Group,
+  Box,
   Text,
   Badge,
   ActionIcon,
   Collapse,
-  Stack,
   Divider,
-  Box,
+  Stack,
 } from '@mantine/core';
 import {
-  IconChevronDown,
-  IconChevronUp,
   IconEdit,
   IconTrash,
+  IconCalendarShare,
+  IconArrowRight,
+  IconArrowLeft,
+  IconLink,
+  IconChevronUp,
+  IconChevronDown,
 } from '@tabler/icons-react';
 import { format } from 'date-fns';
 import { useState } from 'react';
@@ -26,6 +31,8 @@ interface ExpandableAppointmentRowProps {
   appointment: AppointmentWithPatient;
   onEditAppointment: (appointment: AppointmentWithPatient) => void;
   onDeleteAppointment: (id: number) => void;
+  onRescheduleAppointment?: (appointment: AppointmentWithPatient) => void;
+  onJumpToAppointment?: (id: number) => void;
   getStatusColor: (status: string) => string;
   getStatusLabel: (status: string) => string;
   utilityColors?: {
@@ -39,6 +46,8 @@ export function ExpandableAppointmentRow({
   appointment,
   onEditAppointment,
   onDeleteAppointment,
+  onRescheduleAppointment,
+  onJumpToAppointment,
   getStatusColor,
   getStatusLabel,
   utilityColors,
@@ -49,11 +58,25 @@ export function ExpandableAppointmentRow({
 
   // Use passed utilityColors or fallback to theme's utilityColors
   const colors = utilityColors || themeUtilityColors;
-  
-  const typeLabel = (appointment.type && appointmentTypes.find(t => t.id === appointment.type)?.label) || 'Wizyta';
+
+  const typeLabel =
+    (appointment.type &&
+      appointmentTypes.find(t => t.id === appointment.type)?.label) ||
+    'Wizyta';
+
+  const isRescheduled = appointment.status === 'rescheduled';
 
   return (
-    <Card shadow='sm' p='md' mb='sm' style={{ cursor: 'pointer' }}>
+    <Card
+      shadow='sm'
+      p='md'
+      mb='sm'
+      style={{
+        cursor: 'pointer',
+        opacity: isRescheduled ? 0.7 : 1,
+        borderLeft: isRescheduled ? `4px solid ${currentPalette.text}40` : undefined,
+      }}
+    >
       {/* Main row - always visible */}
       <Group
         justify='space-between'
@@ -87,6 +110,11 @@ export function ExpandableAppointmentRow({
                 {appointment.price} zł
               </Text>
             )}
+            {isRescheduled && (
+              <Badge variant='outline' color='gray' size='xs' leftSection={<IconLink size='0.7rem' />}>
+                Historia
+              </Badge>
+            )}
           </Group>
         </Box>
 
@@ -106,6 +134,38 @@ export function ExpandableAppointmentRow({
       <Collapse in={expanded}>
         <Divider my='md' />
         <Stack gap='sm'>
+          {/* Linked Appointments */}
+          {appointment.rescheduledToId && onJumpToAppointment && (
+            <Button
+              variant='light'
+              color='blue'
+              size='xs'
+              fullWidth
+              leftSection={<IconArrowRight size='1rem' />}
+              onClick={(e) => {
+                e.stopPropagation();
+                onJumpToAppointment(appointment.rescheduledToId!);
+              }}
+            >
+              Idź do nowej wizyty
+            </Button>
+          )}
+          {appointment.rescheduledFromId && onJumpToAppointment && (
+            <Button
+              variant='light'
+              color='gray'
+              size='xs'
+              fullWidth
+              leftSection={<IconArrowLeft size='1rem' />}
+              onClick={(e) => {
+                e.stopPropagation();
+                onJumpToAppointment(appointment.rescheduledFromId!);
+              }}
+            >
+              Pokaż poprzednią wizytę
+            </Button>
+          )}
+
           {/* Patient details */}
           {appointment.patient?.phone && (
             <Group justify='space-between'>
@@ -162,14 +222,16 @@ export function ExpandableAppointmentRow({
               <Text size='sm' c='dimmed'>
                 Notatki:
               </Text>
-              <Text size='sm'>{appointment.notes}</Text>
+              <Box p='xs' style={{ backgroundColor: `${currentPalette.background}50`, borderRadius: '4px' }}>
+                <Text size='sm' style={{ whiteSpace: 'pre-wrap' }}>{appointment.notes}</Text>
+              </Box>
             </>
           )}
 
           {/* Actions */}
           <Divider my='xs' />
           <Group justify='flex-end' gap='xs'>
-            {appointment.patient && (
+            {appointment.patient && !isRescheduled && (
               <SMSReminderButton
                 patient={appointment.patient}
                 appointment={appointment}
@@ -180,6 +242,20 @@ export function ExpandableAppointmentRow({
                   window.location.reload();
                 }}
               />
+            )}
+            {!isRescheduled && onRescheduleAppointment && (
+              <Button
+                variant='light'
+                color='blue'
+                size='sm'
+                leftSection={<IconCalendarShare size='1rem' />}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onRescheduleAppointment(appointment);
+                }}
+              >
+                Przełóż
+              </Button>
             )}
             <ActionIcon
               variant='light'
