@@ -12,6 +12,9 @@ export interface Appointment {
   reminderSentAt?: Date | string;
   rescheduledFromId?: number;
   rescheduledToId?: number;
+  cancelledAt?: Date | string;
+  cancellationReason?: string;
+  requiresPayment?: boolean;
   createdAt: Date | string;
   updatedAt: Date | string;
 }

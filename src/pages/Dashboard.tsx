@@ -99,10 +99,11 @@ function Dashboard() {
       return aptDate >= startOfWeek && aptDate <= endOfWeek;
     });
 
-    const weeklyRevenue = thisWeekAppointments.reduce(
-      (sum, apt) => sum + (apt.price ?? 0),
-      0
-    );
+    const weeklyRevenue = thisWeekAppointments.reduce((sum, apt) => {
+      const isCancelled = apt.status === AppointmentStatus.CANCELLED;
+      const shouldCount = !isCancelled || apt.requiresPayment;
+      return sum + (shouldCount ? (apt.price ?? 0) : 0);
+    }, 0);
 
     const pendingAppointments = appointments.filter(
       apt => apt.status === AppointmentStatus.SCHEDULED

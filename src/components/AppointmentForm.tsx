@@ -18,6 +18,7 @@ import { DatePickerInput } from '@mantine/dates';
 import { useForm } from '@mantine/form';
 import { notifications } from '@mantine/notifications';
 import dayjs from 'dayjs';
+import { useEffect } from 'react';
 import { DEFAULT_APPOINTMENT_PRICE } from '../constants/business';
 import { APPOINTMENT_STATUS } from '../constants/status';
 import { useTheme } from '../hooks/useTheme';
@@ -55,6 +56,9 @@ interface FormValues {
     notes?: string;
   };
   newRescheduleDate?: Date | string;
+  cancelledAt?: Date | string;
+  cancellationReason?: string;
+  requiresPayment?: boolean;
 }
 
 export function AppointmentForm({
@@ -95,6 +99,9 @@ export function AppointmentForm({
         notes: appointment?.paymentInfo?.notes || '',
       },
       newRescheduleDate: appointment?.date ? new Date(appointment.date) : new Date(),
+      cancelledAt: appointment?.cancelledAt ? new Date(appointment.cancelledAt) : undefined,
+      cancellationReason: appointment?.cancellationReason || '',
+      requiresPayment: appointment?.requiresPayment || false,
     },
     validate: {
       patientId: (value) => (!value ? 'Wybierz pacjenta' : null),
@@ -109,6 +116,20 @@ export function AppointmentForm({
           : null,
     },
   });
+
+  useEffect(() => {
+    if (form.values.status === APPOINTMENT_STATUS.CANCELLED && !form.values.cancelledAt) {
+      form.setFieldValue('cancelledAt', new Date());
+    } else if (
+      form.values.status !== APPOINTMENT_STATUS.CANCELLED &&
+      (form.values.cancelledAt || form.values.requiresPayment)
+    ) {
+      form.setValues({
+        cancelledAt: undefined,
+        requiresPayment: false,
+      });
+    }
+  }, [form.values.status, form.values.cancelledAt, form.values.requiresPayment]);
 
   const handleDateChange = (value: Date | string | null) => {
     if (!value) return;
@@ -211,6 +232,9 @@ export function AppointmentForm({
                 | undefined,
             }
           : undefined,
+        cancelledAt: values.cancelledAt ? dayjs(values.cancelledAt).toISOString() : undefined,
+        cancellationReason: values.cancellationReason || undefined,
+        requiresPayment: values.requiresPayment,
       };
 
       if (appointment?.id) {
@@ -365,6 +389,42 @@ export function AppointmentForm({
             </Box>
           </ScrollArea>
         </Input.Wrapper>
+
+        {form.values.status === APPOINTMENT_STATUS.CANCELLED && (
+          <Card withBorder p='md' bg={isDark ? `${currentPalette.surface}` : 'red.0'}>
+            <Stack gap='sm'>
+              <Text fw={600} size='sm' c={isDark ? currentPalette.text : 'red.7'}>
+                Szczegóły odwołania
+              </Text>
+              
+              <Group grow>
+                <DatePickerInput
+                  label='Data odwołania'
+                  placeholder='Kiedy odwołano?'
+                  {...form.getInputProps('cancelledAt')}
+                />
+                <Input.Wrapper label='Typ odwołania'>
+                  <SegmentedControl
+                    fullWidth
+                    mt='xs'
+                    data={[
+                      { label: 'Bezpłatne', value: 'false' },
+                      { label: 'Płatne', value: 'true' },
+                    ]}
+                    value={form.values.requiresPayment ? 'true' : 'false'}
+                    onChange={(val) => form.setFieldValue('requiresPayment', val === 'true')}
+                  />
+                </Input.Wrapper>
+              </Group>
+
+              <Textarea
+                label='Powód odwołania'
+                placeholder='Dlaczego wizyta została odwołana?'
+                {...form.getInputProps('cancellationReason')}
+              />
+            </Stack>
+          </Card>
+        )}
 
         {form.values.status === APPOINTMENT_STATUS.RESCHEDULED && (
           <Card withBorder p='md' bg={isDark ? `${currentPalette.primary}1A` : 'blue.0'}>

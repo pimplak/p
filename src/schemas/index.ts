@@ -120,7 +120,11 @@ export const AppointmentSchema = z.object({
     })
     .optional(),
   reminderSent: z.boolean().optional(),
-  reminderSentAt: z.union([z.date(), z.string()]).optional(),
+  rescheduledFromId: z.number().optional(),
+  rescheduledToId: z.number().optional(),
+  cancelledAt: z.union([z.date(), z.string()]).optional(),
+  cancellationReason: z.string().optional(),
+  requiresPayment: z.boolean().optional(),
   createdAt: z.union([z.date(), z.string()]),
   updatedAt: z.union([z.date(), z.string()]),
 });

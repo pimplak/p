@@ -15,6 +15,7 @@ import {
   Paper,
   Divider,
   ScrollArea,
+  Tooltip,
 } from '@mantine/core';
 import { DateInput, DatePickerInput } from '@mantine/dates';
 import { useDisclosure, useMediaQuery } from '@mantine/hooks';
@@ -660,15 +661,21 @@ function DayView({
         <Table.Tbody>
           {sortedAppointments.map(appointment => {
             const isRescheduled = appointment.status === 'rescheduled';
+            const isCancelled = appointment.status === 'cancelled';
             return (
               <Table.Tr
                 key={appointment.id}
-                style={{ opacity: isRescheduled ? 0.6 : 1 }}
+                style={{ opacity: isRescheduled || isCancelled ? 0.6 : 1 }}
               >
                 <Table.Td>
                   <Text fw={500}>
                     {format(new Date(appointment.date), 'HH:mm')}
                   </Text>
+                  {isCancelled && appointment.cancelledAt && (
+                    <Text size='xs' c='dimmed'>
+                      Odwołano: {format(new Date(appointment.cancelledAt), 'dd.MM')}
+                    </Text>
+                  )}
                 </Table.Td>
                 <Table.Td>
                   <div>
@@ -698,6 +705,11 @@ function DayView({
                   <Text size='sm' fw={500}>
                     {appointment.price ? `${appointment.price} zł` : '-'}
                   </Text>
+                  {isCancelled && (
+                    <Text size='xs' c={appointment.requiresPayment ? 'orange' : 'dimmed'}>
+                      Płatna: {appointment.requiresPayment ? 'TAK' : 'NIE'}
+                    </Text>
+                  )}
                 </Table.Td>
                 <Table.Td>
                   {appointment.paymentInfo?.isPaid ? (
@@ -715,6 +727,13 @@ function DayView({
                     <Badge color={getStatusColor(appointment.status)}>
                       {getStatusLabel(appointment.status)}
                     </Badge>
+                    {isCancelled && appointment.cancellationReason && (
+                       <Tooltip label={appointment.cancellationReason}>
+                         <Text size='xs' truncate maw={100} c='dimmed' style={{ cursor: 'help' }}>
+                           {appointment.cancellationReason}
+                         </Text>
+                       </Tooltip>
+                    )}
                     {appointment.rescheduledToId && (
                       <Button
                         variant='subtle'
@@ -926,6 +945,7 @@ function WeekView({
                   >
                     {dayAppointments.map(appointment => {
                       const isRescheduled = appointment.status === 'rescheduled';
+                      const isCancelled = appointment.status === 'cancelled';
                       return (
                         <Paper
                           key={appointment.id}
@@ -934,7 +954,7 @@ function WeekView({
                             backgroundColor: getStatusBackgroundColor(
                               appointment.status
                             ),
-                            opacity: isRescheduled ? 0.6 : 1,
+                            opacity: isRescheduled || isCancelled ? 0.6 : 1,
                             cursor: 'pointer',
                             borderRadius: '4px',
                             width: '100%',
@@ -1108,6 +1128,7 @@ function MonthView({
                 <Stack gap={stackGap}>
                   {dayAppointments.map(appointment => {
                     const isRescheduled = appointment.status === 'rescheduled';
+                    const isCancelled = appointment.status === 'cancelled';
                     return (
                       <Paper
                         key={appointment.id}
@@ -1116,7 +1137,7 @@ function MonthView({
                           backgroundColor: getStatusBackgroundColor(
                             appointment.status
                           ),
-                          opacity: isRescheduled ? 0.6 : 1,
+                          opacity: isRescheduled || isCancelled ? 0.6 : 1,
                           cursor: 'pointer',
                         }}
                         onClick={e => {

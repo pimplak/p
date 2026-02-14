@@ -65,6 +65,7 @@ export function ExpandableAppointmentRow({
     'Wizyta';
 
   const isRescheduled = appointment.status === 'rescheduled';
+  const isCancelled = appointment.status === 'cancelled';
 
   return (
     <Card
@@ -73,8 +74,8 @@ export function ExpandableAppointmentRow({
       mb='sm'
       style={{
         cursor: 'pointer',
-        opacity: isRescheduled ? 0.7 : 1,
-        borderLeft: isRescheduled ? `4px solid ${currentPalette.text}40` : undefined,
+        opacity: isRescheduled || isCancelled ? 0.7 : 1,
+        borderLeft: isRescheduled || isCancelled ? `4px solid ${isCancelled ? colors.error : currentPalette.text}40` : undefined,
       }}
     >
       {/* Main row - always visible */}
@@ -177,6 +178,31 @@ export function ExpandableAppointmentRow({
           )}
 
           {/* Appointment details */}
+          {isCancelled && (
+            <Box p='sm' style={{ backgroundColor: `${colors.error}15`, borderRadius: '8px' }}>
+              <Stack gap='xs'>
+                <Group justify='space-between'>
+                  <Text size='sm' fw={600} color={colors.error}>Odwołana wizyta</Text>
+                  {appointment.cancelledAt && (
+                    <Text size='xs' c='dimmed'>{format(new Date(appointment.cancelledAt), 'dd.MM.yyyy HH:mm')}</Text>
+                  )}
+                </Group>
+                <Group justify='space-between'>
+                  <Text size='sm' c='dimmed'>Wymaga płatności:</Text>
+                  <Badge color={appointment.requiresPayment ? 'orange' : 'gray'} size='sm'>
+                    {appointment.requiresPayment ? 'TAK' : 'NIE'}
+                  </Badge>
+                </Group>
+                {appointment.cancellationReason && (
+                  <>
+                    <Text size='xs' fw={500} c='dimmed'>Powód:</Text>
+                    <Text size='sm' fs='italic'>{appointment.cancellationReason}</Text>
+                  </>
+                )}
+              </Stack>
+            </Box>
+          )}
+
           <Group justify='space-between'>
             <Text size='sm' c='dimmed'>
               Typ wizyty:
