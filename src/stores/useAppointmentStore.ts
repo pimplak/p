@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { db } from '../utils/db';
 import { needsReminder } from '../utils/sms';
+import { APPOINTMENT_STATUS } from '../constants/status';
 import type { Appointment, AppointmentWithPatient } from '../types/Appointment';
 
 interface AppointmentStore {
@@ -45,7 +46,32 @@ export const useAppointmentStore = create<AppointmentStore>((set, get) => ({
   fetchAppointments: async () => {
     set({ loading: true, error: null });
     try {
-      const appointments = await db.appointments.orderBy('date').toArray();
+      let appointments = await db.appointments.orderBy('date').toArray();
+
+      // Automatyczna aktualizacja statusów dla zakończonych wizyt
+      const now = new Date();
+      const updates: Appointment[] = [];
+      let hasUpdates = false;
+
+      appointments = appointments.map(appt => {
+        if (appt.status === APPOINTMENT_STATUS.SCHEDULED) {
+          const apptDate = new Date(appt.date);
+          const durationMs = (appt.duration || 50) * 60 * 1000;
+          const endTime = new Date(apptDate.getTime() + durationMs);
+
+          if (endTime < now) {
+            hasUpdates = true;
+            const updated = { ...appt, status: APPOINTMENT_STATUS.COMPLETED };
+            updates.push(updated);
+            return updated;
+          }
+        }
+        return appt;
+      });
+
+      if (hasUpdates) {
+        await db.appointments.bulkPut(updates);
+      }
 
       // Ferro Fix: Bulk fetch patients to avoid N+1 queries
       const patientIds = [...new Set(appointments.map(apt => apt.patientId))];

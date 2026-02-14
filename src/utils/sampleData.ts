@@ -1,6 +1,6 @@
+import { DEFAULT_APPOINTMENT_TYPES } from '../constants/defaults';
 import { PATIENT_STATUS } from '../constants/status';
 import { AppointmentStatus } from '../types/Appointment';
-import { DEFAULT_APPOINTMENT_TYPES } from '../constants/defaults';
 import { db } from './db';
 import type { Appointment } from '../types/Appointment';
 import type { Patient } from '../types/Patient';

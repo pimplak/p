@@ -53,7 +53,7 @@ export const GOAL_STATUS_LABELS: Record<GoalStatus, string> = {
 export const APPOINTMENT_STATUS_LABELS: Record<AppointmentStatus, string> = {
   [APPOINTMENT_STATUS.SCHEDULED]: 'Zaplanowana',
   [APPOINTMENT_STATUS.COMPLETED]: 'Zakończona',
-  [APPOINTMENT_STATUS.CANCELLED]: 'Anulowana',
+  [APPOINTMENT_STATUS.CANCELLED]: 'Odwołana',
   [APPOINTMENT_STATUS.NO_SHOW]: 'Niestawienie się',
   [APPOINTMENT_STATUS.RESCHEDULED]: 'Przełożona',
 };
