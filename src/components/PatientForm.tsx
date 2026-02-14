@@ -14,6 +14,7 @@ import { zodResolver } from 'mantine-form-zod-resolver';
 import { PATIENT_STATUS, PATIENT_STATUS_LABELS } from '../constants/status';
 import { PatientFormSchema, type PatientFormData } from '../schemas';
 import { usePatientStore } from '../stores/usePatientStore';
+import { calculateAge } from '../utils/dates';
 import type { Patient } from '../types/Patient';
 
 interface PatientFormProps {
@@ -117,11 +118,26 @@ export function PatientForm({
           />
         </Group>
 
-        <DateInput
-          label='Data urodzenia'
-          placeholder='Wybierz datę'
-          {...form.getInputProps('birthDate')}
-        />
+        <Group grow>
+          <DateInput
+            label='Data urodzenia'
+            placeholder='Wybierz datę'
+            {...form.getInputProps('birthDate')}
+          />
+          <TextInput
+            label='Wiek'
+            value={
+              form.values.birthDate
+                ? (() => {
+                    const age = calculateAge(form.values.birthDate);
+                    return age !== null ? `${age} lat` : '';
+                  })()
+                : ''
+            }
+            placeholder='—'
+            readOnly
+          />
+        </Group>
 
         <TextInput
           label='Adres'
