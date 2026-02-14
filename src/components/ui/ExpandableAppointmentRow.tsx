@@ -18,6 +18,7 @@ import {
 import { format } from 'date-fns';
 import { useState } from 'react';
 import { useTheme } from '../../hooks/useTheme';
+import { useSettingsStore } from '../../stores/useSettingsStore';
 import { SMSReminderButton } from '../SMSReminderButton';
 import type { AppointmentWithPatient } from '../../types/Appointment';
 
@@ -44,9 +45,12 @@ export function ExpandableAppointmentRow({
 }: ExpandableAppointmentRowProps) {
   const [expanded, setExpanded] = useState(false);
   const { currentPalette, utilityColors: themeUtilityColors } = useTheme();
+  const appointmentTypes = useSettingsStore(state => state.appointmentTypes);
 
   // Use passed utilityColors or fallback to theme's utilityColors
   const colors = utilityColors || themeUtilityColors;
+  
+  const typeLabel = (appointment.type && appointmentTypes.find(t => t.id === appointment.type)?.label) || 'Wizyta';
 
   return (
     <Card shadow='sm' p='md' mb='sm' style={{ cursor: 'pointer' }}>
@@ -117,7 +121,7 @@ export function ExpandableAppointmentRow({
             <Text size='sm' c='dimmed'>
               Typ wizyty:
             </Text>
-            <Text size='sm'>{appointment.type || 'Wizyta'}</Text>
+            <Text size='sm'>{typeLabel}</Text>
           </Group>
 
           <Group justify='space-between'>

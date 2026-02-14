@@ -1,6 +1,8 @@
 import { create } from 'zustand';
 import { DEFAULT_APPOINTMENT_DURATION } from '../constants/business';
+import { DEFAULT_APPOINTMENT_TYPES } from '../constants/defaults';
 import { DEFAULT_SMS_TEMPLATES, type SMSTemplate } from '../utils/sms';
+import type { AppointmentTypeConfig } from '../types/Appointment';
 
 export type ColorPalette = 'naturalne' | 'magenta-rose';
 
@@ -12,6 +14,7 @@ interface SettingsStore {
   hideWeekends: boolean;
   appointmentHours: string[];
   defaultAppointmentDuration: number;
+  appointmentTypes: AppointmentTypeConfig[];
 
   // SMS settings
   practitionerName: string;
@@ -24,6 +27,11 @@ interface SettingsStore {
   toggleHideWeekends: () => void;
   setAppointmentHours: (hours: string[]) => void;
   setDefaultAppointmentDuration: (duration: number) => void;
+  setAppointmentTypes: (types: AppointmentTypeConfig[]) => void;
+  addAppointmentType: (type: Omit<AppointmentTypeConfig, 'id'>) => void;
+  updateAppointmentType: (id: string, type: Partial<AppointmentTypeConfig>) => void;
+  deleteAppointmentType: (id: string) => void;
+  resetAppointmentTypes: () => void;
 
   // SMS actions
   setPractitionerName: (name: string) => void;
@@ -69,6 +77,7 @@ export const useSettingsStore = create<SettingsStore>((set, get) => {
       hideWeekends: state.hideWeekends,
       appointmentHours: state.appointmentHours,
       defaultAppointmentDuration: state.defaultAppointmentDuration,
+      appointmentTypes: state.appointmentTypes,
       practitionerName: state.practitionerName,
       practitionerTitle: state.practitionerTitle,
       smsTemplates: state.smsTemplates,
@@ -96,6 +105,7 @@ export const useSettingsStore = create<SettingsStore>((set, get) => {
     hideWeekends: storedSettings.hideWeekends ?? false,
     appointmentHours: storedSettings.appointmentHours || generateDefaultHours(),
     defaultAppointmentDuration: storedSettings.defaultAppointmentDuration || DEFAULT_APPOINTMENT_DURATION,
+    appointmentTypes: storedSettings.appointmentTypes || DEFAULT_APPOINTMENT_TYPES,
 
     // SMS settings
     practitionerName:
@@ -125,6 +135,48 @@ export const useSettingsStore = create<SettingsStore>((set, get) => {
 
     setDefaultAppointmentDuration: duration => {
       set({ defaultAppointmentDuration: duration });
+      saveAllSettings();
+    },
+
+    setAppointmentTypes: types => {
+      set({ appointmentTypes: types });
+      saveAllSettings();
+    },
+
+    addAppointmentType: typeData => {
+      const newType: AppointmentTypeConfig = {
+        ...typeData,
+        id: `custom_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+      };
+
+      set(state => ({
+        appointmentTypes: [...state.appointmentTypes, newType],
+      }));
+      saveAllSettings();
+    },
+
+    updateAppointmentType: (id, typeUpdate) => {
+      set(state => ({
+        appointmentTypes: state.appointmentTypes.map(type =>
+          type.id === id
+            ? { ...type, ...typeUpdate }
+            : type
+        ),
+      }));
+      saveAllSettings();
+    },
+
+    deleteAppointmentType: id => {
+      set(state => ({
+        appointmentTypes: state.appointmentTypes.filter(
+          type => type.id !== id
+        ),
+      }));
+      saveAllSettings();
+    },
+
+    resetAppointmentTypes: () => {
+      set({ appointmentTypes: DEFAULT_APPOINTMENT_TYPES });
       saveAllSettings();
     },
 

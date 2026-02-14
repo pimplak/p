@@ -2,17 +2,9 @@ import { Card, Group, Stack, Text, Avatar } from '@mantine/core';
 import { IconInfoCircle, IconPlayerPlay } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from '../../hooks/useTheme';
-import { AppointmentType } from '../../types/Appointment';
+import { useSettingsStore } from '../../stores/useSettingsStore';
 import { Button } from '../ui/Button';
 import type { AppointmentWithPatient } from '../../types/Appointment';
-
-const TYPE_LABELS: Record<string, string> = {
-  [AppointmentType.INITIAL]: 'Wizyta wstępna',
-  [AppointmentType.FOLLOW_UP]: 'Wizyta kontrolna',
-  [AppointmentType.THERAPY]: 'Terapia',
-  [AppointmentType.CONSULTATION]: 'Konsultacja',
-  [AppointmentType.ASSESSMENT]: 'Ocena',
-};
 
 function getInitials(patient?: { firstName?: string; lastName?: string }): string {
   if (!patient) return '?';
@@ -29,10 +21,14 @@ interface NextAppointmentCardProps {
 export function NextAppointmentCard({ appointment, isNow }: NextAppointmentCardProps) {
   const navigate = useNavigate();
   const { currentPalette, mantineTheme } = useTheme();
+  const appointmentTypes = useSettingsStore(state => state.appointmentTypes);
+
   const start = new Date(appointment.date);
   const end = new Date(start.getTime() + (appointment.duration || 60) * 60 * 1000);
   const timeRange = `${start.toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' })} - ${end.toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' })}`;
-  const typeLabel = (appointment.type && TYPE_LABELS[appointment.type]) || 'Wizyta';
+  
+  const typeLabel = (appointment.type && appointmentTypes.find(t => t.id === appointment.type)?.label) || 'Wizyta';
+  
   const patientName = appointment.patient
     ? `${appointment.patient.firstName} ${appointment.patient.lastName}`.trim()
     : 'Pacjent';

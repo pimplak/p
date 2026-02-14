@@ -41,16 +41,13 @@ export const AppointmentStatus = {
 export type AppointmentStatus =
   (typeof AppointmentStatus)[keyof typeof AppointmentStatus];
 
-export const AppointmentType = {
-  INITIAL: 'initial',
-  FOLLOW_UP: 'follow_up',
-  THERAPY: 'therapy',
-  CONSULTATION: 'consultation',
-  ASSESSMENT: 'assessment',
-} as const;
+export type AppointmentType = string;
 
-export type AppointmentType =
-  (typeof AppointmentType)[keyof typeof AppointmentType];
+export interface AppointmentTypeConfig {
+  id: string;
+  label: string;
+  isDefault?: boolean;
+}
 
 import type { Patient } from './Patient';
 

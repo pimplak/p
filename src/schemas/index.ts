@@ -108,9 +108,7 @@ export const AppointmentSchema = z.object({
     APPOINTMENT_STATUS.NO_SHOW,
     APPOINTMENT_STATUS.RESCHEDULED,
   ]),
-  type: z
-    .enum(['initial', 'follow_up', 'therapy', 'consultation', 'assessment'])
-    .optional(),
+  type: z.string().optional(),
   notes: z.string().optional(),
   price: z.number().min(0, 'Cena nie może być ujemna').optional(),
   paymentInfo: z

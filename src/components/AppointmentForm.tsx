@@ -26,7 +26,6 @@ import { usePatientStore } from '../stores/usePatientStore';
 import { useSettingsStore } from '../stores/useSettingsStore';
 import {
   AppointmentStatus,
-  AppointmentType,
   PaymentMethod,
 } from '../types/Appointment';
 import { getPatientDisplayName, toDate } from '../utils/dates';
@@ -65,7 +64,7 @@ export function AppointmentForm({
 }: AppointmentFormProps) {
   const { addAppointment, updateAppointment, loading } = useAppointmentStore();
   const { patients } = usePatientStore();
-  const { appointmentHours, defaultAppointmentDuration } = useSettingsStore();
+  const { appointmentHours, defaultAppointmentDuration, appointmentTypes } = useSettingsStore();
 
   const form = useForm<FormValues>({
     initialValues: {
@@ -73,7 +72,7 @@ export function AppointmentForm({
       date: appointment?.date ? new Date(appointment.date) : initialDate || new Date(),
       duration: appointment?.duration || defaultAppointmentDuration,
       status: appointment?.status || APPOINTMENT_STATUS.SCHEDULED,
-      type: appointment?.type || AppointmentType.THERAPY,
+      type: appointment?.type || (appointmentTypes.length > 0 ? appointmentTypes[0].id : undefined),
       notes: appointment?.notes || '',
       price: appointment?.price || DEFAULT_APPOINTMENT_PRICE,
       paymentInfo: {
@@ -155,13 +154,7 @@ export function AppointmentForm({
           | 'cancelled'
           | 'no_show'
           | 'rescheduled',
-        type: values.type as
-          | 'initial'
-          | 'follow_up'
-          | 'therapy'
-          | 'consultation'
-          | 'assessment'
-          | undefined,
+        type: values.type || undefined,
         paymentInfo: values.paymentInfo
           ? {
               ...values.paymentInfo,
@@ -214,13 +207,10 @@ export function AppointmentForm({
     { value: AppointmentStatus.RESCHEDULED, label: 'Przełożona' },
   ];
 
-  const typeOptions = [
-    { value: AppointmentType.INITIAL, label: 'Wizyta wstępna' },
-    { value: AppointmentType.FOLLOW_UP, label: 'Wizyta kontrolna' },
-    { value: AppointmentType.THERAPY, label: 'Terapia' },
-    { value: AppointmentType.CONSULTATION, label: 'Konsultacja' },
-    { value: AppointmentType.ASSESSMENT, label: 'Ocena' },
-  ];
+  const typeOptions = appointmentTypes.map(type => ({
+    value: type.id,
+    label: type.label,
+  }));
 
   const paymentMethodOptions = [
     { value: PaymentMethod.CASH, label: 'Gotówka' },

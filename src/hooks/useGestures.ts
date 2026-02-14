@@ -1,5 +1,4 @@
 import { useEffect, useRef, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 interface GestureConfig {
     minSwipeDistance?: number;
@@ -30,7 +29,6 @@ export function useGestures(config: GestureConfig = {}) {
         isDrawerOpen: externalIsDrawerOpen,
     } = config;
 
-    const navigate = useNavigate();
     const touchStart = useRef<TouchPoint | null>(null);
     const touchEnd = useRef<TouchPoint | null>(null);
     const isDrawerOpen = useRef(false);
@@ -111,7 +109,7 @@ export function useGestures(config: GestureConfig = {}) {
         document.body.style.overflow = '';
         isDragging.current = false;
         onDrawerProgress?.(0); // Reset progress
-    }, [navigate, minSwipeDistance, maxSwipeTime, enableDrawer, onDrawerOpen, onDrawerClose, onDrawerProgress, onDrawerStateChange]);
+    }, [minSwipeDistance, maxSwipeTime, enableDrawer, onDrawerOpen, onDrawerClose, onDrawerProgress, onDrawerStateChange]);
 
     useEffect(() => {
         document.addEventListener('touchstart', onTouchStart, { passive: true });

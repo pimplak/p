@@ -5,16 +5,9 @@ import {
   IconCalendar,
 } from '@tabler/icons-react';
 import { useTheme } from '../../hooks/useTheme';
-import { AppointmentStatus , AppointmentType } from '../../types/Appointment';
+import { useSettingsStore } from '../../stores/useSettingsStore';
+import { AppointmentStatus } from '../../types/Appointment';
 import type { AppointmentWithPatient } from '../../types/Appointment';
-
-const TYPE_LABELS: Record<string, string> = {
-  [AppointmentType.INITIAL]: 'Wizyta wstępna',
-  [AppointmentType.FOLLOW_UP]: 'Kontrola',
-  [AppointmentType.THERAPY]: 'Terapia',
-  [AppointmentType.CONSULTATION]: 'Konsultacja',
-  [AppointmentType.ASSESSMENT]: 'Ocena',
-};
 
 interface TodaysTimelineProps {
   appointments: AppointmentWithPatient[];
@@ -41,6 +34,7 @@ export function TodaysTimeline({
   onSeeAll,
 }: TodaysTimelineProps) {
   const { currentPalette, mantineTheme } = useTheme();
+  const appointmentTypes = useSettingsStore(state => state.appointmentTypes);
 
   if (appointments.length === 0) {
     return (
@@ -105,7 +99,7 @@ export function TodaysTimeline({
             ? `${apt.patient.firstName} ${apt.patient.lastName}`.trim()
             : 'Pacjent';
           const typeLabel =
-            (apt.type && TYPE_LABELS[apt.type]) || 'Wizyta';
+            (apt.type && appointmentTypes.find(t => t.id === apt.type)?.label) || 'Wizyta';
           const isLast = index === appointments.length - 1;
 
           const statusColor =

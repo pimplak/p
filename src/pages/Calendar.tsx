@@ -61,6 +61,7 @@ import { ExpandableAppointmentRow } from '../components/ui/ExpandableAppointment
 import { useTheme } from '../hooks/useTheme';
 import { useAppointmentStore } from '../stores/useAppointmentStore';
 import { usePatientStore } from '../stores/usePatientStore';
+import { useSettingsStore } from '../stores/useSettingsStore';
 import type { Appointment, AppointmentWithPatient } from '../types/Appointment';
 import type { ColorPalette } from '../types/theme';
 
@@ -80,7 +81,6 @@ function Calendar() {
     fetchAppointments,
     deleteAppointment,
     getAppointmentsByDateRange,
-    appointments,
     error,
   } = useAppointmentStore();
 
@@ -175,7 +175,7 @@ function Calendar() {
     return statusFilter === 'all'
       ? appointments
       : appointments.filter(apt => apt.status === statusFilter);
-  }, [selectedDate, view, getAppointmentsByDateRange, statusFilter, appointments]);
+  }, [selectedDate, view, getAppointmentsByDateRange, statusFilter]);
 
   // Get current period title
   const getCurrentPeriodTitle = () => {
@@ -459,6 +459,7 @@ function DayView({
   currentPalette,
 }: CalendarViewProps) {
   const isMobile = useMediaQuery('(max-width: 768px)');
+  const appointmentTypes = useSettingsStore(state => state.appointmentTypes);
 
   const dayAppointments = appointments.filter(apt =>
     isSameDay(new Date(apt.date), date)
@@ -541,7 +542,9 @@ function DayView({
                 </div>
               </Table.Td>
               <Table.Td>
-                <Text size='sm'>{appointment.type || 'Wizyta'}</Text>
+                <Text size='sm'>
+                  {(appointment.type && appointmentTypes.find(t => t.id === appointment.type)?.label) || 'Wizyta'}
+                </Text>
               </Table.Td>
               <Table.Td>
                 <Text size='sm'>{appointment.duration} min</Text>

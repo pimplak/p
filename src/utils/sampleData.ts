@@ -1,5 +1,6 @@
 import { PATIENT_STATUS } from '../constants/status';
-import { AppointmentStatus, AppointmentType } from '../types/Appointment';
+import { AppointmentStatus } from '../types/Appointment';
+import { DEFAULT_APPOINTMENT_TYPES } from '../constants/defaults';
 import { db } from './db';
 import type { Appointment } from '../types/Appointment';
 import type { Patient } from '../types/Patient';
@@ -408,13 +409,7 @@ export async function insertSampleData(): Promise<boolean> {
       'id' | 'createdAt' | 'updatedAt'
     >[] = [];
 
-    const types = [
-      AppointmentType.THERAPY,
-      AppointmentType.FOLLOW_UP,
-      AppointmentType.INITIAL,
-      AppointmentType.ASSESSMENT,
-      AppointmentType.CONSULTATION,
-    ];
+    const types = DEFAULT_APPOINTMENT_TYPES.map((t) => t.id);
     const statuses = [
       AppointmentStatus.SCHEDULED,
       AppointmentStatus.COMPLETED,
@@ -484,6 +479,8 @@ export async function insertSampleData(): Promise<boolean> {
         }
 
         const type = types[j % types.length];
+        const typeLabel =
+          DEFAULT_APPOINTMENT_TYPES.find((t) => t.id === type)?.label || type;
 
         // Status: przeszłość = głównie COMPLETED, przyszłość = głównie SCHEDULED
         let status: AppointmentStatus;
@@ -510,7 +507,7 @@ export async function insertSampleData(): Promise<boolean> {
           duration,
           status,
           type,
-          notes: `Sesja ${type} - ${status === AppointmentStatus.COMPLETED ? 'zakończona' : 'zaplanowana'}`,
+          notes: `Sesja ${typeLabel} - ${status === AppointmentStatus.COMPLETED ? 'zakończona' : 'zaplanowana'}`,
           reminderSent:
             status === AppointmentStatus.SCHEDULED && date > today
               ? false
@@ -543,6 +540,8 @@ export async function insertSampleData(): Promise<boolean> {
       }
 
       const type = types[Math.floor(Math.random() * types.length)];
+      const typeLabel =
+        DEFAULT_APPOINTMENT_TYPES.find((t) => t.id === type)?.label || type;
       let status: AppointmentStatus;
 
       if (date < today) {
@@ -563,7 +562,7 @@ export async function insertSampleData(): Promise<boolean> {
         duration: [50, 60, 90][Math.floor(Math.random() * 3)],
         status,
         type,
-        notes: `Dodatkowa sesja ${type}`,
+        notes: `Dodatkowa sesja ${typeLabel}`,
         reminderSent:
           status === AppointmentStatus.SCHEDULED && date > today
             ? false

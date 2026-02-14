@@ -28,6 +28,7 @@ import {
   IconChevronRight,
   IconClock,
 } from '@tabler/icons-react';
+import { AppointmentTypesManager } from '../components/AppointmentTypesManager';
 import { SMSTemplateManager } from '../components/SMSTemplateManager';
 import { ThemeSelector } from '../components/ThemeSelector';
 import { useTheme } from '../hooks/useTheme';
@@ -226,6 +227,10 @@ function Settings() {
                   Wpisz godzinę w formacie HH:mm i naciśnij Enter, aby dodać.
                 </Text>
               </Stack>
+
+              <Divider variant='dashed' />
+
+              <AppointmentTypesManager />
             </Stack>
           </Card>
 

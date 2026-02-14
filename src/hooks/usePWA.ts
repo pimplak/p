@@ -41,7 +41,7 @@ function useRegisterSW(options: {
           options.onRegisterError?.(error);
         });
     }
-  }, []);
+  }, [options]);
 
   const updateServiceWorker = (reloadPage?: boolean) => {
     if ('serviceWorker' in navigator) {
