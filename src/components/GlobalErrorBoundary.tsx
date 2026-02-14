@@ -12,7 +12,7 @@ function ErrorFallback({
   error,
   resetErrorBoundary,
 }: {
-  error: Error;
+  error: unknown;
   resetErrorBoundary: () => void;
 }) {
   const { currentPalette } = useTheme();
@@ -49,7 +49,7 @@ function ErrorFallback({
                   color: currentPalette.text,
                 }}
               >
-                {error.message}
+                {error instanceof Error ? error.message : String(error)}
               </Text>
             </details>
           </Stack>
