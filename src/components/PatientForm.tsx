@@ -3,7 +3,6 @@ import {
   Button,
   Group,
   Stack,
-  Textarea,
   Select,
   TagsInput,
 } from '@mantine/core';
@@ -45,7 +44,6 @@ export function PatientForm({
       address: patient?.address || '',
       emergencyContact: patient?.emergencyContact || '',
       emergencyPhone: patient?.emergencyPhone || '',
-      notes: patient?.notes || '',
       status: patient?.status || PATIENT_STATUS.ACTIVE,
       tags: patient?.tags || [],
     },
@@ -180,13 +178,6 @@ export function PatientForm({
             {...form.getInputProps('tags')}
           />
         </Group>
-
-        <Textarea
-          label='Notatki'
-          placeholder='Dodatkowe informacje o pacjencie...'
-          minRows={3}
-          {...form.getInputProps('notes')}
-        />
 
         <Group justify='flex-end' mt='md'>
           <Button variant='light' onClick={onCancel}>

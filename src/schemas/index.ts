@@ -30,7 +30,6 @@ export const PatientSchema = z.object({
   address: z.string().optional(),
   emergencyContact: z.string().optional(),
   emergencyPhone: z.string().optional(),
-  notes: z.string().optional(),
   status: z
     .enum([PATIENT_STATUS.ACTIVE, PATIENT_STATUS.ARCHIVED])
     .default(PATIENT_STATUS.ACTIVE),
@@ -52,6 +51,8 @@ export const NoteSchema = z.object({
   patientId: z.number().min(1, 'ID pacjenta jest wymagane'),
   sessionId: z.number().optional(),
   type: z.enum(['soap', 'general', 'assessment']),
+  title: z.string().max(100, 'Tytuł może mieć maksymalnie 100 znaków').optional(),
+  pinned: z.boolean().default(false),
   subjective: z.string().optional(),
   objective: z.string().optional(),
   assessment: z.string().optional(),

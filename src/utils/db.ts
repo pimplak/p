@@ -110,6 +110,49 @@ export class PDB extends Dexie {
           });
       });
 
+    // Version 5 - dodajemy pinned i title do notatek, migracja patient.notes
+    this.version(5)
+      .stores({
+        patients: '++id, lastName, email, phone, status, [firstName+lastName]',
+        appointments: '++id, patientId, date, status',
+        notes: '++id, patientId, sessionId, type, pinned, createdAt',
+        goals: '++id, patientId, status, targetDate, createdAt',
+      })
+      .upgrade(async tx => {
+        const patients = await tx.table('patients').toArray();
+        const notesToInsert = patients
+          .filter(p => p.notes && p.notes.trim())
+          .map(p => ({
+            patientId: p.id,
+            type: 'general',
+            title: 'Notatki z profilu',
+            pinned: false,
+            content: p.notes,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+          }));
+
+        if (notesToInsert.length > 0) {
+          await tx.table('notes').bulkAdd(notesToInsert);
+        }
+
+        await tx
+          .table('patients')
+          .toCollection()
+          .modify(patient => {
+            delete patient.notes;
+          });
+
+        await tx
+          .table('notes')
+          .toCollection()
+          .modify(note => {
+            if (typeof note.pinned === 'undefined') {
+              note.pinned = false;
+            }
+          });
+      });
+
     // Add hooks for automatic timestamps (now using ISO strings)
     this.patients.hook('creating', function (_, obj: Partial<Patient>) {
       obj.createdAt = new Date().toISOString() as Date | string;

@@ -11,7 +11,6 @@ export interface Patient {
   address?: string;
   emergencyContact?: string;
   emergencyPhone?: string;
-  notes?: string;
   status: PatientStatus;
   tags?: string[];
   createdAt: Date | string;
@@ -29,6 +28,8 @@ export interface Note {
   patientId: number;
   sessionId?: number;
   type: 'soap' | 'general' | 'assessment';
+  title?: string;
+  pinned?: boolean;
   subjective?: string;
   objective?: string;
   assessment?: string;
