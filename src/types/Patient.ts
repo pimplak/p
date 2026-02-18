@@ -25,7 +25,7 @@ export interface PatientWithAppointments extends Patient {
 
 export interface Note {
   id?: number;
-  patientId: number;
+  patientId?: number;
   sessionId?: number;
   type: 'soap' | 'general' | 'assessment';
   title?: string;

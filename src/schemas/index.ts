@@ -48,7 +48,7 @@ export const PatientFormSchema = PatientSchema.omit({
 // Note Schema
 export const NoteSchema = z.object({
   id: z.number().optional(),
-  patientId: z.number().min(1, 'ID pacjenta jest wymagane'),
+  patientId: z.number().optional(),
   sessionId: z.number().optional(),
   type: z.enum(['soap', 'general', 'assessment']),
   title: z.string().max(100, 'Tytuł może mieć maksymalnie 100 znaków').optional(),

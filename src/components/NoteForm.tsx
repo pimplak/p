@@ -21,7 +21,7 @@ import type { Appointment } from '../types/Appointment';
 import type { Note } from '../types/Patient';
 
 interface NoteFormProps {
-  patientId: number;
+  patientId?: number;
   note?: Note | null;
   sessionId?: number;
   appointments?: Appointment[];
@@ -105,7 +105,7 @@ export function NoteForm({
         : undefined;
 
       const noteData = {
-        patientId,
+        ...(patientId !== undefined ? { patientId } : {}),
         sessionId: parsedSessionId || undefined,
         type: values.type,
         title: values.title || undefined,
@@ -156,9 +156,11 @@ export function NoteForm({
   return (
     <form onSubmit={form.onSubmit(handleSubmit)}>
       <Stack gap='md'>
-        {resolvedSessionId && <PinnedNotesChips patientId={patientId} />}
+        {resolvedSessionId && patientId !== undefined && (
+          <PinnedNotesChips patientId={patientId} />
+        )}
 
-        {appointments && appointments.length > 0 && (
+        {patientId !== undefined && appointments && appointments.length > 0 && (
           <Select
             label='Powiązana wizyta'
             placeholder='Wybierz wizytę...'

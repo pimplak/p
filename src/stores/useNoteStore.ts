@@ -9,6 +9,7 @@ interface NoteStore {
 
   // Actions
   fetchNotesByPatient: (patientId: number) => Promise<void>;
+  fetchPersonalNotes: () => Promise<void>;
   addNote: (note: Omit<Note, 'id' | 'createdAt' | 'updatedAt'>) => Promise<void>;
   updateNote: (id: number, data: Partial<Note>) => Promise<void>;
   deleteNote: (id: number) => Promise<void>;
@@ -18,6 +19,14 @@ interface NoteStore {
   // Derived getters
   getPinnedNotes: (patientId: number) => Note[];
   getNotesBySession: (sessionId: number) => Note[];
+}
+
+function sortNotes(notes: Note[]): Note[] {
+  return notes.sort((a, b) => {
+    if (a.pinned && !b.pinned) return -1;
+    if (!a.pinned && b.pinned) return 1;
+    return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+  });
 }
 
 export const useNoteStore = create<NoteStore>((set, get) => ({
@@ -33,17 +42,24 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
         .equals(patientId)
         .toArray();
 
-      // Sort: pinned first, then by createdAt desc
-      notes.sort((a, b) => {
-        if (a.pinned && !b.pinned) return -1;
-        if (!a.pinned && b.pinned) return 1;
-        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-      });
-
-      set({ notes, loading: false });
+      set({ notes: sortNotes(notes), loading: false });
     } catch (error) {
       console.error('Błąd podczas pobierania notatek:', error);
       set({ error: 'Błąd podczas pobierania notatek', loading: false });
+    }
+  },
+
+  fetchPersonalNotes: async () => {
+    set({ loading: true, error: null });
+    try {
+      const notes = await db.notes
+        .filter(n => n.patientId === undefined || n.patientId === null)
+        .toArray();
+
+      set({ notes: sortNotes(notes), loading: false });
+    } catch (error) {
+      console.error('Błąd podczas pobierania notatek osobistych:', error);
+      set({ error: 'Błąd podczas pobierania notatek osobistych', loading: false });
     }
   },
 
@@ -51,7 +67,11 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
     set({ loading: true, error: null });
     try {
       await db.notes.add(noteData as Note);
-      await get().fetchNotesByPatient(noteData.patientId);
+      if (noteData.patientId) {
+        await get().fetchNotesByPatient(noteData.patientId);
+      } else {
+        await get().fetchPersonalNotes();
+      }
     } catch (error) {
       console.error('Błąd podczas dodawania notatki:', error);
       set({ error: 'Błąd podczas dodawania notatki', loading: false });
@@ -62,10 +82,11 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
     set({ loading: true, error: null });
     try {
       await db.notes.update(id, data);
-      // Re-fetch for the patient of the updated note
       const note = get().notes.find(n => n.id === id);
-      if (note) {
+      if (note?.patientId) {
         await get().fetchNotesByPatient(note.patientId);
+      } else {
+        await get().fetchPersonalNotes();
       }
     } catch (error) {
       console.error('Błąd podczas aktualizacji notatki:', error);
@@ -78,8 +99,10 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
     try {
       const note = get().notes.find(n => n.id === id);
       await db.notes.delete(id);
-      if (note) {
+      if (note?.patientId) {
         await get().fetchNotesByPatient(note.patientId);
+      } else {
+        await get().fetchPersonalNotes();
       }
     } catch (error) {
       console.error('Błąd podczas usuwania notatki:', error);
@@ -92,7 +115,11 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
     if (!note) return;
     try {
       await db.notes.update(id, { pinned: !note.pinned });
-      await get().fetchNotesByPatient(note.patientId);
+      if (note.patientId) {
+        await get().fetchNotesByPatient(note.patientId);
+      } else {
+        await get().fetchPersonalNotes();
+      }
     } catch (error) {
       console.error('Błąd podczas przypinania notatki:', error);
       set({ error: 'Błąd podczas przypinania notatki' });

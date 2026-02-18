@@ -53,7 +53,7 @@ export function NoteList({
   if (notes.length === 0) {
     return (
       <Text size='sm' c='dimmed'>
-        Brak notatek dla tego pacjenta.
+        Brak notatek.
       </Text>
     );
   }

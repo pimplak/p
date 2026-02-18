@@ -8,6 +8,7 @@ import {
   Select,
   Button,
   Modal,
+  SegmentedControl,
 } from '@mantine/core';
 import { IconNotes, IconPlus } from '@tabler/icons-react';
 import { useEffect, useState } from 'react';
@@ -22,12 +23,15 @@ import { getPatientDisplayName } from '../utils/dates';
 import type { Appointment } from '../types/Appointment';
 import type { Note } from '../types/Patient';
 
+type ViewMode = 'personal' | 'patient';
+
 function Notes() {
   const { currentPalette } = useTheme();
   const { patients, fetchPatients } = usePatientStore();
-  const { notes, fetchNotesByPatient, togglePin, deleteNote, clearNotes } =
+  const { notes, fetchNotesByPatient, fetchPersonalNotes, togglePin, deleteNote, clearNotes } =
     useNoteStore();
   const { getAppointmentsByPatient } = useAppointmentStore();
+  const [viewMode, setViewMode] = useState<ViewMode>('personal');
   const [selectedPatientId, setSelectedPatientId] = useState<string | null>(null);
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [noteModalOpen, setNoteModalOpen] = useState(false);
@@ -38,16 +42,29 @@ function Notes() {
     fetchPatients();
   }, [fetchPatients]);
 
+  // Load personal notes on mount and when switching to personal mode
   useEffect(() => {
-    if (selectedPatientId) {
-      const patientId = parseInt(selectedPatientId, 10);
-      fetchNotesByPatient(patientId);
-      getAppointmentsByPatient(patientId).then(setAppointments);
+    if (viewMode === 'personal') {
+      fetchPersonalNotes();
+      setAppointments([]);
     } else {
       clearNotes();
-      setAppointments([]);
     }
-  }, [selectedPatientId, fetchNotesByPatient, clearNotes, getAppointmentsByPatient]);
+  }, [viewMode, fetchPersonalNotes, clearNotes]);
+
+  // Load patient notes when patient is selected
+  useEffect(() => {
+    if (viewMode === 'patient') {
+      if (selectedPatientId) {
+        const patientId = parseInt(selectedPatientId, 10);
+        fetchNotesByPatient(patientId);
+        getAppointmentsByPatient(patientId).then(setAppointments);
+      } else {
+        clearNotes();
+        setAppointments([]);
+      }
+    }
+  }, [selectedPatientId, viewMode, fetchNotesByPatient, clearNotes, getAppointmentsByPatient]);
 
   const patientOptions = patients.map(p => ({
     value: p.id?.toString() || '',
@@ -78,6 +95,15 @@ function Notes() {
     }
   };
 
+  const handleViewModeChange = (value: string) => {
+    setViewMode(value as ViewMode);
+    setSelectedPatientId(null);
+    setEditingNote(null);
+    setNoteModalOpen(false);
+  };
+
+  const showAddButton = viewMode === 'personal' || (viewMode === 'patient' && patientId !== null);
+
   return (
     <Container size='md'>
       <Stack gap='xl'>
@@ -93,18 +119,32 @@ function Notes() {
           </div>
         </Group>
 
-        <Group align='flex-end' gap='md'>
-          <Select
-            label='Pacjent'
-            placeholder='Wybierz pacjenta...'
-            data={patientOptions}
-            searchable
-            clearable
-            value={selectedPatientId}
-            onChange={setSelectedPatientId}
-            style={{ flex: 1 }}
-          />
-          {patientId && (
+        <SegmentedControl
+          value={viewMode}
+          onChange={handleViewModeChange}
+          data={[
+            { label: 'Moje notatki', value: 'personal' },
+            { label: 'Pacjenci', value: 'patient' },
+          ]}
+        />
+
+        {viewMode === 'patient' && (
+          <Group align='flex-end' gap='md'>
+            <Select
+              label='Pacjent'
+              placeholder='Wybierz pacjenta...'
+              data={patientOptions}
+              searchable
+              clearable
+              value={selectedPatientId}
+              onChange={setSelectedPatientId}
+              style={{ flex: 1 }}
+            />
+          </Group>
+        )}
+
+        <Group justify='flex-end'>
+          {showAddButton && (
             <Button
               leftSection={<IconPlus size='1rem' />}
               variant='light'
@@ -115,7 +155,20 @@ function Notes() {
           )}
         </Group>
 
-        {patientId ? (
+        {viewMode === 'personal' ? (
+          notes.length > 0 ? (
+            <NoteList
+              notes={notes}
+              onEdit={handleEditNote}
+              onDelete={id => setDeleteNoteId(id)}
+              onTogglePin={id => togglePin(id)}
+            />
+          ) : (
+            <Text size='sm' c='dimmed' ta='center' py='xl'>
+              Nie masz jeszcze żadnych notatek osobistych.
+            </Text>
+          )
+        ) : patientId ? (
           <NoteList
             notes={notes}
             appointments={appointments}
@@ -130,21 +183,19 @@ function Notes() {
         )}
       </Stack>
 
-      {patientId && (
-        <BottomSheet
-          opened={noteModalOpen}
-          onClose={() => setNoteModalOpen(false)}
-          title={editingNote ? 'Edytuj notatkę' : 'Dodaj notatkę'}
-        >
-          <NoteForm
-            patientId={patientId}
-            note={editingNote}
-            appointments={appointments}
-            onSuccess={handleNoteFormSuccess}
-            onCancel={() => setNoteModalOpen(false)}
-          />
-        </BottomSheet>
-      )}
+      <BottomSheet
+        opened={noteModalOpen}
+        onClose={() => setNoteModalOpen(false)}
+        title={editingNote ? 'Edytuj notatkę' : 'Dodaj notatkę'}
+      >
+        <NoteForm
+          patientId={viewMode === 'patient' && patientId ? patientId : undefined}
+          note={editingNote}
+          appointments={viewMode === 'patient' ? appointments : undefined}
+          onSuccess={handleNoteFormSuccess}
+          onCancel={() => setNoteModalOpen(false)}
+        />
+      </BottomSheet>
 
       <Modal
         opened={deleteNoteId !== null}
