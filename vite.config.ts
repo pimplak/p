@@ -50,6 +50,8 @@ export default defineConfig({
           'state-vendor': ['zustand', 'immer'],
           // Utils chunk
           'utils-vendor': ['date-fns', 'dayjs', 'zod'],
+          // Auth chunk
+          'auth-vendor': ['@supabase/supabase-js'],
         },
       },
     },

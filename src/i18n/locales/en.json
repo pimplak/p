@@ -643,5 +643,41 @@
     "restore": "Are you sure you want to restore?",
     "cancel": "Are you sure you want to cancel?",
     "unsavedChanges": "You have unsaved changes. Are you sure you want to leave?"
+  },
+
+  "auth": {
+    "login": {
+      "title": "Sign in",
+      "subtitle": "Sign in to your account",
+      "tabPassword": "Password",
+      "tabMagicLink": "Magic link",
+      "emailLabel": "Email",
+      "passwordLabel": "Password",
+      "submitPassword": "Sign in",
+      "submitMagicLink": "Send magic link",
+      "magicLinkSent": "Link sent",
+      "magicLinkDescription": "Check your inbox and click the link to sign in.",
+      "orRegister": "Don't have an account?",
+      "registerLink": "Register",
+      "errorGeneric": "An error occurred while signing in. Check your credentials and try again."
+    },
+    "register": {
+      "title": "Register",
+      "emailLabel": "Email",
+      "passwordLabel": "Password",
+      "confirmPasswordLabel": "Confirm password",
+      "submit": "Register",
+      "successTitle": "Registration complete",
+      "successMessage": "Check your inbox to confirm your account.",
+      "loginLink": "Already have an account? Sign in",
+      "errorPasswordMismatch": "Passwords do not match",
+      "errorGeneric": "An error occurred during registration. Please try again."
+    },
+    "callback": {
+      "verifying": "Verifying..."
+    },
+    "signOut": {
+      "error": "An error occurred while signing out"
+    }
   }
 }

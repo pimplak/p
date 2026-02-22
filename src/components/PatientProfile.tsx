@@ -7,8 +7,8 @@ import {
 import { notifications } from '@mantine/notifications';
 import { IconAlertCircle } from '@tabler/icons-react';
 import { useState, useEffect, useCallback } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useTheme } from '../hooks/useTheme';
 import { usePatientStore } from '../stores/usePatientStore';
 import { PatientForm } from './PatientForm';

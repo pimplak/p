@@ -25,6 +25,7 @@ import { useTranslation } from 'react-i18next';
 import { Link, useLocation } from 'react-router-dom';
 import { useGestures } from '../../hooks/useGestures';
 import { useTheme } from '../../hooks/useTheme';
+import { useAuthStore } from '../../stores/useAuthStore';
 import { useHeaderStore } from '../../stores/useHeaderStore';
 import { useSettingsStore } from '../../stores/useSettingsStore';
 import { DrawerOverlay } from '../ui/DrawerOverlay';
@@ -46,6 +47,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
   const { currentPalette, isDark, mantineTheme } = useTheme();
   const { title, leftSlot, rightSlot } = useHeaderStore();
   const { practitionerName, practitionerTitle } = useSettingsStore();
+  const { signOut } = useAuthStore();
 
   const navigationItems = [
     {
@@ -80,12 +82,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
       label: t('navigation.settings'),
       icon: IconSettings,
       href: '/settings',
-    },
-    {
-      label: t('navigation.logout'),
-      icon: IconLogout,
-      href: '/logout',
-      color: 'red',
+      color: undefined as string | undefined,
     },
   ];
 
@@ -323,7 +320,6 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
               >
                 {bottomItems.map(item => {
                   const Icon = item.icon;
-                  const isRed = item.color === 'red';
 
                   return (
                     <NavLink
@@ -343,20 +339,47 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
                         fontSize: mantineTheme.fontSizes?.sm,
                         padding: '12px 16px',
                         transition: 'all 200ms ease-out',
-                        color: isRed ? '#ef4444' : currentPalette.text,
+                        color: currentPalette.text,
                       }}
                       styles={{
                         root: {
                           '&:hover': {
-                            backgroundColor: isRed
-                              ? '#ef444420'
-                              : `${currentPalette.accent}30`,
+                            backgroundColor: `${currentPalette.accent}30`,
                           },
                         },
                       }}
                     />
                   );
                 })}
+                <NavLink
+                  component='button'
+                  label={t('navigation.logout')}
+                  leftSection={<IconLogout size={20} stroke={1.5} />}
+                  onClick={() => {
+                    if (isMobile) toggle();
+                    void signOut();
+                  }}
+                  style={{
+                    borderRadius: mantineTheme.radius?.md,
+                    fontWeight: 500,
+                    fontSize: mantineTheme.fontSizes?.sm,
+                    padding: '12px 16px',
+                    transition: 'all 200ms ease-out',
+                    color: '#ef4444',
+                    width: '100%',
+                    background: 'none',
+                    border: 'none',
+                    cursor: 'pointer',
+                    textAlign: 'left',
+                  }}
+                  styles={{
+                    root: {
+                      '&:hover': {
+                        backgroundColor: '#ef444420',
+                      },
+                    },
+                  }}
+                />
               </Stack>
             </Stack>
           </ScrollArea>

@@ -643,5 +643,41 @@
     "restore": "Czy na pewno chcesz przywrócić?",
     "cancel": "Czy na pewno chcesz anulować?",
     "unsavedChanges": "Masz niezapisane zmiany. Czy na pewno chcesz opuścić stronę?"
+  },
+
+  "auth": {
+    "login": {
+      "title": "Zaloguj się",
+      "subtitle": "Zaloguj się do swojego konta",
+      "tabPassword": "Hasło",
+      "tabMagicLink": "Magic link",
+      "emailLabel": "Email",
+      "passwordLabel": "Hasło",
+      "submitPassword": "Zaloguj się",
+      "submitMagicLink": "Wyślij magic link",
+      "magicLinkSent": "Link wysłany",
+      "magicLinkDescription": "Sprawdź swoją skrzynkę e-mail i kliknij link, aby się zalogować.",
+      "orRegister": "Nie masz konta?",
+      "registerLink": "Zarejestruj się",
+      "errorGeneric": "Wystąpił błąd podczas logowania. Sprawdź dane i spróbuj ponownie."
+    },
+    "register": {
+      "title": "Zarejestruj się",
+      "emailLabel": "Email",
+      "passwordLabel": "Hasło",
+      "confirmPasswordLabel": "Potwierdź hasło",
+      "submit": "Zarejestruj się",
+      "successTitle": "Rejestracja zakończona",
+      "successMessage": "Sprawdź swoją skrzynkę e-mail, aby potwierdzić konto.",
+      "loginLink": "Masz już konto? Zaloguj się",
+      "errorPasswordMismatch": "Hasła nie są identyczne",
+      "errorGeneric": "Wystąpił błąd podczas rejestracji. Spróbuj ponownie."
+    },
+    "callback": {
+      "verifying": "Weryfikacja..."
+    },
+    "signOut": {
+      "error": "Wystąpił błąd podczas wylogowywania"
+    }
   }
 }
