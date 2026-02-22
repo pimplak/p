@@ -10,8 +10,8 @@ import { AppRouter } from './components/AppRouter';
 import { GlobalErrorBoundary } from './components/GlobalErrorBoundary';
 import { PWAInstallPrompt } from './components/PWAInstallPrompt';
 import { useTheme } from './hooks/useTheme';
+import './i18n/config';
 
-// Ferro's Dynamic Theme Provider
 function ThemeProvider({ children }: { children: React.ReactNode }) {
   const { mantineTheme } = useTheme();
 

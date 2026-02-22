@@ -1,0 +1,647 @@
+{
+  "common": {
+    "success": "Success!",
+    "error": "Error",
+    "info": "Information",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "close": "Close",
+    "back": "Back",
+    "next": "Next",
+    "loading": "Loading...",
+    "add": "Add",
+    "update": "Update",
+    "view": "View",
+    "search": "Search",
+    "filter": "Filter",
+    "all": "All",
+    "yes": "Yes",
+    "no": "No",
+    "confirm": "Confirm",
+    "actions": "Actions"
+  },
+
+  "navigation": {
+    "dashboard": "Dashboard",
+    "patients": "Patients",
+    "calendar": "Calendar",
+    "notes": "Notes",
+    "analytics": "Analytics",
+    "settings": "Settings",
+    "logout": "Logout",
+    "mainSection": "Main",
+    "appSection": "Application",
+    "tagline": "Psychological practice management"
+  },
+
+  "weekdays": {
+    "sunday": "SUNDAY",
+    "monday": "MONDAY",
+    "tuesday": "TUESDAY",
+    "wednesday": "WEDNESDAY",
+    "thursday": "THURSDAY",
+    "friday": "FRIDAY",
+    "saturday": "SATURDAY",
+    "shortSunday": "Sun",
+    "shortMonday": "Mon",
+    "shortTuesday": "Tue",
+    "shortWednesday": "Wed",
+    "shortThursday": "Thu",
+    "shortFriday": "Fri",
+    "shortSaturday": "Sat"
+  },
+
+  "months": {
+    "january": "JAN",
+    "february": "FEB",
+    "march": "MAR",
+    "april": "APR",
+    "may": "MAY",
+    "june": "JUN",
+    "july": "JUL",
+    "august": "AUG",
+    "september": "SEP",
+    "october": "OCT",
+    "november": "NOV",
+    "december": "DEC"
+  },
+
+  "status": {
+    "patient": {
+      "active": "Active",
+      "archived": "Archived"
+    },
+    "appointment": {
+      "scheduled": "Scheduled",
+      "completed": "Completed",
+      "cancelled": "Cancelled",
+      "no_show": "No Show",
+      "rescheduled": "Rescheduled"
+    },
+    "goal": {
+      "active": "Active",
+      "completed": "Completed",
+      "paused": "Paused",
+      "cancelled": "Cancelled"
+    },
+    "payment": {
+      "paid": "Paid",
+      "unpaid": "Unpaid",
+      "requiresPayment": "Chargeable",
+      "free": "Free"
+    }
+  },
+
+  "dashboard": {
+    "title": "Dashboard",
+    "greeting": "Good day",
+    "notifications": "Notifications",
+    "nextAppointment": "Next Appointment",
+    "quickActions": "Quick Actions",
+    "overview": "Overview",
+    "practiceOverview": "Practice Overview",
+    "todaysPlan": "Today's Plan",
+    "noAppointmentsToday": "No appointments today.",
+    "seeAll": "See All",
+    "stats": {
+      "totalPatients": "Total Patients",
+      "activePatients": "Active patients",
+      "totalInSystem": "Total in system",
+      "weeklyRevenue": "Weekly Revenue",
+      "sessionsThisWeek": "Sessions this week",
+      "scheduledMeetings": "Scheduled meetings",
+      "pendingHours": "Pending Hours",
+      "todaysAppointments": "Today's appointments",
+      "scheduledForToday": "Scheduled for today",
+      "nextSession": "Next session",
+      "noScheduledAppointments": "No scheduled appointments",
+      "review": "Review"
+    },
+    "appointmentStatus": {
+      "done": "Done",
+      "now": "Now",
+      "pending": "Pending"
+    },
+    "actions": {
+      "addPatient": "Add Patient",
+      "sendReminders": "Send Reminders",
+      "reports": "Reports",
+      "newNote": "New Note",
+      "addSession": "Add Session",
+      "export": "Export"
+    }
+  },
+
+  "patients": {
+    "title": "Patients",
+    "addPatient": "Add Patient",
+    "editPatient": "Edit Patient",
+    "viewPatient": "View Patient",
+    "archivePatient": "Archive Patient",
+    "restorePatient": "Restore Patient",
+    "noPatients": "No Patients",
+    "noActivePatients": "You don't have any active patients yet. Add your first one!",
+    "noArchivedPatients": "You don't have any archived patients.",
+    "noSearchResults": "No patients found matching your search.",
+    "searchPlaceholder": "Search for patient...",
+    "showArchived": "Show Archived",
+    "hideArchived": "Hide Archived",
+    "notifications": {
+      "patientAdded": "Patient has been added",
+      "patientUpdated": "Patient data has been updated",
+      "patientArchived": "Patient has been archived",
+      "patientRestored": "Patient has been restored",
+      "errorSaving": "Failed to save patient data",
+      "errorArchiving": "Failed to archive patient",
+      "errorRestoring": "Failed to restore patient",
+      "patientNotFound": "Patient not found",
+      "errorLoadingPatient": "Failed to load patient data",
+      "editPatientData": "Edit patient data"
+    }
+  },
+
+  "patientForm": {
+    "title": "Patient Information",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "displayName": "Display Name (optional)",
+    "displayNamePlaceholder": "If not provided, first and last name will be used",
+    "email": "Email",
+    "emailPlaceholder": "email@example.com",
+    "phone": "Phone",
+    "phonePlaceholder": "+48 123 456 789",
+    "birthDate": "Date of Birth",
+    "age": "Age",
+    "ageYears": "years",
+    "address": "Address",
+    "addressPlaceholder": "Street, city, postal code",
+    "emergencyContact": "Emergency Contact",
+    "emergencyContactPlaceholder": "Full name",
+    "emergencyPhone": "Emergency Phone",
+    "status": "Status",
+    "statusPlaceholder": "Select status",
+    "tags": "Tags",
+    "tagsPlaceholder": "Add tags (e.g., couples therapy, CBT)",
+    "firstNamePlaceholder": "Enter first name",
+    "lastNamePlaceholder": "Enter last name",
+    "selectDate": "Select date"
+  },
+
+  "calendar": {
+    "title": "Calendar",
+    "addAppointment": "Add Appointment",
+    "editAppointment": "Edit Appointment",
+    "deleteAppointment": "Delete Appointment",
+    "rescheduleAppointment": "Reschedule Appointment",
+    "confirmDelete": "Are you sure you want to delete this appointment?",
+    "noAppointments": "No Appointments",
+    "noAppointmentsForDay": "No appointments on this day.",
+    "views": {
+      "day": "Day",
+      "week": "Week",
+      "month": "Month"
+    },
+    "today": "Today",
+    "jumpToDate": "Jump to date",
+    "hideWeekends": "Hide Weekends",
+    "showWeekends": "Show Weekends",
+    "filters": {
+      "all": "All",
+      "scheduled": "Scheduled",
+      "completed": "Completed",
+      "cancelled": "Cancelled",
+      "noShow": "No Show",
+      "rescheduled": "Rescheduled"
+    },
+    "table": {
+      "time": "Time",
+      "patient": "Patient",
+      "type": "Type",
+      "duration": "Duration",
+      "price": "Price",
+      "payment": "Payment",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "reschedule": {
+      "title": "Reschedule Appointment",
+      "selectNewDate": "Select new date and time for patient's appointment:",
+      "confirmReschedule": "Confirm Reschedule",
+      "toNew": "To new",
+      "fromPrevious": "From previous"
+    },
+    "cancellation": {
+      "cancelledOn": "Cancelled:",
+      "requiresPayment": "Chargeable:",
+      "reason": "Reason"
+    },
+    "appointmentRow": {
+      "defaultType": "Appointment",
+      "history": "History",
+      "goToNewAppointment": "Go to new appointment",
+      "showPreviousAppointment": "Show previous appointment",
+      "phone": "Phone:",
+      "cancelledAppointment": "Cancelled appointment",
+      "requiresPayment": "Requires payment:",
+      "yes": "YES",
+      "no": "NO",
+      "reason": "Reason:",
+      "appointmentType": "Appointment type:",
+      "duration": "Duration:",
+      "price": "Price:",
+      "payment": "Payment:",
+      "paid": "Paid",
+      "unpaid": "Unpaid",
+      "notes": "Notes:",
+      "reschedule": "Reschedule"
+    },
+    "patientProfile": {
+      "tabs": {
+        "overview": "Overview",
+        "appointments": "Appointments",
+        "notes": "Notes"
+      },
+      "overview": {
+        "address": "Address",
+        "noAdditionalInfo": "No additional patient information.",
+        "created": "Created:",
+        "lastUpdate": "Last update:"
+      },
+      "appointments": {
+        "title": "Appointments ({{count}})",
+        "selectedCount": "{{count}} selected",
+        "filterByDate": "Filter by date",
+        "selectAll": "Select all",
+        "clearSelection": "Clear selection",
+        "exportSelected": "Export selected",
+        "addAppointment": "Add appointment",
+        "noAppointmentsOnDay": "No appointments on selected day.",
+        "noAppointmentsForPatient": "No appointments for this patient.",
+        "duration": "Duration:",
+        "type": "Type:",
+        "appointmentTypes": {
+          "therapy": "Therapy",
+          "initial": "Initial visit",
+          "follow_up": "Follow-up visit",
+          "consultation": "Consultation",
+          "assessment": "Assessment"
+        },
+        "notes": "Notes:"
+      },
+        "notes": {
+          "title": "Notes ({{count}})",
+          "addNote": "Add note",
+          "addSessionNote": "Add session note"
+        }
+    }
+  },
+
+  "appointmentForm": {
+    "title": "Appointment Details",
+    "patient": "Patient",
+    "patientPlaceholder": "Select patient",
+    "patientRequired": "Select a patient",
+    "date": "Date",
+    "datePlaceholder": "Select date",
+    "dateRequired": "Select date and time",
+    "time": "Time",
+    "timePlaceholder": "Select time",
+    "duration": "Duration (minutes)",
+    "durationPlaceholder": "50",
+    "durationMin": "Duration must be at least 15 minutes",
+    "type": "Appointment Type",
+    "appointmentType": "Appointment",
+    "status": "Status",
+    "notes": "Notes",
+    "notesPlaceholder": "Additional information about the appointment...",
+    "payment": "Payment",
+    "price": "Price (PLN)",
+    "priceNegative": "Price cannot be negative",
+    "paid": "Paid",
+    "paymentDate": "Payment Date",
+    "paymentDatePlaceholder": "When was it paid?",
+    "paymentMethod": "Payment Method",
+    "paymentMethods": {
+      "cash": "Cash",
+      "card": "Card",
+      "transfer": "Bank Transfer",
+      "other": "Other"
+    },
+    "paymentNotes": "Payment Notes",
+    "paymentNotesPlaceholder": "Additional payment information...",
+    "cancellation": {
+      "title": "Cancellation Details",
+      "date": "Cancellation Date",
+      "datePlaceholder": "When was it cancelled?",
+      "type": "Cancellation Type",
+      "reason": "Cancellation Reason",
+      "reasonPlaceholder": "Why was the appointment cancelled?"
+    },
+    "reschedule": {
+      "title": "New Appointment Time",
+      "newDate": "New Appointment Date",
+      "selectNewDate": "Select new date and time",
+      "rescheduledFrom": "This appointment was rescheduled from:",
+      "rescheduledTo": "This appointment was rescheduled to:"
+    },
+    "notifications": {
+      "appointmentAdded": "Appointment has been added",
+      "appointmentUpdated": "Appointment has been updated",
+      "appointmentRescheduled": "Appointment has been rescheduled and a new one created",
+      "errorSaving": "Failed to save appointment"
+    }
+  },
+
+  "notes": {
+    "title": "Notes",
+    "subtitle": "Therapeutic Notes System",
+    "addNote": "Add Note",
+    "editNote": "Edit Note",
+    "deleteNote": "Delete Note",
+    "deleteConfirm": "Are you sure you want to delete this note?",
+    "noNotes": "No Notes",
+    "noPersonalNotes": "You don't have any personal notes yet.",
+    "selectPatient": "Select a patient to view their notes.",
+    "viewModes": {
+      "personal": "My Notes",
+      "patient": "Patients"
+    },
+    "selectPatientPlaceholder": "Select patient...",
+    "types": {
+      "general": "General",
+      "soap": "SOAP",
+      "assessment": "Assessment"
+    },
+    "typeLabels": {
+      "soap": "SOAP",
+      "assessment": "Assessment",
+      "general": "Note"
+    },
+    "pinned": "Pin Note",
+    "pinnedDescription": "Pinned notes are visible in patient overview",
+    "notifications": {
+      "noteAdded": "Note has been added",
+      "noteUpdated": "Note has been updated",
+      "errorSaving": "Failed to save note"
+    }
+  },
+
+  "noteForm": {
+    "title": "Note Details",
+    "type": "Note Type",
+    "noteTitle": "Title (optional)",
+    "noteTitlePlaceholder": "Short note title...",
+    "relatedAppointment": "Related Appointment",
+    "relatedAppointmentPlaceholder": "Select appointment...",
+    "noAppointment": "None (general note)",
+    "content": "Content",
+    "contentPlaceholder": "Note content...",
+    "contentRequired": "Content is required",
+    "assessmentPlaceholder": "Patient assessment...",
+    "soap": {
+      "subjective": "Subjective (S)",
+      "subjectivePlaceholder": "What the patient reports...",
+      "objective": "Objective (O)",
+      "objectivePlaceholder": "Clinical observations...",
+      "assessment": "Assessment (A)",
+      "assessmentPlaceholder": "Clinical assessment...",
+      "plan": "Plan (P)",
+      "planPlaceholder": "Treatment plan...",
+      "atLeastOne": "Fill in at least one SOAP field"
+    }
+  },
+
+  "analytics": {
+    "title": "Analytics",
+    "subtitle": "Practice Analysis and Reports",
+    "comingSoon": "More features coming soon",
+    "comingSoonDescription": "We're preparing advanced analytics tools to track practice progress and therapy effectiveness.",
+    "inDevelopment": "In Development",
+    "plannedFeatures": {
+      "title": "Planned Features:",
+      "patientProgress": "Patient Progress Charts",
+      "revenueAnalysis": "Revenue and Payment Analysis",
+      "timeUsage": "Time Usage Reports",
+      "therapyEffectiveness": "Therapy Effectiveness Statistics",
+      "compliance": "Compliance and Attendance Reports",
+      "exportReports": "Export Reports to PDF/Excel"
+    },
+    "currentFeatures": {
+      "title": "Available Now:",
+      "dashboardStats": "Basic practice statistics available on Dashboard",
+      "smsAnalysis": "SMS analysis available above in this section"
+    }
+  },
+
+  "settings": {
+    "title": "Settings",
+    "subtitle": "Configure the app according to your needs",
+
+    "appearance": {
+      "title": "Appearance and Interface"
+    },
+
+    "language": {
+      "title": "Language",
+      "label": "Select Language",
+      "description": "Choose the app interface language",
+      "polish": "Polski",
+      "english": "English"
+    },
+
+    "sms": {
+      "title": "SMS Reminders",
+      "practiceName": {
+        "label": "Practice Name",
+        "placeholder": "Psychology Practice",
+        "description": "Name displayed in SMS messages"
+      },
+      "practitionerTitle": {
+        "label": "Professional Title",
+        "placeholder": "Select title",
+        "description": "Title used in SMS messages"
+      },
+      "templates": {
+        "title": "SMS Message Templates"
+      }
+    },
+
+    "appointments": {
+      "title": "Appointment Settings",
+      "duration": {
+        "label": "Default Appointment Duration (minutes)",
+        "placeholder": "60",
+        "description": "Default duration for new appointments"
+      },
+      "hours": {
+        "label": "Predefined Appointment Hours",
+        "placeholder": "Add time (e.g., 14:15)",
+        "description": "These times will be available in the dropdown when adding a new appointment",
+        "hint": "Enter time in HH:mm format and press Enter to add."
+      }
+    },
+
+    "data": {
+      "title": "Application and Data",
+      "demo": {
+        "title": "Add Demo Data",
+        "description": "Add sample patients to test the application",
+        "button": "Add Demo",
+        "success": "Sample patients and appointments added",
+        "exists": "Data already exists in the database",
+        "error": "An error occurred while adding data"
+      },
+      "export": {
+        "title": "Export Data",
+        "description": "Download a backup of all data",
+        "button": "Export"
+      },
+      "clear": {
+        "title": "Delete All Data",
+        "description": "Permanently delete all patients and appointments",
+        "button": "Clear Data",
+        "success": "All data has been deleted",
+        "error": "An error occurred while deleting data"
+      }
+    },
+
+    "privacy": {
+      "title": "Privacy and Security",
+      "localStorage": {
+        "title": "Local Storage:",
+        "description": "All data is stored locally on your device."
+      },
+      "offline": {
+        "title": "Offline-first:",
+        "description": "The app works without an internet connection."
+      },
+      "hipaa": {
+        "title": "HIPAA-compliant:",
+        "description": "Built with medical data protection in mind."
+      }
+    },
+
+    "about": {
+      "title": "About the App",
+      "version": "App Version",
+      "lastUpdate": "Last Update",
+      "description": "P - Progressive Web App for Psychologists",
+      "tagline": "Built with ❤️ for the therapeutic community"
+    }
+  },
+
+  "smsReminder": {
+    "sendReminder": "Send SMS Reminder",
+    "reminderSent": "Reminder sent",
+    "alreadySent": "Reminder already sent",
+    "noPhoneNumber": "No phone number",
+    "invalidPhoneError": "Patient doesn't have a valid phone number",
+    "sendSuccess": "SMS app opened with message for {{firstName}} {{lastName}}",
+    "sendError": "Failed to send reminder",
+    "messageGenerationError": "Error generating message",
+    "templateLabel": "Message template",
+    "templatePlaceholder": "Choose template",
+    "messagePreview": "Message preview",
+    "editMessage": "Edit message",
+    "edit": "Edit",
+    "preview": "Preview",
+    "customMessagePlaceholder": "Enter your own message or leave empty to use template",
+    "characterCount": "Length: {{length}} characters",
+    "sendSMS": "Send SMS",
+    "sent": "Sent",
+    "sms": "SMS",
+    "alertTitles": {
+      "alreadySent": "Reminder already sent",
+      "recommended": "Recommended to send reminder",
+      "outsideTime": "Outside optimal time"
+    }
+  },
+
+  "bulkSMS": {
+    "sendReminders": "Send SMS Reminders",
+    "noSelectedReminders": "No selected reminders",
+    "selectAtLeastOne": "Select at least one reminder to send",
+    "remindersSent": "Reminders sent",
+    "sentCount": "Sent {{count}} reminder{{count === 1 ? '' : 's'}}{{errorCount > 0 ? ', {{errorCount}} error{{errorCount === 1 ? '' : 's'}}' : ''}}",
+    "sendError": "Sending error",
+    "noRemindersSent": "Failed to send any reminders",
+    "noRemindersToSend": "No reminders to send",
+    "sendCountReminders": "Send {{count}} reminder{{count === 1 ? '' : 's'}}",
+    "statistics": "Statistics",
+    "selectedOfTotal": "Selected: {{selected}} of {{total}}",
+    "toSend": "To send: {{count}}",
+    "noPhone": "No phone: {{count}}",
+    "alreadySent": "Already sent: {{count}}",
+    "selectAll": "Select all",
+    "unselectAll": "Unselect all",
+    "selectedCount": "{{count}} selected",
+    "noPhoneShort": "No phone",
+    "history": "History",
+    "messagePreview": "Message preview",
+    "messageForPatient": "Message for {{firstName}} {{lastName}}",
+    "sendingReminders": "Sending reminders...",
+    "progressPercent": "{{percent}}%"
+  },
+
+  "patientQuickInfo": {
+    "contact": "Contact",
+    "noContactInfo": "No contact information",
+    "personalInfo": "Personal information",
+    "age": "Age",
+    "noData": "No data",
+    "dateOfBirth": "Date of birth",
+    "address": "Address",
+    "emergencyContact": "Emergency contact",
+    "person": "Person",
+    "phone": "Phone"
+  },
+
+  "appointmentTypes": {
+    "title": "Appointment Types",
+    "addType": "Add appointment type",
+    "description": "These types will be available in the dropdown when adding a new appointment",
+    "hint": "Enter the appointment type name and press Enter to add."
+  },
+
+  "export": {
+    "title": "Export Data",
+    "selectRange": "Select date range",
+    "selectPatient": "Select patient",
+    "allPatients": "All patients",
+    "exportButton": "Export to Excel",
+    "success": "Data has been exported",
+    "error": "Error exporting data",
+    "progress": {
+      "exportInProgress": "Export in progress...",
+      "processingPatients": "Processing patient data ({{progress}}%)",
+      "processingAppointments": "Processing appointments ({{progress}}%)",
+      "generatingFile": "Generating file...",
+      "completed": "Export completed!",
+      "fileDownloaded": "File {{filename}} has been downloaded",
+      "exportError": "Export error",
+      "exportFailed": "Failed to export data"
+    }
+  },
+
+  "errors": {
+    "generic": "An error occurred",
+    "notFound": "Not found",
+    "unauthorized": "Unauthorized",
+    "networkError": "Network error",
+    "validationError": "Validation error",
+    "required": "This field is required",
+    "invalidEmail": "Invalid email address",
+    "invalidPhone": "Invalid phone number",
+    "invalidDate": "Invalid date"
+  },
+
+  "confirmations": {
+    "delete": "Are you sure you want to delete?",
+    "archive": "Are you sure you want to archive?",
+    "restore": "Are you sure you want to restore?",
+    "cancel": "Are you sure you want to cancel?",
+    "unsavedChanges": "You have unsaved changes. Are you sure you want to leave?"
+  }
+}

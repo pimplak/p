@@ -6,6 +6,7 @@ import {
   type Icon,
 } from '@tabler/icons-react';
 import { useState, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useTheme } from '../../hooks/useTheme';
 import { useAppointmentStore } from '../../stores/useAppointmentStore';
@@ -25,6 +26,7 @@ interface MobileNavigationProps {
 export const MobileNavigation: React.FC<MobileNavigationProps> = ({
   onItemClick,
 }) => {
+  const { t } = useTranslation();
   const [pressedItem, setPressedItem] = useState<string | null>(null);
   const navigate = useNavigate();
   const location = useLocation();
@@ -63,19 +65,19 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
   const navigationItems: NavigationItem[] = [
     {
       id: 'dashboard',
-      label: 'Dashboard',
+      label: t('navigation.dashboard'),
       icon: IconDashboard,
       href: '/',
     },
     {
       id: 'patients',
-      label: 'Pacjenci',
+      label: t('navigation.patients'),
       icon: IconUsers,
       href: '/patients',
     },
     {
       id: 'calendar',
-      label: 'Kalendarz',
+      label: t('navigation.calendar'),
       icon: IconCalendar,
       href: '/calendar',
       badge:

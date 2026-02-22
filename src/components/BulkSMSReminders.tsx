@@ -25,6 +25,7 @@ import {
 import { format } from 'date-fns';
 import { pl } from 'date-fns/locale';
 import { useState, useMemo, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useTheme } from '../hooks/useTheme';
 import { useAppointmentStore } from '../stores/useAppointmentStore';
 import { usePatientStore } from '../stores/usePatientStore';
@@ -68,6 +69,7 @@ export function BulkSMSReminders({
   appointments,
   onRemindersSent,
 }: BulkSMSRemindersProps) {
+  const { t } = useTranslation();
   const { smsTemplates } = useSettingsStore();
   const { currentPalette, currentPaletteId, utilityColors } = useTheme();
   const [opened, { open, close }] = useDisclosure(false);
@@ -219,8 +221,8 @@ export function BulkSMSReminders({
 
     if (selectedItems.length === 0) {
       notifications.show({
-        title: 'Brak wybranych przypomnieć',
-        message: 'Wybierz co najmniej jedno przypomnienie do wysłania',
+        title: t('bulkSMS.noSelectedReminders'),
+        message: t('bulkSMS.selectAtLeastOne'),
         color: 'yellow',
       });
       return;
@@ -271,16 +273,16 @@ export function BulkSMSReminders({
     // Show results
     if (sentCount > 0) {
       notifications.show({
-        title: 'Przypomnienia wysłane',
-        message: `Wysłano ${sentCount} przypomnieć${sentCount === 1 ? '' : 'i'}${errorCount > 0 ? `, ${errorCount} błędów` : ''}`,
+        title: t('bulkSMS.remindersSent'),
+        message: t('bulkSMS.sentCount', { count: sentCount, errorCount }),
         color: errorCount > 0 ? 'yellow' : 'green',
       });
     }
 
     if (errorCount > 0 && sentCount === 0) {
       notifications.show({
-        title: 'Błąd wysyłania',
-        message: 'Nie udało się wysłać żadnego przypomnienia',
+        title: t('bulkSMS.sendError'),
+        message: t('bulkSMS.noRemindersSent'),
         color: 'red',
       });
     }
@@ -313,8 +315,8 @@ export function BulkSMSReminders({
         <Tooltip
           label={
             isDisabled
-              ? 'Brak przypomnieć do wysłania'
-              : `Wyślij ${reminderCount} przypomnieć`
+              ? t('bulkSMS.noRemindersToSend')
+              : t('bulkSMS.sendCountReminders', { count: reminderCount })
           }
         >
           <ActionIcon
@@ -348,7 +350,7 @@ export function BulkSMSReminders({
           open();
         }}
       >
-        Wyślij przypomnienia ({reminderCount})
+        {t('bulkSMS.sendReminders')} ({reminderCount})
       </Button>
     );
   };
@@ -360,7 +362,7 @@ export function BulkSMSReminders({
       <BottomSheet
         opened={opened}
         onClose={close}
-        title='Wyślij przypomnienia SMS'
+        title={t('bulkSMS.sendReminders')}
       >
         <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
           {/* Content area - takes remaining space */}
@@ -371,24 +373,24 @@ export function BulkSMSReminders({
                 <Group justify='space-between'>
                   <div>
                     <Text size='sm' fw={500}>
-                      Statystyki
+                      {t('bulkSMS.statistics')}
                     </Text>
                     <Text size='xs' c='dimmed'>
-                      Wybrano: {stats.selected} z {stats.total}
+                      {t('bulkSMS.selectedOfTotal', { selected: stats.selected, total: stats.total })}
                     </Text>
                   </div>
                   <Group gap='sm'>
                     <Badge color={currentPalette.primary} variant='light'>
-                      Do wysłania: {stats.canSend}
+                      {t('bulkSMS.toSend', { count: stats.canSend })}
                     </Badge>
                     {stats.noPhone > 0 && (
                       <Badge color={utilityColors.error} variant='light'>
-                        Brak telefonu: {stats.noPhone}
+                        {t('bulkSMS.noPhone', { count: stats.noPhone })}
                       </Badge>
                     )}
                     {stats.alreadySent > 0 && (
                       <Badge color={utilityColors.success} variant='light'>
-                        Już wysłane: {stats.alreadySent}
+                        {t('bulkSMS.alreadySent', { count: stats.alreadySent })}
                       </Badge>
                     )}
                   </Group>
@@ -397,8 +399,8 @@ export function BulkSMSReminders({
 
               {/* Template selection */}
               <Select
-                label='Szablon wiadomości'
-                placeholder='Wybierz szablon'
+                label={t('smsReminder.templateLabel')}
+                placeholder={t('smsReminder.templatePlaceholder')}
                 value={selectedTemplateId}
                 onChange={value =>
                   setSelectedTemplateId(value || 'appointment_reminder')
@@ -416,7 +418,7 @@ export function BulkSMSReminders({
                     leftSection={<IconSelectAll size='0.8rem' />}
                     onClick={handleSelectAll}
                   >
-                    Zaznacz wszystkie
+                    {t('bulkSMS.selectAll')}
                   </Button>
                   <Button
                     size='xs'
@@ -424,11 +426,11 @@ export function BulkSMSReminders({
                     leftSection={<IconX size='0.8rem' />}
                     onClick={handleSelectNone}
                   >
-                    Odznacz wszystkie
+                    {t('bulkSMS.unselectAll')}
                   </Button>
                 </Group>
                 <Text size='sm' c='dimmed'>
-                  {stats.selected} zaznaczonych
+                  {t('bulkSMS.selectedCount', { count: stats.selected })}
                 </Text>
               </Group>
 
@@ -465,7 +467,7 @@ export function BulkSMSReminders({
                               
                               {/* Phone and date in separate lines */}
                               <Text size='xs' c={item.hasValidPhone ? 'dimmed' : 'red'} truncate>
-                                {item.patient.phone ? formatPhoneNumber(item.patient.phone) : 'Brak telefonu'}
+                                {item.patient.phone ? formatPhoneNumber(item.patient.phone) : t('smsReminder.noPhoneNumber')}
                               </Text>
                               <Text 
                                 size='sm' 
@@ -487,7 +489,7 @@ export function BulkSMSReminders({
                                 variant='light'
                                 size='xs'
                               >
-                                Wysłane
+                                {t('smsReminder.sent')}
                               </Badge>
                             ) : item.canSendReminder ? (
                               <Badge
@@ -503,7 +505,7 @@ export function BulkSMSReminders({
                                 variant='light'
                                 size='xs'
                               >
-                                Brak tel.
+                                {t('bulkSMS.noPhoneShort')}
                               </Badge>
                             ) : (
                               <Badge
@@ -511,19 +513,19 @@ export function BulkSMSReminders({
                                 variant='light'
                                 size='xs'
                               >
-                                Poza czasem
+                                {t('smsReminder.alertTitles.outsideTime')}
                               </Badge>
                             )}
 
                             {/* Preview button */}
-                            <Tooltip label='Podgląd wiadomości'>
+                            <Tooltip label={t('bulkSMS.messagePreview')}>
                               <ActionIcon
                                 size='xs'
                                 variant='subtle'
                                 onClick={(e) => {
                                   e.stopPropagation();
                                   notifications.show({
-                                    title: `Wiadomość dla ${item.patient.firstName} ${item.patient.lastName}`,
+                                    title: t('bulkSMS.messageForPatient', { firstName: item.patient.firstName, lastName: item.patient.lastName }),
                                     message: item.message,
                                     color: 'blue',
                                     autoClose: false,
@@ -550,9 +552,9 @@ export function BulkSMSReminders({
               <Card withBorder p='sm' mb='md'>
                 <Group justify='space-between' mb='xs'>
                   <Text size='sm' fw={500}>
-                    Wysyłanie przypomnieć...
+                    {t('bulkSMS.sendingReminders')}
                   </Text>
-                  <Text size='sm'>{Math.round(sendingProgress)}%</Text>
+                  <Text size='sm'>{t('bulkSMS.progressPercent', { percent: Math.round(sendingProgress) })}</Text>
                 </Group>
                 <Progress value={sendingProgress} animated />
               </Card>
@@ -562,7 +564,7 @@ export function BulkSMSReminders({
             <Divider mb='md' />
             <Group justify='space-between'>
               <Button variant='light' onClick={close} disabled={sending}>
-                Anuluj
+                {t('common.cancel')}
               </Button>
               <Button
                 leftSection={<IconSend size='1rem' />}
@@ -570,7 +572,7 @@ export function BulkSMSReminders({
                 disabled={stats.selected === 0 || sending}
                 loading={sending}
               >
-                Wyślij {stats.selected} przypomnieć
+                {t('bulkSMS.sendCountReminders', { count: stats.selected })}
               </Button>
             </Group>
           </div>

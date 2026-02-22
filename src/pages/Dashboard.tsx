@@ -1,6 +1,7 @@
 import { Container, Stack, Title, Text, ActionIcon, Tooltip } from '@mantine/core';
 import { IconPlus, IconDownload, IconNote, IconBell } from '@tabler/icons-react';
 import { useEffect, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { NextAppointmentCard } from '../components/dashboard/NextAppointmentCard';
 import { OverviewStats } from '../components/dashboard/OverviewStats';
@@ -17,21 +18,8 @@ import { useSettingsStore } from '../stores/useSettingsStore';
 import { AppointmentStatus } from '../types/Appointment';
 import type { AppointmentWithPatient } from '../types/Appointment';
 
-const WEEKDAY_NAMES = [
-  'NIEDZIELA',
-  'PONIEDZIAŁEK',
-  'WTOREK',
-  'ŚRODA',
-  'CZWARTEK',
-  'PIĄTEK',
-  'SOBOTA',
-];
-const MONTH_NAMES = [
-  'STY', 'LUT', 'MAR', 'KWI', 'MAJ', 'CZE',
-  'LIP', 'SIE', 'WRZ', 'PAŹ', 'LIS', 'GRU',
-];
-
 function Dashboard() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { patients, fetchPatients } = usePatientStore();
   const {
@@ -48,8 +36,10 @@ function Dashboard() {
   );
 
   const now = useMemo(() => new Date(), []);
-  const dateLabel = `${WEEKDAY_NAMES[now.getDay()]}, ${now.getDate()} ${MONTH_NAMES[now.getMonth()]}`;
-  const greeting = `Dzień dobry, ${practitionerTitle} ${practitionerName}`;
+  const weekdayKeys = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+  const monthKeys = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december'];
+  const dateLabel = `${t(`weekdays.${weekdayKeys[now.getDay()]}`).toUpperCase()}, ${now.getDate()} ${t(`months.${monthKeys[now.getMonth()]}`).toUpperCase()}`;
+  const greeting = `${t('dashboard.greeting')}, ${practitionerTitle} ${practitionerName}`;
 
   useHeader({
     title: (
@@ -63,7 +53,7 @@ function Dashboard() {
       </Stack>
     ),
     rightSlot: (
-      <Tooltip label="Powiadomienia">
+      <Tooltip label={t('dashboard.notifications')}>
         <ActionIcon
           size="lg"
           variant="subtle"
@@ -161,7 +151,7 @@ function Dashboard() {
                 textTransform: 'uppercase',
               }}
             >
-              Następna wizyta
+              {t('dashboard.nextAppointment')}
             </Title>
             <NextAppointmentCard
               appointment={nextAppointment as AppointmentWithPatient}
@@ -184,7 +174,7 @@ function Dashboard() {
               textTransform: 'uppercase',
             }}
           >
-            Szybkie akcje
+            {t('dashboard.quickActions')}
           </Title>
           <QuickActionsGrid />
         </Stack>
@@ -201,7 +191,7 @@ function Dashboard() {
               textTransform: 'uppercase',
             }}
           >
-            Przegląd
+            {t('dashboard.overview')}
           </Title>
           <OverviewStats
             totalPatients={stats.totalPatients}
@@ -222,19 +212,19 @@ function Dashboard() {
             {
               id: 'new-session',
               icon: <IconPlus size="1.5rem" />,
-              label: 'Dodaj sesję',
+              label: t('dashboard.actions.addSession'),
               onClick: () => navigate('/calendar'),
             },
             {
               id: 'export-excel',
               icon: <IconDownload size="1.5rem" />,
-              label: 'Eksport',
+              label: t('dashboard.actions.export'),
               onClick: handleExport,
             },
             {
               id: 'add-note',
               icon: <IconNote size="1.5rem" />,
-              label: 'Dodaj notatkę',
+              label: t('dashboard.actions.newNote'),
               onClick: () => navigate('/notes'),
               disabled: false,
             },

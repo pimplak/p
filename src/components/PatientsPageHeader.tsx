@@ -5,6 +5,7 @@ import {
   IconArchive,
   IconArchiveOff,
 } from '@tabler/icons-react';
+import { useTranslation } from 'react-i18next';
 import { useTheme } from '../hooks/useTheme';
 
 interface PatientsPageHeaderProps {
@@ -20,14 +21,15 @@ export function PatientsPageHeader({
   onExport,
   onAddPatient,
 }: PatientsPageHeaderProps) {
+  const { t } = useTranslation();
   const { mantineTheme } = useTheme();
 
   return (
     <Group justify='space-between' wrap='wrap'>
-      <Title order={1}>Pacjenci</Title>
+      <Title order={1}>{t('patients.title')}</Title>
       <Group gap={mantineTheme.spacing.sm} visibleFrom='md'>
         <Switch
-          label='Pokaż zarchiwizowanych'
+          label={t('patients.showArchived')}
           checked={showArchived}
           onChange={onToggleArchived}
           size={mantineTheme.other.defaultSizes.input}
@@ -48,14 +50,14 @@ export function PatientsPageHeader({
           size={mantineTheme.other.defaultSizes.button}
           onClick={onExport}
         >
-          Eksport
+          {t('dashboard.actions.export')}
         </Button>
         <Button
           leftSection={<IconPlus size={mantineTheme.other.iconSizes.sm} />}
           size={mantineTheme.other.defaultSizes.button}
           onClick={onAddPatient}
         >
-          Dodaj pacjenta
+          {t('patients.addPatient')}
         </Button>
       </Group>
     </Group>

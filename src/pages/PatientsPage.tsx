@@ -3,6 +3,7 @@ import { useDisclosure } from '@mantine/hooks';
 import { notifications } from '@mantine/notifications';
 import { IconUser, IconPlus, IconDownload } from '@tabler/icons-react';
 import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useDebounce } from 'use-debounce';
 import { ExportModal } from '../components/ExportModal';
@@ -24,6 +25,7 @@ import { usePatientStore } from '../stores/usePatientStore';
 import type { Patient } from '../types/Patient';
 
 function PatientsPage() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { utilityColors } = useTheme();
   const {
@@ -109,21 +111,21 @@ function PatientsPage() {
       try {
         await archivePatient(patientToArchive.id);
         notifications.show({
-          title: 'Sukces',
-          message: 'Pacjent został zarchiwizowany',
+          title: t('common.success'),
+          message: t('patients.notifications.patientArchived'),
           color: 'green',
         });
         setArchiveModalOpened(false);
         setPatientToArchive(null);
       } catch {
         notifications.show({
-          title: 'Błąd',
-          message: 'Nie udało się zarchiwizować pacjenta',
+          title: t('common.error'),
+          message: t('patients.notifications.errorArchiving'),
           color: 'red',
         });
       }
     },
-    [archivePatient, patientToArchive]
+    [archivePatient, patientToArchive, t]
   );
 
   const handleRestorePatient = useCallback(
@@ -131,19 +133,19 @@ function PatientsPage() {
       try {
         await restorePatient(id);
         notifications.show({
-          title: 'Sukces',
-          message: 'Pacjent został przywrócony',
+          title: t('common.success'),
+          message: t('patients.notifications.patientRestored'),
           color: 'green',
         });
       } catch {
         notifications.show({
-          title: 'Błąd',
-          message: 'Nie udało się przywrócić pacjenta',
+          title: t('common.error'),
+          message: t('patients.notifications.errorRestoring'),
           color: 'red',
         });
       }
     },
-    [restorePatient]
+    [restorePatient, t]
   );
 
   const handleFormSuccess = () => {
@@ -158,14 +160,14 @@ function PatientsPage() {
     {
       id: 'add-patient',
       icon: <IconPlus size='1.2rem' />,
-      label: 'Dodaj pacjenta',
+      label: t('patients.addPatient'),
       color: 'yellowGreen',
       onClick: handleAddPatient,
     },
     {
       id: 'export',
       icon: <IconDownload size='1.2rem' />,
-      label: 'Eksport',
+      label: t('dashboard.actions.export'),
       color: 'blue',
       onClick: handleExport,
     },
@@ -184,7 +186,7 @@ function PatientsPage() {
   if (error) {
     return (
       <Container fluid>
-        <Alert color={utilityColors.error} title='Błąd'>
+        <Alert color={utilityColors.error} title={t('common.error')}>
           {error}
         </Alert>
       </Container>
@@ -207,12 +209,12 @@ function PatientsPage() {
         />
 
         {filteredPatients.length === 0 ? (
-          <Alert icon={<IconUser size='1rem' />} title='Brak pacjentów'>
+          <Alert icon={<IconUser size='1rem' />} title={t('patients.noPatients')}>
             {debouncedSearchQuery
-              ? 'Nie znaleziono pacjentów pasujących do wyszukiwania.'
+              ? t('patients.noSearchResults')
               : showArchived
-                ? 'Nie masz żadnych zarchiwizowanych pacjentów.'
-                : 'Nie masz jeszcze żadnych aktywnych pacjentów. Dodaj pierwszego!'}
+                ? t('patients.noArchivedPatients')
+                : t('patients.noActivePatients')}
           </Alert>
         ) : (
           <>
@@ -239,7 +241,7 @@ function PatientsPage() {
       <BottomSheet
         opened={opened}
         onClose={close}
-        title={editingPatient ? 'Edytuj pacjenta' : 'Dodaj pacjenta'}
+        title={editingPatient ? t('patients.editPatient') : t('patients.addPatient')}
       >
         <PatientForm
           patient={editingPatient}

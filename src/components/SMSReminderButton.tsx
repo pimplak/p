@@ -26,6 +26,7 @@ import {
 import { format } from 'date-fns';
 import { pl } from 'date-fns/locale';
 import { useState, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAppointmentStore } from '../stores/useAppointmentStore';
 import { useSettingsStore } from '../stores/useSettingsStore';
 import {
@@ -58,6 +59,7 @@ export function SMSReminderButton({
   compact = false,
   onReminderSent,
 }: SMSReminderButtonProps) {
+  const { t } = useTranslation();
   const [opened, { open, close }] = useDisclosure(false);
   const [selectedTemplateId, setSelectedTemplateId] = useState<string>('');
   const [customMessage, setCustomMessage] = useState('');
@@ -90,7 +92,7 @@ export function SMSReminderButton({
       );
     } catch (error) {
       console.error('Error generating SMS message:', error);
-      return 'Błąd generowania wiadomości';
+      return t('smsReminder.messageGenerationError');
     }
   }, [
     currentTemplateId,
@@ -112,8 +114,8 @@ export function SMSReminderButton({
   const handleSendSMS = async () => {
     if (!hasValidPhone) {
       notifications.show({
-        title: 'Błąd',
-        message: 'Pacjent nie ma prawidłowego numeru telefonu',
+        title: t('common.error'),
+        message: t('smsReminder.invalidPhoneError'),
         color: 'red',
       });
       return;
@@ -136,8 +138,8 @@ export function SMSReminderButton({
       });
 
       notifications.show({
-        title: 'Przypomnienie wysłane',
-        message: `Otwarto aplikację SMS z wiadomością dla ${patient.firstName} ${patient.lastName}`,
+        title: t('smsReminder.reminderSent'),
+        message: t('smsReminder.sendSuccess', { firstName: patient.firstName, lastName: patient.lastName }),
         color: 'green',
       });
 
@@ -146,8 +148,8 @@ export function SMSReminderButton({
     } catch (error) {
       console.error('Error sending SMS reminder:', error);
       notifications.show({
-        title: 'Błąd',
-        message: 'Nie udało się wysłać przypomnienia',
+        title: t('common.error'),
+        message: t('smsReminder.sendError'),
         color: 'red',
       });
     }
@@ -170,10 +172,10 @@ export function SMSReminderButton({
           <Tooltip
             label={
               isDisabled
-                ? 'Brak numeru telefonu'
+                ? t('smsReminder.noPhoneNumber')
                 : reminderSent
-                  ? 'Przypomnienie już wysłane'
-                  : 'Wyślij przypomnienie SMS'
+                  ? t('smsReminder.alreadySent')
+                  : t('smsReminder.sendReminder')
             }
           >
             <ActionIcon
@@ -200,8 +202,8 @@ export function SMSReminderButton({
             onClick={open}
           >
             {reminderSent
-              ? 'Przypomnienie wysłane'
-              : 'Wyślij przypomnienie SMS'}
+              ? t('smsReminder.reminderSent')
+              : t('smsReminder.sendReminder')}
           </Menu.Item>
         );
 
@@ -226,11 +228,11 @@ export function SMSReminderButton({
           >
             {compact
               ? reminderSent
-                ? 'Wysłane'
-                : 'SMS'
+                ? t('smsReminder.sent')
+                : t('smsReminder.sms')
               : reminderSent
-                ? 'Przypomnienie wysłane'
-                : 'Wyślij przypomnienie SMS'}
+                ? t('smsReminder.reminderSent')
+                : t('smsReminder.sendReminder')}
           </Button>
         );
     }
@@ -243,7 +245,7 @@ export function SMSReminderButton({
       <BottomSheet
         opened={opened}
         onClose={close}
-        title='Wyślij przypomnienie SMS'
+        title={t('smsReminder.sendReminder')}
       >
         <Stack gap='md'>
           {/* Patient info */}
@@ -256,7 +258,7 @@ export function SMSReminderButton({
                 <Text size='sm' c='dimmed'>
                   {hasValidPhone
                     ? formatPhoneNumber(patient.phone!)
-                    : 'Brak numeru telefonu'}
+                    : t('smsReminder.noPhoneNumber')}
                 </Text>
               </div>
               <div style={{ textAlign: 'right' }}>
@@ -292,10 +294,10 @@ export function SMSReminderButton({
             }
             title={
               appointment.reminderSent
-                ? 'Przypomnienie już wysłane'
+                ? t('smsReminder.alertTitles.alreadySent')
                 : shouldSendReminder
-                  ? 'Zalecane wysłanie przypomnienia'
-                  : 'Poza optymalnym czasem'
+                  ? t('smsReminder.alertTitles.recommended')
+                  : t('smsReminder.alertTitles.outsideTime')
             }
           >
             <Text size='sm'>
@@ -307,8 +309,8 @@ export function SMSReminderButton({
 
           {/* Template selection */}
           <Select
-            label='Szablon wiadomości'
-            placeholder='Wybierz szablon'
+            label={t('smsReminder.templateLabel')}
+            placeholder={t('smsReminder.templatePlaceholder')}
             value={currentTemplateId}
             onChange={value => setSelectedTemplateId(value || '')}
             data={templateOptions}
@@ -319,7 +321,7 @@ export function SMSReminderButton({
           <div>
             <Group justify='space-between' mb='xs'>
               <Text size='sm' fw={500}>
-                {previewMode ? 'Podgląd wiadomości' : 'Edytuj wiadomość'}
+                {previewMode ? t('smsReminder.messagePreview') : t('smsReminder.editMessage')}
               </Text>
               <Button
                 size='xs'
@@ -327,7 +329,7 @@ export function SMSReminderButton({
                 leftSection={<IconEye size='0.8rem' />}
                 onClick={() => setPreviewMode(!previewMode)}
               >
-                {previewMode ? 'Edytuj' : 'Podgląd'}
+                {previewMode ? t('smsReminder.edit') : t('smsReminder.preview')}
               </Button>
             </Group>
 
@@ -341,7 +343,7 @@ export function SMSReminderButton({
               </Card>
             ) : (
               <Textarea
-                placeholder='Wpisz własną wiadomość lub zostaw puste aby użyć szablonu'
+                placeholder={t('smsReminder.customMessagePlaceholder')}
                 value={customMessage}
                 onChange={e => setCustomMessage(e.target.value)}
                 minRows={4}
@@ -351,21 +353,21 @@ export function SMSReminderButton({
             )}
 
             <Text size='xs' c='dimmed' mt='xs'>
-              Długość: {messagePreview.length} znaków
+              {t('smsReminder.characterCount', { length: messagePreview.length })}
             </Text>
           </div>
 
           {/* Actions */}
           <Group justify='space-between' mt='md'>
             <Button variant='subtle' onClick={close}>
-              Anuluj
+              {t('common.cancel')}
             </Button>
             <Button
               leftSection={<IconSend size='1rem' />}
               onClick={handleSendSMS}
               disabled={!hasValidPhone}
             >
-              Wyślij SMS
+              {t('smsReminder.sendSMS')}
             </Button>
           </Group>
         </Stack>

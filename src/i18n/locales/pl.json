@@ -1,0 +1,647 @@
+{
+  "common": {
+    "success": "Sukces!",
+    "error": "Błąd",
+    "info": "Informacja",
+    "cancel": "Anuluj",
+    "save": "Zapisz",
+    "delete": "Usuń",
+    "edit": "Edytuj",
+    "close": "Zamknij",
+    "back": "Wstecz",
+    "next": "Dalej",
+    "loading": "Ładowanie...",
+    "add": "Dodaj",
+    "update": "Aktualizuj",
+    "view": "Podgląd",
+    "search": "Szukaj",
+    "filter": "Filtruj",
+    "all": "Wszystkie",
+    "yes": "Tak",
+    "no": "Nie",
+    "confirm": "Potwierdź",
+    "actions": "Akcje"
+  },
+
+  "navigation": {
+    "dashboard": "Dashboard",
+    "patients": "Pacjenci",
+    "calendar": "Kalendarz",
+    "notes": "Notatki",
+    "analytics": "Statystyki",
+    "settings": "Ustawienia",
+    "logout": "Wyloguj",
+    "mainSection": "Główne",
+    "appSection": "Aplikacja",
+    "tagline": "Zarządzanie praktyką psychologiczną"
+  },
+
+  "weekdays": {
+    "sunday": "NIEDZIELA",
+    "monday": "PONIEDZIAŁEK",
+    "tuesday": "WTOREK",
+    "wednesday": "ŚRODA",
+    "thursday": "CZWARTEK",
+    "friday": "PIĄTEK",
+    "saturday": "SOBOTA",
+    "shortSunday": "Nie",
+    "shortMonday": "Pon",
+    "shortTuesday": "Wt",
+    "shortWednesday": "Śr",
+    "shortThursday": "Czw",
+    "shortFriday": "Pt",
+    "shortSaturday": "Sob"
+  },
+
+  "months": {
+    "january": "STY",
+    "february": "LUT",
+    "march": "MAR",
+    "april": "KWI",
+    "may": "MAJ",
+    "june": "CZE",
+    "july": "LIP",
+    "august": "SIE",
+    "september": "WRZ",
+    "october": "PAŹ",
+    "november": "LIS",
+    "december": "GRU"
+  },
+
+  "status": {
+    "patient": {
+      "active": "Aktywny",
+      "archived": "Zarchiwizowany"
+    },
+    "appointment": {
+      "scheduled": "Zaplanowana",
+      "completed": "Zakończona",
+      "cancelled": "Anulowana",
+      "no_show": "Nieobecność",
+      "rescheduled": "Przełożona"
+    },
+    "goal": {
+      "active": "Aktywny",
+      "completed": "Zakończony",
+      "paused": "Wstrzymany",
+      "cancelled": "Anulowany"
+    },
+    "payment": {
+      "paid": "Opłacono",
+      "unpaid": "Nieopłacono",
+      "requiresPayment": "Płatna",
+      "free": "Bezpłatne"
+    }
+  },
+
+  "dashboard": {
+    "title": "Dashboard",
+    "greeting": "Dzień dobry",
+    "notifications": "Powiadomienia",
+    "nextAppointment": "Następna wizyta",
+    "quickActions": "Szybkie akcje",
+    "overview": "Przegląd",
+    "practiceOverview": "Przegląd praktyki",
+    "todaysPlan": "Plan na dziś",
+    "noAppointmentsToday": "Brak wizyt na dziś.",
+    "seeAll": "Zobacz wszystko",
+    "stats": {
+      "totalPatients": "Pacjenci łącznie",
+      "activePatients": "Aktywni pacjenci",
+      "totalInSystem": "Łącznie w systemie",
+      "weeklyRevenue": "Przychód w tym tygodniu",
+      "sessionsThisWeek": "Sesje w tym tygodniu",
+      "scheduledMeetings": "Zaplanowane spotkania",
+      "pendingHours": "Oczekujące godziny",
+      "todaysAppointments": "Dzisiejsze wizyty",
+      "scheduledForToday": "Zaplanowane na dziś",
+      "nextSession": "Najbliższa sesja",
+      "noScheduledAppointments": "Brak zaplanowanych wizyt",
+      "review": "Przejrzyj"
+    },
+    "appointmentStatus": {
+      "done": "Zrobione",
+      "now": "Teraz",
+      "pending": "Oczekuje"
+    },
+    "actions": {
+      "addPatient": "Dodaj pacjenta",
+      "sendReminders": "Wyślij przypomnienia",
+      "reports": "Raporty",
+      "newNote": "Nowa notatka",
+      "addSession": "Dodaj sesję",
+      "export": "Eksport"
+    }
+  },
+
+  "patients": {
+    "title": "Pacjenci",
+    "addPatient": "Dodaj pacjenta",
+    "editPatient": "Edytuj pacjenta",
+    "viewPatient": "Podgląd pacjenta",
+    "archivePatient": "Archiwizuj pacjenta",
+    "restorePatient": "Przywróć pacjenta",
+    "noPatients": "Brak pacjentów",
+    "noActivePatients": "Nie masz jeszcze żadnych aktywnych pacjentów. Dodaj pierwszego!",
+    "noArchivedPatients": "Nie masz żadnych zarchiwizowanych pacjentów.",
+    "noSearchResults": "Nie znaleziono pacjentów pasujących do wyszukiwania.",
+    "searchPlaceholder": "Szukaj pacjenta...",
+    "showArchived": "Pokaż archiwum",
+    "hideArchived": "Ukryj archiwum",
+    "notifications": {
+      "patientAdded": "Pacjent został dodany",
+      "patientUpdated": "Dane pacjenta zostały zaktualizowane",
+      "patientArchived": "Pacjent został zarchiwizowany",
+      "patientRestored": "Pacjent został przywrócony",
+      "errorSaving": "Nie udało się zapisać danych pacjenta",
+      "errorArchiving": "Nie udało się zarchiwizować pacjenta",
+      "errorRestoring": "Nie udało się przywrócić pacjenta",
+      "patientNotFound": "Nie znaleziono pacjenta",
+      "errorLoadingPatient": "Nie udało się załadować danych pacjenta",
+      "editPatientData": "Edytuj dane pacjenta"
+    }
+  },
+
+  "patientForm": {
+    "title": "Dane pacjenta",
+    "firstName": "Imię",
+    "lastName": "Nazwisko",
+    "displayName": "Nazwa wyświetlana (opcjonalnie)",
+    "displayNamePlaceholder": "Jeśli nie podano, będzie używane imię i nazwisko",
+    "email": "Email",
+    "emailPlaceholder": "email@example.com",
+    "phone": "Telefon",
+    "phonePlaceholder": "+48 123 456 789",
+    "birthDate": "Data urodzenia",
+    "age": "Wiek",
+    "ageYears": "lat",
+    "address": "Adres",
+    "addressPlaceholder": "Ulica, miasto, kod pocztowy",
+    "emergencyContact": "Kontakt awaryjny",
+    "emergencyContactPlaceholder": "Imię i nazwisko",
+    "emergencyPhone": "Telefon awaryjny",
+    "status": "Status",
+    "statusPlaceholder": "Wybierz status",
+    "tags": "Tagi",
+    "tagsPlaceholder": "Dodaj tagi (np. terapia par, CBT)",
+    "firstNamePlaceholder": "Wprowadź imię",
+    "lastNamePlaceholder": "Wprowadź nazwisko",
+    "selectDate": "Wybierz datę"
+  },
+
+  "calendar": {
+    "title": "Kalendarz",
+    "addAppointment": "Dodaj wizytę",
+    "editAppointment": "Edytuj wizytę",
+    "deleteAppointment": "Usuń wizytę",
+    "rescheduleAppointment": "Przełóż wizytę",
+    "confirmDelete": "Czy na pewno chcesz usunąć tę wizytę?",
+    "noAppointments": "Brak wizyt",
+    "noAppointmentsForDay": "Brak wizyt na ten dzień.",
+    "views": {
+      "day": "Dzień",
+      "week": "Tydzień",
+      "month": "Miesiąc"
+    },
+    "today": "Dzisiaj",
+    "jumpToDate": "Przejdź do daty",
+    "hideWeekends": "Ukryj weekendy",
+    "showWeekends": "Pokaż weekendy",
+    "filters": {
+      "all": "Wszystkie",
+      "scheduled": "Zaplanowane",
+      "completed": "Zakończone",
+      "cancelled": "Anulowane",
+      "noShow": "Nieobecności",
+      "rescheduled": "Przełożone"
+    },
+    "table": {
+      "time": "Godzina",
+      "patient": "Pacjent",
+      "type": "Typ",
+      "duration": "Czas trwania",
+      "price": "Cena",
+      "payment": "Płatność",
+      "status": "Status",
+      "actions": "Akcje"
+    },
+    "reschedule": {
+      "title": "Przełóż wizytę",
+      "selectNewDate": "Wybierz nową datę i godzinę dla wizyty pacjenta:",
+      "confirmReschedule": "Potwierdź przełożenie",
+      "toNew": "Do nowej",
+      "fromPrevious": "Z poprzedniej"
+    },
+    "cancellation": {
+      "cancelledOn": "Odwołano:",
+      "requiresPayment": "Płatna:",
+      "reason": "Powód"
+    },
+    "appointmentRow": {
+      "defaultType": "Wizyta",
+      "history": "Historia",
+      "goToNewAppointment": "Idź do nowej wizyty",
+      "showPreviousAppointment": "Pokaż poprzednią wizytę",
+      "phone": "Telefon:",
+      "cancelledAppointment": "Odwołana wizyta",
+      "requiresPayment": "Wymaga płatności:",
+      "yes": "TAK",
+      "no": "NIE",
+      "reason": "Powód:",
+      "appointmentType": "Typ wizyty:",
+      "duration": "Czas trwania:",
+      "price": "Cena:",
+      "payment": "Płatność:",
+      "paid": "Opłacono",
+      "unpaid": "Nieopłacono",
+      "notes": "Notatki:",
+      "reschedule": "Przełóż"
+    },
+    "patientProfile": {
+      "tabs": {
+        "overview": "Przegląd",
+        "appointments": "Wizyty",
+        "notes": "Notatki"
+      },
+      "overview": {
+        "address": "Adres",
+        "noAdditionalInfo": "Brak dodatkowych informacji o pacjencie.",
+        "created": "Utworzono:",
+        "lastUpdate": "Ostatnia aktualizacja:"
+      },
+      "appointments": {
+        "title": "Wizyty ({{count}})",
+        "selectedCount": "{{count}} zaznaczonych",
+        "filterByDate": "Filtruj po dacie",
+        "selectAll": "Zaznacz wszystkie",
+        "clearSelection": "Wyczyść zaznaczenie",
+        "exportSelected": "Eksportuj zaznaczone",
+        "addAppointment": "Dodaj wizytę",
+        "noAppointmentsOnDay": "Brak wizyt w wybranym dniu.",
+        "noAppointmentsForPatient": "Brak wizyt dla tego pacjenta.",
+        "duration": "Czas trwania:",
+        "type": "Typ:",
+        "appointmentTypes": {
+          "therapy": "Terapia",
+          "initial": "Wizyta początkowa",
+          "follow_up": "Wizyta kontrolna",
+          "consultation": "Konsultacja",
+          "assessment": "Ocena"
+        },
+        "notes": "Notatki:"
+      },
+        "notes": {
+          "title": "Notatki ({{count}})",
+          "addNote": "Dodaj notatkę",
+          "addSessionNote": "Dodaj notatkę sesyjną"
+        }
+    }
+  },
+
+  "appointmentForm": {
+    "title": "Szczegóły wizyty",
+    "patient": "Pacjent",
+    "patientPlaceholder": "Wybierz pacjenta",
+    "patientRequired": "Wybierz pacjenta",
+    "date": "Data",
+    "datePlaceholder": "Wybierz datę",
+    "dateRequired": "Wybierz datę i godzinę",
+    "time": "Godzina",
+    "timePlaceholder": "Wybierz godzinę",
+    "duration": "Czas trwania (minuty)",
+    "durationPlaceholder": "50",
+    "durationMin": "Czas trwania musi być co najmniej 15 minut",
+    "type": "Typ wizyty",
+    "appointmentType": "Wizyta",
+    "status": "Status",
+    "notes": "Notatki",
+    "notesPlaceholder": "Dodatkowe informacje o wizycie...",
+    "payment": "Płatność",
+    "price": "Cena (zł)",
+    "priceNegative": "Cena nie może być ujemna",
+    "paid": "Opłacono",
+    "paymentDate": "Data płatności",
+    "paymentDatePlaceholder": "Kiedy opłacono?",
+    "paymentMethod": "Sposób płatności",
+    "paymentMethods": {
+      "cash": "Gotówka",
+      "card": "Karta",
+      "transfer": "Przelew",
+      "other": "Inne"
+    },
+    "paymentNotes": "Notatki do płatności",
+    "paymentNotesPlaceholder": "Dodatkowe informacje o płatności...",
+    "cancellation": {
+      "title": "Szczegóły odwołania",
+      "date": "Data odwołania",
+      "datePlaceholder": "Kiedy odwołano?",
+      "type": "Typ odwołania",
+      "reason": "Powód odwołania",
+      "reasonPlaceholder": "Dlaczego wizyta została odwołana?"
+    },
+    "reschedule": {
+      "title": "Nowy termin wizyty",
+      "newDate": "Data nowej wizyty",
+      "selectNewDate": "Wybierz nową datę i godzinę",
+      "rescheduledFrom": "Ta wizyta została przełożona z dnia:",
+      "rescheduledTo": "Ta wizyta została przełożona na dzień:"
+    },
+    "notifications": {
+      "appointmentAdded": "Wizyta została dodana",
+      "appointmentUpdated": "Wizyta została zaktualizowana",
+      "appointmentRescheduled": "Wizyta została przełożona i utworzono nową",
+      "errorSaving": "Nie udało się zapisać wizyty"
+    }
+  },
+
+  "notes": {
+    "title": "Notatki",
+    "subtitle": "System notatek terapeutycznych",
+    "addNote": "Dodaj notatkę",
+    "editNote": "Edytuj notatkę",
+    "deleteNote": "Usuń notatkę",
+    "deleteConfirm": "Czy na pewno chcesz usunąć tę notatkę?",
+    "noNotes": "Brak notatek",
+    "noPersonalNotes": "Nie masz jeszcze żadnych notatek osobistych.",
+    "selectPatient": "Wybierz pacjenta, aby zobaczyć jego notatki.",
+    "viewModes": {
+      "personal": "Moje notatki",
+      "patient": "Pacjenci"
+    },
+    "selectPatientPlaceholder": "Wybierz pacjenta...",
+    "types": {
+      "general": "Ogólna",
+      "soap": "SOAP",
+      "assessment": "Ocena"
+    },
+    "typeLabels": {
+      "soap": "SOAP",
+      "assessment": "Ocena",
+      "general": "Notatka"
+    },
+    "pinned": "Przypnij notatkę",
+    "pinnedDescription": "Przypięte notatki są widoczne w przeglądzie pacjenta",
+    "notifications": {
+      "noteAdded": "Notatka została dodana",
+      "noteUpdated": "Notatka została zaktualizowana",
+      "errorSaving": "Nie udało się zapisać notatki"
+    }
+  },
+
+  "noteForm": {
+    "title": "Szczegóły notatki",
+    "type": "Typ notatki",
+    "noteTitle": "Tytuł (opcjonalnie)",
+    "noteTitlePlaceholder": "Krótki tytuł notatki...",
+    "relatedAppointment": "Powiązana wizyta",
+    "relatedAppointmentPlaceholder": "Wybierz wizytę...",
+    "noAppointment": "Brak (notatka ogólna)",
+    "content": "Treść",
+    "contentPlaceholder": "Treść notatki...",
+    "contentRequired": "Treść jest wymagana",
+    "assessmentPlaceholder": "Ocena pacjenta...",
+    "soap": {
+      "subjective": "Subiektywne (S)",
+      "subjectivePlaceholder": "Co pacjent zgłasza...",
+      "objective": "Obiektywne (O)",
+      "objectivePlaceholder": "Obserwacje kliniczne...",
+      "assessment": "Ocena (A)",
+      "assessmentPlaceholder": "Ocena kliniczna...",
+      "plan": "Plan (P)",
+      "planPlaceholder": "Plan dalszego postępowania...",
+      "atLeastOne": "Wypełnij przynajmniej jedno pole SOAP"
+    }
+  },
+
+  "analytics": {
+    "title": "Statystyki",
+    "subtitle": "Analiza i raporty praktyki terapeutycznej",
+    "comingSoon": "Więcej funkcji będzie dostępnych soon",
+    "comingSoonDescription": "Przygotowujemy zaawansowane narzędzia analityczne do śledzenia postępów praktyki i efektywności terapii.",
+    "inDevelopment": "W przygotowaniu",
+    "plannedFeatures": {
+      "title": "Planowane funkcje:",
+      "patientProgress": "Wykresy postępów pacjentów",
+      "revenueAnalysis": "Analiza przychodów i płatności",
+      "timeUsage": "Raport wykorzystania czasu",
+      "therapyEffectiveness": "Statystyki skuteczności terapii",
+      "compliance": "Raporty compliance i frekwencji",
+      "exportReports": "Eksport raportów do PDF/Excel"
+    },
+    "currentFeatures": {
+      "title": "Dostępne już teraz:",
+      "dashboardStats": "Podstawowe statystyki praktyki znajdziesz na Dashboard",
+      "smsAnalysis": "Analiza SMS dostępna powyżej w tej sekcji"
+    }
+  },
+
+  "settings": {
+    "title": "Ustawienia",
+    "subtitle": "Konfiguruj aplikację według swoich potrzeb",
+
+    "appearance": {
+      "title": "Wygląd i interfejs"
+    },
+
+    "language": {
+      "title": "Język",
+      "label": "Wybierz język",
+      "description": "Wybierz język interfejsu aplikacji",
+      "polish": "Polski",
+      "english": "English"
+    },
+
+    "sms": {
+      "title": "Przypomnienia SMS",
+      "practiceName": {
+        "label": "Nazwa gabinetu",
+        "placeholder": "Gabinet Psychologiczny",
+        "description": "Nazwa wyświetlana w wiadomościach SMS"
+      },
+      "practitionerTitle": {
+        "label": "Tytuł zawodowy",
+        "placeholder": "Wybierz tytuł",
+        "description": "Tytuł używany w wiadomościach SMS"
+      },
+      "templates": {
+        "title": "Szablony wiadomości SMS"
+      }
+    },
+
+    "appointments": {
+      "title": "Ustawienia wizyt",
+      "duration": {
+        "label": "Domyślny czas trwania wizyty (minuty)",
+        "placeholder": "60",
+        "description": "Domyślny czas trwania nowej wizyty"
+      },
+      "hours": {
+        "label": "Predefiniowane godziny wizyt",
+        "placeholder": "Dodaj godzinę (np. 14:15)",
+        "description": "Te godziny będą dostępne w dropdownie podczas dodawania nowej wizyty",
+        "hint": "Wpisz godzinę w formacie HH:mm i naciśnij Enter, aby dodać."
+      }
+    },
+
+    "data": {
+      "title": "Aplikacja i dane",
+      "demo": {
+        "title": "Dodaj dane demonstracyjne",
+        "description": "Dodaj przykładowych pacjentów do testowania aplikacji",
+        "button": "Dodaj demo",
+        "success": "Dodano przykładowych pacjentów i wizyty",
+        "exists": "Dane już istnieją w bazie",
+        "error": "Wystąpił błąd podczas dodawania danych"
+      },
+      "export": {
+        "title": "Eksport danych",
+        "description": "Pobierz kopię zapasową wszystkich danych",
+        "button": "Eksportuj"
+      },
+      "clear": {
+        "title": "Usuń wszystkie dane",
+        "description": "Trwale usuń wszystkich pacjentów i wizyty",
+        "button": "Wyczyść dane",
+        "success": "Wszystkie dane zostały usunięte",
+        "error": "Wystąpił błąd podczas usuwania danych"
+      }
+    },
+
+    "privacy": {
+      "title": "Prywatność i bezpieczeństwo",
+      "localStorage": {
+        "title": "Lokalny storage:",
+        "description": "Wszystkie dane są przechowywane lokalnie na twoim urządzeniu."
+      },
+      "offline": {
+        "title": "Offline-first:",
+        "description": "Aplikacja działa bez połączenia z internetem."
+      },
+      "hipaa": {
+        "title": "HIPAA-compliant:",
+        "description": "Zbudowana z myślą o ochronie danych medycznych."
+      }
+    },
+
+    "about": {
+      "title": "O aplikacji",
+      "version": "Wersja aplikacji",
+      "lastUpdate": "Ostatnia aktualizacja",
+      "description": "P - Progressive Web App dla psychologów",
+      "tagline": "Zbudowane z ❤️ dla społeczności terapeutycznej"
+    }
+  },
+
+  "smsReminder": {
+    "sendReminder": "Wyślij przypomnienie SMS",
+    "reminderSent": "Przypomnienie wysłane",
+    "alreadySent": "Przypomnienie już wysłane",
+    "noPhoneNumber": "Brak numeru telefonu",
+    "invalidPhoneError": "Pacjent nie ma prawidłowego numeru telefonu",
+    "sendSuccess": "Otwarto aplikację SMS z wiadomością dla {{firstName}} {{lastName}}",
+    "sendError": "Nie udało się wysłać przypomnienia",
+    "messageGenerationError": "Błąd generowania wiadomości",
+    "templateLabel": "Szablon wiadomości",
+    "templatePlaceholder": "Wybierz szablon",
+    "messagePreview": "Podgląd wiadomości",
+    "editMessage": "Edytuj wiadomość",
+    "edit": "Edytuj",
+    "preview": "Podgląd",
+    "customMessagePlaceholder": "Wpisz własną wiadomość lub zostaw puste aby użyć szablonu",
+    "characterCount": "Długość: {{length}} znaków",
+    "sendSMS": "Wyślij SMS",
+    "sent": "Wysłane",
+    "sms": "SMS",
+    "alertTitles": {
+      "alreadySent": "Przypomnienie już wysłane",
+      "recommended": "Zalecane wysłanie przypomnienia",
+      "outsideTime": "Poza optymalnym czasem"
+    }
+  },
+
+  "bulkSMS": {
+    "sendReminders": "Wyślij przypomnienia SMS",
+    "noSelectedReminders": "Brak wybranych przypomnieć",
+    "selectAtLeastOne": "Wybierz co najmniej jedno przypomnienie do wysłania",
+    "remindersSent": "Przypomnienia wysłane",
+    "sentCount": "Wysłano {{count}} przypomnien{{count === 1 ? 'ie' : 'ia'}}{{errorCount > 0 ? ', {{errorCount}} błęd{{errorCount === 1 ? '' : 'ów'}}' : ''}}",
+    "sendError": "Błąd wysyłania",
+    "noRemindersSent": "Nie udało się wysłać żadnego przypomnienia",
+    "noRemindersToSend": "Brak przypomnieć do wysłania",
+    "sendCountReminders": "Wyślij {{count}} przypomnien{{count === 1 ? 'ie' : 'ia'}}",
+    "statistics": "Statystyki",
+    "selectedOfTotal": "Wybrano: {{selected}} z {{total}}",
+    "toSend": "Do wysłania: {{count}}",
+    "noPhone": "Brak telefonu: {{count}}",
+    "alreadySent": "Już wysłane: {{count}}",
+    "selectAll": "Zaznacz wszystkie",
+    "unselectAll": "Odznacz wszystkie",
+    "selectedCount": "{{count}} zaznaczonych",
+    "noPhoneShort": "Brak tel.",
+    "history": "Historia",
+    "messagePreview": "Podgląd wiadomości",
+    "messageForPatient": "Wiadomość dla {{firstName}} {{lastName}}",
+    "sendingReminders": "Wysyłanie przypomnieć...",
+    "progressPercent": "{{percent}}%"
+  },
+
+  "patientQuickInfo": {
+    "contact": "Kontakt",
+    "noContactInfo": "Brak danych kontaktowych",
+    "personalInfo": "Informacje osobiste",
+    "age": "Wiek",
+    "noData": "Brak danych",
+    "dateOfBirth": "Data urodzenia",
+    "address": "Adres",
+    "emergencyContact": "Kontakt awaryjny",
+    "person": "Osoba",
+    "phone": "Telefon"
+  },
+
+  "appointmentTypes": {
+    "title": "Typy wizyt",
+    "addType": "Dodaj typ wizyty",
+    "description": "Te typy będą dostępne w dropdownie podczas dodawania nowej wizyty",
+    "hint": "Wpisz nazwę typu wizyty i naciśnij Enter, aby dodać."
+  },
+
+  "export": {
+    "title": "Eksport danych",
+    "selectRange": "Wybierz zakres dat",
+    "selectPatient": "Wybierz pacjenta",
+    "allPatients": "Wszyscy pacjenci",
+    "exportButton": "Eksportuj do Excel",
+    "success": "Dane zostały wyeksportowane",
+    "error": "Błąd podczas eksportowania danych",
+    "progress": {
+      "exportInProgress": "Eksport w toku...",
+      "processingPatients": "Przetwarzanie danych pacjentów ({{progress}}%)",
+      "processingAppointments": "Przetwarzanie wizyt ({{progress}}%)",
+      "generatingFile": "Generowanie pliku...",
+      "completed": "Eksport zakończony!",
+      "fileDownloaded": "Plik {{filename}} został pobrany",
+      "exportError": "Błąd eksportu",
+      "exportFailed": "Nie udało się wyeksportować danych"
+    }
+  },
+
+  "errors": {
+    "generic": "Wystąpił błąd",
+    "notFound": "Nie znaleziono",
+    "unauthorized": "Brak autoryzacji",
+    "networkError": "Błąd połączenia",
+    "validationError": "Błąd walidacji",
+    "required": "To pole jest wymagane",
+    "invalidEmail": "Nieprawidłowy adres email",
+    "invalidPhone": "Nieprawidłowy numer telefonu",
+    "invalidDate": "Nieprawidłowa data"
+  },
+
+  "confirmations": {
+    "delete": "Czy na pewno chcesz usunąć?",
+    "archive": "Czy na pewno chcesz zarchiwizować?",
+    "restore": "Czy na pewno chcesz przywrócić?",
+    "cancel": "Czy na pewno chcesz anulować?",
+    "unsavedChanges": "Masz niezapisane zmiany. Czy na pewno chcesz opuścić stronę?"
+  }
+}

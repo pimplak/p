@@ -54,6 +54,7 @@ import {
 import { pl } from 'date-fns/locale';
 import dayjs from 'dayjs';
 import { useState, useEffect, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { AppointmentForm } from '../components/AppointmentForm';
 import { BulkSMSReminders } from '../components/BulkSMSReminders';
 import {
@@ -74,6 +75,7 @@ import type { ColorPalette } from '../types/theme';
 type CalendarView = 'day' | 'week' | 'month';
 
 function Calendar() {
+  const { t } = useTranslation();
   const [opened, { open, close }] = useDisclosure(false);
   const [editingAppointment, setEditingAppointment] =
     useState<Appointment | null>(null);
@@ -126,7 +128,7 @@ function Calendar() {
   };
 
   const handleDeleteAppointment = async (id: number) => {
-    if (window.confirm('Czy na pewno chcesz usunąć tę wizytę?')) {
+    if (window.confirm(t('calendar.confirmDelete'))) {
       await deleteAppointment(id);
     }
   };
@@ -301,15 +303,15 @@ function Calendar() {
   const getStatusLabel = (status: string) => {
     switch (status) {
       case 'scheduled':
-        return 'Zaplanowana';
+        return t('status.appointment.scheduled');
       case 'completed':
-        return 'Zakończona';
+        return t('status.appointment.completed');
       case 'cancelled':
-        return 'Anulowana';
+        return t('status.appointment.cancelled');
       case 'no_show':
-        return 'Nieobecność';
+        return t('status.appointment.no_show');
       case 'rescheduled':
-        return 'Przełożona';
+        return t('status.appointment.rescheduled');
       default:
         return status;
     }
@@ -320,7 +322,7 @@ function Calendar() {
     {
       id: 'add-appointment',
       icon: <IconPlus size='1.2rem' />,
-      label: 'Dodaj wizytę',
+      label: t('calendar.addAppointment'),
       onClick: () => handleAddAppointment(),
     },
   ];
@@ -329,7 +331,7 @@ function Calendar() {
     <Stack>
       {/* Header */}
       <Group justify='space-between'>
-        <Title order={1}>Kalendarz</Title>
+        <Title order={1}>{t('calendar.title')}</Title>
         <Group gap='sm'>
           <BulkSMSReminders
             size='sm'
@@ -343,13 +345,13 @@ function Calendar() {
             onClick={() => handleAddAppointment()}
             visibleFrom='md'
           >
-            Dodaj wizytę
+            {t('calendar.addAppointment')}
           </Button>
         </Group>
       </Group>
 
       {error && (
-        <Alert color={utilityColors.error} title='Błąd'>
+        <Alert color={utilityColors.error} title={t('common.error')}>
           {error}
         </Alert>
       )}
@@ -364,9 +366,9 @@ function Calendar() {
             transitionDuration={300}
             onChange={value => setView(value as CalendarView)}
             data={[
-              { label: 'Dzień', value: 'day' },
-              { label: 'Tydzień', value: 'week' },
-              { label: 'Miesiąc', value: 'month' },
+              { label: t('calendar.views.day'), value: 'day' },
+              { label: t('calendar.views.week'), value: 'week' },
+              { label: t('calendar.views.month'), value: 'month' },
             ]}
           />
 
@@ -377,7 +379,7 @@ function Calendar() {
             </ActionIcon>
 
             <Button variant='light' onClick={handleToday} size='sm'>
-              Dzisiaj
+              {t('calendar.today')}
             </Button>
 
             <ActionIcon variant='light' onClick={handleNext} size='lg'>
@@ -394,7 +396,7 @@ function Calendar() {
 
           <Group gap='sm' wrap='wrap'>
             <DateInput
-              placeholder='Przejdź do daty'
+              placeholder={t('calendar.jumpToDate')}
               value={selectedDate}
               onChange={value => {
                 if (value) {
@@ -407,16 +409,16 @@ function Calendar() {
               w={{ base: 150, sm: 180 }}
             />
             <Select
-              placeholder='Status'
+              placeholder={t('status.appointment.scheduled')}
               value={statusFilter}
               onChange={value => setStatusFilter(value || 'all')}
               data={[
-                { value: 'all', label: 'Wszystkie' },
-                { value: 'scheduled', label: 'Zaplanowane' },
-                { value: 'completed', label: 'Zakończone' },
-                { value: 'cancelled', label: 'Anulowane' },
-                { value: 'no_show', label: 'Nieobecności' },
-                { value: 'rescheduled', label: 'Przełożone' },
+                { value: 'all', label: t('calendar.filters.all') },
+                { value: 'scheduled', label: t('calendar.filters.scheduled') },
+                { value: 'completed', label: t('calendar.filters.completed') },
+                { value: 'cancelled', label: t('calendar.filters.cancelled') },
+                { value: 'no_show', label: t('calendar.filters.noShow') },
+                { value: 'rescheduled', label: t('calendar.filters.rescheduled') },
               ]}
               size='sm'
               w={{ base: 120, sm: 140 }}
@@ -429,7 +431,7 @@ function Calendar() {
                 color={currentPalette.primary}
                 size='sm'
                 onClick={toggleHideWeekends}
-                title={hideWeekends ? 'Pokaż weekendy' : 'Ukryj weekendy'}
+                title={hideWeekends ? t('calendar.showWeekends') : t('calendar.hideWeekends')}
               >
                 {hideWeekends ? (
                   <IconEyeOff size='1rem' />
@@ -499,7 +501,7 @@ function Calendar() {
       <BottomSheet
         opened={opened}
         onClose={close}
-        title={editingAppointment ? 'Edytuj wizytę' : 'Dodaj wizytę'}
+        title={editingAppointment ? t('calendar.editAppointment') : t('calendar.addAppointment')}
       >
         <AppointmentForm
           appointment={editingAppointment}
@@ -512,11 +514,11 @@ function Calendar() {
       <BottomSheet
         opened={rescheduleOpened}
         onClose={closeReschedule}
-        title='Przełóż wizytę'
+        title={t('calendar.reschedule.title')}
       >
         <Stack p='md'>
           <Text size='sm'>
-            Wybierz nową datę i godzinę dla wizyty pacjenta:{' '}
+            {t('calendar.reschedule.selectNewDate')}{' '}
             <Text span fw={600}>
               {appointmentToReschedule?.patient?.firstName}{' '}
               {appointmentToReschedule?.patient?.lastName}
@@ -524,15 +526,15 @@ function Calendar() {
           </Text>
           <Group grow>
             <DatePickerInput
-              label='Data'
-              placeholder='Wybierz datę'
+              label={t('appointmentForm.date')}
+              placeholder={t('appointmentForm.datePlaceholder')}
               required
               value={toDate(newRescheduleDate || undefined)}
               onChange={handleRescheduleDateChange}
             />
             <Select
-              label='Godzina'
-              placeholder='Wybierz godzinę'
+              label={t('appointmentForm.time')}
+              placeholder={t('appointmentForm.timePlaceholder')}
               required
               data={appointmentHours}
               value={dayjs(newRescheduleDate).format('HH:mm')}
@@ -541,14 +543,14 @@ function Calendar() {
           </Group>
           <Group justify='flex-end' mt='md'>
             <Button variant='subtle' onClick={closeReschedule}>
-              Anuluj
+              {t('common.cancel')}
             </Button>
             <Button
               onClick={handleConfirmReschedule}
               disabled={!newRescheduleDate}
               leftSection={<IconCalendarShare size='1rem' />}
             >
-              Potwierdź przełożenie
+              {t('calendar.reschedule.confirmReschedule')}
             </Button>
           </Group>
         </Stack>
@@ -594,6 +596,7 @@ function DayView({
   utilityColors,
   currentPalette,
 }: CalendarViewProps) {
+  const { t } = useTranslation();
   const isMobile = useMediaQuery('(max-width: 768px)');
   const appointmentTypes = useSettingsStore(state => state.appointmentTypes);
 
@@ -603,15 +606,15 @@ function DayView({
 
   if (dayAppointments.length === 0) {
     return (
-      <Alert icon={<IconCalendarEvent size='1rem' />} title='Brak wizyt'>
-        Brak wizyt na ten dzień.
+      <Alert icon={<IconCalendarEvent size='1rem' />} title={t('calendar.noAppointments')}>
+        {t('calendar.noAppointmentsForDay')}
         <Button
           variant='light'
           size='sm'
           mt='sm'
           onClick={() => onAddAppointment(date)}
         >
-          Dodaj wizytę
+          {t('calendar.addAppointment')}
         </Button>
       </Alert>
     );
@@ -648,14 +651,14 @@ function DayView({
       <Table>
         <Table.Thead>
           <Table.Tr>
-            <Table.Th>Godzina</Table.Th>
-            <Table.Th>Pacjent</Table.Th>
-            <Table.Th>Typ</Table.Th>
-            <Table.Th>Czas trwania</Table.Th>
-            <Table.Th>Cena</Table.Th>
-            <Table.Th>Płatność</Table.Th>
-            <Table.Th>Status</Table.Th>
-            <Table.Th>Akcje</Table.Th>
+            <Table.Th>{t('calendar.table.time')}</Table.Th>
+            <Table.Th>{t('calendar.table.patient')}</Table.Th>
+            <Table.Th>{t('calendar.table.type')}</Table.Th>
+            <Table.Th>{t('calendar.table.duration')}</Table.Th>
+            <Table.Th>{t('calendar.table.price')}</Table.Th>
+            <Table.Th>{t('calendar.table.payment')}</Table.Th>
+            <Table.Th>{t('calendar.table.status')}</Table.Th>
+            <Table.Th>{t('calendar.table.actions')}</Table.Th>
           </Table.Tr>
         </Table.Thead>
         <Table.Tbody>
@@ -673,7 +676,7 @@ function DayView({
                   </Text>
                   {isCancelled && appointment.cancelledAt && (
                     <Text size='xs' c='dimmed'>
-                      Odwołano: {format(new Date(appointment.cancelledAt), 'dd.MM')}
+                      {t('calendar.cancellation.cancelledOn')} {format(new Date(appointment.cancelledAt), 'dd.MM')}
                     </Text>
                   )}
                 </Table.Td>
@@ -695,7 +698,7 @@ function DayView({
                     {(appointment.type &&
                       appointmentTypes.find(t => t.id === appointment.type)
                         ?.label) ||
-                      'Wizyta'}
+                      t('appointmentForm.appointmentType')}
                   </Text>
                 </Table.Td>
                 <Table.Td>
@@ -707,18 +710,18 @@ function DayView({
                   </Text>
                   {isCancelled && (
                     <Text size='xs' c={appointment.requiresPayment ? 'orange' : 'dimmed'}>
-                      Płatna: {appointment.requiresPayment ? 'TAK' : 'NIE'}
+                      {t('calendar.cancellation.requiresPayment')} {appointment.requiresPayment ? t('common.yes') : t('common.no')}
                     </Text>
                   )}
                 </Table.Td>
                 <Table.Td>
                   {appointment.paymentInfo?.isPaid ? (
                     <Badge color={utilityColors?.success || 'green'} size='sm'>
-                      Opłacono
+                      {t('status.payment.paid')}
                     </Badge>
                   ) : (
                     <Badge color={utilityColors?.error || 'red'} size='sm'>
-                      Nieopłacono
+                      {t('status.payment.unpaid')}
                     </Badge>
                   )}
                 </Table.Td>
@@ -743,7 +746,7 @@ function DayView({
                           onJumpToAppointment(appointment.rescheduledToId!)
                         }
                       >
-                        Do nowej
+                        {t('calendar.reschedule.toNew')}
                       </Button>
                     )}
                     {appointment.rescheduledFromId && (
@@ -755,7 +758,7 @@ function DayView({
                           onJumpToAppointment(appointment.rescheduledFromId!)
                         }
                       >
-                        Z poprzedniej
+                        {t('calendar.reschedule.fromPrevious')}
                       </Button>
                     )}
                   </Stack>
@@ -778,7 +781,7 @@ function DayView({
                       <ActionIcon
                         variant='light'
                         color='blue'
-                        title='Przełóż'
+                        title={t('calendar.rescheduleAppointment')}
                         onClick={() => onRescheduleAppointment(appointment)}
                       >
                         <IconCalendarShare size='1rem' />
@@ -1061,7 +1064,8 @@ function MonthView({
     end: calendarEnd,
   });
 
-  const weekDays = ['Pon', 'Wt', 'Śr', 'Czw', 'Pt', 'Sob', 'Nie'];
+  const { t } = useTranslation();
+  const weekDays = [t('weekdays.shortMonday'), t('weekdays.shortTuesday'), t('weekdays.shortWednesday'), t('weekdays.shortThursday'), t('weekdays.shortFriday'), t('weekdays.shortSaturday'), t('weekdays.shortSunday')];
 
   // Always use compact style
   const cellGap = '4px';

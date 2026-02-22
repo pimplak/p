@@ -7,6 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 **P** is a Progressive Web Application (PWA) for psychologists and mental health practitioners. It's a practice management solution built with React 19, TypeScript, and an offline-first architecture using IndexedDB.
 
 **Key characteristics:**
+
 - Fully client-side application with no backend (offline-first)
 - PWA installable on any device (iOS, Android, desktop)
 - Local-first data storage with Dexie.js (IndexedDB wrapper)
@@ -15,53 +16,65 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Development Commands
 
 ### Essential Commands
+
+use yarn
+
 ```bash
-npm run dev           # Start Vite dev server with hot reload (default: localhost:5173)
-npm run build         # TypeScript check + production build
-npm run preview       # Preview production build locally
-npm run lint          # Run ESLint checks
-npm run lint:fix      # Auto-fix ESLint issues
-npm run format        # Format code with Prettier
-npm run format:check  # Check formatting without modifying files
+yarn dev           # Start Vite dev server with hot reload (default: localhost:5173)
+yarn build         # TypeScript check + production build
+yarn preview       # Preview production build locally
+yarn lint          # Run ESLint checks
+yarn lint:fix      # Auto-fix ESLint issues
+yarn format        # Format code with Prettier
+yarn format:check  # Check formatting without modifying files
 ```
 
 ### Development Tools
+
 - **Vite Inspector**: Available at `localhost:5173/__inspect/` during development
 - **Build Analysis**: Check `vite.config.ts` for manual chunk configuration
 
 ## Technology Stack
 
 ### Core
+
 - **React 19** with **TypeScript 5.8**
 - **Vite 6** for build tooling
 - **React Router 7** with lazy-loaded routes
 - **Mantine v8** UI component library
+- **Internationalization**: `i18next` + `react-i18next` with `pl` (Polish) and `en` (English) support
 
 ### State & Data
+
 - **Zustand 5** for global state management
 - **Immer 10** for immutable state updates
-- **Dexie.js 4** for IndexedDB operations (currently at schema v4)
+- **Dexie.js 4** for IndexedDB operations (currently at schema v5)
 - **Zod** for validation schemas
 
 ### Forms & Validation
+
 - **@mantine/form** for form handling
 - **Zod** schemas via `mantine-form-zod-resolver`
 - **@hookform/resolvers** for validation integration
 
 ### UI & Styling
+
 - **@tabler/icons-react** (v3.34.0) - standard icon library
 - **PostCSS** with `postcss-preset-mantine`
 - **@emotion/react** for CSS-in-JS
 
 ### Date & Time
+
 - **date-fns 4** (primary date utility)
 - **dayjs 1.11** (secondary, for specific use cases)
 
 ### PWA
+
 - **vite-plugin-pwa 0.20** for PWA configuration
 - **workbox** for service worker management
 
 ### Additional Features
+
 - **react-window** + **react-virtualized-auto-sizer** for virtual scrolling
 - **react-error-boundary** for error handling
 - **XLSX** for Excel export functionality
@@ -82,13 +95,15 @@ Dexie (IndexedDB operations)
 ```
 
 **Key stores:**
+
 - `usePatientStore` - Patient data, search, filtering
 - `useAppointmentStore` - Appointments, scheduling
+- `useNoteStore` - Notes; `fetchNotesByPatient(id)` for patient notes, `fetchPersonalNotes()` for notes without a patient
 - `useSettingsStore` - User preferences, app configuration
 - `useThemeStore` - Theme management
 - `useHeaderStore` - Dynamic header content injection
 
-**Important:** Stores handle UI state and orchestration. Database operations go through `PatientDataService` which provides validation with Zod schemas before persistence.
+**Important:** `PatientDataService` (`src/services/patientDataService.ts`) is a static class used only for patient CRUD — it validates with Zod before writing to DB. Notes, goals, and appointments are written directly to Dexie from their respective stores without going through a service layer.
 
 ### Component Organization
 
@@ -112,25 +127,30 @@ src/
 
 ### Database Architecture (Dexie)
 
-**Current Schema Version:** 4
+**Current Schema Version:** 5
 
-**Tables:**
-- `patients` - Patient records with status, tags, notes
-- `appointments` - Appointments with status tracking, rescheduling, cancellation
-- `notes` - Session notes (SOAP format support)
-- `goals` - Treatment goals with progress tracking
+**Tables & indexes:**
+
+- `patients` — `++id, lastName, email, phone, status, [firstName+lastName]`
+- `appointments` — `++id, patientId, date, status`
+- `notes` — `++id, patientId, sessionId, type, pinned, createdAt`
+- `goals` — `++id, patientId, status, targetDate, createdAt`
 
 **Key Features:**
-- Automatic timestamps (createdAt, updatedAt) via Dexie hooks
-- Migration system for schema evolution (4 versions deployed)
-- ISO date strings for consistency
-- Indexes on frequently queried fields
+
+- Automatic timestamps (createdAt, updatedAt) via Dexie hooks — never set these manually
+- All dates stored as ISO strings (converted from Date objects in v2 migration)
+- `notes.patientId` is optional — notes without a patientId are "personal notes"
+- v5 migration moved `patient.notes` text field into the `notes` table as general notes
 
 **Database Class:** `PDB` in `src/utils/db.ts`
+
+**Adding a DB version:** Always add a new `.version(N).stores({...})` block — never modify existing version blocks. The stores definition must repeat all tables even if unchanged.
 
 ### Routing
 
 All routes use lazy loading via `React.lazy()`:
+
 - `/` - Dashboard
 - `/patients` - Patient list
 - `/patients/:id` - Patient profile
@@ -141,17 +161,22 @@ All routes use lazy loading via `React.lazy()`:
 
 ### Data Models
 
-**Patient:** id, firstName, lastName, email, phone, birthDate, address, emergencyContact, emergencyPhone, notes, status (active/archived), tags, createdAt, updatedAt
+**Patient:** id, firstName, lastName, nazwa (display name override), email, phone, birthDate, address, emergencyContact, emergencyPhone, status (active/archived), tags, createdAt, updatedAt
 
-**Appointment:** id, patientId, date, duration, status (scheduled/completed/cancelled/no_show/rescheduled), type, notes, price, paymentInfo, reminderSent, reminderSentAt, rescheduledFromId, rescheduledToId, cancelledAt, cancellationReason, createdAt, updatedAt
+**Appointment:** id, patientId, date, duration, status (scheduled/completed/cancelled/no_show/rescheduled), type (string — free-form or from `DEFAULT_APPOINTMENT_TYPES`), notes, price, paymentInfo `{isPaid, paidAt, paymentMethod, notes}`, requiresPayment, reminderSent, reminderSentAt, rescheduledFromId, rescheduledToId, cancelledAt, cancellationReason, createdAt, updatedAt
 
-**Note (SOAP):** id, patientId, sessionId, type (soap/general/assessment), subjective, objective, assessment, plan, createdAt, updatedAt
+**Note:** id, patientId? (optional — undefined = personal note), sessionId?, type (soap/general/assessment), title?, pinned?, content (general/assessment), subjective/objective/assessment/plan (SOAP fields), createdAt, updatedAt
 
-**Goal:** id, patientId, description, status (active/completed/paused/cancelled), targetDate, progress (0-100), notes, createdAt, updatedAt
+**Goal:** id, patientId, description, status (active/completed/paused/cancelled), targetDate?, progress (0-100), notes?, createdAt, updatedAt
+
+**Status constants** are in `src/constants/status.ts` (with `_LABELS` maps for display). `AppointmentStatus` is also duplicated in `src/types/Appointment.ts` — prefer importing from `src/constants/status.ts` for stores/services, from `src/types/Appointment.ts` when importing the `Appointment` type.
+
+**Business constants** (`DEFAULT_APPOINTMENT_PRICE = 150 zł`, `DEFAULT_APPOINTMENT_DURATION = 60 min`, etc.) live in `src/constants/business.ts`. Default appointment types are in `src/constants/defaults.ts`.
 
 ## Development Guidelines
 
 ### Component Structure
+
 - Use functional components with TypeScript interfaces for props
 - Leverage Mantine v8 components for UI consistency
 - Keep components small and focused (Single Responsibility Principle)
@@ -159,6 +184,7 @@ All routes use lazy loading via `React.lazy()`:
 - Split large components into smaller sub-components
 
 ### Hooks & Logic
+
 - Use Mantine hooks (`@mantine/hooks`) whenever possible: `useDisclosure`, `useMediaQuery`, `useDebouncedValue`
 - Extract complex logic into custom hooks in `src/hooks/`
 - Follow the Rules of Hooks strictly
@@ -166,6 +192,7 @@ All routes use lazy loading via `React.lazy()`:
 - Prefer `use-debounce` for input debouncing
 
 ### State Management
+
 - Use Zustand for global application state
 - Use useState for local, component-specific state
 - Use Mantine Context API or React Context for theme-related state
@@ -173,6 +200,7 @@ All routes use lazy loading via `React.lazy()`:
 - Keep state as close to its usage as possible to minimize re-renders
 
 ### Forms & Validation
+
 - Use `@mantine/form` for all form handling
 - Use Zod schemas for validation via `mantine-form-zod-resolver`
 - Implement controlled components through `form.getInputProps()`
@@ -180,17 +208,20 @@ All routes use lazy loading via `React.lazy()`:
 - Ensure accessibility with semantic labels and ARIA attributes
 
 ### Performance
+
 - Use `react-window` and `react-virtualized-auto-sizer` for long lists
 - Implement `useMemo` and `useCallback` only when profiling shows bottlenecks
 - Use `React.memo` for expensive leaf components with stable props
 - Leverage Vite's dynamic imports (`React.lazy`) for route-based code splitting
 
 ### Error Handling
+
 - Wrap key feature areas in `react-error-boundary` to prevent full-app crashes
 - Handle async errors gracefully with user-friendly notifications via `@mantine/notifications`
 - Use `date-fns` or `dayjs` for date manipulations
 
 ### Code Style
+
 - Use PascalCase for component files (`MyComponent.tsx`)
 - Use camelCase for hooks (`useMyHook.ts`)
 - Group related components, hooks, and styles in feature-based directories
@@ -199,6 +230,7 @@ All routes use lazy loading via `React.lazy()`:
 - Document complex logic with concise comments
 
 ### Accessibility
+
 - Use semantic HTML elements
 - Implement proper heading hierarchy (h1, h2, h3, etc.)
 - Use ARIA attributes appropriately
@@ -214,7 +246,16 @@ All routes use lazy loading via `React.lazy()`:
 - Implement proper modal dialog accessibility with focus trapping
 - Test with screen readers (NVDA, JAWS, VoiceOver)
 
+### Internationalization (i18n)
+
+- **No Hardcoded Strings**: Strictly forbid hardcoded user-facing strings in JSX/TSX.
+- **Auto-Fix**: If you find hardcoded strings or missing translations, fix them immediately by migrating them to `src/i18n/locales/*.json`.
+- **Hook**: Use `useTranslation` hook from `react-i18next`.
+- **Keys**: Keep keys synchronized between `pl.json` and `en.json`. Use a consistent naming convention (camelCase).
+- **Persistence**: Language is stored in `localStorage` as `p-language`.
+
 ### Code Quality Standards
+
 - **Verify information** before making changes
 - **Make changes file by file** to allow for review
 - **Don't invent changes** beyond what's explicitly requested
@@ -228,6 +269,7 @@ All routes use lazy loading via `React.lazy()`:
 ## Key Features & Implementation Notes
 
 ### SMS Reminders
+
 - **Phase 1 (Current):** Opens device SMS app with pre-filled message templates
 - **Phase 2 (Planned):** Twilio backend integration for automated sending
 - Template system with customizable messages
@@ -235,17 +277,20 @@ All routes use lazy loading via `React.lazy()`:
 - Tracking: reminderSent, reminderSentAt fields on appointments
 
 ### Appointment Status Workflow
+
 - Auto-status change to "completed" for past appointments
 - Rescheduling links appointments via rescheduledFromId/rescheduledToId
 - Cancellation tracking with reason and timestamp
 - Appointment type manager with default types
 
 ### Data Export
+
 - Excel export via XLSX library
 - Filtered exports by date range, patient, or status
 - Export modal component handles configuration
 
 ### PWA Features
+
 - Install prompt component
 - Service worker with auto-update
 - Offline-capable with IndexedDB persistence
@@ -253,17 +298,20 @@ All routes use lazy loading via `React.lazy()`:
 - Multi-device consistency (planned: cloud sync)
 
 ### Theme System
+
 - Dynamic theme switching (light/dark modes)
 - Custom Mantine theme objects
 - CSS variables for runtime theming
 - `useTheme` hook provides current palette
 
 ### Dynamic Header
+
 - `useHeaderStore` allows pages to customize header content
 - Three slots: left (burger/logo), center (title), right (info)
 - Pages inject custom JSX as needed
 
 ### Gesture Support
+
 - `useGestures` hook for mobile drawer interaction
 - Swipe/drag detection with visual feedback
 - Touch-optimized interactions
@@ -271,7 +319,9 @@ All routes use lazy loading via `React.lazy()`:
 ## Build Configuration
 
 ### Manual Chunks (Code Splitting)
+
 Vite is configured to split vendor libraries into separate chunks:
+
 - `react-vendor` - React, React DOM, React Router
 - `mantine-vendor` - All Mantine packages
 - `icons-vendor` - Tabler Icons
@@ -280,6 +330,7 @@ Vite is configured to split vendor libraries into separate chunks:
 - `utils-vendor` - date-fns, dayjs, Zod
 
 ### PWA Manifest
+
 - Name: "P"
 - Categories: medical, productivity, business
 - Display: standalone
@@ -288,6 +339,7 @@ Vite is configured to split vendor libraries into separate chunks:
 ## Common Patterns
 
 ### Optimistic Updates
+
 ```typescript
 // In Zustand store
 const updatePatient = async (id: string, data: Partial<Patient>) => {
@@ -305,6 +357,7 @@ const updatePatient = async (id: string, data: Partial<Patient>) => {
 ```
 
 ### Form with Zod Validation
+
 ```typescript
 import { useForm, zodResolver } from '@mantine/form';
 import { z } from 'zod';
@@ -321,6 +374,7 @@ const form = useForm({
 ```
 
 ### Dynamic Header Injection
+
 ```typescript
 // In a page component
 const headerStore = useHeaderStore();
@@ -342,4 +396,5 @@ useEffect(() => {
 - **HIPAA compliance considerations** built in but not certified
 - **Local-first architecture** means data stays on device unless explicitly exported
 - **SMS reminders** currently use device SMS app, not automated backend
-- **Recent work** focuses on appointment management, cancellation, rescheduling, and status workflows
+- **Recent work** focuses on appointment management, cancellation, rescheduling, status workflows, and personal notes (notes without a patient)
+- **No test suite** — there are no unit or integration tests in this project

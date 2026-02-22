@@ -27,6 +27,7 @@ import {
 } from '@tabler/icons-react';
 import { isSameDay } from 'date-fns';
 import { useState, useEffect, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useTheme } from '../hooks/useTheme';
 import { useAppointmentStore } from '../stores/useAppointmentStore';
 import { useNoteStore } from '../stores/useNoteStore';
@@ -56,6 +57,7 @@ function getNotePreviewShort(note: Note): string {
 }
 
 export function PatientProfileTabs({ patient }: PatientProfileTabsProps) {
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<string>('overview');
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [selectedAppointments, setSelectedAppointments] = useState<number[]>(
@@ -213,16 +215,16 @@ export function PatientProfileTabs({ patient }: PatientProfileTabsProps) {
       <Tabs value={activeTab} onChange={value => value && setActiveTab(value)}>
         <Tabs.List>
           <Tabs.Tab value='overview' leftSection={<IconNotes size='1rem' />}>
-            Przegląd
+            {t('calendar.patientProfile.tabs.overview')}
           </Tabs.Tab>
           <Tabs.Tab
             value='appointments'
             leftSection={<IconCalendar size='1rem' />}
           >
-            Wizyty
+            {t('calendar.patientProfile.tabs.appointments')}
           </Tabs.Tab>
           <Tabs.Tab value='notes' leftSection={<IconNote size='1rem' />}>
-            Notatki
+            {t('calendar.patientProfile.tabs.notes')}
           </Tabs.Tab>
         </Tabs.List>
 
@@ -239,7 +241,7 @@ export function PatientProfileTabs({ patient }: PatientProfileTabsProps) {
               {patient.address && (
                 <div>
                   <Text size='sm' fw={500} mb='xs'>
-                    Adres
+                    {t('calendar.patientProfile.overview.address')}
                   </Text>
                   <Text size='sm'>{patient.address}</Text>
                 </div>
@@ -247,7 +249,7 @@ export function PatientProfileTabs({ patient }: PatientProfileTabsProps) {
 
               {!patient.address && pinnedNotes.length === 0 && (
                 <Text size='sm' c='dimmed'>
-                  Brak dodatkowych informacji o pacjencie.
+                  {t('calendar.patientProfile.overview.noAdditionalInfo')}
                 </Text>
               )}
 
@@ -255,10 +257,10 @@ export function PatientProfileTabs({ patient }: PatientProfileTabsProps) {
 
               <div>
                 <Text size='xs' c='dimmed'>
-                  Utworzono: {formatDate(patient.createdAt)}
+                  {t('calendar.patientProfile.overview.created')} {formatDate(patient.createdAt)}
                 </Text>
                 <Text size='xs' c='dimmed'>
-                  Ostatnia aktualizacja: {formatDate(patient.updatedAt)}
+                  {t('calendar.patientProfile.overview.lastUpdate')} {formatDate(patient.updatedAt)}
                 </Text>
               </div>
             </Stack>
@@ -269,16 +271,16 @@ export function PatientProfileTabs({ patient }: PatientProfileTabsProps) {
           <Paper p='md' withBorder>
             <Group justify='space-between' align='flex-start' mb='md'>
               <Stack gap='xs'>
-                <Title order={4}>Wizyty ({filteredAppointments.length})</Title>
+                <Title order={4}>{t('calendar.patientProfile.appointments.title', { count: filteredAppointments.length })}</Title>
                 {selectedAppointments.length > 0 && (
                   <Badge color={currentPalette.primary} variant='light'>
-                    {selectedAppointments.length} zaznaczonych
+                    {t('calendar.patientProfile.appointments.selectedCount', { count: selectedAppointments.length })}
                   </Badge>
                 )}
               </Stack>
               <Group gap='xs'>
                 <DateInput
-                  placeholder='Filtruj po dacie'
+                  placeholder={t('calendar.patientProfile.appointments.filterByDate')}
                   value={dateFilter}
                   onChange={(value) => {
                     if (value) {
@@ -307,14 +309,14 @@ export function PatientProfileTabs({ patient }: PatientProfileTabsProps) {
                           selectedAppointments.length === appointments.length
                         }
                       >
-                        Zaznacz wszystkie
+                        {t('calendar.patientProfile.appointments.selectAll')}
                       </Menu.Item>
                       <Menu.Item
                         leftSection={<IconX size='1rem' />}
                         onClick={clearSelection}
                         disabled={selectedAppointments.length === 0}
                       >
-                        Wyczyść zaznaczenie
+                        {t('calendar.patientProfile.appointments.clearSelection')}
                       </Menu.Item>
                       <Menu.Divider />
                       <Menu.Item
@@ -322,7 +324,7 @@ export function PatientProfileTabs({ patient }: PatientProfileTabsProps) {
                         onClick={handleExportSelected}
                         disabled={selectedAppointments.length === 0}
                       >
-                        Eksportuj zaznaczone
+                        {t('calendar.patientProfile.appointments.exportSelected')}
                       </Menu.Item>
                     </Menu.Dropdown>
                   </Menu>
@@ -333,7 +335,7 @@ export function PatientProfileTabs({ patient }: PatientProfileTabsProps) {
                   variant='light'
                   onClick={handleAddAppointment}
                 >
-                  Dodaj wizytę
+                  {t('calendar.patientProfile.appointments.addAppointment')}
                 </Button>
               </Group>
             </Group>
@@ -341,8 +343,8 @@ export function PatientProfileTabs({ patient }: PatientProfileTabsProps) {
             {filteredAppointments.length === 0 ? (
               <Text size='sm' c='dimmed'>
                 {dateFilter
-                  ? 'Brak wizyt w wybranym dniu.'
-                  : 'Brak wizyt dla tego pacjenta.'}
+                  ? t('calendar.patientProfile.appointments.noAppointmentsOnDay')
+                  : t('calendar.patientProfile.appointments.noAppointmentsForPatient')}
               </Text>
             ) : (
               <Stack gap='md'>
@@ -384,42 +386,42 @@ export function PatientProfileTabs({ patient }: PatientProfileTabsProps) {
                                 size='sm'
                               >
                                 {appointment.status === AppointmentStatus.COMPLETED
-                                  ? 'Zakończona'
+                                  ? t('status.appointment.completed')
                                   : appointment.status ===
                                     AppointmentStatus.CANCELLED
-                                    ? 'Anulowana'
+                                    ? t('status.appointment.cancelled')
                                     : appointment.status ===
                                       AppointmentStatus.NO_SHOW
-                                      ? 'Nieobecność'
+                                      ? t('status.appointment.no_show')
                                       : appointment.status ===
                                         AppointmentStatus.SCHEDULED
-                                        ? 'Zaplanowana'
-                                        : 'Przełożona'}
+                                        ? t('status.appointment.scheduled')
+                                        : t('status.appointment.rescheduled')}
                               </Badge>
                             </Group>
 
                             <Text size='sm' c='dimmed'>
-                              Czas trwania: {appointment.duration} min
+                              {t('calendar.patientProfile.appointments.duration')} {appointment.duration} min
                             </Text>
 
                             {appointment.type && (
                               <Text size='sm' c='dimmed'>
-                                Typ:{' '}
+                                {t('calendar.patientProfile.appointments.type')}{' '}
                                 {appointment.type === 'therapy'
-                                  ? 'Terapia'
+                                  ? t('calendar.patientProfile.appointments.appointmentTypes.therapy')
                                   : appointment.type === 'initial'
-                                    ? 'Wizyta początkowa'
+                                    ? t('calendar.patientProfile.appointments.appointmentTypes.initial')
                                     : appointment.type === 'follow_up'
-                                      ? 'Wizyta kontrolna'
+                                      ? t('calendar.patientProfile.appointments.appointmentTypes.follow_up')
                                       : appointment.type === 'consultation'
-                                        ? 'Konsultacja'
-                                        : 'Ocena'}
+                                        ? t('calendar.patientProfile.appointments.appointmentTypes.consultation')
+                                        : t('calendar.patientProfile.appointments.appointmentTypes.assessment')}
                               </Text>
                             )}
 
                             {appointment.notes && (
                               <Text size='sm' mt='xs'>
-                                <strong>Notatki:</strong> {appointment.notes}
+                                <strong>{t('calendar.patientProfile.appointments.notes')}</strong> {appointment.notes}
                               </Text>
                             )}
 
@@ -438,7 +440,11 @@ export function PatientProfileTabs({ patient }: PatientProfileTabsProps) {
                                   >
                                     <IconNote size='0.75rem' color='var(--mantine-color-violet-5)' />
                                     <Badge size='xs' variant='light' color='violet'>
-                                      {sNote.type === 'soap' ? 'SOAP' : sNote.type === 'assessment' ? 'Ocena' : 'Notatka'}
+                                      {sNote.type === 'soap'
+                                        ? t('notes.typeLabels.soap')
+                                        : sNote.type === 'assessment'
+                                          ? t('notes.typeLabels.assessment')
+                                          : t('notes.typeLabels.general')}
                                     </Badge>
                                     <Text size='xs' c='dimmed' lineClamp={1}>
                                       {sNote.title || getNotePreviewShort(sNote)}
@@ -463,7 +469,7 @@ export function PatientProfileTabs({ patient }: PatientProfileTabsProps) {
                               e.stopPropagation();
                               handleAddNote(appointment.id);
                             }}
-                            aria-label='Dodaj notatkę sesyjną'
+                            aria-label={t('calendar.patientProfile.notes.addSessionNote')}
                           >
                             <IconNote size='1rem' />
                           </ActionIcon>
@@ -480,14 +486,14 @@ export function PatientProfileTabs({ patient }: PatientProfileTabsProps) {
         <Tabs.Panel value='notes' pt='md'>
           <Paper p='md' withBorder>
             <Group justify='space-between' mb='md'>
-              <Title order={4}>Notatki ({notes.length})</Title>
+              <Title order={4}>{t('calendar.patientProfile.notes.title', { count: notes.length })}</Title>
               <Button
                 size='sm'
                 leftSection={<IconPlus size='1rem' />}
                 variant='light'
                 onClick={() => handleAddNote()}
               >
-                Dodaj notatkę
+                {t('calendar.patientProfile.notes.addNote')}
               </Button>
             </Group>
 
@@ -506,7 +512,7 @@ export function PatientProfileTabs({ patient }: PatientProfileTabsProps) {
       <BottomSheet
         opened={appointmentModalOpen}
         onClose={() => setAppointmentModalOpen(false)}
-        title={editingAppointment ? 'Edytuj wizytę' : 'Dodaj wizytę'}
+        title={editingAppointment ? t('calendar.editAppointment') : t('calendar.addAppointment')}
       >
         <AppointmentForm
           appointment={editingAppointment}
@@ -520,7 +526,7 @@ export function PatientProfileTabs({ patient }: PatientProfileTabsProps) {
       <BottomSheet
         opened={noteModalOpen}
         onClose={() => setNoteModalOpen(false)}
-        title={editingNote ? 'Edytuj notatkę' : 'Dodaj notatkę'}
+        title={editingNote ? t('notes.editNote') : t('notes.addNote')}
       >
         {patient.id && (
           <NoteForm
@@ -538,18 +544,18 @@ export function PatientProfileTabs({ patient }: PatientProfileTabsProps) {
       <Modal
         opened={deleteNoteId !== null}
         onClose={() => setDeleteNoteId(null)}
-        title='Usuń notatkę'
+        title={t('notes.deleteNote')}
         centered
         size='sm'
       >
         <Stack gap='md'>
-          <Text size='sm'>Czy na pewno chcesz usunąć tę notatkę?</Text>
+          <Text size='sm'>{t('notes.deleteConfirm')}</Text>
           <Group justify='flex-end'>
             <Button variant='light' onClick={() => setDeleteNoteId(null)}>
-              Anuluj
+              {t('common.cancel')}
             </Button>
             <Button color='red' onClick={handleConfirmDeleteNote}>
-              Usuń
+              {t('common.delete')}
             </Button>
           </Group>
         </Stack>

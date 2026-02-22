@@ -14,6 +14,7 @@ import {
 import { useForm } from '@mantine/form';
 import { notifications } from '@mantine/notifications';
 import { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNoteStore } from '../stores/useNoteStore';
 import { formatDateTime } from '../utils/dates';
 import { PinnedNotesChips } from './PinnedNotes';
@@ -49,6 +50,7 @@ export function NoteForm({
   onSuccess,
   onCancel,
 }: NoteFormProps) {
+  const { t } = useTranslation();
   const { addNote, updateNote, loading } = useNoteStore();
 
   const form = useForm<NoteFormValues>({
@@ -66,7 +68,7 @@ export function NoteForm({
     validate: {
       content: (value, values) =>
         values.type !== 'soap' && !value?.trim()
-          ? 'Treść jest wymagana'
+          ? t('noteForm.contentRequired')
           : null,
       subjective: (value, values) =>
         values.type === 'soap' &&
@@ -74,7 +76,7 @@ export function NoteForm({
         !values.objective?.trim() &&
         !values.assessment?.trim() &&
         !values.plan?.trim()
-          ? 'Wypełnij przynajmniej jedno pole SOAP'
+          ? t('noteForm.soap.atLeastOne')
           : null,
     },
   });
@@ -120,15 +122,15 @@ export function NoteForm({
       if (note?.id) {
         await updateNote(note.id, noteData);
         notifications.show({
-          title: 'Sukces',
-          message: 'Notatka została zaktualizowana',
+          title: t('common.success'),
+          message: t('notes.notifications.noteUpdated'),
           color: 'green',
         });
       } else {
         await addNote(noteData);
         notifications.show({
-          title: 'Sukces',
-          message: 'Notatka została dodana',
+          title: t('common.success'),
+          message: t('notes.notifications.noteAdded'),
           color: 'green',
         });
       }
@@ -136,8 +138,8 @@ export function NoteForm({
     } catch (error) {
       console.error('Błąd podczas zapisywania notatki:', error);
       notifications.show({
-        title: 'Błąd',
-        message: 'Nie udało się zapisać notatki',
+        title: t('common.error'),
+        message: t('notes.notifications.errorSaving'),
         color: 'red',
       });
     }
@@ -145,10 +147,10 @@ export function NoteForm({
 
   const appointmentOptions = appointments
     ? [
-        { value: '', label: 'Brak (notatka ogólna)' },
+        { value: '', label: t('noteForm.noAppointment') },
         ...appointments.map(a => ({
           value: a.id!.toString(),
-          label: `${formatDateTime(a.date)} — ${a.type || 'Wizyta'}`,
+          label: `${formatDateTime(a.date)} — ${a.type || t('appointmentForm.appointmentType')}`,
         })),
       ]
     : [];
@@ -162,8 +164,8 @@ export function NoteForm({
 
         {patientId !== undefined && appointments && appointments.length > 0 && (
           <Select
-            label='Powiązana wizyta'
-            placeholder='Wybierz wizytę...'
+            label={t('noteForm.relatedAppointment')}
+            placeholder={t('noteForm.relatedAppointmentPlaceholder')}
             data={appointmentOptions}
             searchable
             clearable
@@ -171,7 +173,7 @@ export function NoteForm({
           />
         )}
 
-        <Input.Wrapper label='Typ notatki'>
+        <Input.Wrapper label={t('noteForm.type')}>
           <ScrollArea scrollbars='x' type='never' mt='xs'>
             <Box
               style={{
@@ -182,9 +184,9 @@ export function NoteForm({
             >
               <SegmentedControl
                 data={[
-                  { label: 'Ogólna', value: 'general' },
-                  { label: 'SOAP', value: 'soap' },
-                  { label: 'Ocena', value: 'assessment' },
+                  { label: t('notes.types.general'), value: 'general' },
+                  { label: t('notes.types.soap'), value: 'soap' },
+                  { label: t('notes.types.assessment'), value: 'assessment' },
                 ]}
                 {...form.getInputProps('type')}
                 fullWidth
@@ -194,44 +196,44 @@ export function NoteForm({
         </Input.Wrapper>
 
         <TextInput
-          label='Tytuł (opcjonalnie)'
-          placeholder='Krótki tytuł notatki...'
+          label={t('noteForm.noteTitle')}
+          placeholder={t('noteForm.noteTitlePlaceholder')}
           maxLength={100}
           {...form.getInputProps('title')}
         />
 
         <Switch
-          label='Przypnij notatkę'
-          description='Przypięte notatki są widoczne w przeglądzie pacjenta'
+          label={t('notes.pinned')}
+          description={t('notes.pinnedDescription')}
           {...form.getInputProps('pinned', { type: 'checkbox' })}
         />
 
         {form.values.type === 'soap' ? (
           <Stack gap='sm'>
             <Textarea
-              label='Subiektywne (S)'
-              placeholder='Co pacjent zgłasza...'
+              label={t('noteForm.soap.subjective')}
+              placeholder={t('noteForm.soap.subjectivePlaceholder')}
               minRows={2}
               autosize
               {...form.getInputProps('subjective')}
             />
             <Textarea
-              label='Obiektywne (O)'
-              placeholder='Obserwacje kliniczne...'
+              label={t('noteForm.soap.objective')}
+              placeholder={t('noteForm.soap.objectivePlaceholder')}
               minRows={2}
               autosize
               {...form.getInputProps('objective')}
             />
             <Textarea
-              label='Ocena (A)'
-              placeholder='Ocena kliniczna...'
+              label={t('noteForm.soap.assessment')}
+              placeholder={t('noteForm.soap.assessmentPlaceholder')}
               minRows={2}
               autosize
               {...form.getInputProps('assessment')}
             />
             <Textarea
-              label='Plan (P)'
-              placeholder='Plan dalszego postępowania...'
+              label={t('noteForm.soap.plan')}
+              placeholder={t('noteForm.soap.planPlaceholder')}
               minRows={2}
               autosize
               {...form.getInputProps('plan')}
@@ -239,11 +241,11 @@ export function NoteForm({
           </Stack>
         ) : (
           <Textarea
-            label='Treść'
+            label={t('noteForm.content')}
             placeholder={
               form.values.type === 'assessment'
-                ? 'Ocena pacjenta...'
-                : 'Treść notatki...'
+                ? t('noteForm.assessmentPlaceholder')
+                : t('noteForm.contentPlaceholder')
             }
             minRows={4}
             autosize
@@ -253,10 +255,10 @@ export function NoteForm({
 
         <Group justify='flex-end' mt='md'>
           <Button variant='light' onClick={onCancel}>
-            Anuluj
+            {t('common.cancel')}
           </Button>
           <Button type='submit' loading={loading}>
-            {note ? 'Aktualizuj' : 'Dodaj'}
+            {note ? t('common.update') : t('common.add')}
           </Button>
         </Group>
       </Stack>

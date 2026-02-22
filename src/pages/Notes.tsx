@@ -12,6 +12,7 @@ import {
 } from '@mantine/core';
 import { IconNotes, IconPlus } from '@tabler/icons-react';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { NoteForm } from '../components/NoteForm';
 import { NoteList } from '../components/NoteList';
 import { BottomSheet } from '../components/ui/BottomSheet';
@@ -26,6 +27,7 @@ import type { Note } from '../types/Patient';
 type ViewMode = 'personal' | 'patient';
 
 function Notes() {
+  const { t } = useTranslation();
   const { currentPalette } = useTheme();
   const { patients, fetchPatients } = usePatientStore();
   const { notes, fetchNotesByPatient, fetchPersonalNotes, togglePin, deleteNote, clearNotes } =
@@ -112,9 +114,9 @@ function Notes() {
             <IconNotes size={24} />
           </ThemeIcon>
           <div>
-            <Title order={1}>Notatki</Title>
+            <Title order={1}>{t('notes.title')}</Title>
             <Text size='sm' c='dimmed'>
-              System notatek terapeutycznych
+              {t('notes.subtitle')}
             </Text>
           </div>
         </Group>
@@ -123,16 +125,16 @@ function Notes() {
           value={viewMode}
           onChange={handleViewModeChange}
           data={[
-            { label: 'Moje notatki', value: 'personal' },
-            { label: 'Pacjenci', value: 'patient' },
+            { label: t('notes.viewModes.personal'), value: 'personal' },
+            { label: t('notes.viewModes.patient'), value: 'patient' },
           ]}
         />
 
         {viewMode === 'patient' && (
           <Group align='flex-end' gap='md'>
             <Select
-              label='Pacjent'
-              placeholder='Wybierz pacjenta...'
+              label={t('calendar.table.patient')}
+              placeholder={t('notes.selectPatientPlaceholder')}
               data={patientOptions}
               searchable
               clearable
@@ -150,7 +152,7 @@ function Notes() {
               variant='light'
               onClick={handleAddNote}
             >
-              Dodaj notatkę
+              {t('notes.addNote')}
             </Button>
           )}
         </Group>
@@ -165,7 +167,7 @@ function Notes() {
             />
           ) : (
             <Text size='sm' c='dimmed' ta='center' py='xl'>
-              Nie masz jeszcze żadnych notatek osobistych.
+              {t('notes.noPersonalNotes')}
             </Text>
           )
         ) : patientId ? (
@@ -178,7 +180,7 @@ function Notes() {
           />
         ) : (
           <Text size='sm' c='dimmed' ta='center' py='xl'>
-            Wybierz pacjenta, aby zobaczyć jego notatki.
+            {t('notes.selectPatient')}
           </Text>
         )}
       </Stack>
@@ -186,7 +188,7 @@ function Notes() {
       <BottomSheet
         opened={noteModalOpen}
         onClose={() => setNoteModalOpen(false)}
-        title={editingNote ? 'Edytuj notatkę' : 'Dodaj notatkę'}
+        title={editingNote ? t('notes.editNote') : t('notes.addNote')}
       >
         <NoteForm
           patientId={viewMode === 'patient' && patientId ? patientId : undefined}
@@ -200,18 +202,18 @@ function Notes() {
       <Modal
         opened={deleteNoteId !== null}
         onClose={() => setDeleteNoteId(null)}
-        title='Usuń notatkę'
+        title={t('notes.deleteNote')}
         centered
         size='sm'
       >
         <Stack gap='md'>
-          <Text size='sm'>Czy na pewno chcesz usunąć tę notatkę?</Text>
+          <Text size='sm'>{t('notes.deleteConfirm')}</Text>
           <Group justify='flex-end'>
             <Button variant='light' onClick={() => setDeleteNoteId(null)}>
-              Anuluj
+              {t('common.cancel')}
             </Button>
             <Button color='red' onClick={handleConfirmDelete}>
-              Usuń
+              {t('common.delete')}
             </Button>
           </Group>
         </Stack>

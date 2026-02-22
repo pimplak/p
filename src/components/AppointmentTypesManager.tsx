@@ -3,10 +3,12 @@ import {
   Text,
   TagsInput,
 } from '@mantine/core';
+import { useTranslation } from 'react-i18next';
 import { DEFAULT_APPOINTMENT_TYPES } from '../constants/defaults';
 import { useSettingsStore } from '../stores/useSettingsStore';
 
 export function AppointmentTypesManager() {
+  const { t } = useTranslation();
   const {
     appointmentTypes,
     addAppointmentType,
@@ -51,15 +53,15 @@ export function AppointmentTypesManager() {
   return (
     <Stack gap='md'>
       <TagsInput
-        label='Typy wizyt'
-        placeholder='Dodaj typ wizyty'
+        label={t('appointmentTypes.title')}
+        placeholder={t('appointmentTypes.addType')}
         value={appointmentTypes.map(type => type.label)}
         onChange={handleTagsChange}
-        description='Te typy będą dostępne w dropdownie podczas dodawania nowej wizyty'
+        description={t('appointmentTypes.description')}
         clearable
       />
       <Text size='xs' c='dimmed'>
-        Wpisz nazwę typu wizyty i naciśnij Enter, aby dodać.
+        {t('appointmentTypes.hint')}
       </Text>
     </Stack>
   );

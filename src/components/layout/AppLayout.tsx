@@ -21,6 +21,7 @@ import {
 } from '@tabler/icons-react';
 import { useState } from 'react';
 import { createPortal } from 'react-dom';
+import { useTranslation } from 'react-i18next';
 import { Link, useLocation } from 'react-router-dom';
 import { useGestures } from '../../hooks/useGestures';
 import { useTheme } from '../../hooks/useTheme';
@@ -34,49 +35,10 @@ interface AppLayoutProps {
   children: ReactNode;
 }
 
-const navigationItems = [
-  {
-    label: 'Dashboard',
-    icon: IconDashboard,
-    href: '/',
-  },
-  {
-    label: 'Pacjenci',
-    icon: IconUsers,
-    href: '/patients',
-  },
-  {
-    label: 'Kalendarz',
-    icon: IconCalendar,
-    href: '/calendar',
-  },
-  {
-    label: 'Notatki',
-    icon: IconNotes,
-    href: '/notes',
-  },
-  {
-    label: 'Statystyki',
-    icon: IconChartLine,
-    href: '/analytics',
-  },
-];
-
-const bottomItems = [
-  {
-    label: 'Ustawienia',
-    icon: IconSettings,
-    href: '/settings',
-  },
-  {
-    label: 'Wyloguj',
-    icon: IconLogout,
-    href: '/logout',
-    color: 'red',
-  },
-];
+// Navigation items will be created dynamically in the component
 
 export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
+  const { t } = useTranslation();
   const [opened, { toggle, close }] = useDisclosure();
   const [drawerProgress, setDrawerProgress] = useState(0);
   const isMobile = useMediaQuery('(max-width: 768px)');
@@ -84,6 +46,48 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
   const { currentPalette, isDark, mantineTheme } = useTheme();
   const { title, leftSlot, rightSlot } = useHeaderStore();
   const { practitionerName, practitionerTitle } = useSettingsStore();
+
+  const navigationItems = [
+    {
+      label: t('navigation.dashboard'),
+      icon: IconDashboard,
+      href: '/',
+    },
+    {
+      label: t('navigation.patients'),
+      icon: IconUsers,
+      href: '/patients',
+    },
+    {
+      label: t('navigation.calendar'),
+      icon: IconCalendar,
+      href: '/calendar',
+    },
+    {
+      label: t('navigation.notes'),
+      icon: IconNotes,
+      href: '/notes',
+    },
+    {
+      label: t('navigation.analytics'),
+      icon: IconChartLine,
+      href: '/analytics',
+    },
+  ];
+
+  const bottomItems = [
+    {
+      label: t('navigation.settings'),
+      icon: IconSettings,
+      href: '/settings',
+    },
+    {
+      label: t('navigation.logout'),
+      icon: IconLogout,
+      href: '/logout',
+      color: 'red',
+    },
+  ];
 
   // Dodaj gesty tylko na mobile
   useGestures({

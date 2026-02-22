@@ -1,5 +1,6 @@
 import { Card, SimpleGrid, Stack, Text, Group } from '@mantine/core';
 import { IconUsers, IconCurrencyZloty, IconClock } from '@tabler/icons-react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from '../../hooks/useTheme';
 import { Button } from '../ui/Button';
@@ -20,28 +21,29 @@ export function OverviewStats({
   weeklyRevenue,
   pendingHours,
 }: OverviewStatsProps) {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { currentPalette, mantineTheme } = useTheme();
 
   const items = [
     {
       key: 'patients',
-      title: 'Pacjenci łącznie',
+      title: t('dashboard.stats.totalPatients'),
       value: totalPatients,
       icon: IconUsers,
     },
     {
       key: 'revenue',
-      title: 'Przychód w tym tygodniu',
+      title: t('dashboard.stats.weeklyRevenue'),
       value: formatRevenue(weeklyRevenue),
       icon: IconCurrencyZloty,
     },
     {
       key: 'pending',
-      title: 'Oczekujące godziny',
+      title: t('dashboard.stats.pendingHours'),
       value: `${pendingHours}h`,
       icon: IconClock,
-      action: { label: 'Przejrzyj', onClick: () => navigate('/calendar') },
+      action: { label: t('dashboard.stats.review'), onClick: () => navigate('/calendar') },
     },
   ];
 

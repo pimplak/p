@@ -27,7 +27,9 @@ import {
   IconChevronDown,
   IconChevronRight,
   IconClock,
+  IconLanguage,
 } from '@tabler/icons-react';
+import { useTranslation } from 'react-i18next';
 import { AppointmentTypesManager } from '../components/AppointmentTypesManager';
 import { SMSTemplateManager } from '../components/SMSTemplateManager';
 import { ThemeSelector } from '../components/ThemeSelector';
@@ -38,6 +40,7 @@ import { useSettingsStore } from '../stores/useSettingsStore';
 import { insertSampleData, clearAllData } from '../utils/sampleData';
 
 function Settings() {
+  const { t, i18n } = useTranslation();
   const { fetchPatients } = usePatientStore();
   const { fetchAppointments } = useAppointmentStore();
   const {
@@ -49,33 +52,41 @@ function Settings() {
     setAppointmentHours,
     defaultAppointmentDuration,
     setDefaultAppointmentDuration,
+    language,
+    setLanguage,
   } = useSettingsStore();
   const { currentPalette, utilityColors } = useTheme();
   const [templatesOpened, { toggle: toggleTemplates }] = useDisclosure(false);
+
+  const handleLanguageChange = (newLanguage: string | null) => {
+    if (newLanguage && (newLanguage === 'pl' || newLanguage === 'en')) {
+      setLanguage(newLanguage);
+      i18n.changeLanguage(newLanguage);
+    }
+  };
 
   const handleAddDemoData = async () => {
     try {
       const success = await insertSampleData();
       if (success) {
         notifications.show({
-          title: 'Sukces!',
-          message: 'Dodano przykładowych pacjentów i wizyty',
+          title: t('common.success'),
+          message: t('settings.data.demo.success'),
           color: 'green',
         });
-        // Odśwież listę pacjentów i wizyt
         fetchPatients();
         fetchAppointments();
       } else {
         notifications.show({
-          title: 'Informacja',
-          message: 'Dane już istnieją w bazie',
+          title: t('common.info'),
+          message: t('settings.data.demo.exists'),
           color: 'yellow',
         });
       }
     } catch {
       notifications.show({
-        title: 'Błąd',
-        message: 'Wystąpił błąd podczas dodawania danych',
+        title: t('common.error'),
+        message: t('settings.data.demo.error'),
         color: 'red',
       });
     }
@@ -85,17 +96,16 @@ function Settings() {
     try {
       await clearAllData();
       notifications.show({
-        title: 'Sukces!',
-        message: 'Wszystkie dane zostały usunięte',
+        title: t('common.success'),
+        message: t('settings.data.clear.success'),
         color: 'green',
       });
-      // Odśwież listę pacjentów i wizyt
       fetchPatients();
       fetchAppointments();
     } catch {
       notifications.show({
-        title: 'Błąd',
-        message: 'Wystąpił błąd podczas usuwania danych',
+        title: t('common.error'),
+        message: t('settings.data.clear.error'),
         color: 'red',
       });
     }
@@ -107,9 +117,9 @@ function Settings() {
         {/* Header */}
         <Group justify='space-between' align='flex-start'>
           <Stack gap='xs'>
-            <Title order={1}>Ustawienia</Title>
+            <Title order={1}>{t('settings.title')}</Title>
             <Text size='lg' c='dimmed'>
-              Konfiguruj aplikację według swoich potrzeb
+              {t('settings.subtitle')}
             </Text>
           </Stack>
         </Group>
@@ -122,13 +132,35 @@ function Settings() {
               <Group align='center' gap='sm'>
                 <IconPalette size={20} color={currentPalette.primary} />
                 <Text fw={600} size='lg'>
-                  Wygląd i interfejs
+                  {t('settings.appearance.title')}
                 </Text>
               </Group>
 
               <Divider />
 
               <ThemeSelector />
+
+              <Divider variant='dashed' />
+
+              {/* Language Selector */}
+              <Stack gap='xs'>
+                <Group align='center' gap='sm'>
+                  <IconLanguage size={20} color={currentPalette.accent} />
+                  <Text fw={600} size='md'>
+                    {t('settings.language.title')}
+                  </Text>
+                </Group>
+                <Select
+                  label={t('settings.language.label')}
+                  description={t('settings.language.description')}
+                  value={language}
+                  onChange={handleLanguageChange}
+                  data={[
+                    { value: 'pl', label: t('settings.language.polish') },
+                    { value: 'en', label: t('settings.language.english') },
+                  ]}
+                />
+              </Stack>
             </Stack>
           </Card>
 
@@ -138,7 +170,7 @@ function Settings() {
               <Group align='center' gap='sm'>
                 <IconMessage size={20} color={currentPalette.accent} />
                 <Text fw={600} size='lg'>
-                  Przypomnienia SMS
+                  {t('settings.sms.title')}
                 </Text>
               </Group>
 
@@ -146,16 +178,16 @@ function Settings() {
 
               <Stack gap='md'>
                 <TextInput
-                  label='Nazwa gabinetu'
-                  placeholder='Gabinet Psychologiczny'
+                  label={t('settings.sms.practiceName.label')}
+                  placeholder={t('settings.sms.practiceName.placeholder')}
                   value={practitionerName}
                   onChange={e => setPractitionerName(e.target.value)}
-                  description='Nazwa wyświetlana w wiadomościach SMS'
+                  description={t('settings.sms.practiceName.description')}
                 />
 
                 <Select
-                  label='Tytuł zawodowy'
-                  placeholder='Wybierz tytuł'
+                  label={t('settings.sms.practitionerTitle.label')}
+                  placeholder={t('settings.sms.practitionerTitle.placeholder')}
                   value={practitionerTitle}
                   onChange={value => setPractitionerTitle(value || 'mgr')}
                   data={[
@@ -164,7 +196,7 @@ function Settings() {
                     { value: 'dr hab.', label: 'dr hab.' },
                     { value: 'prof.', label: 'prof.' },
                   ]}
-                  description='Tytuł używany w wiadomościach SMS'
+                  description={t('settings.sms.practitionerTitle.description')}
                 />
 
                 <Divider variant='dashed' />
@@ -179,10 +211,10 @@ function Settings() {
                     color={currentPalette.primary}
                   >
                     <Text size='sm' fw={500}>
-                      Szablony wiadomości SMS
+                      {t('settings.sms.templates.title')}
                     </Text>
                   </Button>
-                  
+
                   <Collapse in={templatesOpened}>
                     <SMSTemplateManager />
                   </Collapse>
@@ -197,7 +229,7 @@ function Settings() {
               <Group align='center' gap='sm'>
                 <IconClock size={20} color={currentPalette.primary} />
                 <Text fw={600} size='lg'>
-                  Ustawienia wizyt
+                  {t('settings.appointments.title')}
                 </Text>
               </Group>
 
@@ -205,26 +237,26 @@ function Settings() {
 
               <Stack gap='md'>
                 <NumberInput
-                  label='Domyślny czas trwania wizyty (minuty)'
-                  placeholder='60'
+                  label={t('settings.appointments.duration.label')}
+                  placeholder={t('settings.appointments.duration.placeholder')}
                   value={defaultAppointmentDuration}
                   onChange={value => setDefaultAppointmentDuration(Number(value) || 60)}
                   min={15}
                   max={300}
                   step={5}
-                  description='Domyślny czas trwania nowej wizyty'
+                  description={t('settings.appointments.duration.description')}
                 />
 
                 <TagsInput
-                  label='Predefiniowane godziny wizyt'
-                  placeholder='Dodaj godzinę (np. 14:15)'
+                  label={t('settings.appointments.hours.label')}
+                  placeholder={t('settings.appointments.hours.placeholder')}
                   value={appointmentHours}
                   onChange={setAppointmentHours}
-                  description='Te godziny będą dostępne w dropdownie podczas dodawania nowej wizyty'
+                  description={t('settings.appointments.hours.description')}
                   clearable
                 />
                 <Text size='xs' c='dimmed'>
-                  Wpisz godzinę w formacie HH:mm i naciśnij Enter, aby dodać.
+                  {t('settings.appointments.hours.hint')}
                 </Text>
               </Stack>
 
@@ -240,7 +272,7 @@ function Settings() {
               <Group align='center' gap='sm'>
                 <IconDatabase size={20} color={currentPalette.primary} />
                 <Text fw={600} size='lg'>
-                  Aplikacja i dane
+                  {t('settings.data.title')}
                 </Text>
               </Group>
 
@@ -249,9 +281,9 @@ function Settings() {
               {/* Demo Data Section */}
               <Group justify='space-between' align='flex-start'>
                 <Stack gap='xs' style={{ flex: 1 }}>
-                  <Text fw={500}>Dodaj dane demonstracyjne</Text>
+                  <Text fw={500}>{t('settings.data.demo.title')}</Text>
                   <Text size='sm' c='dimmed'>
-                    Dodaj przykładowych pacjentów do testowania aplikacji
+                    {t('settings.data.demo.description')}
                   </Text>
                 </Stack>
                 <Button
@@ -261,7 +293,7 @@ function Settings() {
                   size='sm'
                   onClick={handleAddDemoData}
                 >
-                  Dodaj demo
+                  {t('settings.data.demo.button')}
                 </Button>
               </Group>
 
@@ -270,9 +302,9 @@ function Settings() {
               {/* Export Data Section */}
               <Group justify='space-between' align='flex-start'>
                 <Stack gap='xs' style={{ flex: 1 }}>
-                  <Text fw={500}>Eksport danych</Text>
+                  <Text fw={500}>{t('settings.data.export.title')}</Text>
                   <Text size='sm' c='dimmed'>
-                    Pobierz kopię zapasową wszystkich danych
+                    {t('settings.data.export.description')}
                   </Text>
                 </Stack>
                 <Button
@@ -285,7 +317,7 @@ function Settings() {
                     console.log('Eksport danych...');
                   }}
                 >
-                  Eksportuj
+                  {t('settings.data.export.button')}
                 </Button>
               </Group>
 
@@ -295,10 +327,10 @@ function Settings() {
               <Group justify='space-between' align='flex-start'>
                 <Stack gap='xs' style={{ flex: 1 }}>
                   <Text fw={500} c='red'>
-                    Usuń wszystkie dane
+                    {t('settings.data.clear.title')}
                   </Text>
                   <Text size='sm' c='dimmed'>
-                    Trwale usuń wszystkich pacjentów i wizyty
+                    {t('settings.data.clear.description')}
                   </Text>
                 </Stack>
                 <Button
@@ -308,7 +340,7 @@ function Settings() {
                   size='sm'
                   onClick={handleClearAllData}
                 >
-                  Wyczyść dane
+                  {t('settings.data.clear.button')}
                 </Button>
               </Group>
             </Stack>
@@ -320,7 +352,7 @@ function Settings() {
               <Group align='center' gap='sm'>
                 <IconShield size={20} color={currentPalette.accent} />
                 <Text fw={600} size='lg'>
-                  Prywatność i bezpieczeństwo
+                  {t('settings.privacy.title')}
                 </Text>
               </Group>
 
@@ -329,29 +361,28 @@ function Settings() {
               <Stack gap='sm'>
                 <Group align='flex-start' gap='sm'>
                   <Text fw={500} size='sm'>
-                    Lokalny storage:
+                    {t('settings.privacy.localStorage.title')}
                   </Text>
                   <Text size='sm' c='dimmed' style={{ flex: 1 }}>
-                    Wszystkie dane są przechowywane lokalnie na twoim
-                    urządzeniu.
+                    {t('settings.privacy.localStorage.description')}
                   </Text>
                 </Group>
 
                 <Group align='flex-start' gap='sm'>
                   <Text fw={500} size='sm'>
-                    Offline-first:
+                    {t('settings.privacy.offline.title')}
                   </Text>
                   <Text size='sm' c='dimmed' style={{ flex: 1 }}>
-                    Aplikacja działa bez połączenia z internetem.
+                    {t('settings.privacy.offline.description')}
                   </Text>
                 </Group>
 
                 <Group align='flex-start' gap='sm'>
                   <Text fw={500} size='sm'>
-                    HIPAA-compliant:
+                    {t('settings.privacy.hipaa.title')}
                   </Text>
                   <Text size='sm' c='dimmed' style={{ flex: 1 }}>
-                    Zbudowana z myślą o ochronie danych medycznych.
+                    {t('settings.privacy.hipaa.description')}
                   </Text>
                 </Group>
               </Stack>
@@ -364,7 +395,7 @@ function Settings() {
               <Group align='center' gap='sm'>
                 <IconInfoCircle size={20} color={currentPalette.text} />
                 <Text fw={600} size='lg'>
-                  O aplikacji
+                  {t('settings.about.title')}
                 </Text>
               </Group>
 
@@ -373,7 +404,7 @@ function Settings() {
               <Stack gap='sm'>
                 <Group justify='space-between' align='center'>
                   <Text fw={500} size='sm'>
-                    Wersja aplikacji
+                    {t('settings.about.version')}
                   </Text>
                   <Badge variant='light' color={currentPalette.primary}>
                     1.0.0-BETA
@@ -382,7 +413,7 @@ function Settings() {
 
                 <Group justify='space-between' align='center'>
                   <Text fw={500} size='sm'>
-                    Ostatnia aktualizacja
+                    {t('settings.about.lastUpdate')}
                   </Text>
                   <Text size='sm' c='dimmed'>
                     17.07.2025 01:51:59 AM
@@ -393,9 +424,9 @@ function Settings() {
               <Divider variant='dashed' />
 
               <Text size='xs' c='dimmed' ta='center'>
-                P - Progressive Web App dla psychologów
+                {t('settings.about.description')}
                 <br />
-                Zbudowane z ❤️ dla społeczności terapeutycznej
+                {t('settings.about.tagline')}
               </Text>
             </Stack>
           </Card>

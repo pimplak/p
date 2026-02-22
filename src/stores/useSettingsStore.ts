@@ -5,10 +5,12 @@ import { DEFAULT_SMS_TEMPLATES, type SMSTemplate } from '../utils/sms';
 import type { AppointmentTypeConfig } from '../types/Appointment';
 
 export type ColorPalette = 'naturalne' | 'magenta-rose';
+export type Language = 'pl' | 'en';
 
 interface SettingsStore {
   colorPalette: ColorPalette;
   darkMode: boolean;
+  language: Language;
 
   // Calendar settings
   hideWeekends: boolean;
@@ -24,6 +26,7 @@ interface SettingsStore {
   // Actions
   setColorPalette: (palette: ColorPalette) => void;
   toggleDarkMode: () => void;
+  setLanguage: (language: Language) => void;
   toggleHideWeekends: () => void;
   setAppointmentHours: (hours: string[]) => void;
   setDefaultAppointmentDuration: (duration: number) => void;
@@ -74,6 +77,7 @@ export const useSettingsStore = create<SettingsStore>((set, get) => {
     saveSettings({
       colorPalette: state.colorPalette,
       darkMode: state.darkMode,
+      language: state.language,
       hideWeekends: state.hideWeekends,
       appointmentHours: state.appointmentHours,
       defaultAppointmentDuration: state.defaultAppointmentDuration,
@@ -102,6 +106,7 @@ export const useSettingsStore = create<SettingsStore>((set, get) => {
   return {
     colorPalette: storedSettings.colorPalette || 'naturalne',
     darkMode: storedSettings.darkMode ?? true,
+    language: storedSettings.language || 'pl',
     hideWeekends: storedSettings.hideWeekends ?? false,
     appointmentHours: storedSettings.appointmentHours || generateDefaultHours(),
     defaultAppointmentDuration: storedSettings.defaultAppointmentDuration || DEFAULT_APPOINTMENT_DURATION,
@@ -120,6 +125,13 @@ export const useSettingsStore = create<SettingsStore>((set, get) => {
 
     toggleDarkMode: () => {
       set(state => ({ darkMode: !state.darkMode }));
+      saveAllSettings();
+    },
+
+    setLanguage: language => {
+      set({ language });
+      // Save to separate localStorage key for i18n
+      localStorage.setItem('p-language', language);
       saveAllSettings();
     },
 

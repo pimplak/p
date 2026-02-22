@@ -2,6 +2,7 @@ import { notifications } from '@mantine/notifications';
 import { format } from 'date-fns';
 import * as XLSX from 'xlsx';
 import { EXPORT_CHUNK_SIZE } from '../constants/business';
+import i18n from '../i18n/config';
 import { db } from './db';
 import type { AppointmentWithPatient } from '../types/Appointment';
 import type { PatientWithAppointments, Patient } from '../types/Patient';
@@ -71,8 +72,8 @@ export async function exportToExcel(
     // Export patients if requested - z progresem
     if (options.patients !== false && filteredPatients.length > 0) {
       notificationId = notifications.show({
-        title: 'Eksport w toku...',
-        message: 'Przetwarzanie danych pacjentów (0%)',
+        title: i18n.t('export.progress.exportInProgress'),
+        message: i18n.t('export.progress.processingPatients', { progress: 0 }),
         color: 'blue',
         loading: true,
         autoClose: false,
@@ -103,7 +104,7 @@ export async function exportToExcel(
         const progress = Math.round(((chunkIndex + 1) / totalChunks) * 100);
         notifications.update({
           id: notificationId,
-          message: `Przetwarzanie danych pacjentów (${progress}%)`,
+          message: i18n.t('export.progress.processingPatients', { progress }),
         });
 
         // Small delay for UI responsiveness
@@ -118,8 +119,8 @@ export async function exportToExcel(
     if (options.appointments !== false && filteredAppointments.length > 0) {
       if (!notificationId) {
         notificationId = notifications.show({
-          title: 'Eksport w toku...',
-          message: 'Przetwarzanie wizyt (0%)',
+          title: i18n.t('export.progress.exportInProgress'),
+          message: i18n.t('export.progress.processingAppointments', { progress: 0 }),
           color: 'blue',
           loading: true,
           autoClose: false,
@@ -127,7 +128,7 @@ export async function exportToExcel(
       } else {
         notifications.update({
           id: notificationId,
-          message: 'Przetwarzanie wizyt (0%)',
+          message: i18n.t('export.progress.processingAppointments', { progress: 0 }),
         });
       }
 
@@ -185,7 +186,7 @@ export async function exportToExcel(
         const progress = Math.round(((chunkIndex + 1) / totalChunks) * 100);
         notifications.update({
           id: notificationId,
-          message: `Przetwarzanie wizyt (${progress}%)`,
+          message: i18n.t('export.progress.processingAppointments', { progress }),
         });
 
         // Small delay for UI responsiveness
@@ -201,7 +202,7 @@ export async function exportToExcel(
     if (notificationId) {
       notifications.update({
         id: notificationId,
-        message: 'Generowanie pliku...',
+        message: i18n.t('export.progress.generatingFile'),
       });
     }
 
@@ -220,8 +221,8 @@ export async function exportToExcel(
     if (notificationId) {
       notifications.update({
         id: notificationId,
-        title: 'Eksport zakończony!',
-        message: `Plik ${filename} został pobrany`,
+        title: i18n.t('export.progress.completed'),
+        message: i18n.t('export.progress.fileDownloaded', { filename }),
         color: 'green',
         loading: false,
         autoClose: 3000,
@@ -232,8 +233,8 @@ export async function exportToExcel(
     if (notificationId) {
       notifications.update({
         id: notificationId,
-        title: 'Błąd eksportu',
-        message: 'Nie udało się wyeksportować danych',
+        title: i18n.t('export.progress.exportError'),
+        message: i18n.t('export.progress.exportFailed'),
         color: 'red',
         loading: false,
         autoClose: 5000,

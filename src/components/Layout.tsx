@@ -7,6 +7,7 @@ import {
   IconSettings,
   IconUsers,
 } from '@tabler/icons-react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useTheme } from '../hooks/useTheme';
 import type { ReactNode } from 'react';
@@ -16,19 +17,20 @@ interface LayoutProps {
 }
 
 export function Layout({ children }: LayoutProps) {
+  const { t } = useTranslation();
   const [opened, { toggle, close }] = useDisclosure();
   const navigate = useNavigate();
   const location = useLocation();
   const { currentPalette } = useTheme();
 
   const mainNavItems = [
-    { label: 'Dashboard', icon: IconDashboard, path: '/' },
-    { label: 'Pacjenci', icon: IconUsers, path: '/patients' },
-    { label: 'Kalendarz', icon: IconCalendar, path: '/calendar' },
+    { label: t('navigation.dashboard'), icon: IconDashboard, path: '/' },
+    { label: t('navigation.patients'), icon: IconUsers, path: '/patients' },
+    { label: t('navigation.calendar'), icon: IconCalendar, path: '/calendar' },
   ];
 
   const settingsNavItems = [
-    { label: 'Ustawienia', icon: IconSettings, path: '/settings' },
+    { label: t('navigation.settings'), icon: IconSettings, path: '/settings' },
   ];
 
   const handleNavigation = (path: string) => {
@@ -68,7 +70,7 @@ export function Layout({ children }: LayoutProps) {
             visibleFrom='md'
             style={{ color: currentPalette.text, opacity: 0.7 }}
           >
-            Zarządzanie praktyką psychologiczną
+            {t('navigation.tagline')}
           </Text>
         </Group>
       </AppShell.Header>
@@ -81,7 +83,7 @@ export function Layout({ children }: LayoutProps) {
           mb='md'
           style={{ color: currentPalette.text, opacity: 0.6 }}
         >
-          Główne
+          {t('navigation.mainSection')}
         </Text>
         {mainNavItems.map(item => (
           <NavLink
@@ -102,7 +104,7 @@ export function Layout({ children }: LayoutProps) {
           mb='md'
           style={{ color: currentPalette.text, opacity: 0.6 }}
         >
-          Aplikacja
+          {t('navigation.appSection')}
         </Text>
         {settingsNavItems.map(item => (
           <NavLink

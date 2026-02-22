@@ -1,5 +1,6 @@
 import { SimpleGrid, Stack, Title } from '@mantine/core';
 import { IconUsers, IconCalendar } from '@tabler/icons-react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { StatsCard } from '../ui/StatsCard';
 
@@ -29,6 +30,7 @@ export const DashboardStats: React.FC<DashboardStatsProps> = ({
     nextAppointment: null,
   },
 }) => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   return (
@@ -43,7 +45,7 @@ export const DashboardStats: React.FC<DashboardStatsProps> = ({
           marginBottom: '0.5rem',
         }}
       >
-        Przegląd praktyki
+        {t('dashboard.practiceOverview')}
       </Title>
 
       <SimpleGrid
@@ -52,17 +54,17 @@ export const DashboardStats: React.FC<DashboardStatsProps> = ({
         style={{ marginBottom: '2rem' }}
       >
         <StatsCard
-          title='Aktywni pacjenci'
+          title={t('dashboard.stats.activePatients')}
           value={stats.totalPatients}
-          description='Łącznie w systemie'
+          description={t('dashboard.stats.totalInSystem')}
           icon={<IconUsers size={20} />}
           onClick={() => navigate('/patients')}
         />
 
         <StatsCard
-          title='Sesje w tym tygodniu'
+          title={t('dashboard.stats.sessionsThisWeek')}
           value={stats.sessionsThisWeek}
-          description='Zaplanowane spotkania'
+          description={t('dashboard.stats.scheduledMeetings')}
           icon={<IconCalendar size={20} />}
           onClick={() => navigate('/calendar')}
         />
@@ -71,19 +73,19 @@ export const DashboardStats: React.FC<DashboardStatsProps> = ({
       {/* Secondary stats row */}
       <SimpleGrid cols={{ base: 1, sm: 2 }} spacing='xl'>
         <StatsCard
-          title='Dzisiejsze wizyty'
+          title={t('dashboard.stats.todaysAppointments')}
           value={stats.todaysAppointments}
-          description='Zaplanowane na dziś'
+          description={t('dashboard.stats.scheduledForToday')}
           icon={<IconCalendar size={20} />}
         />
 
         <StatsCard
-          title='Najbliższa sesja'
-          value={stats.nextAppointment ? stats.nextAppointment.time : 'Brak'}
+          title={t('dashboard.stats.nextSession')}
+          value={stats.nextAppointment ? stats.nextAppointment.time : t('dashboard.stats.noScheduledAppointments')}
           description={
             stats.nextAppointment
               ? stats.nextAppointment.patient
-              : 'Brak zaplanowanych wizyt'
+              : t('dashboard.stats.noScheduledAppointments')
           }
           icon={<IconCalendar size={20} />}
         />

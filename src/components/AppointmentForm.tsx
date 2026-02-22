@@ -19,6 +19,7 @@ import { useForm } from '@mantine/form';
 import { notifications } from '@mantine/notifications';
 import dayjs from 'dayjs';
 import { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { DEFAULT_APPOINTMENT_PRICE } from '../constants/business';
 import { APPOINTMENT_STATUS } from '../constants/status';
 import { useTheme } from '../hooks/useTheme';
@@ -68,6 +69,7 @@ export function AppointmentForm({
   onSuccess,
   onCancel,
 }: AppointmentFormProps) {
+  const { t } = useTranslation();
   const { addAppointment, updateAppointment, rescheduleAppointment, loading } = useAppointmentStore();
   const { patients } = usePatientStore();
   const { appointmentHours, defaultAppointmentDuration, appointmentTypes } = useSettingsStore();
@@ -104,15 +106,15 @@ export function AppointmentForm({
       requiresPayment: appointment?.requiresPayment || false,
     },
     validate: {
-      patientId: (value) => (!value ? 'Wybierz pacjenta' : null),
+      patientId: (value) => (!value ? t('appointmentForm.patientRequired') : null),
       duration: (value) =>
-        !value || value < 15 ? 'Czas trwania musi być co najmniej 15 minut' : null,
+        !value || value < 15 ? t('appointmentForm.durationMin') : null,
       price: (value) =>
-        value !== undefined && value < 0 ? 'Cena nie może być ujemna' : null,
-      date: (value) => (!value ? 'Wybierz datę i godzinę' : null),
+        value !== undefined && value < 0 ? t('appointmentForm.priceNegative') : null,
+      date: (value) => (!value ? t('appointmentForm.dateRequired') : null),
       newRescheduleDate: (value, values) =>
         values.status === APPOINTMENT_STATUS.RESCHEDULED && !value
-          ? 'Wybierz datę nowej wizyty'
+          ? t('appointmentForm.reschedule.selectNewDate')
           : null,
     },
   });
@@ -245,23 +247,23 @@ export function AppointmentForm({
             appointmentData
           );
           notifications.show({
-            title: 'Sukces',
-            message: 'Wizyta została przełożona i utworzono nową',
+            title: t('common.success'),
+            message: t('appointmentForm.notifications.appointmentRescheduled'),
             color: 'green',
           });
         } else {
           await updateAppointment(appointment.id, appointmentData);
           notifications.show({
-            title: 'Sukces',
-            message: 'Wizyta została zaktualizowana',
+            title: t('common.success'),
+            message: t('appointmentForm.notifications.appointmentUpdated'),
             color: 'green',
           });
         }
       } else {
         await addAppointment(appointmentData);
         notifications.show({
-          title: 'Sukces',
-          message: 'Wizyta została dodana',
+          title: t('common.success'),
+          message: t('appointmentForm.notifications.appointmentAdded'),
           color: 'green',
         });
       }
@@ -269,8 +271,8 @@ export function AppointmentForm({
     } catch (error) {
       console.error('Błąd podczas zapisywania wizyty:', error);
       notifications.show({
-        title: 'Błąd',
-        message: 'Nie udało się zapisać wizyty',
+        title: t('common.error'),
+        message: t('appointmentForm.notifications.errorSaving'),
         color: 'red',
       });
     }
@@ -282,11 +284,11 @@ export function AppointmentForm({
   }));
 
   const statusOptions = [
-    { value: AppointmentStatus.SCHEDULED, label: 'Zaplanowana' },
-    { value: AppointmentStatus.COMPLETED, label: 'Zakończona' },
-    { value: AppointmentStatus.CANCELLED, label: 'Anulowana' },
-    { value: AppointmentStatus.NO_SHOW, label: 'Nieobecność' },
-    ...(appointment ? [{ value: AppointmentStatus.RESCHEDULED, label: 'Przełożona' }] : []),
+    { value: AppointmentStatus.SCHEDULED, label: t('status.appointment.scheduled') },
+    { value: AppointmentStatus.COMPLETED, label: t('status.appointment.completed') },
+    { value: AppointmentStatus.CANCELLED, label: t('status.appointment.cancelled') },
+    { value: AppointmentStatus.NO_SHOW, label: t('status.appointment.no_show') },
+    ...(appointment ? [{ value: AppointmentStatus.RESCHEDULED, label: t('status.appointment.rescheduled') }] : []),
   ];
 
   const typeOptions = appointmentTypes.map(type => ({
@@ -295,10 +297,10 @@ export function AppointmentForm({
   }));
 
   const paymentMethodOptions = [
-    { value: PaymentMethod.CASH, label: 'Gotówka' },
-    { value: PaymentMethod.CARD, label: 'Karta' },
-    { value: PaymentMethod.TRANSFER, label: 'Przelew' },
-    { value: PaymentMethod.OTHER, label: 'Inne' },
+    { value: PaymentMethod.CASH, label: t('appointmentForm.paymentMethods.cash') },
+    { value: PaymentMethod.CARD, label: t('appointmentForm.paymentMethods.card') },
+    { value: PaymentMethod.TRANSFER, label: t('appointmentForm.paymentMethods.transfer') },
+    { value: PaymentMethod.OTHER, label: t('appointmentForm.paymentMethods.other') },
   ];
 
   return (
@@ -309,7 +311,7 @@ export function AppointmentForm({
             <Stack gap="xs">
               {rescheduledFrom && (
                 <Text size="sm">
-                  Ta wizyta została przełożona z dnia:{' '}
+                  {t('appointmentForm.reschedule.rescheduledFrom')}{' '}
                   <Text span fw={600}>
                     {dayjs(rescheduledFrom.date).format('DD.MM.YYYY HH:mm')}
                   </Text>
@@ -317,7 +319,7 @@ export function AppointmentForm({
               )}
               {rescheduledTo && (
                 <Text size="sm">
-                  Ta wizyta została przełożona na dzień:{' '}
+                  {t('appointmentForm.reschedule.rescheduledTo')}{' '}
                   <Text span fw={600}>
                     {dayjs(rescheduledTo.date).format('DD.MM.YYYY HH:mm')}
                   </Text>
@@ -327,8 +329,8 @@ export function AppointmentForm({
           </Card>
         )}
         <Select
-          label='Pacjent'
-          placeholder='Wybierz pacjenta'
+          label={t('appointmentForm.patient')}
+          placeholder={t('appointmentForm.patientPlaceholder')}
           required
           data={patientOptions}
           searchable
@@ -337,16 +339,16 @@ export function AppointmentForm({
 
         <Group grow>
           <DatePickerInput
-            label='Data'
-            placeholder='Wybierz datę'
+            label={t('appointmentForm.date')}
+            placeholder={t('appointmentForm.datePlaceholder')}
             required
             value={toDate(form.values.date)}
             onChange={handleDateChange}
             error={form.errors.date}
           />
           <Select
-            label='Godzina'
-            placeholder='Wybierz godzinę'
+            label={t('appointmentForm.time')}
+            placeholder={t('appointmentForm.timePlaceholder')}
             required
             data={appointmentHours}
             value={dayjs(form.values.date).format('HH:mm')}
@@ -356,8 +358,8 @@ export function AppointmentForm({
 
         <Group grow>
           <NumberInput
-            label='Czas trwania (minuty)'
-            placeholder='50'
+            label={t('appointmentForm.duration')}
+            placeholder={t('appointmentForm.durationPlaceholder')}
             min={15}
             max={300}
             step={5}
@@ -366,7 +368,7 @@ export function AppointmentForm({
           />
         </Group>
 
-        <Input.Wrapper label='Typ wizyty'>
+        <Input.Wrapper label={t('appointmentForm.type')}>
           <ScrollArea scrollbars='x' type='never' mt='xs'>
             <Box style={{ display: 'flex', width: 'max-content', minWidth: '100%' }}>
               <SegmentedControl
@@ -378,7 +380,7 @@ export function AppointmentForm({
           </ScrollArea>
         </Input.Wrapper>
 
-        <Input.Wrapper label='Status'>
+        <Input.Wrapper label={t('appointmentForm.status')}>
           <ScrollArea scrollbars='x' type='never' mt='xs'>
             <Box style={{ display: 'flex', width: 'max-content', minWidth: '100%' }}>
               <SegmentedControl
@@ -394,22 +396,22 @@ export function AppointmentForm({
           <Card withBorder p='md' bg={isDark ? `${currentPalette.surface}` : 'red.0'}>
             <Stack gap='sm'>
               <Text fw={600} size='sm' c={isDark ? currentPalette.text : 'red.7'}>
-                Szczegóły odwołania
+                {t('appointmentForm.cancellation.title')}
               </Text>
-              
+
               <Group grow>
                 <DatePickerInput
-                  label='Data odwołania'
-                  placeholder='Kiedy odwołano?'
+                  label={t('appointmentForm.cancellation.date')}
+                  placeholder={t('appointmentForm.cancellation.datePlaceholder')}
                   {...form.getInputProps('cancelledAt')}
                 />
-                <Input.Wrapper label='Typ odwołania'>
+                <Input.Wrapper label={t('appointmentForm.cancellation.type')}>
                   <SegmentedControl
                     fullWidth
                     mt='xs'
                     data={[
-                      { label: 'Bezpłatne', value: 'false' },
-                      { label: 'Płatne', value: 'true' },
+                      { label: t('status.payment.free'), value: 'false' },
+                      { label: t('status.payment.requiresPayment'), value: 'true' },
                     ]}
                     value={form.values.requiresPayment ? 'true' : 'false'}
                     onChange={(val) => form.setFieldValue('requiresPayment', val === 'true')}
@@ -418,8 +420,8 @@ export function AppointmentForm({
               </Group>
 
               <Textarea
-                label='Powód odwołania'
-                placeholder='Dlaczego wizyta została odwołana?'
+                label={t('appointmentForm.cancellation.reason')}
+                placeholder={t('appointmentForm.cancellation.reasonPlaceholder')}
                 {...form.getInputProps('cancellationReason')}
               />
             </Stack>
@@ -429,19 +431,19 @@ export function AppointmentForm({
         {form.values.status === APPOINTMENT_STATUS.RESCHEDULED && (
           <Card withBorder p='md' bg={isDark ? `${currentPalette.primary}1A` : 'blue.0'}>
             <Text fw={600} size='sm' mb='xs' c={isDark ? currentPalette.primary : 'blue.7'}>
-              Nowy termin wizyty
+              {t('appointmentForm.reschedule.title')}
             </Text>
             <Group grow>
               <DatePickerInput
-                label='Data nowej wizyty'
-                placeholder='Wybierz datę'
+                label={t('appointmentForm.reschedule.newDate')}
+                placeholder={t('appointmentForm.datePlaceholder')}
                 required
                 value={toDate(form.values.newRescheduleDate)}
                 onChange={handleRescheduleDateChange}
               />
               <Select
-                label='Godzina'
-                placeholder='Wybierz godzinę'
+                label={t('appointmentForm.time')}
+                placeholder={t('appointmentForm.timePlaceholder')}
                 required
                 data={appointmentHours}
                 value={dayjs(form.values.newRescheduleDate).format('HH:mm')}
@@ -452,8 +454,8 @@ export function AppointmentForm({
         )}
 
         <Textarea
-          label='Notatki'
-          placeholder='Dodatkowe informacje o wizycie...'
+          label={t('appointmentForm.notes')}
+          placeholder={t('appointmentForm.notesPlaceholder')}
           minRows={3}
           {...form.getInputProps('notes')}
         />
@@ -462,11 +464,11 @@ export function AppointmentForm({
 
         <Card withBorder p='md'>
           <Text fw={600} mb='md'>
-            Płatność
+            {t('appointmentForm.payment')}
           </Text>
 
           <NumberInput
-            label='Cena (zł)'
+            label={t('appointmentForm.price')}
             placeholder={DEFAULT_APPOINTMENT_PRICE.toString()}
             min={0}
             step={10}
@@ -475,7 +477,7 @@ export function AppointmentForm({
           />
 
           <Checkbox
-            label='Opłacono'
+            label={t('appointmentForm.paid')}
             mt='md'
             {...form.getInputProps('paymentInfo.isPaid', {
               type: 'checkbox',
@@ -486,12 +488,12 @@ export function AppointmentForm({
             <>
               <Stack gap='md' mt='md'>
                 <DatePickerInput
-                  label='Data płatności'
-                  placeholder='Kiedy opłacono?'
+                  label={t('appointmentForm.paymentDate')}
+                  placeholder={t('appointmentForm.paymentDatePlaceholder')}
                   value={toDate(form.values.paymentInfo?.paidAt)}
                   onChange={handlePaymentDateChange}
                 />
-                <Input.Wrapper label='Sposób płatności'>
+                <Input.Wrapper label={t('appointmentForm.paymentMethod')}>
                   <ScrollArea scrollbars='x' type='never' mt='xs'>
                     <Box style={{ display: 'flex', width: 'max-content', minWidth: '100%' }}>
                       <SegmentedControl
@@ -505,8 +507,8 @@ export function AppointmentForm({
               </Stack>
 
               <Textarea
-                label='Notatki do płatności'
-                placeholder='Dodatkowe informacje o płatności...'
+                label={t('appointmentForm.paymentNotes')}
+                placeholder={t('appointmentForm.paymentNotesPlaceholder')}
                 mt='md'
                 {...form.getInputProps('paymentInfo.notes')}
               />
@@ -516,10 +518,10 @@ export function AppointmentForm({
 
         <Group justify='flex-end' mt='md'>
           <Button variant='light' onClick={onCancel}>
-            Anuluj
+            {t('common.cancel')}
           </Button>
           <Button type='submit' loading={loading}>
-            {appointment ? 'Aktualizuj' : 'Dodaj'}
+            {appointment ? t('common.update') : t('common.add')}
           </Button>
         </Group>
       </Stack>

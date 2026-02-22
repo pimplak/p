@@ -9,9 +9,11 @@ import {
   Badge,
 } from '@mantine/core';
 import { IconChartLine, IconClock } from '@tabler/icons-react';
+import { useTranslation } from 'react-i18next';
 import { useTheme } from '../hooks/useTheme';
 
 function Analytics() {
+  const { t } = useTranslation();
   const { currentPalette } = useTheme();
 
   return (
@@ -23,9 +25,9 @@ function Analytics() {
             <IconChartLine size={24} />
           </ThemeIcon>
           <div>
-            <Title order={1}>Statystyki</Title>
+            <Title order={1}>{t('analytics.title')}</Title>
             <Text size='sm' c='dimmed'>
-              Analiza i raporty praktyki terapeutycznej
+              {t('analytics.subtitle')}
             </Text>
           </div>
         </Group>
@@ -39,16 +41,15 @@ function Analytics() {
 
             <Stack gap='sm' align='center'>
               <Title order={2} size='h3'>
-                Więcej funkcji będzie dostępnych soon
+                {t('analytics.comingSoon')}
               </Title>
               <Text size='lg' c='dimmed' maw={500}>
-                Przygotowujemy zaawansowane narzędzia analityczne do śledzenia
-                postępów praktyki i efektywności terapii.
+                {t('analytics.comingSoonDescription')}
               </Text>
             </Stack>
 
             <Badge size='lg' variant='light' color={currentPalette.primary}>
-              W przygotowaniu
+              {t('analytics.inDevelopment')}
             </Badge>
           </Stack>
         </Card>
@@ -57,16 +58,16 @@ function Analytics() {
         <Card shadow='sm' padding='lg' radius='md' withBorder>
           <Stack gap='md'>
             <Title order={3} size='h4'>
-              Planowane funkcje:
+              {t('analytics.plannedFeatures.title')}
             </Title>
 
             <Stack gap='xs'>
-              <Text size='sm'>📈 Wykresy postępów pacjentów</Text>
-              <Text size='sm'>💰 Analiza przychodów i płatności</Text>
-              <Text size='sm'>📅 Raport wykorzystania czasu</Text>
-              <Text size='sm'>📊 Statystyki skuteczności terapii</Text>
-              <Text size='sm'>📋 Raporty compliance i frekwencji</Text>
-              <Text size='sm'>📄 Eksport raportów do PDF/Excel</Text>
+              <Text size='sm'>📈 {t('analytics.plannedFeatures.patientProgress')}</Text>
+              <Text size='sm'>💰 {t('analytics.plannedFeatures.revenueAnalysis')}</Text>
+              <Text size='sm'>📅 {t('analytics.plannedFeatures.timeUsage')}</Text>
+              <Text size='sm'>📊 {t('analytics.plannedFeatures.therapyEffectiveness')}</Text>
+              <Text size='sm'>📋 {t('analytics.plannedFeatures.compliance')}</Text>
+              <Text size='sm'>📄 {t('analytics.plannedFeatures.exportReports')}</Text>
             </Stack>
           </Stack>
         </Card>
@@ -75,14 +76,13 @@ function Analytics() {
         <Card shadow='sm' padding='lg' radius='md' withBorder>
           <Stack gap='md'>
             <Title order={3} size='h4'>
-              Dostępne już teraz:
+              {t('analytics.currentFeatures.title')}
             </Title>
 
             <Text size='sm'>
-              🔹 Podstawowe statystyki praktyki znajdziesz na{' '}
-              <strong>Dashboard</strong>
+              🔹 {t('analytics.currentFeatures.dashboardStats')}
               <br />
-              🔹 Analiza SMS dostępna powyżej w tej sekcji
+              🔹 {t('analytics.currentFeatures.smsAnalysis')}
             </Text>
           </Stack>
         </Card>

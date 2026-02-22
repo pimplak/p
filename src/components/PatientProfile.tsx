@@ -8,6 +8,7 @@ import { notifications } from '@mantine/notifications';
 import { IconAlertCircle } from '@tabler/icons-react';
 import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useTheme } from '../hooks/useTheme';
 import { usePatientStore } from '../stores/usePatientStore';
 import { PatientForm } from './PatientForm';
@@ -21,6 +22,7 @@ import type { Patient } from '../types/Patient';
 function PatientProfile() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const { utilityColors } = useTheme();
   const { getPatient, archivePatient, restorePatient, loading, error } =
     usePatientStore();
@@ -38,16 +40,16 @@ function PatientProfile() {
         } else {
           navigate('/patients', { replace: true });
           notifications.show({
-            title: 'Błąd',
-            message: 'Nie znaleziono pacjenta',
+            title: t('common.error'),
+            message: t('patients.notifications.patientNotFound'),
             color: 'red',
           });
         }
       } catch (error) {
         console.error('Błąd podczas ładowania pacjenta:', error);
         notifications.show({
-          title: 'Błąd',
-          message: 'Nie udało się załadować danych pacjenta',
+          title: t('common.error'),
+          message: t('patients.notifications.errorLoadingPatient'),
           color: 'red',
         });
       }
@@ -68,16 +70,16 @@ function PatientProfile() {
       await archivePatient(patient.id);
       setArchiveModalOpen(false);
       notifications.show({
-        title: 'Sukces',
-        message: 'Pacjent został zarchiwizowany',
+        title: t('common.success'),
+        message: t('patients.notifications.patientArchived'),
         color: 'green',
       });
       // Odśwież dane pacjenta
       await loadPatient(patient.id);
     } catch {
       notifications.show({
-        title: 'Błąd',
-        message: 'Nie udało się zarchiwizować pacjenta',
+        title: t('common.error'),
+        message: t('patients.notifications.errorArchiving'),
         color: 'red',
       });
     }
@@ -89,16 +91,16 @@ function PatientProfile() {
     try {
       await restorePatient(patient.id);
       notifications.show({
-        title: 'Sukces',
-        message: 'Pacjent został przywrócony',
+        title: t('common.success'),
+        message: t('patients.notifications.patientRestored'),
         color: 'green',
       });
       // Odśwież dane pacjenta
       await loadPatient(patient.id);
     } catch {
       notifications.show({
-        title: 'Błąd',
-        message: 'Nie udało się przywrócić pacjenta',
+        title: t('common.error'),
+        message: t('patients.notifications.errorRestoring'),
         color: 'red',
       });
     }
@@ -118,7 +120,7 @@ function PatientProfile() {
         {error && (
           <Alert
             icon={<IconAlertCircle size='1rem' />}
-            title='Błąd'
+            title={t('common.error')}
             color={utilityColors.error}
           >
             {error}
@@ -147,7 +149,7 @@ function PatientProfile() {
       <BottomSheet
         opened={editModalOpen}
         onClose={() => setEditModalOpen(false)}
-        title='Edytuj dane pacjenta'
+        title={t('patients.notifications.editPatientData')}
       >
         <PatientForm
           patient={patient}

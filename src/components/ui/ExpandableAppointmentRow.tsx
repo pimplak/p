@@ -22,6 +22,7 @@ import {
 } from '@tabler/icons-react';
 import { format } from 'date-fns';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useTheme } from '../../hooks/useTheme';
 import { useSettingsStore } from '../../stores/useSettingsStore';
 import { SMSReminderButton } from '../SMSReminderButton';
@@ -52,6 +53,7 @@ export function ExpandableAppointmentRow({
   getStatusLabel,
   utilityColors,
 }: ExpandableAppointmentRowProps) {
+  const { t } = useTranslation();
   const [expanded, setExpanded] = useState(false);
   const { currentPalette, utilityColors: themeUtilityColors } = useTheme();
   const appointmentTypes = useSettingsStore(state => state.appointmentTypes);
@@ -62,7 +64,7 @@ export function ExpandableAppointmentRow({
   const typeLabel =
     (appointment.type &&
       appointmentTypes.find(t => t.id === appointment.type)?.label) ||
-    'Wizyta';
+    t('calendar.appointmentRow.defaultType');
 
   const isRescheduled = appointment.status === 'rescheduled';
   const isCancelled = appointment.status === 'cancelled';
@@ -113,7 +115,7 @@ export function ExpandableAppointmentRow({
             )}
             {isRescheduled && (
               <Badge variant='outline' color='gray' size='xs' leftSection={<IconLink size='0.7rem' />}>
-                Historia
+                {t('calendar.appointmentRow.history')}
               </Badge>
             )}
           </Group>
@@ -148,7 +150,7 @@ export function ExpandableAppointmentRow({
                 onJumpToAppointment(appointment.rescheduledToId!);
               }}
             >
-              Idź do nowej wizyty
+              {t('calendar.appointmentRow.goToNewAppointment')}
             </Button>
           )}
           {appointment.rescheduledFromId && onJumpToAppointment && (
@@ -163,7 +165,7 @@ export function ExpandableAppointmentRow({
                 onJumpToAppointment(appointment.rescheduledFromId!);
               }}
             >
-              Pokaż poprzednią wizytę
+              {t('calendar.appointmentRow.showPreviousAppointment')}
             </Button>
           )}
 
@@ -171,7 +173,7 @@ export function ExpandableAppointmentRow({
           {appointment.patient?.phone && (
             <Group justify='space-between'>
               <Text size='sm' c='dimmed'>
-                Telefon:
+                {t('calendar.appointmentRow.phone')}
               </Text>
               <Text size='sm'>{appointment.patient.phone}</Text>
             </Group>
@@ -182,20 +184,20 @@ export function ExpandableAppointmentRow({
             <Box p='sm' style={{ backgroundColor: `${colors.error}15`, borderRadius: '8px' }}>
               <Stack gap='xs'>
                 <Group justify='space-between'>
-                  <Text size='sm' fw={600} color={colors.error}>Odwołana wizyta</Text>
+                  <Text size='sm' fw={600} color={colors.error}>{t('calendar.appointmentRow.cancelledAppointment')}</Text>
                   {appointment.cancelledAt && (
                     <Text size='xs' c='dimmed'>{format(new Date(appointment.cancelledAt), 'dd.MM.yyyy HH:mm')}</Text>
                   )}
                 </Group>
                 <Group justify='space-between'>
-                  <Text size='sm' c='dimmed'>Wymaga płatności:</Text>
+                  <Text size='sm' c='dimmed'>{t('calendar.appointmentRow.requiresPayment')}</Text>
                   <Badge color={appointment.requiresPayment ? 'orange' : 'gray'} size='sm'>
-                    {appointment.requiresPayment ? 'TAK' : 'NIE'}
+                    {appointment.requiresPayment ? t('calendar.appointmentRow.yes') : t('calendar.appointmentRow.no')}
                   </Badge>
                 </Group>
                 {appointment.cancellationReason && (
                   <>
-                    <Text size='xs' fw={500} c='dimmed'>Powód:</Text>
+                    <Text size='xs' fw={500} c='dimmed'>{t('calendar.appointmentRow.reason')}</Text>
                     <Text size='sm' fs='italic'>{appointment.cancellationReason}</Text>
                   </>
                 )}
@@ -205,14 +207,14 @@ export function ExpandableAppointmentRow({
 
           <Group justify='space-between'>
             <Text size='sm' c='dimmed'>
-              Typ wizyty:
+              {t('calendar.appointmentRow.appointmentType')}
             </Text>
             <Text size='sm'>{typeLabel}</Text>
           </Group>
 
           <Group justify='space-between'>
             <Text size='sm' c='dimmed'>
-              Czas trwania:
+              {t('calendar.appointmentRow.duration')}
             </Text>
             <Text size='sm'>{appointment.duration} min</Text>
           </Group>
@@ -220,7 +222,7 @@ export function ExpandableAppointmentRow({
           {appointment.price && (
             <Group justify='space-between'>
               <Text size='sm' c='dimmed'>
-                Cena:
+                {t('calendar.appointmentRow.price')}
               </Text>
               <Text size='sm' fw={500}>
                 {appointment.price} zł
@@ -230,15 +232,15 @@ export function ExpandableAppointmentRow({
 
           <Group justify='space-between'>
             <Text size='sm' c='dimmed'>
-              Płatność:
+              {t('calendar.appointmentRow.payment')}
             </Text>
             {appointment.paymentInfo?.isPaid ? (
               <Badge color={colors.success} size='sm'>
-                Opłacono
+                {t('calendar.appointmentRow.paid')}
               </Badge>
             ) : (
               <Badge color={colors.error} size='sm'>
-                Nieopłacono
+                {t('calendar.appointmentRow.unpaid')}
               </Badge>
             )}
           </Group>
@@ -246,7 +248,7 @@ export function ExpandableAppointmentRow({
           {appointment.notes && (
             <>
               <Text size='sm' c='dimmed'>
-                Notatki:
+                {t('calendar.appointmentRow.notes')}
               </Text>
               <Box p='xs' style={{ backgroundColor: `${currentPalette.background}50`, borderRadius: '4px' }}>
                 <Text size='sm' style={{ whiteSpace: 'pre-wrap' }}>{appointment.notes}</Text>
@@ -280,7 +282,7 @@ export function ExpandableAppointmentRow({
                   onRescheduleAppointment(appointment);
                 }}
               >
-                Przełóż
+                {t('calendar.appointmentRow.reschedule')}
               </Button>
             )}
             <ActionIcon
