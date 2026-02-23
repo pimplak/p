@@ -528,7 +528,7 @@
       "version": "App Version",
       "lastUpdate": "Last Update",
       "description": "P - Progressive Web App for Psychologists",
-      "tagline": "Built with ❤️ for the therapeutic community"
+      "tagline": "Built with ❤️ for the therapeutic community. 🙈 Monice"
     }
   },
 
@@ -659,7 +659,8 @@
       "magicLinkDescription": "Check your inbox and click the link to sign in.",
       "orRegister": "Don't have an account?",
       "registerLink": "Register",
-      "errorGeneric": "An error occurred while signing in. Check your credentials and try again."
+      "errorGeneric": "An error occurred while signing in. Check your credentials and try again.",
+      "forgotPassword": "Forgot password?"
     },
     "register": {
       "title": "Register",
@@ -678,6 +679,43 @@
     },
     "signOut": {
       "error": "An error occurred while signing out"
+    },
+    "account": {
+      "title": "Account",
+      "emailLabel": "Email address",
+      "changeEmailTitle": "Change email",
+      "newEmailLabel": "New email address",
+      "changeEmailSubmit": "Save email",
+      "changeEmailSuccess": "Confirmation sent to {{email}}",
+      "changePasswordTitle": "Change password",
+      "newPasswordLabel": "New password",
+      "confirmPasswordLabel": "Confirm new password",
+      "changePasswordSubmit": "Change password",
+      "changePasswordSuccess": "Password updated",
+      "errorPasswordMismatch": "Passwords do not match",
+      "errorGeneric": "An error occurred. Please try again."
+    },
+    "forgotPassword": {
+      "title": "Reset password",
+      "subtitle": "Enter your email address and we will send you a link to reset your password.",
+      "emailLabel": "Email",
+      "submit": "Send link",
+      "successTitle": "Link sent",
+      "successMessage": "Check your inbox and click the link to reset your password.",
+      "backToLogin": "Back to sign in",
+      "errorGeneric": "An error occurred. Check your email and try again."
+    },
+    "resetPassword": {
+      "title": "Set new password",
+      "subtitle": "Enter a new password for your account.",
+      "passwordLabel": "New password",
+      "confirmPasswordLabel": "Confirm new password",
+      "submit": "Set password",
+      "successMessage": "Password updated. Redirecting...",
+      "invalidLink": "The link is invalid or has expired.",
+      "backToForgot": "Send a new link",
+      "errorPasswordMismatch": "Passwords do not match",
+      "errorGeneric": "An error occurred. Please try again."
     }
   }
 }

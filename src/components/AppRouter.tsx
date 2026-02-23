@@ -15,6 +15,8 @@ const Analytics = lazy(() => import('../pages/Analytics'));
 const LoginPage = lazy(() => import('../pages/LoginPage'));
 const RegisterPage = lazy(() => import('../pages/RegisterPage'));
 const AuthCallbackPage = lazy(() => import('../pages/AuthCallbackPage'));
+const ForgotPasswordPage = lazy(() => import('../pages/ForgotPasswordPage'));
+const ResetPasswordPage = lazy(() => import('../pages/ResetPasswordPage'));
 
 // Loading fallback component
 function PageLoader() {
@@ -52,6 +54,8 @@ export function AppRouter() {
         <Route path='/login' element={<LoginPage />} />
         <Route path='/register' element={<RegisterPage />} />
         <Route path='/auth/callback' element={<AuthCallbackPage />} />
+        <Route path='/forgot-password' element={<ForgotPasswordPage />} />
+        <Route path='/reset-password' element={<ResetPasswordPage />} />
         <Route path='/*' element={<ProtectedLayout />} />
       </Routes>
     </Suspense>

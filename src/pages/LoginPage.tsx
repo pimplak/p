@@ -3,6 +3,7 @@ import {
   Anchor,
   Button,
   Center,
+  Group,
   Paper,
   PasswordInput,
   Stack,
@@ -108,6 +109,11 @@ export default function LoginPage() {
                     autoComplete='current-password'
                     {...passwordForm.getInputProps('password')}
                   />
+                  <Group justify='flex-end'>
+                    <Anchor component={Link} to='/forgot-password' size='xs'>
+                      {t('auth.login.forgotPassword')}
+                    </Anchor>
+                  </Group>
                   <Button type='submit' fullWidth loading={actionLoading} mt='xs'>
                     {t('auth.login.submitPassword')}
                   </Button>

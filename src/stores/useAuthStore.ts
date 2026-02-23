@@ -14,6 +14,9 @@ interface AuthState {
   sendMagicLink: (email: string) => Promise<void>;
   signOut: () => Promise<void>;
   clearError: () => void;
+  sendPasswordReset: (email: string) => Promise<void>;
+  updateEmail: (newEmail: string) => Promise<void>;
+  updatePassword: (newPassword: string) => Promise<void>;
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
@@ -67,4 +70,27 @@ export const useAuthStore = create<AuthState>((set) => ({
   },
 
   clearError: () => set({ error: null }),
+
+  sendPasswordReset: async (email) => {
+    set({ actionLoading: true, error: null });
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/reset-password`,
+    });
+    set({ actionLoading: false, error: error?.message ?? null });
+    if (error) throw error;
+  },
+
+  updateEmail: async (newEmail) => {
+    set({ actionLoading: true, error: null });
+    const { error } = await supabase.auth.updateUser({ email: newEmail });
+    set({ actionLoading: false, error: error?.message ?? null });
+    if (error) throw error;
+  },
+
+  updatePassword: async (newPassword) => {
+    set({ actionLoading: true, error: null });
+    const { error } = await supabase.auth.updateUser({ password: newPassword });
+    set({ actionLoading: false, error: error?.message ?? null });
+    if (error) throw error;
+  },
 }));

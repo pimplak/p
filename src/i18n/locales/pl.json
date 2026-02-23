@@ -528,7 +528,7 @@
       "version": "Wersja aplikacji",
       "lastUpdate": "Ostatnia aktualizacja",
       "description": "P - Progressive Web App dla psychologów",
-      "tagline": "Zbudowane z ❤️ dla społeczności terapeutycznej"
+      "tagline": "Zbudowane z ❤️ dla społeczności terapeutycznej.🙈 Monice"
     }
   },
 
@@ -659,7 +659,8 @@
       "magicLinkDescription": "Sprawdź swoją skrzynkę e-mail i kliknij link, aby się zalogować.",
       "orRegister": "Nie masz konta?",
       "registerLink": "Zarejestruj się",
-      "errorGeneric": "Wystąpił błąd podczas logowania. Sprawdź dane i spróbuj ponownie."
+      "errorGeneric": "Wystąpił błąd podczas logowania. Sprawdź dane i spróbuj ponownie.",
+      "forgotPassword": "Nie pamiętasz hasła?"
     },
     "register": {
       "title": "Zarejestruj się",
@@ -678,6 +679,43 @@
     },
     "signOut": {
       "error": "Wystąpił błąd podczas wylogowywania"
+    },
+    "account": {
+      "title": "Konto",
+      "emailLabel": "Adres email",
+      "changeEmailTitle": "Zmień email",
+      "newEmailLabel": "Nowy adres email",
+      "changeEmailSubmit": "Zapisz email",
+      "changeEmailSuccess": "Potwierdzenie wysłano na {{email}}",
+      "changePasswordTitle": "Zmień hasło",
+      "newPasswordLabel": "Nowe hasło",
+      "confirmPasswordLabel": "Potwierdź nowe hasło",
+      "changePasswordSubmit": "Zmień hasło",
+      "changePasswordSuccess": "Hasło zostało zmienione",
+      "errorPasswordMismatch": "Hasła nie są identyczne",
+      "errorGeneric": "Wystąpił błąd. Spróbuj ponownie."
+    },
+    "forgotPassword": {
+      "title": "Resetuj hasło",
+      "subtitle": "Podaj swój adres email, a wyślemy Ci link do resetowania hasła.",
+      "emailLabel": "Email",
+      "submit": "Wyślij link",
+      "successTitle": "Link wysłany",
+      "successMessage": "Sprawdź swoją skrzynkę e-mail i kliknij link, aby zresetować hasło.",
+      "backToLogin": "Wróć do logowania",
+      "errorGeneric": "Wystąpił błąd. Sprawdź adres email i spróbuj ponownie."
+    },
+    "resetPassword": {
+      "title": "Ustaw nowe hasło",
+      "subtitle": "Wprowadź nowe hasło dla swojego konta.",
+      "passwordLabel": "Nowe hasło",
+      "confirmPasswordLabel": "Potwierdź nowe hasło",
+      "submit": "Ustaw hasło",
+      "successMessage": "Hasło zostało zmienione. Przekierowywanie...",
+      "invalidLink": "Link jest nieprawidłowy lub wygasł.",
+      "backToForgot": "Wyślij nowy link",
+      "errorPasswordMismatch": "Hasła nie są identyczne",
+      "errorGeneric": "Wystąpił błąd. Spróbuj ponownie."
     }
   }
 }

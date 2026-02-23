@@ -1,4 +1,5 @@
 import {
+  Alert,
   Container,
   Stack,
   Group,
@@ -9,6 +10,7 @@ import {
   Button,
   Badge,
   TextInput,
+  PasswordInput,
   Select,
   Collapse,
   TagsInput,
@@ -28,19 +30,23 @@ import {
   IconChevronRight,
   IconClock,
   IconLanguage,
+  IconUser,
 } from '@tabler/icons-react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AppointmentTypesManager } from '../components/AppointmentTypesManager';
 import { SMSTemplateManager } from '../components/SMSTemplateManager';
 import { ThemeSelector } from '../components/ThemeSelector';
 import { useTheme } from '../hooks/useTheme';
 import { useAppointmentStore } from '../stores/useAppointmentStore';
+import { useAuthStore } from '../stores/useAuthStore';
 import { usePatientStore } from '../stores/usePatientStore';
 import { useSettingsStore } from '../stores/useSettingsStore';
 import { insertSampleData, clearAllData } from '../utils/sampleData';
 
 function Settings() {
   const { t, i18n } = useTranslation();
+  const { user, actionLoading, updateEmail, updatePassword } = useAuthStore();
   const { fetchPatients } = usePatientStore();
   const { fetchAppointments } = useAppointmentStore();
   const {
@@ -57,6 +63,52 @@ function Settings() {
   } = useSettingsStore();
   const { currentPalette, utilityColors } = useTheme();
   const [templatesOpened, { toggle: toggleTemplates }] = useDisclosure(false);
+
+  // Account state
+  const [newEmail, setNewEmail] = useState('');
+  const [emailSuccess, setEmailSuccess] = useState(false);
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [passwordError, setPasswordError] = useState<string | null>(null);
+
+  const handleChangeEmail = async () => {
+    if (!newEmail) return;
+    try {
+      await updateEmail(newEmail);
+      setEmailSuccess(true);
+      setNewEmail('');
+    } catch {
+      notifications.show({
+        color: 'red',
+        title: t('common.error'),
+        message: t('auth.account.errorGeneric'),
+      });
+    }
+  };
+
+  const handleChangePassword = async () => {
+    if (newPassword !== confirmPassword) {
+      setPasswordError(t('auth.account.errorPasswordMismatch'));
+      return;
+    }
+    setPasswordError(null);
+    try {
+      await updatePassword(newPassword);
+      setNewPassword('');
+      setConfirmPassword('');
+      notifications.show({
+        color: 'green',
+        title: t('common.success'),
+        message: t('auth.account.changePasswordSuccess'),
+      });
+    } catch {
+      notifications.show({
+        color: 'red',
+        title: t('common.error'),
+        message: t('auth.account.errorGeneric'),
+      });
+    }
+  };
 
   const handleLanguageChange = (newLanguage: string | null) => {
     if (newLanguage && (newLanguage === 'pl' || newLanguage === 'en')) {
@@ -126,6 +178,79 @@ function Settings() {
 
         {/* Settings Sections */}
         <Stack gap='lg'>
+          {/* Account */}
+          <Card shadow='sm' padding='lg' radius='md' withBorder>
+            <Stack gap='md'>
+              <Group align='center' gap='sm'>
+                <IconUser size={20} color={currentPalette.primary} />
+                <Text fw={600} size='lg'>
+                  {t('auth.account.title')}
+                </Text>
+              </Group>
+
+              <Divider />
+
+              {/* Account info */}
+              <Stack gap={4}>
+                <Text size='sm' c='dimmed'>
+                  {t('auth.account.emailLabel')}
+                </Text>
+                <Text fw={600}>{user?.email}</Text>
+              </Stack>
+
+              <Divider variant='dashed' />
+
+              {/* Change email */}
+              <Stack gap='sm'>
+                <Text fw={500}>{t('auth.account.changeEmailTitle')}</Text>
+                {emailSuccess && (
+                  <Alert color='blue'>
+                    {t('auth.account.changeEmailSuccess', { email: newEmail || user?.email })}
+                  </Alert>
+                )}
+                <Group align='flex-end' gap='sm'>
+                  <TextInput
+                    style={{ flex: 1 }}
+                    label={t('auth.account.newEmailLabel')}
+                    type='email'
+                    value={newEmail}
+                    onChange={(e) => { setNewEmail(e.target.value); setEmailSuccess(false); }}
+                  />
+                  <Button loading={actionLoading} onClick={() => void handleChangeEmail()}>
+                    {t('auth.account.changeEmailSubmit')}
+                  </Button>
+                </Group>
+              </Stack>
+
+              <Divider variant='dashed' />
+
+              {/* Change password */}
+              <Stack gap='sm'>
+                <Text fw={500}>{t('auth.account.changePasswordTitle')}</Text>
+                <PasswordInput
+                  label={t('auth.account.newPasswordLabel')}
+                  autoComplete='new-password'
+                  value={newPassword}
+                  onChange={(e) => { setNewPassword(e.target.value); setPasswordError(null); }}
+                />
+                <PasswordInput
+                  label={t('auth.account.confirmPasswordLabel')}
+                  autoComplete='new-password'
+                  value={confirmPassword}
+                  onChange={(e) => { setConfirmPassword(e.target.value); setPasswordError(null); }}
+                  error={passwordError}
+                />
+                <Button
+                  style={{ alignSelf: 'flex-start' }}
+                  loading={actionLoading}
+                  onClick={() => void handleChangePassword()}
+                >
+                  {t('auth.account.changePasswordSubmit')}
+                </Button>
+              </Stack>
+            </Stack>
+          </Card>
+
           {/* Wygląd i interfejs */}
           <Card shadow='sm' padding='lg' radius='md' withBorder>
             <Stack gap='md'>
