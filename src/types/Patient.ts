@@ -50,3 +50,24 @@ export interface Goal {
   createdAt: Date | string;
   updatedAt: Date | string;
 }
+
+export type DocumentKind = 'file' | 'text' | 'link';
+
+export interface Document {
+  id?: number;
+  patientId: number;
+  type: import('../constants/status').DocumentType;
+  kind: DocumentKind;
+  title: string;
+  description?: string;
+  pinned?: boolean;
+  // File fields (kind === 'file')
+  fileData?: string;        // full data: URI (Base64)
+  fileName?: string;
+  fileMimeType?: string;
+  fileSizeBytes?: number;
+  // Text/link field (kind === 'text' | 'link')
+  content?: string;         // body text OR URL
+  createdAt: Date | string;
+  updatedAt: Date | string;
+}

@@ -1,13 +1,14 @@
 import Dexie, { type Table } from 'dexie';
 import { DEFAULT_APPOINTMENT_PRICE } from '../constants/business';
 import type { Appointment } from '../types/Appointment';
-import type { Patient, Note, Goal } from '../types/Patient';
+import type { Patient, Note, Goal, Document } from '../types/Patient';
 
 export class PDB extends Dexie {
   patients!: Table<Patient>;
   appointments!: Table<Appointment>;
   notes!: Table<Note>;
   goals!: Table<Goal>;
+  documents!: Table<Document>;
 
   constructor() {
     super('PDB');
@@ -153,6 +154,15 @@ export class PDB extends Dexie {
           });
       });
 
+    // Version 6 - dodajemy tabelę dokumentów
+    this.version(6).stores({
+      patients: '++id, lastName, email, phone, status, [firstName+lastName]',
+      appointments: '++id, patientId, date, status',
+      notes: '++id, patientId, sessionId, type, pinned, createdAt',
+      goals: '++id, patientId, status, targetDate, createdAt',
+      documents: '++id, patientId, type, kind, pinned, createdAt',
+    });
+
     // Add hooks for automatic timestamps (now using ISO strings)
     this.patients.hook('creating', function (_, obj: Partial<Patient>) {
       obj.createdAt = new Date().toISOString() as Date | string;
@@ -207,6 +217,15 @@ export class PDB extends Dexie {
     });
 
     this.goals.hook('updating', function (modifications: Partial<Goal>) {
+      modifications.updatedAt = new Date().toISOString() as Date | string;
+    });
+
+    this.documents.hook('creating', function (_, obj: Partial<Document>) {
+      obj.createdAt = new Date().toISOString() as Date | string;
+      obj.updatedAt = new Date().toISOString() as Date | string;
+      if (typeof obj.pinned === 'undefined') obj.pinned = false;
+    });
+    this.documents.hook('updating', function (modifications: Partial<Document>) {
       modifications.updatedAt = new Date().toISOString() as Date | string;
     });
   }

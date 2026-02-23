@@ -261,7 +261,8 @@
       "tabs": {
         "overview": "Przegląd",
         "appointments": "Wizyty",
-        "notes": "Notatki"
+        "notes": "Notatki",
+        "documents": "Dokumenty"
       },
       "overview": {
         "address": "Adres",
@@ -294,6 +295,10 @@
           "title": "Notatki ({{count}})",
           "addNote": "Dodaj notatkę",
           "addSessionNote": "Dodaj notatkę sesyjną"
+        },
+        "documents": {
+          "title": "Dokumenty ({{count}})",
+          "addDocument": "Dodaj dokument"
         }
     }
   },
@@ -623,6 +628,63 @@
       "exportError": "Błąd eksportu",
       "exportFailed": "Nie udało się wyeksportować danych"
     }
+  },
+
+  "documents": {
+    "title": "Dokumenty",
+    "addDocument": "Dodaj dokument",
+    "editDocument": "Edytuj dokument",
+    "deleteDocument": "Usuń dokument",
+    "deleteConfirm": "Czy na pewno chcesz usunąć ten dokument?",
+    "noDocuments": "Brak dokumentów",
+    "noDocumentsOfType": "Brak dokumentów tego typu",
+    "filterByType": "Filtruj według typu",
+    "pinned": "Przypięty",
+    "unpin": "Odepnij",
+    "pin": "Przypnij",
+    "pinnedDescription": "Przypięte dokumenty są wyświetlane na górze listy",
+    "download": "Pobierz",
+    "types": {
+      "medical_record": "Dokumentacja medyczna",
+      "consent_form": "Formularz zgody",
+      "report": "Raport",
+      "correspondence": "Korespondencja",
+      "insurance": "Ubezpieczenie",
+      "other": "Inne"
+    },
+    "notifications": {
+      "documentAdded": "Dokument został dodany",
+      "documentUpdated": "Dokument został zaktualizowany",
+      "errorSaving": "Nie udało się zapisać dokumentu"
+    }
+  },
+
+  "documentForm": {
+    "kind": "Typ zawartości",
+    "kinds": {
+      "file": "Plik",
+      "text": "Tekst",
+      "link": "Link"
+    },
+    "type": "Kategoria dokumentu",
+    "title": "Tytuł",
+    "titlePlaceholder": "Nazwa dokumentu...",
+    "titleRequired": "Tytuł jest wymagany",
+    "description": "Opis (opcjonalnie)",
+    "descriptionPlaceholder": "Krótki opis dokumentu...",
+    "file": "Plik",
+    "filePlaceholder": "Wybierz plik...",
+    "fileRequired": "Wybierz plik",
+    "fileTooLarge": "Plik jest za duży (maksymalnie 20 MB)",
+    "fileSizeWarning": "Duży plik (ponad 5 MB) może spowolnić aplikację",
+    "storageNote": "Pliki są przechowywane lokalnie na tym urządzeniu",
+    "currentFile": "Aktualny plik",
+    "url": "Adres URL",
+    "urlPlaceholder": "https://...",
+    "urlRequired": "Adres URL jest wymagany",
+    "content": "Treść",
+    "contentPlaceholder": "Treść dokumentu...",
+    "contentRequired": "Treść jest wymagana"
   },
 
   "errors": {

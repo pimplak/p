@@ -24,24 +24,28 @@ import {
   IconX,
   IconFileExport,
   IconNote,
+  IconFolder,
 } from '@tabler/icons-react';
 import { isSameDay } from 'date-fns';
 import { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '../hooks/useTheme';
 import { useAppointmentStore } from '../stores/useAppointmentStore';
+import { useDocumentStore } from '../stores/useDocumentStore';
 import { useNoteStore } from '../stores/useNoteStore';
 import { usePatientStore } from '../stores/usePatientStore';
 import { AppointmentStatus } from '../types/Appointment';
 import { formatDate, formatDateTime } from '../utils/dates';
 import { exportToExcel } from '../utils/export';
 import { AppointmentForm } from './AppointmentForm';
+import { DocumentForm } from './documents/DocumentForm';
+import { DocumentList } from './documents/DocumentList';
 import { NoteForm } from './NoteForm';
 import { NoteList } from './NoteList';
 import { PinnedNotesOverview } from './PinnedNotes';
 import { BottomSheet } from './ui/BottomSheet';
 import type { Appointment, AppointmentWithPatient } from '../types/Appointment';
-import type { Note, Patient } from '../types/Patient';
+import type { Note, Patient, Document } from '../types/Patient';
 
 interface PatientProfileTabsProps {
   patient: Patient;
@@ -70,8 +74,21 @@ export function PatientProfileTabs({ patient }: PatientProfileTabsProps) {
   const [editingNote, setEditingNote] = useState<Note | null>(null);
   const [noteSessionId, setNoteSessionId] = useState<number | undefined>(undefined);
   const [deleteNoteId, setDeleteNoteId] = useState<number | null>(null);
+  const [documentModalOpen, setDocumentModalOpen] = useState(false);
+  const [editingDocument, setEditingDocument] = useState<Document | null>(null);
+  const [deleteDocumentId, setDeleteDocumentId] = useState<number | null>(null);
   const { getAppointmentsByPatient } = useAppointmentStore();
   const { notes, fetchNotesByPatient, togglePin, deleteNote, clearNotes, getPinnedNotes, getNotesBySession } = useNoteStore();
+  const {
+    documents,
+    filterType: documentFilterType,
+    fetchDocumentsByPatient,
+    togglePin: toggleDocumentPin,
+    deleteDocument,
+    clearDocuments,
+    setFilterType: setDocumentFilterType,
+    getFilteredDocuments,
+  } = useDocumentStore();
   const { fetchPatients } = usePatientStore();
   const { currentPalette, utilityColors } = useTheme();
 
@@ -85,12 +102,13 @@ export function PatientProfileTabs({ patient }: PatientProfileTabsProps) {
         const patientAppointments = await getAppointmentsByPatient(patient.id);
         setAppointments(patientAppointments);
         await fetchNotesByPatient(patient.id);
+        await fetchDocumentsByPatient(patient.id);
       }
     };
 
     loadData();
-    return () => clearNotes();
-  }, [patient.id, getAppointmentsByPatient, fetchPatients, fetchNotesByPatient, clearNotes]);
+    return () => { clearNotes(); clearDocuments(); };
+  }, [patient.id, getAppointmentsByPatient, fetchPatients, fetchNotesByPatient, clearNotes, fetchDocumentsByPatient, clearDocuments]);
 
   const handleAppointmentSelection = (
     appointmentId: number,
@@ -184,6 +202,28 @@ export function PatientProfileTabs({ patient }: PatientProfileTabsProps) {
     }
   };
 
+  const handleAddDocument = () => {
+    setEditingDocument(null);
+    setDocumentModalOpen(true);
+  };
+
+  const handleEditDocument = (doc: Document) => {
+    setEditingDocument(doc);
+    setDocumentModalOpen(true);
+  };
+
+  const handleDocumentFormSuccess = () => {
+    setDocumentModalOpen(false);
+    setEditingDocument(null);
+  };
+
+  const handleConfirmDeleteDocument = async () => {
+    if (deleteDocumentId) {
+      await deleteDocument(deleteDocumentId);
+      setDeleteDocumentId(null);
+    }
+  };
+
   const pinnedNotes = patient.id ? getPinnedNotes(patient.id) : [];
 
   const getStatusBadgeColor = (status: AppointmentStatus) => {
@@ -225,6 +265,9 @@ export function PatientProfileTabs({ patient }: PatientProfileTabsProps) {
           </Tabs.Tab>
           <Tabs.Tab value='notes' leftSection={<IconNote size='1rem' />}>
             {t('calendar.patientProfile.tabs.notes')}
+          </Tabs.Tab>
+          <Tabs.Tab value='documents' leftSection={<IconFolder size='1rem' />}>
+            {t('calendar.patientProfile.tabs.documents')}
           </Tabs.Tab>
         </Tabs.List>
 
@@ -506,6 +549,32 @@ export function PatientProfileTabs({ patient }: PatientProfileTabsProps) {
             />
           </Paper>
         </Tabs.Panel>
+
+        <Tabs.Panel value='documents' pt='md'>
+          <Paper p='md' withBorder>
+            <Group justify='space-between' mb='md'>
+              <Title order={4}>
+                {t('calendar.patientProfile.documents.title', { count: getFilteredDocuments().length })}
+              </Title>
+              <Button
+                size='sm'
+                leftSection={<IconPlus size='1rem' />}
+                variant='light'
+                onClick={handleAddDocument}
+              >
+                {t('calendar.patientProfile.documents.addDocument')}
+              </Button>
+            </Group>
+            <DocumentList
+              documents={documents}
+              filterType={documentFilterType}
+              onFilterChange={setDocumentFilterType}
+              onEdit={handleEditDocument}
+              onDelete={id => setDeleteDocumentId(id)}
+              onTogglePin={id => toggleDocumentPin(id)}
+            />
+          </Paper>
+        </Tabs.Panel>
       </Tabs>
 
       {/* Appointment Form Bottom Sheet */}
@@ -555,6 +624,43 @@ export function PatientProfileTabs({ patient }: PatientProfileTabsProps) {
               {t('common.cancel')}
             </Button>
             <Button color='red' onClick={handleConfirmDeleteNote}>
+              {t('common.delete')}
+            </Button>
+          </Group>
+        </Stack>
+      </Modal>
+
+      {/* Document Form Bottom Sheet */}
+      <BottomSheet
+        opened={documentModalOpen}
+        onClose={() => setDocumentModalOpen(false)}
+        title={editingDocument ? t('documents.editDocument') : t('documents.addDocument')}
+      >
+        {patient.id && (
+          <DocumentForm
+            patientId={patient.id}
+            document={editingDocument}
+            onSuccess={handleDocumentFormSuccess}
+            onCancel={() => setDocumentModalOpen(false)}
+          />
+        )}
+      </BottomSheet>
+
+      {/* Delete Document Confirmation */}
+      <Modal
+        opened={deleteDocumentId !== null}
+        onClose={() => setDeleteDocumentId(null)}
+        title={t('documents.deleteDocument')}
+        centered
+        size='sm'
+      >
+        <Stack gap='md'>
+          <Text size='sm'>{t('documents.deleteConfirm')}</Text>
+          <Group justify='flex-end'>
+            <Button variant='light' onClick={() => setDeleteDocumentId(null)}>
+              {t('common.cancel')}
+            </Button>
+            <Button color='red' onClick={handleConfirmDeleteDocument}>
               {t('common.delete')}
             </Button>
           </Group>

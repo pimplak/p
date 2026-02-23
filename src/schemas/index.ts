@@ -3,6 +3,7 @@ import {
   PATIENT_STATUS,
   GOAL_STATUS,
   APPOINTMENT_STATUS,
+  DOCUMENT_TYPE,
 } from '../constants/status';
 
 // Patient Schema - jedno źródło prawdy
@@ -156,6 +157,35 @@ export type AppointmentFormData = z.infer<typeof AppointmentFormSchema>;
 export type PatientWithAppointmentsZod = z.infer<
   typeof PatientWithAppointmentsSchema
 >;
+
+// Document Schema
+export const DocumentSchema = z.object({
+  id: z.number().optional(),
+  patientId: z.number().min(1),
+  type: z.enum([
+    DOCUMENT_TYPE.MEDICAL_RECORD,
+    DOCUMENT_TYPE.CONSENT_FORM,
+    DOCUMENT_TYPE.REPORT,
+    DOCUMENT_TYPE.CORRESPONDENCE,
+    DOCUMENT_TYPE.INSURANCE,
+    DOCUMENT_TYPE.OTHER,
+  ]),
+  kind: z.enum(['file', 'text', 'link']),
+  title: z.string().min(1, 'Tytuł jest wymagany').max(200),
+  description: z.string().optional(),
+  pinned: z.boolean().default(false),
+  fileData: z.string().optional(),
+  fileName: z.string().optional(),
+  fileMimeType: z.string().optional(),
+  fileSizeBytes: z.number().optional(),
+  content: z.string().optional(),
+  createdAt: z.union([z.date(), z.string()]),
+  updatedAt: z.union([z.date(), z.string()]),
+});
+
+export const DocumentFormSchema = DocumentSchema.omit({ id: true, createdAt: true, updatedAt: true });
+export type DocumentZod = z.infer<typeof DocumentSchema>;
+export type DocumentFormData = z.infer<typeof DocumentFormSchema>;
 
 // Validation helpers
 export function validatePatient(data: unknown): PatientZod {

@@ -57,3 +57,17 @@ export const APPOINTMENT_STATUS_LABELS: Record<AppointmentStatus, string> = {
   [APPOINTMENT_STATUS.NO_SHOW]: 'Niestawienie się',
   [APPOINTMENT_STATUS.RESCHEDULED]: 'Przełożona',
 };
+
+/**
+ * Document Type Constants
+ */
+export const DOCUMENT_TYPE = {
+  MEDICAL_RECORD: 'medical_record',
+  CONSENT_FORM: 'consent_form',
+  REPORT: 'report',
+  CORRESPONDENCE: 'correspondence',
+  INSURANCE: 'insurance',
+  OTHER: 'other',
+} as const;
+
+export type DocumentType = (typeof DOCUMENT_TYPE)[keyof typeof DOCUMENT_TYPE];

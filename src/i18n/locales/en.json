@@ -261,7 +261,8 @@
       "tabs": {
         "overview": "Overview",
         "appointments": "Appointments",
-        "notes": "Notes"
+        "notes": "Notes",
+        "documents": "Documents"
       },
       "overview": {
         "address": "Address",
@@ -294,6 +295,10 @@
           "title": "Notes ({{count}})",
           "addNote": "Add note",
           "addSessionNote": "Add session note"
+        },
+        "documents": {
+          "title": "Documents ({{count}})",
+          "addDocument": "Add document"
         }
     }
   },
@@ -623,6 +628,63 @@
       "exportError": "Export error",
       "exportFailed": "Failed to export data"
     }
+  },
+
+  "documents": {
+    "title": "Documents",
+    "addDocument": "Add document",
+    "editDocument": "Edit document",
+    "deleteDocument": "Delete document",
+    "deleteConfirm": "Are you sure you want to delete this document?",
+    "noDocuments": "No documents",
+    "noDocumentsOfType": "No documents of this type",
+    "filterByType": "Filter by type",
+    "pinned": "Pinned",
+    "unpin": "Unpin",
+    "pin": "Pin",
+    "pinnedDescription": "Pinned documents appear at the top of the list",
+    "download": "Download",
+    "types": {
+      "medical_record": "Medical record",
+      "consent_form": "Consent form",
+      "report": "Report",
+      "correspondence": "Correspondence",
+      "insurance": "Insurance",
+      "other": "Other"
+    },
+    "notifications": {
+      "documentAdded": "Document has been added",
+      "documentUpdated": "Document has been updated",
+      "errorSaving": "Failed to save document"
+    }
+  },
+
+  "documentForm": {
+    "kind": "Content type",
+    "kinds": {
+      "file": "File",
+      "text": "Text",
+      "link": "Link"
+    },
+    "type": "Document category",
+    "title": "Title",
+    "titlePlaceholder": "Document name...",
+    "titleRequired": "Title is required",
+    "description": "Description (optional)",
+    "descriptionPlaceholder": "Short document description...",
+    "file": "File",
+    "filePlaceholder": "Select file...",
+    "fileRequired": "Select a file",
+    "fileTooLarge": "File is too large (maximum 20 MB)",
+    "fileSizeWarning": "Large file (over 5 MB) may slow down the app",
+    "storageNote": "Files are stored locally on this device",
+    "currentFile": "Current file",
+    "url": "URL",
+    "urlPlaceholder": "https://...",
+    "urlRequired": "URL is required",
+    "content": "Content",
+    "contentPlaceholder": "Document content...",
+    "contentRequired": "Content is required"
   },
 
   "errors": {
