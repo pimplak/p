@@ -132,33 +132,77 @@ export const COLOR_PALETTES: Record<string, ColorPalette> = {
   earthyDark: {
     name: 'Earthy Dark',
     id: 'earthyDark',
-    background: '#1a1a16', // ciemne tło z odcieniem beżu
-    surface: '#2a2a24', // ciemne karty
-    primary: '#78bc61', // Mantis - główny zielony (bez zmian)
-    accent: '#e9806e', // Salmon - akcent pomarańczowy (bez zmian)
-    text: '#f0f0e8', // jasny tekst dla kontrastu
+    background: '#1a1a16',
+    surface: '#2a2a24',
+    primary: '#78bc61',
+    accent: '#e9806e',
+    text: '#f0f0e8',
   },
 
   // === CIEMNA WERSJA OCEAN ===
   oceanDark: {
     name: 'Ocean Dark',
     id: 'oceanDark',
-    background: '#0f1a1c', // ciemne tło z odcieniem niebiesko-zieleni
-    surface: '#1a2a2e', // ciemne karty
-    primary: '#87bba2', // Cambridge blue - jaśniejszy jako primary
-    accent: '#5998c5', // Celestial Blue - akcent niebieski
-    text: '#e8f4f0', // jasny tekst dla kontrastu
+    background: '#0f1a1c',
+    surface: '#1a2a2e',
+    primary: '#87bba2',
+    accent: '#5998c5',
+    text: '#e8f4f0',
   },
 
   // === CIEMNA WERSJA VIBRANT ===
   vibrantDark: {
     name: 'Vibrant Dark',
     id: 'vibrantDark',
-    background: '#1a161a', // ciemne tło z odcieniem fioletu
-    surface: '#2a242a', // ciemne karty
-    primary: '#b8b3e9', // Periwinkle - jaśniejszy jako primary
-    accent: '#e03616', // Chili red - jaskrawy czerwony akcent
-    text: '#f0f0f0', // jasny tekst dla kontrastu
+    background: '#1a161a',
+    surface: '#2a242a',
+    primary: '#b8b3e9',
+    accent: '#e03616',
+    text: '#f0f0f0',
+  },
+
+  // === CIEMNA WERSJA FOREST ===
+  forestDark: {
+    name: 'Forest Dark',
+    id: 'forestDark',
+    background: '#0f1a0c',
+    surface: '#182b14',
+    primary: '#a8d97a',
+    accent: '#d2ff28',
+    text: '#e8f5e2',
+  },
+
+  // === CIEMNA WERSJA SUNSET ===
+  sunsetDark: {
+    name: 'Sunset Dark',
+    id: 'sunsetDark',
+    background: '#1c1208',
+    surface: '#2c1e10',
+    primary: '#f08700',
+    accent: '#00c8c8',
+    text: '#f5ece0',
+  },
+
+  // === CIEMNA WERSJA PASTEL ===
+  pastelDark: {
+    name: 'Pastel Dark',
+    id: 'pastelDark',
+    background: '#0d151c',
+    surface: '#162130',
+    primary: '#7ab3e0',
+    accent: '#e8a8d4',
+    text: '#e8f0f8',
+  },
+
+  // === CIEMNA WERSJA BOLD ===
+  boldDark: {
+    name: 'Bold Dark',
+    id: 'boldDark',
+    background: '#1c1008',
+    surface: '#2c1c10',
+    primary: '#f08060',
+    accent: '#17c4b8',
+    text: '#f5ede8',
   },
 };
 
@@ -166,7 +210,16 @@ export type PaletteId = keyof typeof COLOR_PALETTES;
 
 // Helper do sprawdzania czy paleta jest ciemna
 export const isDarkPalette = (paletteId: PaletteId): boolean => {
-  return ['darkpro', 'earthyDark', 'oceanDark', 'vibrantDark'].includes(paletteId);
+  return [
+    'darkpro',
+    'earthyDark',
+    'oceanDark',
+    'vibrantDark',
+    'forestDark',
+    'sunsetDark',
+    'pastelDark',
+    'boldDark',
+  ].includes(paletteId);
 };
 
 // Helper do konwersji 5-kolorowej palety na Mantine theme

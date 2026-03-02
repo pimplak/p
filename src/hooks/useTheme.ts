@@ -92,7 +92,20 @@ export const useTheme = () => {
             },
 
             fontFamily:
-                'Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+                '"Noto Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+            fontFamilyMonospace: 'ui-monospace, SFMono-Regular, Menlo, monospace',
+            headings: {
+                fontFamily: '"Manrope", system-ui, sans-serif',
+                fontWeight: '700',
+                sizes: {
+                    h1: { fontSize: '1.875rem', lineHeight: '1.2' },
+                    h2: { fontSize: '1.5rem', lineHeight: '1.25' },
+                    h3: { fontSize: '1.25rem', lineHeight: '1.3' },
+                    h4: { fontSize: '1.125rem', lineHeight: '1.35' },
+                    h5: { fontSize: '1rem', lineHeight: '1.4' },
+                    h6: { fontSize: '0.875rem', lineHeight: '1.4' },
+                },
+            },
 
             // Mobile-optimized sizing
             fontSizes: {
@@ -114,12 +127,12 @@ export const useTheme = () => {
             },
 
             radius: {
-                xs: '0.25rem',
-                sm: '0.375rem',
-                md: '0.5rem',
-                lg: '0.75rem',
-                xl: '1rem',
-                round: '50%',
+                xs: '0.375rem',
+                sm: '0.5rem',
+                md: '0.75rem',
+                lg: '1rem',
+                xl: '1.5rem',
+                round: '9999px',
             },
 
             // === FERRO'S GUARANTEED THEME EXTENSIONS ===
@@ -161,7 +174,7 @@ export const useTheme = () => {
             components: {
                 Button: {
                     defaultProps: {
-                        radius: 'md',
+                        radius: 'lg',
                         size: 'md',
                     },
                     // vars: () => ({
@@ -183,7 +196,7 @@ export const useTheme = () => {
 
                 TextInput: {
                     defaultProps: {
-                        radius: 'md',
+                        radius: 'lg',
                         size: 'md',
                     },
                     styles: {
@@ -204,7 +217,7 @@ export const useTheme = () => {
 
                 Select: {
                     defaultProps: {
-                        radius: 'md',
+                        radius: 'lg',
                         size: 'md',
                     },
                     styles: {
@@ -230,7 +243,7 @@ export const useTheme = () => {
 
                 Menu: {
                     defaultProps: {
-                        radius: 'md',
+                        radius: 'lg',
                     },
                     vars: () => ({
                         root: {
@@ -281,7 +294,7 @@ export const useTheme = () => {
 
                 Popover: {
                     defaultProps: {
-                        radius: 'md',
+                        radius: 'lg',
                     },
                     styles: {
                         dropdown: {
@@ -295,7 +308,7 @@ export const useTheme = () => {
 
                 DateInput: {
                     defaultProps: {
-                        radius: 'md',
+                        radius: 'lg',
                         size: 'md',
                     },
                     styles: {
@@ -316,7 +329,7 @@ export const useTheme = () => {
 
                 NumberInput: {
                     defaultProps: {
-                        radius: 'md',
+                        radius: 'lg',
                         size: 'md',
                     },
                     styles: {
@@ -342,7 +355,7 @@ export const useTheme = () => {
 
                 Textarea: {
                     defaultProps: {
-                        radius: 'md',
+                        radius: 'lg',
                         size: 'md',
                     },
                     styles: {
@@ -363,7 +376,7 @@ export const useTheme = () => {
 
                 Checkbox: {
                     defaultProps: {
-                        radius: 'sm',
+                        radius: 'md',
                         size: 'md',
                     },
                     styles: {
@@ -384,7 +397,7 @@ export const useTheme = () => {
 
                 Table: {
                     defaultProps: {
-                        radius: 'md',
+                        radius: 'lg',
                         size: 'md',
                     },
                     styles: {
@@ -424,7 +437,7 @@ export const useTheme = () => {
 
                 DateTimePicker: {
                     defaultProps: {
-                        radius: 'md',
+                        radius: 'lg',
                         size: 'md',
                     },
                     styles: {
@@ -445,7 +458,7 @@ export const useTheme = () => {
 
                 Tabs: {
                     defaultProps: {
-                        radius: 'md',
+                        radius: 'lg',
                         size: 'md',
                     },
                     styles: {
@@ -468,7 +481,7 @@ export const useTheme = () => {
 
                 TagsInput: {
                     defaultProps: {
-                        radius: 'md',
+                        radius: 'lg',
                         size: 'md',
                     },
                     styles: {
@@ -493,7 +506,7 @@ export const useTheme = () => {
 
                 Alert: {
                     defaultProps: {
-                        radius: 'md',
+                        radius: 'lg',
                     },
                     styles: {
                         root: {
@@ -512,9 +525,10 @@ export const useTheme = () => {
 
                 Card: {
                     defaultProps: {
-                        radius: 'md',
+                        radius: 'lg',
                         shadow: 'sm',
-                        padding: 'xl',
+                        padding: 'lg',
+                        withBorder: true,
                     },
                     styles: {
                         root: {
@@ -527,7 +541,7 @@ export const useTheme = () => {
 
                 Code: {
                     defaultProps: {
-                        radius: 'md',
+                        radius: 'lg',
                     },
                     styles: {
                         root: {
@@ -540,7 +554,7 @@ export const useTheme = () => {
 
                 Notification: {
                     defaultProps: {
-                        radius: 'md',
+                        radius: 'lg',
                     },
                     styles: {
                         root: {
@@ -565,7 +579,7 @@ export const useTheme = () => {
 
                 CloseButton: {
                     defaultProps: {
-                        radius: 'md',
+                        radius: 'lg',
                     },
                     styles: {
                         root: {
@@ -580,7 +594,7 @@ export const useTheme = () => {
 
                 Paper: {
                     defaultProps: {
-                        radius: 'md',
+                        radius: 'lg',
                     },
                     styles: {
                         root: {
@@ -593,7 +607,7 @@ export const useTheme = () => {
 
                 Drawer: {
                     defaultProps: {
-                        radius: 'md',
+                        radius: 'lg',
                     },
                     styles: {
                         content: {
@@ -612,7 +626,7 @@ export const useTheme = () => {
                 Modal: {
                     defaultProps: {
                         centered: true,
-                        radius: 'lg',
+                        radius: 'xl',
                         overlayProps: {
                             opacity: 0.4,
                             blur: 4,

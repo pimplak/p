@@ -27,7 +27,11 @@ const getStoredPaletteId = (): PaletteId => {
   } catch {
     // ignore
   }
-  return 'springblush'; // default - Spring Blush (różowa paleta)
+  // No stored preference — fall back to system setting
+  const prefersDark =
+    typeof window !== 'undefined' &&
+    window.matchMedia?.('(prefers-color-scheme: dark)').matches;
+  return prefersDark ? 'darkpro' : 'arctic';
 };
 
 const savePaletteId = (paletteId: PaletteId) => {

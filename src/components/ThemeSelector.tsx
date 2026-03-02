@@ -69,15 +69,15 @@ export function ThemeSelector() {
   // Helper do znajdowania ciemnej wersji motywu
   const getDarkVersion = (paletteId: string): PaletteId => {
     const darkMap: Record<string, PaletteId> = {
-      'earthy': 'earthyDark',
-      'ocean': 'oceanDark', 
-      'vibrant': 'vibrantDark',
       'arctic': 'darkpro',
       'springblush': 'darkpro',
-      'forest': 'darkpro',
-      'sunset': 'darkpro',
-      'pastel': 'darkpro',
-      'bold': 'darkpro',
+      'earthy': 'earthyDark',
+      'forest': 'forestDark',
+      'sunset': 'sunsetDark',
+      'ocean': 'oceanDark',
+      'vibrant': 'vibrantDark',
+      'pastel': 'pastelDark',
+      'bold': 'boldDark',
     };
     return darkMap[paletteId] || 'darkpro';
   };
@@ -85,10 +85,14 @@ export function ThemeSelector() {
   // Helper do znajdowania jasnej wersji motywu
   const getLightVersion = (paletteId: string): PaletteId => {
     const lightMap: Record<string, PaletteId> = {
+      'darkpro': 'arctic',
       'earthyDark': 'earthy',
+      'forestDark': 'forest',
+      'sunsetDark': 'sunset',
       'oceanDark': 'ocean',
       'vibrantDark': 'vibrant',
-      'darkpro': 'arctic',
+      'pastelDark': 'pastel',
+      'boldDark': 'bold',
     };
     return lightMap[paletteId] || 'arctic';
   };
@@ -102,36 +106,13 @@ export function ThemeSelector() {
   };
 
   const getThemeIcon = () => {
-    switch (currentPaletteId) {
-      case 'arctic':
-        return <IconSun size={18} color={currentPalette.accent} />;
-      case 'springblush':
-        return <IconPalette size={18} color={currentPalette.primary} />;
-      case 'darkpro':
-        return <IconMoon size={18} color={currentPalette.primary} />;
-      case 'earthy':
-        return <IconPalette size={18} color={currentPalette.primary} />;
-      case 'forest':
-        return <IconPalette size={18} color={currentPalette.primary} />;
-      case 'sunset':
-        return <IconSun size={18} color={currentPalette.accent} />;
-      case 'ocean':
-        return <IconPalette size={18} color={currentPalette.primary} />;
-      case 'vibrant':
-        return <IconPalette size={18} color={currentPalette.primary} />;
-      case 'pastel':
-        return <IconPalette size={18} color={currentPalette.primary} />;
-      case 'bold':
-        return <IconPalette size={18} color={currentPalette.primary} />;
-      case 'earthyDark':
-        return <IconMoon size={18} color={currentPalette.primary} />;
-      case 'oceanDark':
-        return <IconMoon size={18} color={currentPalette.primary} />;
-      case 'vibrantDark':
-        return <IconMoon size={18} color={currentPalette.primary} />;
-      default:
-        return <IconPalette size={18} color={currentPalette.primary} />;
+    if (isDark) {
+      return <IconMoonStars size={18} color={currentPalette.primary} />;
     }
+    if (currentPaletteId === 'arctic' || currentPaletteId === 'sunset') {
+      return <IconSun size={18} color={currentPalette.accent} />;
+    }
+    return <IconPalette size={18} color={currentPalette.primary} />;
   };
 
   const getTooltipText = () => {
