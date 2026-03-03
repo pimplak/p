@@ -1,9 +1,7 @@
-import { Card, SimpleGrid, Stack, Text, Group } from '@mantine/core';
-import { IconUsers, IconCurrencyZloty, IconClock } from '@tabler/icons-react';
+import { Card, Divider, Group, Stack, Text } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from '../../hooks/useTheme';
-import { Button } from '../ui/Button';
 
 interface OverviewStatsProps {
   totalPatients: number;
@@ -16,75 +14,77 @@ function formatRevenue(pln: number): string {
   return `${pln} zł`;
 }
 
-export function OverviewStats({
-  totalPatients,
-  weeklyRevenue,
-  pendingHours,
-}: OverviewStatsProps) {
+export function OverviewStats({ totalPatients, weeklyRevenue, pendingHours }: OverviewStatsProps) {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { currentPalette, mantineTheme } = useTheme();
+  const { currentPalette } = useTheme();
 
   const items = [
     {
       key: 'patients',
-      title: t('dashboard.stats.totalPatients'),
-      value: totalPatients,
-      icon: IconUsers,
+      label: t('dashboard.stats.totalPatients'),
+      value: String(totalPatients),
+      onClick: () => navigate('/patients'),
     },
     {
       key: 'revenue',
-      title: t('dashboard.stats.weeklyRevenue'),
+      label: t('dashboard.stats.weeklyRevenue'),
       value: formatRevenue(weeklyRevenue),
-      icon: IconCurrencyZloty,
+      onClick: undefined,
     },
     {
       key: 'pending',
-      title: t('dashboard.stats.pendingHours'),
+      label: t('dashboard.stats.pendingHours'),
       value: `${pendingHours}h`,
-      icon: IconClock,
-      action: { label: t('dashboard.stats.review'), onClick: () => navigate('/calendar') },
+      onClick: () => navigate('/calendar'),
     },
   ];
 
   return (
-    <SimpleGrid cols={{ base: 1, sm: 3 }} spacing={mantineTheme.spacing?.md ?? 'md'}>
-      {items.map(({ key, title, value, icon: Icon, action }) => (
-        <Card
-          key={key}
-          padding="lg"
-          radius="md"
-          style={{
-            backgroundColor: currentPalette.surface,
-            border: `1px solid ${currentPalette.primary}40`,
-          }}
-        >
-          <Stack gap="sm">
-            <Group justify="space-between" align="flex-start">
-              <Text size="sm" style={{ color: `${currentPalette.text}B3` }}>
-                {title}
-              </Text>
-              <Icon
-                size={20}
-                style={{ color: `${currentPalette.primary}80`, opacity: 0.8 }}
+    <Card
+      padding="md"
+      radius="lg"
+      style={{
+        backgroundColor: currentPalette.surface,
+        border: `1px solid ${currentPalette.primary}30`,
+      }}
+    >
+      <Group justify="space-around" align="center" wrap="nowrap" gap={0}>
+        {items.map((item, idx) => (
+          <Group key={item.key} wrap="nowrap" gap={0} style={{ flex: 1 }}>
+            {idx > 0 && (
+              <Divider
+                orientation="vertical"
+                style={{
+                  borderColor: `${currentPalette.primary}25`,
+                  alignSelf: 'stretch',
+                }}
               />
-            </Group>
-            <Text size="xl" fw={700} style={{ color: currentPalette.text }}>
-              {value}
-            </Text>
-            {action && (
-              <Button
-                variant="secondary"
-                size="xs"
-                onClick={action.onClick}
-                style={{ alignSelf: 'flex-start' }}
-              >
-                {action.label}
-              </Button>
             )}
-          </Stack>
-        </Card>
-      ))}
-    </SimpleGrid>
+            <Stack
+              gap={4}
+              align="center"
+              style={{
+                flex: 1,
+                padding: '10px 8px',
+                cursor: item.onClick ? 'pointer' : 'default',
+              }}
+              onClick={item.onClick}
+            >
+              <Text fw={700} size="xl" style={{ color: currentPalette.text, lineHeight: 1 }}>
+                {item.value}
+              </Text>
+              <Text
+                size="xs"
+                ta="center"
+                style={{ color: `${currentPalette.text}70`, lineHeight: 1.2 }}
+              >
+                {item.label}
+              </Text>
+            </Stack>
+          </Group>
+        ))}
+      </Group>
+    </Card>
   );
 }

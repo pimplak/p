@@ -114,7 +114,7 @@ export const useSettingsStore = create<SettingsStore>((set, get) => {
 
     // SMS settings
     practitionerName:
-      storedSettings.practitionerName || 'Gabinet Psychologiczny',
+      storedSettings.practitionerName || 'DR DEMO',
     practitionerTitle: storedSettings.practitionerTitle || 'mgr',
     smsTemplates: storedSettings.smsTemplates || DEFAULT_SMS_TEMPLATES,
 

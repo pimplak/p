@@ -204,7 +204,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
                 rightSlot
               ) : (
                 <Text size='sm' style={{ color: `${currentPalette.text}B3` }}>
-                  {practitionerTitle} {practitionerName}
+                  {practitionerTitle !== 'NONE' ? `${practitionerTitle} ` : ''}{practitionerName}
                 </Text>
               )}
             </Group>

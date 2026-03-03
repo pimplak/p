@@ -314,8 +314,9 @@ function Settings() {
                   label={t('settings.sms.practitionerTitle.label')}
                   placeholder={t('settings.sms.practitionerTitle.placeholder')}
                   value={practitionerTitle}
-                  onChange={value => setPractitionerTitle(value || 'mgr')}
+                  onChange={value => setPractitionerTitle(value || 'NONE')}
                   data={[
+                    { value: 'NONE', label: t('settings.sms.practitionerTitle.none') },
                     { value: 'mgr', label: 'mgr' },
                     { value: 'dr', label: 'dr' },
                     { value: 'dr hab.', label: 'dr hab.' },

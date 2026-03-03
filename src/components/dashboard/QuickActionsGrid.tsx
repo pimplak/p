@@ -1,90 +1,115 @@
-import { Card, SimpleGrid, Stack, Text, UnstyledButton } from '@mantine/core';
+import { Stack, Text, UnstyledButton } from '@mantine/core';
 import {
   IconUserPlus,
   IconMessageCircle,
   IconChartBar,
   IconNote,
+  IconCalendarPlus,
 } from '@tabler/icons-react';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from '../../hooks/useTheme';
 import { BulkSMSReminders } from '../BulkSMSReminders';
 
-const actions = [
-  {
-    id: 'add-patient',
-    label: 'Dodaj pacjenta',
-    icon: IconUserPlus,
-    href: '/patients',
-    onClick: (navigate: (path: string) => void) => navigate('/patients'),
-  },
-  {
-    id: 'send-reminders',
-    label: 'Wyślij przypomnienia',
-    icon: IconMessageCircle,
-    isSpecial: true,
-    onClick: (navigate: (path: string) => void) => navigate('/reminders'),
-  },
-  {
-    id: 'reports',
-    label: 'Raporty',
-    icon: IconChartBar,
-    onClick: (navigate: (path: string) => void) => navigate('/analytics'),
-  },
-  {
-    id: 'new-note',
-    label: 'Nowa notatka',
-    icon: IconNote,
-    onClick: (navigate: (path: string) => void) => navigate('/notes'),
-  },
-];
+export const ACTION_IDS = ['add-patient', 'send-reminders', 'reports', 'new-note', 'add-session'] as const;
+type ActionId = (typeof ACTION_IDS)[number];
 
 export function QuickActionsGrid() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
-  const { currentPalette, mantineTheme } = useTheme();
-  const [hoveredId, setHoveredId] = useState<string | null>(null);
+  const { currentPalette } = useTheme();
+  const [hoveredId, setHoveredId] = useState<ActionId | null>(null);
 
-  const getCardStyle = (id: string, isPointer: boolean = true) => ({
-    backgroundColor: currentPalette.surface,
-    border: `1px solid ${hoveredId === id ? currentPalette.accent : currentPalette.primary}`,
-    boxShadow: hoveredId === id ? '0 4px 12px rgba(0, 0, 0, 0.3)' : '0 2px 8px rgba(0, 0, 0, 0.2)',
-    transition: 'all 200ms ease-out',
-    height: '100%',
+  const actions: {
+    id: ActionId;
+    labelKey: string;
+    icon: React.ElementType;
+    isSpecial?: boolean;
+    onClick?: () => void;
+  }[] = [
+    {
+      id: 'add-patient',
+      labelKey: 'dashboard.actions.addPatient',
+      icon: IconUserPlus,
+      onClick: () => navigate('/patients'),
+    },
+    {
+      id: 'send-reminders',
+      labelKey: 'dashboard.actions.sendReminders',
+      icon: IconMessageCircle,
+      isSpecial: true,
+    },
+    {
+      id: 'reports',
+      labelKey: 'dashboard.actions.reports',
+      icon: IconChartBar,
+      onClick: () => navigate('/analytics'),
+    },
+    {
+      id: 'new-note',
+      labelKey: 'dashboard.actions.newNote',
+      icon: IconNote,
+      onClick: () => navigate('/notes'),
+    },
+    {
+      id: 'add-session',
+      labelKey: 'dashboard.actions.addSession',
+      icon: IconCalendarPlus,
+      onClick: () => navigate('/calendar'),
+    },
+  ];
+
+  const getButtonStyle = (id: ActionId) => ({
     display: 'flex',
     flexDirection: 'column' as const,
-    overflow: 'hidden',
-    cursor: isPointer ? 'pointer' : 'default',
-    transform: hoveredId === id ? 'translateY(-2px)' : 'translateY(0)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    padding: '16px 14px',
+    borderRadius: 12,
+    backgroundColor:
+      hoveredId === id ? `${currentPalette.primary}25` : `${currentPalette.primary}12`,
+    border: `1px solid ${hoveredId === id ? currentPalette.primary : `${currentPalette.primary}35`}`,
+    transition: 'all 150ms ease-out',
+    minWidth: 88,
+    flex: 1,
+    cursor: 'pointer',
   });
 
   return (
-    <SimpleGrid cols={{ base: 2, sm: 4 }} spacing={mantineTheme.spacing?.md ?? 'md'}>
+    <div
+      style={{
+        display: 'flex',
+        gap: 10,
+        overflowX: 'auto',
+        scrollbarWidth: 'none',
+        WebkitOverflowScrolling: 'touch',
+        paddingBottom: 2,
+      }}
+    >
       {actions.map(action => {
         const Icon = action.icon;
-        
+        const label = t(action.labelKey);
+
         if (action.isSpecial && action.id === 'send-reminders') {
           return (
-            <BulkSMSReminders
-              key={action.id}
-              variant="custom"
-              onRemindersSent={() => {}}
-            >
-              <Card
-                padding="lg"
-                radius="md"
-                style={getCardStyle(action.id)}
+            <BulkSMSReminders key={action.id} variant="custom" onRemindersSent={() => {}}>
+              <div
+                style={getButtonStyle(action.id)}
                 onMouseEnter={() => setHoveredId(action.id)}
                 onMouseLeave={() => setHoveredId(null)}
               >
-                <Stack gap="sm" align="center" justify="center" style={{ flex: 1 }}>
-                  <div style={{ color: currentPalette.primary }}>
-                    <Icon size={28} stroke={1.5} />
-                  </div>
-                  <Text size="sm" fw={500} ta="center" style={{ color: currentPalette.text }}>
-                    {action.label}
-                  </Text>
-                </Stack>
-              </Card>
+                <Icon size={22} stroke={1.5} style={{ color: currentPalette.primary }} />
+                <Text
+                  size="xs"
+                  fw={500}
+                  ta="center"
+                  style={{ color: currentPalette.text, lineHeight: 1.2 }}
+                >
+                  {label}
+                </Text>
+              </div>
             </BulkSMSReminders>
           );
         }
@@ -92,35 +117,25 @@ export function QuickActionsGrid() {
         return (
           <UnstyledButton
             key={action.id}
-            onClick={() => action.onClick?.(navigate)}
-            style={{ height: '100%' }}
+            onClick={action.onClick}
+            style={getButtonStyle(action.id)}
             onMouseEnter={() => setHoveredId(action.id)}
             onMouseLeave={() => setHoveredId(null)}
           >
-            <Card
-              padding="lg"
-              radius="md"
-              style={getCardStyle(action.id)}
-            >
-              <Stack gap="sm" align="center" justify="center" style={{ flex: 1 }}>
-                <div
-                  style={{
-                    color: currentPalette.primary,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}
-                >
-                  <Icon size={28} stroke={1.5} />
-                </div>
-                <Text size="sm" fw={500} ta="center" style={{ color: currentPalette.text }}>
-                  {action.label}
-                </Text>
-              </Stack>
-            </Card>
+            <Stack gap={6} align="center" justify="center">
+              <Icon size={22} stroke={1.5} style={{ color: currentPalette.primary }} />
+              <Text
+                size="xs"
+                fw={500}
+                ta="center"
+                style={{ color: currentPalette.text, lineHeight: 1.2 }}
+              >
+                {label}
+              </Text>
+            </Stack>
           </UnstyledButton>
         );
       })}
-    </SimpleGrid>
+    </div>
   );
 }

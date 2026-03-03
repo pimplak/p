@@ -1,4 +1,4 @@
-import { Container, Stack, Title, Text, ActionIcon, Tooltip } from '@mantine/core';
+import { Container, Stack, Text, ActionIcon, Tooltip } from '@mantine/core';
 import { IconPlus, IconDownload, IconNote, IconBell } from '@tabler/icons-react';
 import { useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -39,7 +39,7 @@ function Dashboard() {
   const weekdayKeys = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
   const monthKeys = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december'];
   const dateLabel = `${t(`weekdays.${weekdayKeys[now.getDay()]}`).toUpperCase()}, ${now.getDate()} ${t(`months.${monthKeys[now.getMonth()]}`).toUpperCase()}`;
-  const greeting = `${t('dashboard.greeting')}, ${practitionerTitle} ${practitionerName}`;
+  const greeting = `${t('dashboard.greeting')}, ${practitionerTitle !== 'NONE' ? `${practitionerTitle} ` : ''}${practitionerName}`;
 
   useHeader({
     title: (
@@ -137,62 +137,57 @@ function Dashboard() {
       size={mantineTheme.other?.layout?.containerSize ?? 'xl'}
       px={{ base: 'md', sm: 'xl' }}
     >
-      <Stack gap={mantineTheme.spacing?.xl ?? 'xl'} py={mantineTheme.spacing?.xl ?? 'xl'}>
+      <Stack gap="lg" py="lg">
         {/* Next Up */}
         {nextAppointment && (
-          <Stack gap="sm">
-            <Title
-              order={3}
+          <Stack gap="xs">
+            <Text
+              size="xs"
+              fw={600}
               style={{
-                fontSize: '0.75rem',
-                fontWeight: 600,
-                color: `${currentPalette.text}B3`,
-                letterSpacing: '0.05em',
+                color: `${currentPalette.text}70`,
+                letterSpacing: '0.06em',
                 textTransform: 'uppercase',
               }}
             >
               {t('dashboard.nextAppointment')}
-            </Title>
+            </Text>
             <NextAppointmentCard
               appointment={nextAppointment as AppointmentWithPatient}
-              isNow={
-                nextAppointment.id === currentAppointmentId
-              }
+              isNow={nextAppointment.id === currentAppointmentId}
             />
           </Stack>
         )}
 
         {/* Quick Actions */}
-        <Stack gap="sm">
-          <Title
-            order={3}
+        <Stack gap="xs">
+          <Text
+            size="xs"
+            fw={600}
             style={{
-              fontSize: '0.75rem',
-              fontWeight: 600,
-              color: `${currentPalette.text}B3`,
-              letterSpacing: '0.05em',
+              color: `${currentPalette.text}70`,
+              letterSpacing: '0.06em',
               textTransform: 'uppercase',
             }}
           >
             {t('dashboard.quickActions')}
-          </Title>
+          </Text>
           <QuickActionsGrid />
         </Stack>
 
         {/* Overview */}
-        <Stack gap="sm">
-          <Title
-            order={3}
+        <Stack gap="xs">
+          <Text
+            size="xs"
+            fw={600}
             style={{
-              fontSize: '0.75rem',
-              fontWeight: 600,
-              color: `${currentPalette.text}B3`,
-              letterSpacing: '0.05em',
+              color: `${currentPalette.text}70`,
+              letterSpacing: '0.06em',
               textTransform: 'uppercase',
             }}
           >
             {t('dashboard.overview')}
-          </Title>
+          </Text>
           <OverviewStats
             totalPatients={stats.totalPatients}
             weeklyRevenue={stats.weeklyRevenue}

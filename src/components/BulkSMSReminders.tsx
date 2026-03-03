@@ -85,7 +85,7 @@ export function BulkSMSReminders({
   const { getAppointmentsNeedingReminders, updateAppointment } =
     useAppointmentStore();
   const { patients } = usePatientStore();
-  const { practitionerName } = useSettingsStore();
+  const { practitionerName, practitionerTitle } = useSettingsStore();
 
   // Get appointments that need reminders
   const appointmentsNeedingReminders = useMemo(() => {
@@ -121,6 +121,7 @@ export function BulkSMSReminders({
                 patient,
                 appointment,
                 practitionerName,
+                practitionerTitle,
                 smsTemplates
               );
             } catch (error) {
@@ -162,6 +163,7 @@ export function BulkSMSReminders({
               item.patient,
               item.appointment,
               practitionerName,
+              practitionerTitle,
               smsTemplates
             );
             return { ...item, message, templateId: selectedTemplateId };
@@ -244,6 +246,7 @@ export function BulkSMSReminders({
           item.appointment,
           item.templateId,
           practitionerName,
+          practitionerTitle,
           smsTemplates
         );
 

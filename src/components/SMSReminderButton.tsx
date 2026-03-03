@@ -65,7 +65,7 @@ export function SMSReminderButton({
   const [customMessage, setCustomMessage] = useState('');
   const [previewMode, setPreviewMode] = useState(false);
 
-  const { practitionerName, smsTemplates } = useSettingsStore();
+  const { practitionerName, practitionerTitle, smsTemplates } = useSettingsStore();
   const { updateAppointment } = useAppointmentStore();
 
   // Get recommended template on mount
@@ -88,6 +88,7 @@ export function SMSReminderButton({
         patient,
         appointment,
         practitionerName,
+        practitionerTitle,
         smsTemplates
       );
     } catch (error) {
@@ -128,6 +129,7 @@ export function SMSReminderButton({
         appointment,
         currentTemplateId,
         practitionerName,
+        practitionerTitle,
         smsTemplates
       );
 

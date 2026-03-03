@@ -131,6 +131,17 @@
       "newNote": "Nowa notatka",
       "addSession": "Dodaj sesję",
       "export": "Eksport"
+    },
+    "nextAppointmentCard": {
+      "details": "Szczegóły",
+      "startSession": "Rozpocznij sesję",
+      "defaultType": "Wizyta",
+      "unknownPatient": "Pacjent"
+    },
+    "timeline": {
+      "inMinutes": "za {{count}} min",
+      "inHours": "za {{count}}h",
+      "inHoursMinutes": "za {{hours}}h {{minutes}}min"
     }
   },
 
@@ -460,13 +471,14 @@
       "title": "Przypomnienia SMS",
       "practiceName": {
         "label": "Nazwa gabinetu",
-        "placeholder": "Gabinet Psychologiczny",
+        "placeholder": "DR DEMO",
         "description": "Nazwa wyświetlana w wiadomościach SMS"
       },
       "practitionerTitle": {
         "label": "Tytuł zawodowy",
         "placeholder": "Wybierz tytuł",
-        "description": "Tytuł używany w wiadomościach SMS"
+        "description": "Tytuł używany w wiadomościach SMS",
+        "none": "BRAK"
       },
       "templates": {
         "title": "Szablony wiadomości SMS"

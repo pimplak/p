@@ -116,7 +116,7 @@ export interface SMSReminderLog {
 export function generateSMSVariables(
   patient: Patient,
   appointment: Appointment,
-  practitionerName: string = 'Gabinet',
+  practitionerName: string = 'DR DEMO',
   practitionerTitle: string = 'mgr'
 ): SMSVariables {
   const appointmentDate = new Date(appointment.date);
@@ -127,7 +127,7 @@ export function generateSMSVariables(
     date: format(appointmentDate, 'dd.MM.yyyy (EEEE)', { locale: pl }),
     time: format(appointmentDate, 'HH:mm'),
     practitionerName,
-    practitionerTitle,
+    practitionerTitle: practitionerTitle === 'NONE' ? '' : practitionerTitle,
     appointmentType: appointment.type || 'sesja',
     duration: `${appointment.duration} min`,
   };
@@ -161,6 +161,7 @@ export function generateSMSMessage(
   patient: Patient,
   appointment: Appointment,
   practitionerName?: string,
+  practitionerTitle?: string,
   customTemplates?: SMSTemplate[]
 ): string {
   const templates = customTemplates || DEFAULT_SMS_TEMPLATES;
@@ -173,7 +174,8 @@ export function generateSMSMessage(
   const variables = generateSMSVariables(
     patient,
     appointment,
-    practitionerName
+    practitionerName,
+    practitionerTitle
   );
   return replaceTemplateVariables(template.content, variables);
 }
@@ -228,6 +230,7 @@ export function sendSMSReminder(
   appointment: Appointment,
   templateId: string = 'appointment_reminder',
   practitionerName?: string,
+  practitionerTitle?: string,
   customTemplates?: SMSTemplate[]
 ): void {
   if (!patient.phone) {
@@ -239,6 +242,7 @@ export function sendSMSReminder(
     patient,
     appointment,
     practitionerName,
+    practitionerTitle,
     customTemplates
   );
 

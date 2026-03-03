@@ -131,6 +131,17 @@
       "newNote": "New Note",
       "addSession": "Add Session",
       "export": "Export"
+    },
+    "nextAppointmentCard": {
+      "details": "Details",
+      "startSession": "Start Session",
+      "defaultType": "Appointment",
+      "unknownPatient": "Patient"
+    },
+    "timeline": {
+      "inMinutes": "in {{count}} min",
+      "inHours": "in {{count}}h",
+      "inHoursMinutes": "in {{hours}}h {{minutes}}min"
     }
   },
 
@@ -460,13 +471,14 @@
       "title": "SMS Reminders",
       "practiceName": {
         "label": "Practice Name",
-        "placeholder": "Psychology Practice",
+        "placeholder": "DR DEMO",
         "description": "Name displayed in SMS messages"
       },
       "practitionerTitle": {
         "label": "Professional Title",
         "placeholder": "Select title",
-        "description": "Title used in SMS messages"
+        "description": "Title used in SMS messages",
+        "none": "NONE"
       },
       "templates": {
         "title": "SMS Message Templates"

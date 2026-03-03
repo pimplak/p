@@ -1,5 +1,6 @@
-import { Card, Group, Stack, Text, Avatar } from '@mantine/core';
+import { Badge, Card, Group, Stack, Text, Avatar } from '@mantine/core';
 import { IconInfoCircle, IconPlayerPlay } from '@tabler/icons-react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from '../../hooks/useTheme';
 import { useSettingsStore } from '../../stores/useSettingsStore';
@@ -19,85 +20,122 @@ interface NextAppointmentCardProps {
 }
 
 export function NextAppointmentCard({ appointment, isNow }: NextAppointmentCardProps) {
+  const { t } = useTranslation();
   const navigate = useNavigate();
-  const { currentPalette, mantineTheme } = useTheme();
+  const { currentPalette } = useTheme();
   const appointmentTypes = useSettingsStore(state => state.appointmentTypes);
 
   const start = new Date(appointment.date);
   const end = new Date(start.getTime() + (appointment.duration || 60) * 60 * 1000);
-  const timeRange = `${start.toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' })} - ${end.toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' })}`;
-  
-  const typeLabel = (appointment.type && appointmentTypes.find(t => t.id === appointment.type)?.label) || 'Wizyta';
-  
+  const timeRange = `${start.toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' })} – ${end.toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' })}`;
+
+  const typeLabel =
+    (appointment.type && appointmentTypes.find(t => t.id === appointment.type)?.label) ||
+    t('dashboard.nextAppointmentCard.defaultType');
+
   const patientName = appointment.patient
     ? `${appointment.patient.firstName} ${appointment.patient.lastName}`.trim()
-    : 'Pacjent';
+    : t('dashboard.nextAppointmentCard.unknownPatient');
 
   return (
     <Card
       padding="lg"
-      radius="md"
+      radius="lg"
       style={{
-        backgroundColor: `${currentPalette.primary}20`,
-        border: `1px solid ${currentPalette.primary}60`,
+        backgroundColor: `${currentPalette.primary}18`,
+        border: `1px solid ${currentPalette.primary}50`,
       }}
     >
-      <Stack gap={mantineTheme.spacing?.md ?? 'md'}>
-        <Group justify="space-between" align="flex-start">
-          <Group gap="md">
+      <Stack gap="md">
+        {/* Top row: avatar + info + badges */}
+        <Group justify="space-between" align="flex-start" wrap="nowrap">
+          <Group gap="md" wrap="nowrap" style={{ flex: 1, minWidth: 0 }}>
             <Avatar
+              size={52}
               radius="xl"
-              color={currentPalette.primary}
               style={{
-                backgroundColor: `${currentPalette.primary}40`,
-                color: currentPalette.text,
+                backgroundColor: `${currentPalette.primary}30`,
+                color: currentPalette.primary,
+                fontWeight: 700,
+                fontSize: '1.1rem',
+                flexShrink: 0,
               }}
             >
               {getInitials(appointment.patient)}
             </Avatar>
-            <Stack gap={4}>
-              <Text fw={600} size="lg" style={{ color: currentPalette.text }}>
+            <Stack gap={3} style={{ minWidth: 0 }}>
+              <Text fw={700} size="lg" style={{ color: currentPalette.text }} lineClamp={1}>
                 {patientName}
               </Text>
-              <Text size="sm" style={{ color: `${currentPalette.text}B3` }}>
-                {timeRange}
-              </Text>
-              <Text size="sm" fw={500} style={{ color: currentPalette.primary }}>
-                {typeLabel}
-              </Text>
+              <Badge
+                size="xs"
+                radius="sm"
+                style={{
+                  backgroundColor: `${currentPalette.primary}25`,
+                  color: currentPalette.primary,
+                  border: `1px solid ${currentPalette.primary}50`,
+                  width: 'fit-content',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.04em',
+                }}
+              >
+                {t('status.patient.active')}
+              </Badge>
             </Stack>
           </Group>
+
           {isNow && (
-            <Text
-              size="xs"
-              fw={700}
+            <Badge
+              size="sm"
+              radius="md"
               style={{
+                backgroundColor: `${currentPalette.primary}25`,
                 color: currentPalette.primary,
-                backgroundColor: `${currentPalette.primary}30`,
-                padding: '4px 10px',
-                borderRadius: mantineTheme.radius?.md ?? 8,
+                border: `1px solid ${currentPalette.primary}60`,
+                flexShrink: 0,
+                fontWeight: 700,
+                textTransform: 'uppercase',
+                letterSpacing: '0.06em',
               }}
             >
-              TERAZ
-            </Text>
+              {t('dashboard.appointmentStatus.now')}
+            </Badge>
           )}
         </Group>
+
+        {/* Time + type row */}
+        <Stack gap={2}>
+          <Text
+            fw={700}
+            size="xl"
+            style={{ color: currentPalette.text, letterSpacing: '-0.01em' }}
+          >
+            {timeRange}
+          </Text>
+          <Text size="sm" style={{ color: currentPalette.primary, fontWeight: 500 }}>
+            {typeLabel}
+          </Text>
+        </Stack>
+
+        {/* Action buttons */}
         <Group gap="sm">
           <Button
             variant="secondary"
             size="sm"
             leftSection={<IconInfoCircle size={16} />}
             onClick={() => navigate('/calendar')}
+            style={{ flex: 1 }}
           >
-            Szczegóły
+            {t('dashboard.nextAppointmentCard.details')}
           </Button>
           <Button
             variant="primary"
             size="sm"
             leftSection={<IconPlayerPlay size={16} />}
             onClick={() => navigate('/notes')}
+            style={{ flex: 1 }}
           >
-            Rozpocznij sesję
+            {t('dashboard.nextAppointmentCard.startSession')}
           </Button>
         </Group>
       </Stack>
