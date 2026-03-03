@@ -141,7 +141,18 @@
     "timeline": {
       "inMinutes": "za {{count}} min",
       "inHours": "za {{count}}h",
-      "inHoursMinutes": "za {{hours}}h {{minutes}}min"
+      "inHoursMinutes": "za {{hours}}h {{minutes}}min",
+      "viewCalendar": "Pokaż kalendarz",
+      "online": "Online",
+      "inPerson": "Gabinet",
+      "endsAt": "→ {{time}}",
+      "menuViewPatient": "Profil pacjenta",
+      "menuMarkComplete": "Zakończ wizytę",
+      "menuOpenCalendar": "Otwórz w kalendarzu",
+      "menuCancel": "Anuluj wizytę",
+      "cancelConfirm": "Czy na pewno chcesz anulować wizytę z {{name}}?",
+      "markedComplete": "Wizyta zakończona",
+      "cancelledSuccess": "Wizyta anulowana"
     }
   },
 

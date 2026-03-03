@@ -141,7 +141,18 @@
     "timeline": {
       "inMinutes": "in {{count}} min",
       "inHours": "in {{count}}h",
-      "inHoursMinutes": "in {{hours}}h {{minutes}}min"
+      "inHoursMinutes": "in {{hours}}h {{minutes}}min",
+      "viewCalendar": "View Calendar",
+      "online": "Online",
+      "inPerson": "In Person",
+      "endsAt": "→ {{time}}",
+      "menuViewPatient": "Patient Profile",
+      "menuMarkComplete": "Mark Complete",
+      "menuOpenCalendar": "Open in Calendar",
+      "menuCancel": "Cancel Appointment",
+      "cancelConfirm": "Are you sure you want to cancel the appointment with {{name}}?",
+      "markedComplete": "Appointment completed",
+      "cancelledSuccess": "Appointment cancelled"
     }
   },
 
