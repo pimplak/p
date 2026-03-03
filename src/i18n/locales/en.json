@@ -142,6 +142,8 @@
       "inMinutes": "in {{count}} min",
       "inHours": "in {{count}}h",
       "inHoursMinutes": "in {{hours}}h {{minutes}}min",
+      "inDays": "in {{count}} day",
+      "inDays_other": "in {{count}} days",
       "viewCalendar": "View Calendar",
       "online": "Online",
       "inPerson": "In Person",

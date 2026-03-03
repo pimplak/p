@@ -178,18 +178,36 @@ function Dashboard() {
             </Text>
             <QuickActionsGrid />
           </Stack>
+        </Stack>
+      </div>
 
-          {/* Overview */}
-          <Stack gap={12}>
-            <Text size="xs" fw={800} style={sectionLabelStyle}>
-              {t('dashboard.overview')}
-            </Text>
-            <OverviewStats
-              totalPatients={stats.totalPatients}
-              weeklyRevenue={stats.weeklyRevenue}
-              pendingHours={stats.pendingHours}
-            />
-          </Stack>
+      {/* Overview — full-bleed */}
+      <Stack gap={12}>
+        <div style={{ maxWidth: containerMaxWidth, margin: '0 auto', width: '100%', paddingLeft: 'clamp(16px, 4vw, 32px)', paddingRight: 'clamp(16px, 4vw, 32px)' }}>
+          <Text size="xs" fw={800} style={sectionLabelStyle}>
+            {t('dashboard.overview')}
+          </Text>
+        </div>
+        <OverviewStats
+          totalPatients={stats.totalPatients}
+          weeklyRevenue={stats.weeklyRevenue}
+          pendingHours={stats.pendingHours}
+        />
+      </Stack>
+
+      {/* Padded sections */}
+      <div
+        style={{
+          maxWidth: containerMaxWidth,
+          margin: '0 auto',
+          width: '100%',
+          paddingLeft: 'var(--dashboard-px)',
+          paddingRight: 'var(--dashboard-px)',
+          // CSS custom property for responsive padding
+          '--dashboard-px': 'clamp(16px, 4vw, 32px)',
+        } as React.CSSProperties}
+      >
+        <Stack gap={40}>
 
           {/* Today's Timeline */}
           <TodaysTimeline

@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from '../../hooks/useTheme';
 import { useSettingsStore } from '../../stores/useSettingsStore';
+import { getTimeUntil } from '../../utils/dates';
 import { Button } from '../ui/Button';
 import type { AppointmentWithPatient } from '../../types/Appointment';
 
@@ -32,6 +33,10 @@ export function NextAppointmentCard({ appointment, isNow }: NextAppointmentCardP
   const typeLabel =
     (appointment.type && appointmentTypes.find(t => t.id === appointment.type)?.label) ||
     t('dashboard.nextAppointmentCard.defaultType');
+
+  const timeUntilLabel = isNow
+    ? t('dashboard.appointmentStatus.now')
+    : getTimeUntil(start, t) || t('dashboard.nextAppointment');
 
   const patientName = appointment.patient
     ? `${appointment.patient.firstName} ${appointment.patient.lastName}`.trim()
@@ -75,9 +80,7 @@ export function NextAppointmentCard({ appointment, isNow }: NextAppointmentCardP
                 fontSize: 10,
               }}
             >
-              {isNow
-                ? t('dashboard.appointmentStatus.now')
-                : t('dashboard.nextAppointment')}
+              {timeUntilLabel}
             </Text>
 
             {/* Patient name */}

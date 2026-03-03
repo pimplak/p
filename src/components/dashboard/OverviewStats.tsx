@@ -45,7 +45,7 @@ export function OverviewStats({ totalPatients, weeklyRevenue, pendingHours }: Ov
       style={{
         backgroundColor: `${currentPalette.surface}80`,
         border: `1px solid ${currentPalette.text}08`,
-        borderRadius: 16,
+        borderRadius: 0,
         padding: '4px 0',
       }}
     >

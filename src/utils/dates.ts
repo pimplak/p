@@ -101,6 +101,28 @@ export function getDayRange(date: Date | string): { start: Date; end: Date } {
   return { start, end };
 }
 
+/**
+ * Returns a human-readable string for how long until a future date.
+ * Handles minutes, hours, and days.
+ */
+export function getTimeUntil(
+  date: Date,
+  t: (key: string, opts?: Record<string, unknown>) => string
+): string {
+  const diffMs = date.getTime() - Date.now();
+  if (diffMs <= 0) return '';
+  const totalMins = Math.round(diffMs / 60000);
+  if (totalMins < 60) return t('dashboard.timeline.inMinutes', { count: totalMins });
+  const totalHours = Math.floor(totalMins / 60);
+  if (totalHours < 24) {
+    const mins = totalMins % 60;
+    if (mins === 0) return t('dashboard.timeline.inHours', { count: totalHours });
+    return t('dashboard.timeline.inHoursMinutes', { hours: totalHours, minutes: mins });
+  }
+  const days = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+  return t('dashboard.timeline.inDays', { count: days });
+}
+
 // Helper do wyświetlania nazwy pacjenta - używa 'nazwa' jeśli dostępna, w przeciwnym razie imię i nazwisko
 export function getPatientDisplayName(patient: Patient): string {
   if (patient.nazwa) {

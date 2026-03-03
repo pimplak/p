@@ -142,6 +142,8 @@
       "inMinutes": "za {{count}} min",
       "inHours": "za {{count}}h",
       "inHoursMinutes": "za {{hours}}h {{minutes}}min",
+      "inDays": "za {{count}} dzień",
+      "inDays_other": "za {{count}} dni",
       "viewCalendar": "Pokaż kalendarz",
       "online": "Online",
       "inPerson": "Gabinet",

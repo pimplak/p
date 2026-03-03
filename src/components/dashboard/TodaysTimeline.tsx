@@ -17,23 +17,13 @@ import { useTheme } from '../../hooks/useTheme';
 import { useAppointmentStore } from '../../stores/useAppointmentStore';
 import { useSettingsStore } from '../../stores/useSettingsStore';
 import { AppointmentStatus } from '../../types/Appointment';
+import { getTimeUntil } from '../../utils/dates';
 import type { AppointmentWithPatient } from '../../types/Appointment';
 
 interface TodaysTimelineProps {
   appointments: AppointmentWithPatient[];
   currentAppointmentId?: number;
   onSeeAll?: () => void;
-}
-
-function getTimeUntil(date: Date, t: (key: string, opts?: Record<string, unknown>) => string): string {
-  const diffMs = date.getTime() - Date.now();
-  if (diffMs <= 0) return '';
-  const totalMins = Math.round(diffMs / 60000);
-  if (totalMins < 60) return t('dashboard.timeline.inMinutes', { count: totalMins });
-  const hours = Math.floor(totalMins / 60);
-  const mins = totalMins % 60;
-  if (mins === 0) return t('dashboard.timeline.inHours', { count: hours });
-  return t('dashboard.timeline.inHoursMinutes', { hours, minutes: mins });
 }
 
 function formatTime(date: Date): string {
