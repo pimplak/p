@@ -145,7 +145,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
       {/* Mobile Navigation - shown only on mobile */}
       {isMobile && <MobileNavigation />}
       <AppShell
-        header={{ height: 70 }}
+        header={{ height: 'calc(70px + env(safe-area-inset-top, 0px))' }}
         navbar={{
           width: 280,
           breakpoint: 'sm',
@@ -163,7 +163,9 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
             backdropFilter: 'blur(20px)',
             WebkitBackdropFilter: 'blur(20px)',
             borderBottom: `1px solid ${currentPalette.text}08`,
-            padding: '0 24px',
+            paddingTop: 'env(safe-area-inset-top, 0px)',
+            paddingLeft: '24px',
+            paddingRight: '24px',
             display: 'flex',
             alignItems: 'center',
             color: currentPalette.text,

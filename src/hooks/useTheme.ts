@@ -3,7 +3,7 @@ import {
     type MantineColorsTuple,
     type MantineTheme,
 } from '@mantine/core';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import classes from '../css/overrides.module.css';
 import { useThemeStore } from '../stores/useThemeStore';
 import { isDarkPalette } from '../types/theme';
@@ -661,6 +661,18 @@ export const useTheme = () => {
             },
         }) as FerrroTheme;
     }, [currentPalette]);
+
+    // Sync status bar color with current palette (iOS PWA + Android/Chrome)
+    useEffect(() => {
+        // Update theme-color meta tag (Android Chrome, desktop browsers)
+        const meta = document.querySelector('meta[name="theme-color"]');
+        if (meta) {
+            meta.setAttribute('content', currentPalette.background);
+        }
+
+        // Set body background color (iOS PWA with black-translucent status bar)
+        document.body.style.backgroundColor = currentPalette.background;
+    }, [currentPalette.background]);
 
     return {
         // Current theme state
