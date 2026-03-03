@@ -112,15 +112,11 @@ export function TodaysTimeline({
   };
 
   const header = (
-    <Group justify="space-between" mb="lg" align="center">
+    <Group justify="space-between" mb="lg" align="baseline">
       <Text
-        size="xs"
+        size="lg"
         fw={700}
-        style={{
-          color: `${currentPalette.text}60`,
-          letterSpacing: '0.12em',
-          textTransform: 'uppercase',
-        }}
+        style={{ color: currentPalette.text }}
       >
         {t('dashboard.todaysPlan')}
       </Text>
@@ -263,30 +259,18 @@ export function TodaysTimeline({
                   />
                 </div>
 
-                {/* Appointment card */}
+                {/* Appointment content */}
                 <div
                   style={{
                     marginLeft: 8,
-                    borderRadius: 14,
-                    padding: isNow ? '14px 16px' : '10px 14px',
-                    backgroundColor: isNow
-                      ? `${currentPalette.primary}14`
-                      : isCancelled
-                        ? `${currentPalette.text}04`
-                        : isDone
-                          ? `${currentPalette.text}05`
-                          : `${currentPalette.text}08`,
-                    border: isNow
-                      ? `1px solid ${currentPalette.primary}35`
-                      : `1px solid ${currentPalette.text}0E`,
-                    borderLeft: isNow
-                      ? `3px solid ${currentPalette.primary}`
-                      : `1px solid ${currentPalette.text}0E`,
-                    transition: 'background-color 0.2s',
+                    padding: isNow ? '10px 14px' : '4px 0',
+                    borderRadius: isNow ? 12 : 0,
+                    backgroundColor: isNow ? `${currentPalette.primary}10` : 'transparent',
+                    borderLeft: isNow ? `2px solid ${currentPalette.primary}` : 'none',
                   }}
                 >
                   <Group justify="space-between" align="flex-start" wrap="nowrap" gap={8}>
-                    <Stack gap={4} style={{ minWidth: 0, flex: 1 }}>
+                    <Stack gap={2} style={{ minWidth: 0, flex: 1 }}>
                       {/* Patient name row */}
                       <Group gap={6} align="center" wrap="nowrap">
                         {isDone && (
@@ -297,7 +281,6 @@ export function TodaysTimeline({
                           />
                         )}
                         <Text
-                          size={isNow ? 'md' : 'sm'}
                           fw={isNow ? 700 : 600}
                           lineClamp={1}
                           style={{
@@ -307,16 +290,16 @@ export function TodaysTimeline({
                             textDecoration: isDone || isCancelled ? 'line-through' : 'none',
                             textDecorationColor: `${currentPalette.text}40`,
                             lineHeight: 1.3,
+                            fontSize: isNow ? 15 : 14,
                           }}
                         >
                           {patientName}
                         </Text>
                       </Group>
 
-                      {/* Type + location row */}
+                      {/* Type + duration + location row */}
                       <Group gap={6} wrap="nowrap" align="center">
                         <Text
-                          size="xs"
                           lineClamp={1}
                           style={{
                             color: isDone || isCancelled
@@ -327,16 +310,36 @@ export function TodaysTimeline({
                             lineHeight: 1.3,
                             flexShrink: 1,
                             minWidth: 0,
+                            fontSize: 12,
                           }}
                         >
                           {typeLabel}
                         </Text>
 
+                        {/* Duration */}
+                        {!isDone && !isCancelled && (
+                          <>
+                            <Text style={{ color: `${currentPalette.text}20`, flexShrink: 0, fontSize: 12 }}>
+                              ·
+                            </Text>
+                            <Text
+                              style={{
+                                color: `${currentPalette.text}45`,
+                                flexShrink: 0,
+                                fontSize: 12,
+                                fontVariantNumeric: 'tabular-nums',
+                              }}
+                            >
+                              {apt.duration ?? 60}min
+                            </Text>
+                          </>
+                        )}
+
                         {/* Online / in-person chip */}
                         {!isDone && !isCancelled && (isOnline || isInPerson) && (
                           <>
-                            <Text size="xs" style={{ color: `${currentPalette.text}25`, flexShrink: 0 }}>
-                              •
+                            <Text style={{ color: `${currentPalette.text}20`, flexShrink: 0, fontSize: 12 }}>
+                              ·
                             </Text>
                             <Group gap={3} wrap="nowrap" align="center" style={{ flexShrink: 0 }}>
                               {isOnline ? (
@@ -345,13 +348,13 @@ export function TodaysTimeline({
                                 <IconBuilding size={11} style={{ color: `${currentPalette.text}50` }} />
                               )}
                               <Text
-                                size="xs"
                                 style={{
                                   color: isNow && isOnline
                                     ? currentPalette.primary
                                     : `${currentPalette.text}50`,
                                   fontWeight: isOnline && isNow ? 600 : 400,
                                   lineHeight: 1.3,
+                                  fontSize: 12,
                                 }}
                               >
                                 {isOnline
@@ -366,9 +369,12 @@ export function TodaysTimeline({
                       {/* End time for current appointment */}
                       {isNow && (
                         <Text
-                          size="xs"
-                          mt={2}
-                          style={{ color: `${currentPalette.primary}80`, fontWeight: 500 }}
+                          mt={4}
+                          style={{
+                            color: `${currentPalette.primary}80`,
+                            fontWeight: 500,
+                            fontSize: 12,
+                          }}
                         >
                           {t('dashboard.timeline.endsAt', { time: endTimeStr })}
                         </Text>
@@ -379,20 +385,33 @@ export function TodaysTimeline({
                     <Stack gap={4} align="flex-end" style={{ flexShrink: 0 }}>
                       {isNow && (
                         <Badge
-                          size="sm"
-                          radius="md"
+                          size="xs"
+                          radius="sm"
                           style={{
                             backgroundColor: currentPalette.primary,
                             color: '#000',
                             fontWeight: 800,
-                            fontSize: 11,
+                            fontSize: 9,
                             letterSpacing: '0.08em',
                             textTransform: 'uppercase',
-                            paddingInline: 10,
+                            paddingInline: 8,
                           }}
                         >
                           {t('dashboard.appointmentStatus.now')}
                         </Badge>
+                      )}
+
+                      {/* End time badge for upcoming */}
+                      {!isNow && !isDone && !isCancelled && (
+                        <Text
+                          style={{
+                            color: `${currentPalette.text}35`,
+                            fontSize: 11,
+                            fontVariantNumeric: 'tabular-nums',
+                          }}
+                        >
+                          {endTimeStr}
+                        </Text>
                       )}
 
                       {/* Dots menu for scheduled (not done/cancelled) */}

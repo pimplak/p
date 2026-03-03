@@ -60,28 +60,47 @@ export function QuickActionsGrid() {
     },
   ];
 
-  const getButtonStyle = (id: ActionId) => ({
+  const getIconBoxStyle = (id: ActionId) => ({
+    width: 64,
+    height: 64,
+    borderRadius: 16,
     display: 'flex',
-    flexDirection: 'column' as const,
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 8,
-    padding: '16px 14px',
-    borderRadius: 12,
     backgroundColor:
-      hoveredId === id ? `${currentPalette.primary}25` : `${currentPalette.primary}12`,
-    border: `1px solid ${hoveredId === id ? currentPalette.primary : `${currentPalette.primary}35`}`,
+      hoveredId === id ? `${currentPalette.primary}18` : currentPalette.surface,
+    border: `1px solid ${hoveredId === id ? `${currentPalette.primary}30` : `${currentPalette.text}08`}`,
     transition: 'all 150ms ease-out',
-    minWidth: 88,
-    flex: 1,
-    cursor: 'pointer',
   });
+
+  const labelStyle = {
+    fontSize: 10,
+    textTransform: 'uppercase' as const,
+    letterSpacing: '0.05em',
+    color: `${currentPalette.text}60`,
+    lineHeight: 1.2,
+    textAlign: 'center' as const,
+  };
+
+  const renderTile = (action: typeof actions[number]) => {
+    const Icon = action.icon;
+    const label = t(action.labelKey);
+
+    return (
+      <Stack gap={8} align="center" style={{ width: 76 }}>
+        <div style={getIconBoxStyle(action.id)}>
+          <Icon size={24} stroke={1.5} style={{ color: currentPalette.primary }} />
+        </div>
+        <Text style={labelStyle}>{label}</Text>
+      </Stack>
+    );
+  };
 
   return (
     <div
       style={{
         display: 'flex',
-        gap: 10,
+        gap: 16,
         overflowX: 'auto',
         scrollbarWidth: 'none',
         WebkitOverflowScrolling: 'touch',
@@ -89,26 +108,15 @@ export function QuickActionsGrid() {
       }}
     >
       {actions.map(action => {
-        const Icon = action.icon;
-        const label = t(action.labelKey);
-
         if (action.isSpecial && action.id === 'send-reminders') {
           return (
             <BulkSMSReminders key={action.id} variant="custom" onRemindersSent={() => {}}>
               <div
-                style={getButtonStyle(action.id)}
+                style={{ cursor: 'pointer' }}
                 onMouseEnter={() => setHoveredId(action.id)}
                 onMouseLeave={() => setHoveredId(null)}
               >
-                <Icon size={22} stroke={1.5} style={{ color: currentPalette.primary }} />
-                <Text
-                  size="xs"
-                  fw={500}
-                  ta="center"
-                  style={{ color: currentPalette.text, lineHeight: 1.2 }}
-                >
-                  {label}
-                </Text>
+                {renderTile(action)}
               </div>
             </BulkSMSReminders>
           );
@@ -118,21 +126,10 @@ export function QuickActionsGrid() {
           <UnstyledButton
             key={action.id}
             onClick={action.onClick}
-            style={getButtonStyle(action.id)}
             onMouseEnter={() => setHoveredId(action.id)}
             onMouseLeave={() => setHoveredId(null)}
           >
-            <Stack gap={6} align="center" justify="center">
-              <Icon size={22} stroke={1.5} style={{ color: currentPalette.primary }} />
-              <Text
-                size="xs"
-                fw={500}
-                ta="center"
-                style={{ color: currentPalette.text, lineHeight: 1.2 }}
-              >
-                {label}
-              </Text>
-            </Stack>
+            {renderTile(action)}
           </UnstyledButton>
         );
       })}

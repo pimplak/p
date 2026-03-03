@@ -1,4 +1,4 @@
-import { Container, Stack, Text, ActionIcon, Tooltip } from '@mantine/core';
+import { Stack, Text, ActionIcon, Tooltip } from '@mantine/core';
 import { IconPlus, IconDownload, IconNote, IconBell } from '@tabler/icons-react';
 import { useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -132,108 +132,105 @@ function Dashboard() {
     };
   }, [patients, appointments, getTodaysAppointments, getUpcomingAppointments, now]);
 
+  const containerMaxWidth = mantineTheme.other?.layout?.containerSize === 'lg' ? 960 : 1200;
+
+  const sectionLabelStyle = {
+    color: `${currentPalette.text}70`,
+    letterSpacing: '0.12em',
+    textTransform: 'uppercase' as const,
+    fontSize: 10,
+  };
+
   return (
-    <Container
-      size={mantineTheme.other?.layout?.containerSize ?? 'xl'}
-      px={{ base: 'md', sm: 'xl' }}
-    >
-      <Stack gap="lg" py="lg">
-        {/* Next Up */}
-        {nextAppointment && (
-          <Stack gap="xs">
-            <Text
-              size="xs"
-              fw={600}
-              style={{
-                color: `${currentPalette.text}70`,
-                letterSpacing: '0.06em',
-                textTransform: 'uppercase',
-              }}
-            >
+    <Stack gap={40} py="lg" style={{ margin: 'calc(var(--mantine-spacing-md) * -1)', marginTop: 0 }}>
+      {/* Next Up — full-bleed, breaks out of AppShell padding */}
+      {nextAppointment && (
+        <Stack gap={12}>
+          <div style={{ maxWidth: containerMaxWidth, margin: '0 auto', width: '100%', paddingLeft: 'clamp(16px, 4vw, 32px)', paddingRight: 'clamp(16px, 4vw, 32px)' }}>
+            <Text size="xs" fw={800} style={sectionLabelStyle}>
               {t('dashboard.nextAppointment')}
             </Text>
-            <NextAppointmentCard
-              appointment={nextAppointment as AppointmentWithPatient}
-              isNow={nextAppointment.id === currentAppointmentId}
-            />
-          </Stack>
-        )}
-
-        {/* Quick Actions */}
-        <Stack gap="xs">
-          <Text
-            size="xs"
-            fw={600}
-            style={{
-              color: `${currentPalette.text}70`,
-              letterSpacing: '0.06em',
-              textTransform: 'uppercase',
-            }}
-          >
-            {t('dashboard.quickActions')}
-          </Text>
-          <QuickActionsGrid />
-        </Stack>
-
-        {/* Overview */}
-        <Stack gap="xs">
-          <Text
-            size="xs"
-            fw={600}
-            style={{
-              color: `${currentPalette.text}70`,
-              letterSpacing: '0.06em',
-              textTransform: 'uppercase',
-            }}
-          >
-            {t('dashboard.overview')}
-          </Text>
-          <OverviewStats
-            totalPatients={stats.totalPatients}
-            weeklyRevenue={stats.weeklyRevenue}
-            pendingHours={stats.pendingHours}
+          </div>
+          <NextAppointmentCard
+            appointment={nextAppointment as AppointmentWithPatient}
+            isNow={nextAppointment.id === currentAppointmentId}
           />
         </Stack>
+      )}
 
-        {/* Today's Timeline */}
-        <TodaysTimeline
-          appointments={todaysList as AppointmentWithPatient[]}
-          currentAppointmentId={currentAppointmentId}
-          onSeeAll={() => navigate('/calendar')}
-        />
+      {/* Padded sections */}
+      <div
+        style={{
+          maxWidth: containerMaxWidth,
+          margin: '0 auto',
+          width: '100%',
+          paddingLeft: 'var(--dashboard-px)',
+          paddingRight: 'var(--dashboard-px)',
+          // CSS custom property for responsive padding
+          '--dashboard-px': 'clamp(16px, 4vw, 32px)',
+        } as React.CSSProperties}
+      >
+        <Stack gap={40}>
+          {/* Quick Actions */}
+          <Stack gap={12}>
+            <Text size="xs" fw={800} style={sectionLabelStyle}>
+              {t('dashboard.quickActions')}
+            </Text>
+            <QuickActionsGrid />
+          </Stack>
 
-        <FloatingActionButton
-          actions={[
-            {
-              id: 'new-session',
-              icon: <IconPlus size="1.5rem" />,
-              label: t('dashboard.actions.addSession'),
-              onClick: () => navigate('/calendar'),
-            },
-            {
-              id: 'export-excel',
-              icon: <IconDownload size="1.5rem" />,
-              label: t('dashboard.actions.export'),
-              onClick: handleExport,
-            },
-            {
-              id: 'add-note',
-              icon: <IconNote size="1.5rem" />,
-              label: t('dashboard.actions.newNote'),
-              onClick: () => navigate('/notes'),
-              disabled: false,
-            },
-          ]}
-        />
+          {/* Overview */}
+          <Stack gap={12}>
+            <Text size="xs" fw={800} style={sectionLabelStyle}>
+              {t('dashboard.overview')}
+            </Text>
+            <OverviewStats
+              totalPatients={stats.totalPatients}
+              weeklyRevenue={stats.weeklyRevenue}
+              pendingHours={stats.pendingHours}
+            />
+          </Stack>
 
-        <ExportModal
-          opened={exportOpened}
-          onClose={closeExport}
-          filteredPatients={patients}
-          onExport={handleExportData}
-        />
-      </Stack>
-    </Container>
+          {/* Today's Timeline */}
+          <TodaysTimeline
+            appointments={todaysList as AppointmentWithPatient[]}
+            currentAppointmentId={currentAppointmentId}
+            onSeeAll={() => navigate('/calendar')}
+          />
+        </Stack>
+      </div>
+
+      <FloatingActionButton
+        actions={[
+          {
+            id: 'new-session',
+            icon: <IconPlus size="1.5rem" />,
+            label: t('dashboard.actions.addSession'),
+            onClick: () => navigate('/calendar'),
+          },
+          {
+            id: 'export-excel',
+            icon: <IconDownload size="1.5rem" />,
+            label: t('dashboard.actions.export'),
+            onClick: handleExport,
+          },
+          {
+            id: 'add-note',
+            icon: <IconNote size="1.5rem" />,
+            label: t('dashboard.actions.newNote'),
+            onClick: () => navigate('/notes'),
+            disabled: false,
+          },
+        ]}
+      />
+
+      <ExportModal
+        opened={exportOpened}
+        onClose={closeExport}
+        filteredPatients={patients}
+        onExport={handleExportData}
+      />
+    </Stack>
   );
 }
 

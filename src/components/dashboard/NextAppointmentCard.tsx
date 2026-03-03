@@ -1,5 +1,5 @@
-import { Badge, Card, Group, Stack, Text, Avatar } from '@mantine/core';
-import { IconInfoCircle, IconPlayerPlay } from '@tabler/icons-react';
+import { Avatar, Group, Stack, Text, ActionIcon } from '@mantine/core';
+import { IconClock, IconInfoCircle, IconPlayerPlay, IconBrain } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from '../../hooks/useTheme';
@@ -38,107 +38,120 @@ export function NextAppointmentCard({ appointment, isNow }: NextAppointmentCardP
     : t('dashboard.nextAppointmentCard.unknownPatient');
 
   return (
-    <Card
-      padding="lg"
-      radius="lg"
+    <div
       style={{
-        backgroundColor: `${currentPalette.primary}18`,
-        border: `1px solid ${currentPalette.primary}50`,
+        backgroundColor: `${currentPalette.primary}08`,
+        borderTop: `1px solid ${currentPalette.text}10`,
+        borderBottom: `1px solid ${currentPalette.text}10`,
+        padding: '48px 28px',
       }}
     >
-      <Stack gap="md">
-        {/* Top row: avatar + info + badges */}
-        <Group justify="space-between" align="flex-start" wrap="nowrap">
-          <Group gap="md" wrap="nowrap" style={{ flex: 1, minWidth: 0 }}>
-            <Avatar
-              size={52}
-              radius="xl"
-              style={{
-                backgroundColor: `${currentPalette.primary}30`,
-                color: currentPalette.primary,
-                fontWeight: 700,
-                fontSize: '1.1rem',
-                flexShrink: 0,
-              }}
-            >
-              {getInitials(appointment.patient)}
-            </Avatar>
-            <Stack gap={3} style={{ minWidth: 0 }}>
-              <Text fw={700} size="lg" style={{ color: currentPalette.text }} lineClamp={1}>
-                {patientName}
-              </Text>
-              <Badge
-                size="xs"
-                radius="sm"
-                style={{
-                  backgroundColor: `${currentPalette.primary}25`,
-                  color: currentPalette.primary,
-                  border: `1px solid ${currentPalette.primary}50`,
-                  width: 'fit-content',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.04em',
-                }}
-              >
-                {t('status.patient.active')}
-              </Badge>
-            </Stack>
-          </Group>
+      <div style={{ maxWidth: 600, margin: '0 auto' }}>
+        <Group gap="lg" wrap="nowrap" align="flex-start">
+          <Avatar
+            size={72}
+            radius="xl"
+            style={{
+              backgroundColor: `${currentPalette.primary}20`,
+              color: currentPalette.primary,
+              fontWeight: 700,
+              fontSize: '1.4rem',
+              flexShrink: 0,
+              border: `2px solid ${currentPalette.primary}30`,
+            }}
+          >
+            {getInitials(appointment.patient)}
+          </Avatar>
 
-          {isNow && (
-            <Badge
-              size="sm"
-              radius="md"
+          <Stack gap={12} style={{ flex: 1, minWidth: 0 }}>
+            {/* Status label */}
+            <Text
+              size="xs"
+              fw={800}
               style={{
-                backgroundColor: `${currentPalette.primary}25`,
                 color: currentPalette.primary,
-                border: `1px solid ${currentPalette.primary}60`,
-                flexShrink: 0,
-                fontWeight: 700,
                 textTransform: 'uppercase',
-                letterSpacing: '0.06em',
+                letterSpacing: '0.1em',
+                fontSize: 10,
               }}
             >
-              {t('dashboard.appointmentStatus.now')}
-            </Badge>
-          )}
+              {isNow
+                ? t('dashboard.appointmentStatus.now')
+                : t('dashboard.nextAppointment')}
+            </Text>
+
+            {/* Patient name */}
+            <Text
+              fw={800}
+              lineClamp={1}
+              style={{
+                color: currentPalette.text,
+                fontSize: '1.4rem',
+                lineHeight: 1.2,
+              }}
+            >
+              {patientName}
+            </Text>
+
+            {/* Time + type info — single line */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12, minWidth: 0 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexShrink: 0 }}>
+                <IconClock size={14} style={{ color: `${currentPalette.text}60`, flexShrink: 0 }} />
+                <Text size="sm" style={{ color: `${currentPalette.text}80`, whiteSpace: 'nowrap' }}>
+                  {timeRange}
+                </Text>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6, minWidth: 0, overflow: 'hidden' }}>
+                <IconBrain size={14} style={{ color: `${currentPalette.text}60`, flexShrink: 0 }} />
+                <Text
+                  size="sm"
+                  style={{
+                    color: `${currentPalette.text}80`,
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                  }}
+                >
+                  {typeLabel}
+                </Text>
+              </div>
+            </div>
+          </Stack>
         </Group>
 
-        {/* Time + type row */}
-        <Stack gap={2}>
-          <Text
-            fw={700}
-            size="xl"
-            style={{ color: currentPalette.text, letterSpacing: '-0.01em' }}
-          >
-            {timeRange}
-          </Text>
-          <Text size="sm" style={{ color: currentPalette.primary, fontWeight: 500 }}>
-            {typeLabel}
-          </Text>
-        </Stack>
-
         {/* Action buttons */}
-        <Group gap="sm">
-          <Button
-            variant="secondary"
-            size="sm"
-            leftSection={<IconInfoCircle size={16} />}
-            onClick={() => navigate('/calendar')}
-            style={{ flex: 1 }}
-          >
-            {t('dashboard.nextAppointmentCard.details')}
-          </Button>
+        <Group gap="sm" mt={28} wrap="nowrap">
           <Button
             variant="primary"
-            size="sm"
-            leftSection={<IconPlayerPlay size={16} />}
+            size="md"
+            leftSection={<IconPlayerPlay size={18} />}
             onClick={() => navigate('/notes')}
-            style={{ flex: 1 }}
+            style={{
+              flex: 1,
+              textTransform: 'uppercase',
+              letterSpacing: '0.06em',
+              fontWeight: 700,
+              padding: '14px 20px',
+            }}
           >
             {t('dashboard.nextAppointmentCard.startSession')}
           </Button>
+          <ActionIcon
+            size={48}
+            variant="subtle"
+            style={{
+              color: `${currentPalette.text}70`,
+              border: `1px solid ${currentPalette.text}15`,
+              borderRadius: 12,
+              flexShrink: 0,
+            }}
+            onClick={() => navigate('/calendar')}
+            aria-label={t('dashboard.nextAppointmentCard.details')}
+          >
+            <IconInfoCircle size={20} />
+          </ActionIcon>
         </Group>
-      </Stack>
-    </Card>
+      </div>
+    </div>
   );
 }

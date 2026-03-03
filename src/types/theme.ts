@@ -204,6 +204,17 @@ export const COLOR_PALETTES: Record<string, ColorPalette> = {
     accent: '#17c4b8',
     text: '#f5ede8',
   },
+
+  // === NEON DARK ===
+  neon: {
+    name: 'Neon',
+    id: 'neon',
+    background: '#050b08',
+    surface: '#0f1c16',
+    primary: '#13ec5b',
+    accent: '#10d952',
+    text: '#e8f5e8',
+  },
 };
 
 export type PaletteId = keyof typeof COLOR_PALETTES;
@@ -219,6 +230,7 @@ export const isDarkPalette = (paletteId: PaletteId): boolean => {
     'sunsetDark',
     'pastelDark',
     'boldDark',
+    'neon',
   ].includes(paletteId);
 };
 

@@ -1,4 +1,4 @@
-import { Card, Divider, Group, Stack, Text } from '@mantine/core';
+import { Divider, Group, Stack, Text } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from '../../hooks/useTheme';
@@ -41,12 +41,12 @@ export function OverviewStats({ totalPatients, weeklyRevenue, pendingHours }: Ov
   ];
 
   return (
-    <Card
-      padding="md"
-      radius="lg"
+    <div
       style={{
-        backgroundColor: currentPalette.surface,
-        border: `1px solid ${currentPalette.primary}30`,
+        backgroundColor: `${currentPalette.surface}80`,
+        border: `1px solid ${currentPalette.text}08`,
+        borderRadius: 16,
+        padding: '4px 0',
       }}
     >
       <Group justify="space-around" align="center" wrap="nowrap" gap={0}>
@@ -56,7 +56,7 @@ export function OverviewStats({ totalPatients, weeklyRevenue, pendingHours }: Ov
               <Divider
                 orientation="vertical"
                 style={{
-                  borderColor: `${currentPalette.primary}25`,
+                  borderColor: `${currentPalette.text}08`,
                   alignSelf: 'stretch',
                 }}
               />
@@ -75,9 +75,15 @@ export function OverviewStats({ totalPatients, weeklyRevenue, pendingHours }: Ov
                 {item.value}
               </Text>
               <Text
-                size="xs"
                 ta="center"
-                style={{ color: `${currentPalette.text}70`, lineHeight: 1.2 }}
+                style={{
+                  color: `${currentPalette.text}45`,
+                  lineHeight: 1.2,
+                  fontSize: 9,
+                  fontWeight: 800,
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.1em',
+                }}
               >
                 {item.label}
               </Text>
@@ -85,6 +91,6 @@ export function OverviewStats({ totalPatients, weeklyRevenue, pendingHours }: Ov
           </Group>
         ))}
       </Group>
-    </Card>
+    </div>
   );
 }

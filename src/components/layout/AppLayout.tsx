@@ -159,8 +159,10 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
         {/* Dynamic Header: Left | Center | Right */}
         <AppShell.Header
           style={{
-            backgroundColor: currentPalette.surface,
-            borderBottom: `1px solid ${currentPalette.primary}`,
+            backgroundColor: `${currentPalette.background}80`,
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            borderBottom: `1px solid ${currentPalette.text}08`,
             padding: '0 24px',
             display: 'flex',
             alignItems: 'center',
