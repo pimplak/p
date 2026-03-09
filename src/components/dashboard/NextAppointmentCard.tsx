@@ -43,19 +43,19 @@ export function NextAppointmentCard({ appointment, isNow }: NextAppointmentCardP
         backgroundColor: `${currentPalette.primary}08`,
         borderTop: `1px solid ${currentPalette.text}10`,
         borderBottom: `1px solid ${currentPalette.text}10`,
-        padding: '48px 28px',
+        padding: '24px 16px',
       }}
     >
-      <div style={{ maxWidth: 600, margin: '0 auto' }}>
+      <div style={{ maxWidth: 420, margin: '0 auto' }}>
         <Group gap="lg" wrap="nowrap" align="flex-start">
           <Avatar
-            size={72}
+            size={52}
             radius="xl"
             style={{
               backgroundColor: `${currentPalette.primary}20`,
               color: currentPalette.primary,
               fontWeight: 700,
-              fontSize: '1.4rem',
+              fontSize: '1.1rem',
               flexShrink: 0,
               border: `2px solid ${currentPalette.primary}30`,
             }}
@@ -63,7 +63,7 @@ export function NextAppointmentCard({ appointment, isNow }: NextAppointmentCardP
             {getInitials(appointment.patient)}
           </Avatar>
 
-          <Stack gap={12} style={{ flex: 1, minWidth: 0 }}>
+          <Stack gap={6} style={{ flex: 1, minWidth: 0 }}>
             {/* Status label */}
             <Text
               size="xs"
@@ -82,11 +82,11 @@ export function NextAppointmentCard({ appointment, isNow }: NextAppointmentCardP
 
             {/* Patient name */}
             <Text
-              fw={800}
+              fw={700}
               lineClamp={1}
               style={{
                 color: currentPalette.text,
-                fontSize: '1.4rem',
+                fontSize: '1.15rem',
                 lineHeight: 1.2,
               }}
             >
@@ -120,35 +120,35 @@ export function NextAppointmentCard({ appointment, isNow }: NextAppointmentCardP
         </Group>
 
         {/* Action buttons */}
-        <Group gap="sm" mt={28} wrap="nowrap">
+        <Group gap="sm" mt={16} wrap="nowrap">
           <Button
             variant="primary"
-            size="md"
-            leftSection={<IconPlayerPlay size={18} />}
+            size="sm"
+            leftSection={<IconPlayerPlay size={16} />}
             onClick={() => navigate('/notes')}
             style={{
               flex: 1,
               textTransform: 'uppercase',
               letterSpacing: '0.06em',
               fontWeight: 700,
-              padding: '14px 20px',
+              padding: '10px 16px',
             }}
           >
             {t('dashboard.nextAppointmentCard.startSession')}
           </Button>
           <ActionIcon
-            size={48}
+            size={38}
             variant="subtle"
             style={{
               color: `${currentPalette.text}70`,
               border: `1px solid ${currentPalette.text}15`,
-              borderRadius: 12,
+              borderRadius: 10,
               flexShrink: 0,
             }}
             onClick={() => navigate('/calendar')}
             aria-label={t('dashboard.nextAppointmentCard.details')}
           >
-            <IconInfoCircle size={20} />
+            <IconInfoCircle size={18} />
           </ActionIcon>
         </Group>
       </div>

@@ -3,18 +3,21 @@ import {
   Stack,
   LoadingOverlay,
   Alert,
+  Text,
+  UnstyledButton,
 } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
-import { IconAlertCircle } from '@tabler/icons-react';
+import { IconAlertCircle, IconChevronLeft } from '@tabler/icons-react';
 import { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useHeader } from '../hooks/useHeader';
 import { useTheme } from '../hooks/useTheme';
 import { usePatientStore } from '../stores/usePatientStore';
+import { getPatientDisplayName } from '../utils/dates';
 import { PatientForm } from './PatientForm';
 import { PatientProfileHeader } from './PatientProfileHeader';
 import { PatientProfileTabs } from './PatientProfileTabs';
-import { PatientQuickInfoCards } from './PatientQuickInfoCards';
 import { ArchiveConfirmationModal } from './ui/ArchiveConfirmationModal';
 import { BottomSheet } from './ui/BottomSheet';
 import type { Patient } from '../types/Patient';
@@ -23,13 +26,34 @@ function PatientProfile() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const { utilityColors } = useTheme();
+  const { utilityColors, currentPalette } = useTheme();
   const { getPatient, archivePatient, restorePatient, loading, error } =
     usePatientStore();
 
   const [patient, setPatient] = useState<Patient | null>(null);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [archiveModalOpen, setArchiveModalOpen] = useState(false);
+
+  useHeader({
+    leftSlot: (
+      <UnstyledButton onClick={() => navigate('/patients')} style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+        <IconChevronLeft size={18} style={{ color: currentPalette.text }} />
+      </UnstyledButton>
+    ),
+    title: (
+      <Text size='sm' fw={600} style={{ color: currentPalette.text }}>
+        {patient ? getPatientDisplayName(patient) : ''}
+      </Text>
+    ),
+    rightSlot: patient ? (
+      <UnstyledButton
+        onClick={() => setEditModalOpen(true)}
+        style={{ color: currentPalette.primary, fontSize: 13, fontWeight: 600 }}
+      >
+        {t('common.edit')}
+      </UnstyledButton>
+    ) : undefined,
+  });
 
   const loadPatient = useCallback(
     async (patientId: number) => {
@@ -115,7 +139,7 @@ function PatientProfile() {
 
   if (!patient) {
     return (
-      <Container size='lg'>
+      <Container fluid>
         <LoadingOverlay visible={loading} />
         {error && (
           <Alert
@@ -131,16 +155,14 @@ function PatientProfile() {
   }
 
   return (
-    <Container size='lg'>
-      <Stack gap='md'>
+    <Container fluid>
+      <Stack gap='lg' pb='xl'>
         <PatientProfileHeader
           patient={patient}
           onEdit={() => setEditModalOpen(true)}
           onArchive={() => setArchiveModalOpen(true)}
           onRestore={handleRestore}
         />
-
-        <PatientQuickInfoCards patient={patient} />
 
         <PatientProfileTabs patient={patient} />
       </Stack>

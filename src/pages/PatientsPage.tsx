@@ -1,7 +1,7 @@
-import { Card, Alert, Skeleton, Container } from '@mantine/core';
+import { Alert, Skeleton, Container, Text, ActionIcon } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { notifications } from '@mantine/notifications';
-import { IconUser, IconPlus, IconDownload } from '@tabler/icons-react';
+import { IconUser, IconPlus, IconDownload, IconSearch } from '@tabler/icons-react';
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
@@ -14,11 +14,11 @@ import {
 import { PatientForm } from '../components/PatientForm';
 import { PatientsCardList } from '../components/PatientsCardList';
 import { PatientSearchBar } from '../components/PatientSearchBar';
-import { PatientsPageHeader } from '../components/PatientsPageHeader';
 import { PatientTable } from '../components/PatientTable';
 import { ArchiveConfirmationModal } from '../components/ui/ArchiveConfirmationModal';
 import { BottomSheet } from '../components/ui/BottomSheet';
 import { useExport } from '../hooks/useExport';
+import { useHeader } from '../hooks/useHeader';
 import { useTheme } from '../hooks/useTheme';
 import { useAppointmentStore } from '../stores/useAppointmentStore';
 import { usePatientStore } from '../stores/usePatientStore';
@@ -27,14 +27,13 @@ import type { Patient } from '../types/Patient';
 function PatientsPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { utilityColors } = useTheme();
+  const { utilityColors, currentPalette } = useTheme();
   const {
     patients,
     fetchPatients,
     archivePatient,
     restorePatient,
     showArchived,
-    toggleShowArchived,
     loading,
     error,
   } = usePatientStore();
@@ -67,6 +66,28 @@ function PatientsPage() {
         patient.tags?.some(tag => tag.toLowerCase().includes(query))
     );
   }, [patients, debouncedSearchQuery]);
+
+  // Header injection
+  useHeader({
+    title: (
+      <Text size='md' fw={700} style={{ color: currentPalette.text }}>
+        {t('patients.title')}
+      </Text>
+    ),
+    rightSlot: (
+      <ActionIcon
+        variant='subtle'
+        size='lg'
+        style={{ color: currentPalette.text }}
+        onClick={() => {
+          const el = document.getElementById('patient-search-input');
+          if (el) el.focus();
+        }}
+      >
+        <IconSearch size={20} />
+      </ActionIcon>
+    ),
+  });
 
   useEffect(() => {
     fetchPatients();
@@ -153,9 +174,7 @@ function PatientsPage() {
     setEditingPatient(undefined);
   };
 
-
-
-  // FAB Actions dla mobile
+  // FAB Actions for mobile
   const fabActions: FABAction[] = [
     {
       id: 'add-patient',
@@ -195,47 +214,39 @@ function PatientsPage() {
 
   return (
     <Container fluid>
-      <PatientsPageHeader
-        showArchived={showArchived}
-        onToggleArchived={toggleShowArchived}
-        onExport={handleExport}
-        onAddPatient={handleAddPatient}
+      <PatientSearchBar
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        totalCount={filteredPatients.length}
       />
 
-      <Card>
-        <PatientSearchBar
-          searchQuery={searchQuery}
-          onSearchChange={setSearchQuery}
-        />
+      {filteredPatients.length === 0 ? (
+        <Alert icon={<IconUser size='1rem' />} title={t('patients.noPatients')}>
+          {debouncedSearchQuery
+            ? t('patients.noSearchResults')
+            : showArchived
+              ? t('patients.noArchivedPatients')
+              : t('patients.noActivePatients')}
+        </Alert>
+      ) : (
+        <>
+          <PatientsCardList
+            patients={filteredPatients}
+            onEdit={handleEditPatient}
+            onView={handleViewPatient}
+            onArchive={handleArchivePatient}
+            onRestore={handleRestorePatient}
+          />
 
-        {filteredPatients.length === 0 ? (
-          <Alert icon={<IconUser size='1rem' />} title={t('patients.noPatients')}>
-            {debouncedSearchQuery
-              ? t('patients.noSearchResults')
-              : showArchived
-                ? t('patients.noArchivedPatients')
-                : t('patients.noActivePatients')}
-          </Alert>
-        ) : (
-          <>
-            <PatientsCardList
-              patients={filteredPatients}
-              onEdit={handleEditPatient}
-              onView={handleViewPatient}
-              onArchive={handleArchivePatient}
-              onRestore={handleRestorePatient}
-            />
-
-            <PatientTable
-              patients={filteredPatients}
-              onEdit={handleEditPatient}
-              onView={handleViewPatient}
-              onArchive={handleArchivePatient}
-              onRestore={handleRestorePatient}
-            />
-          </>
-        )}
-      </Card>
+          <PatientTable
+            patients={filteredPatients}
+            onEdit={handleEditPatient}
+            onView={handleViewPatient}
+            onArchive={handleArchivePatient}
+            onRestore={handleRestorePatient}
+          />
+        </>
+      )}
 
       {/* Patient Form Bottom Sheet */}
       <BottomSheet

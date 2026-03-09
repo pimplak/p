@@ -1,27 +1,35 @@
 import {
   Stack,
-  Card,
-  Group,
   Text,
+  Avatar,
+  Group,
   Badge,
   ActionIcon,
   Menu,
+  Loader,
 } from '@mantine/core';
 import {
   IconDots,
   IconEdit,
   IconArchive,
   IconRestore,
-  IconPhone,
-  IconMail,
-  IconCalendar,
 } from '@tabler/icons-react';
 import { format } from 'date-fns';
 import { pl } from 'date-fns/locale';
+import { useState, useEffect, useRef, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { PATIENT_STATUS, PATIENT_STATUS_LABELS } from '../constants/status';
 import { useTheme } from '../hooks/useTheme';
-import { formatDate, getPatientDisplayName } from '../utils/dates';
+import { getPatientDisplayName } from '../utils/dates';
 import type { PatientWithAppointments, Patient } from '../types/Patient';
+
+const PAGE_SIZE = 20;
+
+function getInitials(patient: Patient): string {
+  const first = patient.firstName?.charAt(0) ?? '';
+  const last = patient.lastName?.charAt(0) ?? '';
+  return (first + last).toUpperCase() || '?';
+}
 
 interface PatientsCardListProps {
   patients: PatientWithAppointments[];
@@ -38,198 +46,209 @@ export function PatientsCardList({
   onArchive,
   onRestore,
 }: PatientsCardListProps) {
+  const { t } = useTranslation();
   const { currentPalette, utilityColors } = useTheme();
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+  const sentinelRef = useRef<HTMLDivElement | null>(null);
+
+  // Reset visible count when patients list changes (e.g. search)
+  useEffect(() => {
+    setVisibleCount(PAGE_SIZE);
+  }, [patients]);
+
+  // Infinite scroll with IntersectionObserver
+  const observerCallback = useCallback(
+    (entries: IntersectionObserverEntry[]) => {
+      if (entries[0]?.isIntersecting && visibleCount < patients.length) {
+        setVisibleCount(prev => Math.min(prev + PAGE_SIZE, patients.length));
+      }
+    },
+    [visibleCount, patients.length]
+  );
+
+  useEffect(() => {
+    const sentinel = sentinelRef.current;
+    if (!sentinel) return;
+    const observer = new IntersectionObserver(observerCallback, {
+      rootMargin: '200px',
+    });
+    observer.observe(sentinel);
+    return () => observer.disconnect();
+  }, [observerCallback]);
 
   if (patients.length === 0) {
     return (
-      <Card padding='xl'>
-        <Text ta='center' c='dimmed'>
-          Brak pacjentów do wyświetlenia
-        </Text>
-      </Card>
+      <Text ta='center' c='dimmed' py='xl'>
+        {t('patients.noPatients')}
+      </Text>
     );
   }
 
+  const visiblePatients = patients.slice(0, visibleCount);
+  const hasMore = visibleCount < patients.length;
+
   return (
-    <Stack gap='md' hiddenFrom='md'>
-      {patients.map(patient => (
-        <Card
-          key={patient.id}
-          withBorder
-          p='lg'
-          radius='md'
-          style={{
-            cursor: 'pointer',
-            transition: 'all 200ms ease-out',
-            backgroundColor:
-              patient.status === PATIENT_STATUS.ACTIVE
-                ? currentPalette.surface
-                : currentPalette.surface,
-            border: `1px solid ${currentPalette.primary}`,
-            opacity: patient.status === PATIENT_STATUS.ARCHIVED ? 0.7 : 1,
-          }}
-          onClick={() => onView(patient)}
-        >
-          <Stack gap='md'>
-            <Group justify='space-between' align='flex-start' wrap='nowrap'>
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <Group gap='xs' align='center'>
-                  <Text fw={600} size='md' truncate>
-                    {getPatientDisplayName(patient)}
-                  </Text>
-                  <Badge
-                    size='xs'
-                    color={
-                      patient.status === PATIENT_STATUS.ACTIVE
-                        ? utilityColors.success
-                        : 'gray'
-                    }
-                    variant='light'
-                  >
-                    {PATIENT_STATUS_LABELS[patient.status]}
-                  </Badge>
-                </Group>
+    <Stack gap={8} hiddenFrom='md'>
+      {visiblePatients.map(patient => {
+        const isArchived = patient.status === PATIENT_STATUS.ARCHIVED;
+        const statusColor =
+          patient.status === PATIENT_STATUS.ACTIVE
+            ? utilityColors.success
+            : 'gray';
 
-                {patient.birthDate && (
-                  <Text size='sm' c='dimmed'>
-                    Ur. {formatDate(patient.birthDate)}
-                  </Text>
-                )}
+        const lastVisitLabel = patient.lastAppointment
+          ? `${t('patients.lastVisit')}: ${format(
+              typeof patient.lastAppointment === 'string'
+                ? new Date(patient.lastAppointment)
+                : patient.lastAppointment,
+              'd MMM',
+              { locale: pl }
+            )}`
+          : null;
 
-                {patient.tags && patient.tags.length > 0 && (
-                  <Group gap={4} mt={4}>
-                    {patient.tags.slice(0, 3).map(tag => (
-                      <Badge key={tag} variant='outline' size='xs'>
-                        {tag}
-                      </Badge>
-                    ))}
-                    {patient.tags.length > 3 && (
-                      <Badge variant='outline' size='xs' c='dimmed'>
-                        +{patient.tags.length - 3}
-                      </Badge>
-                    )}
-                  </Group>
-                )}
-              </div>
+        return (
+          <div
+            key={patient.id}
+            onClick={() => onView(patient)}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 14,
+              padding: '12px 14px',
+              cursor: 'pointer',
+              opacity: isArchived ? 0.6 : 1,
+              borderRadius: 14,
+              backgroundColor: `${currentPalette.text}05`,
+              border: `1px solid ${currentPalette.text}08`,
+              transition: 'all 150ms ease',
+            }}
+            onMouseEnter={e => {
+              e.currentTarget.style.backgroundColor = `${currentPalette.primary}10`;
+              e.currentTarget.style.borderColor = `${currentPalette.primary}20`;
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.backgroundColor = `${currentPalette.text}05`;
+              e.currentTarget.style.borderColor = `${currentPalette.text}08`;
+            }}
+          >
+            <Avatar
+              size={46}
+              radius='xl'
+              style={{
+                backgroundColor: `${currentPalette.primary}15`,
+                color: currentPalette.primary,
+                fontWeight: 700,
+                fontSize: '0.85rem',
+                flexShrink: 0,
+                border: `2px solid ${currentPalette.primary}20`,
+              }}
+            >
+              {getInitials(patient)}
+            </Avatar>
 
-              <Group>
-                <Badge
-                  size='sm'
-                  variant='light'
-                  color={currentPalette.primary}
-                  style={{ flexShrink: 0 }}
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <Text
+                fw={600}
+                size='sm'
+                lineClamp={1}
+                style={{ color: currentPalette.text }}
+              >
+                {getPatientDisplayName(patient)}
+              </Text>
+              {lastVisitLabel && (
+                <Text
+                  size='xs'
+                  mt={2}
+                  style={{ color: `${currentPalette.text}50` }}
                 >
-                  {patient.appointmentCount} wizyt
+                  {lastVisitLabel}
+                </Text>
+              )}
+              <Group gap={6} mt={4}>
+                <Badge
+                  size='xs'
+                  color={statusColor}
+                  variant='light'
+                  styles={{
+                    root: { textTransform: 'capitalize', fontWeight: 600 },
+                  }}
+                >
+                  {PATIENT_STATUS_LABELS[patient.status]}
                 </Badge>
-                <Menu shadow='md' width={180}>
-                  <Menu.Target>
-                    <ActionIcon
-                      variant='light'
-                      size='sm'
-                      onClick={e => e.stopPropagation()}
-                    >
-                      <IconDots size='1rem' />
-                    </ActionIcon>
-                  </Menu.Target>
-
-                  <Menu.Dropdown>
-                    <Menu.Item
-                      leftSection={<IconEdit size='1rem' />}
-                      onClick={e => {
-                        e.stopPropagation();
-                        onEdit(patient);
-                      }}
-                    >
-                      Edytuj
-                    </Menu.Item>
-
-                    {patient.status === PATIENT_STATUS.ACTIVE ? (
-                      <Menu.Item
-                        leftSection={<IconArchive size='1rem' />}
-                        color={utilityColors.error}
-                        onClick={e => {
-                          e.stopPropagation();
-                          if (patient.id) onArchive(patient.id);
-                        }}
-                      >
-                        Archiwizuj
-                      </Menu.Item>
-                    ) : (
-                      <Menu.Item
-                        leftSection={<IconRestore size='1rem' />}
-                        color={utilityColors.success}
-                        onClick={e => {
-                          e.stopPropagation();
-                          if (patient.id) onRestore(patient.id);
-                        }}
-                      >
-                        Przywróć
-                      </Menu.Item>
-                    )}
-                  </Menu.Dropdown>
-                </Menu>
+                {patient.tags?.slice(0, 2).map(tag => (
+                  <Badge
+                    key={tag}
+                    size='xs'
+                    variant='dot'
+                    style={{
+                      color: `${currentPalette.text}70`,
+                    }}
+                  >
+                    {tag}
+                  </Badge>
+                ))}
               </Group>
-            </Group>
+            </div>
 
-            <Stack gap='sm'>
-              {patient.phone && (
-                <Group gap='sm' wrap='nowrap'>
-                  <ActionIcon
-                    size='sm'
-                    variant='subtle'
-                    style={{ color: currentPalette.text, flexShrink: 0 }}
-                  >
-                    <IconPhone size='1rem' />
-                  </ActionIcon>
-                  <Text size='sm' style={{ flex: 1 }}>
-                    {patient.phone}
-                  </Text>
-                </Group>
-              )}
+            <Menu shadow='md' width={180}>
+              <Menu.Target>
+                <ActionIcon
+                  variant='subtle'
+                  size='sm'
+                  onClick={e => e.stopPropagation()}
+                  style={{ color: `${currentPalette.text}40`, flexShrink: 0 }}
+                >
+                  <IconDots size={16} />
+                </ActionIcon>
+              </Menu.Target>
 
-              {patient.email && (
-                <Group gap='sm' wrap='nowrap'>
-                  <ActionIcon
-                    size='sm'
-                    variant='subtle'
-                    style={{ color: currentPalette.text, flexShrink: 0 }}
-                  >
-                    <IconMail size='1rem' />
-                  </ActionIcon>
-                  <Text size='sm' c='dimmed' truncate style={{ flex: 1 }}>
-                    {patient.email}
-                  </Text>
-                </Group>
-              )}
+              <Menu.Dropdown>
+                <Menu.Item
+                  leftSection={<IconEdit size='1rem' />}
+                  onClick={e => {
+                    e.stopPropagation();
+                    onEdit(patient);
+                  }}
+                >
+                  {t('common.edit')}
+                </Menu.Item>
 
-              {patient.nextAppointment && (
-                <Group gap='sm' wrap='nowrap'>
-                  <ActionIcon
-                    size='sm'
-                    variant='subtle'
-                    style={{ color: currentPalette.primary, flexShrink: 0 }}
+                {patient.status === PATIENT_STATUS.ACTIVE ? (
+                  <Menu.Item
+                    leftSection={<IconArchive size='1rem' />}
+                    color={utilityColors.error}
+                    onClick={e => {
+                      e.stopPropagation();
+                      if (patient.id) onArchive(patient.id);
+                    }}
                   >
-                    <IconCalendar size='1rem' />
-                  </ActionIcon>
-                  <Text
-                    size='sm'
-                    style={{ color: currentPalette.primary, flex: 1 }}
+                    {t('patients.archive')}
+                  </Menu.Item>
+                ) : (
+                  <Menu.Item
+                    leftSection={<IconRestore size='1rem' />}
+                    color={utilityColors.success}
+                    onClick={e => {
+                      e.stopPropagation();
+                      if (patient.id) onRestore(patient.id);
+                    }}
                   >
-                    Następna:{' '}
-                    {format(
-                      typeof patient.nextAppointment === 'string'
-                        ? new Date(patient.nextAppointment)
-                        : patient.nextAppointment,
-                      'dd.MM.yyyy',
-                      { locale: pl }
-                    )}
-                  </Text>
-                </Group>
-              )}
-            </Stack>
-          </Stack>
-        </Card>
-      ))}
+                    {t('patients.restore')}
+                  </Menu.Item>
+                )}
+              </Menu.Dropdown>
+            </Menu>
+          </div>
+        );
+      })}
+
+      {/* Infinite scroll sentinel */}
+      <div ref={sentinelRef} style={{ height: 1 }} />
+      {hasMore && (
+        <Group justify='center' py='sm'>
+          <Loader size='sm' color={currentPalette.primary} />
+        </Group>
+      )}
     </Stack>
   );
 }

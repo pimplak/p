@@ -1,9 +1,6 @@
 import {
-  Tabs,
-  Paper,
   Stack,
   Text,
-  Divider,
   Badge,
   Group,
   Card,
@@ -13,18 +10,17 @@ import {
   Menu,
   ActionIcon,
   Modal,
+  ScrollArea,
+  UnstyledButton,
 } from '@mantine/core';
 import { DateInput } from '@mantine/dates';
 import {
-  IconNotes,
-  IconCalendar,
   IconPlus,
   IconDownload,
   IconCheck,
   IconX,
   IconFileExport,
   IconNote,
-  IconFolder,
 } from '@tabler/icons-react';
 import { isSameDay } from 'date-fns';
 import { useState, useEffect, useMemo } from 'react';
@@ -42,6 +38,7 @@ import { DocumentForm } from './documents/DocumentForm';
 import { DocumentList } from './documents/DocumentList';
 import { NoteForm } from './NoteForm';
 import { NoteList } from './NoteList';
+import { PatientQuickInfoCards } from './PatientQuickInfoCards';
 import { PinnedNotesOverview } from './PinnedNotes';
 import { BottomSheet } from './ui/BottomSheet';
 import type { Appointment, AppointmentWithPatient } from '../types/Appointment';
@@ -250,73 +247,94 @@ export function PatientProfileTabs({ patient }: PatientProfileTabsProps) {
     });
   }, [appointments, dateFilter]);
 
+  const segmentData = [
+    { label: t('calendar.patientProfile.tabs.overview'), value: 'overview' },
+    { label: t('calendar.patientProfile.tabs.appointments'), value: 'appointments' },
+    { label: t('calendar.patientProfile.tabs.notes'), value: 'notes' },
+    { label: t('calendar.patientProfile.tabs.documents'), value: 'documents' },
+  ];
+
   return (
     <>
-      <Tabs value={activeTab} onChange={value => value && setActiveTab(value)}>
-        <Tabs.List>
-          <Tabs.Tab value='overview' leftSection={<IconNotes size='1rem' />}>
-            {t('calendar.patientProfile.tabs.overview')}
-          </Tabs.Tab>
-          <Tabs.Tab
-            value='appointments'
-            leftSection={<IconCalendar size='1rem' />}
-          >
-            {t('calendar.patientProfile.tabs.appointments')}
-          </Tabs.Tab>
-          <Tabs.Tab value='notes' leftSection={<IconNote size='1rem' />}>
-            {t('calendar.patientProfile.tabs.notes')}
-          </Tabs.Tab>
-          <Tabs.Tab value='documents' leftSection={<IconFolder size='1rem' />}>
-            {t('calendar.patientProfile.tabs.documents')}
-          </Tabs.Tab>
-        </Tabs.List>
-
-        <Tabs.Panel value='overview' pt='md'>
-          <Paper p='md' withBorder>
-            <Stack gap='md'>
-              <PinnedNotesOverview
-                notes={pinnedNotes}
-                onNoteClick={note => {
-                  handleEditNote(note);
+      <ScrollArea scrollbarSize={0} type='never'>
+        <Group gap={6} wrap='nowrap' pb={2}>
+          {segmentData.map(tab => {
+            const isActive = activeTab === tab.value;
+            return (
+              <UnstyledButton
+                key={tab.value}
+                onClick={() => setActiveTab(tab.value)}
+                style={{
+                  padding: '6px 14px',
+                  borderRadius: 20,
+                  fontSize: 12,
+                  fontWeight: 600,
+                  whiteSpace: 'nowrap',
+                  backgroundColor: isActive ? currentPalette.primary : `${currentPalette.text}06`,
+                  color: isActive ? '#fff' : `${currentPalette.text}70`,
+                  border: `1px solid ${isActive ? currentPalette.primary : `${currentPalette.text}10`}`,
+                  transition: 'all 150ms ease',
                 }}
-              />
+              >
+                {tab.label}
+              </UnstyledButton>
+            );
+          })}
+        </Group>
+      </ScrollArea>
 
-              {patient.address && (
-                <div>
-                  <Text size='sm' fw={500} mb='xs'>
-                    {t('calendar.patientProfile.overview.address')}
-                  </Text>
-                  <Text size='sm'>{patient.address}</Text>
-                </div>
-              )}
+      <div style={{ marginTop: 16 }}>
+        {activeTab === 'overview' && (
+          <Stack gap='md'>
+            <PatientQuickInfoCards patient={patient} />
 
-              {!patient.address && pinnedNotes.length === 0 && (
-                <Text size='sm' c='dimmed'>
-                  {t('calendar.patientProfile.overview.noAdditionalInfo')}
+            <PinnedNotesOverview
+              notes={pinnedNotes}
+              onNoteClick={note => {
+                handleEditNote(note);
+              }}
+            />
+
+            {patient.address && (
+              <div
+                style={{
+                  padding: 14,
+                  borderRadius: 12,
+                  backgroundColor: `${currentPalette.text}04`,
+                  border: `1px solid ${currentPalette.text}08`,
+                }}
+              >
+                <Text size='xs' fw={700} mb={4} style={{ color: `${currentPalette.text}50`, textTransform: 'uppercase', letterSpacing: '0.05em', fontSize: 10 }}>
+                  {t('calendar.patientProfile.overview.address')}
                 </Text>
-              )}
-
-              <Divider />
-
-              <div>
-                <Text size='xs' c='dimmed'>
-                  {t('calendar.patientProfile.overview.created')} {formatDate(patient.createdAt)}
-                </Text>
-                <Text size='xs' c='dimmed'>
-                  {t('calendar.patientProfile.overview.lastUpdate')} {formatDate(patient.updatedAt)}
-                </Text>
+                <Text size='sm'>{patient.address}</Text>
               </div>
-            </Stack>
-          </Paper>
-        </Tabs.Panel>
+            )}
 
-        <Tabs.Panel value='appointments' pt='md'>
-          <Paper p='md' withBorder>
-            <Group justify='space-between' align='flex-start' mb='md'>
+            {!patient.address && pinnedNotes.length === 0 && (
+              <Text size='sm' c='dimmed' ta='center' py='lg'>
+                {t('calendar.patientProfile.overview.noAdditionalInfo')}
+              </Text>
+            )}
+
+            <div style={{ padding: '8px 0' }}>
+              <Text size='xs' style={{ color: `${currentPalette.text}40` }}>
+                {t('calendar.patientProfile.overview.created')} {formatDate(patient.createdAt)}
+              </Text>
+              <Text size='xs' style={{ color: `${currentPalette.text}40` }}>
+                {t('calendar.patientProfile.overview.lastUpdate')} {formatDate(patient.updatedAt)}
+              </Text>
+            </div>
+          </Stack>
+        )}
+
+        {activeTab === 'appointments' && (
+          <Stack gap='md'>
+            <Group justify='space-between' align='flex-start'>
               <Stack gap='xs'>
-                <Title order={4}>{t('calendar.patientProfile.appointments.title', { count: filteredAppointments.length })}</Title>
+                <Title order={5}>{t('calendar.patientProfile.appointments.title', { count: filteredAppointments.length })}</Title>
                 {selectedAppointments.length > 0 && (
-                  <Badge color={currentPalette.primary} variant='light'>
+                  <Badge color={currentPalette.primary} variant='light' size='sm'>
                     {t('calendar.patientProfile.appointments.selectedCount', { count: selectedAppointments.length })}
                   </Badge>
                 )}
@@ -334,23 +352,21 @@ export function PatientProfileTabs({ patient }: PatientProfileTabsProps) {
                     }
                   }}
                   clearable
-                  size='sm'
-                  w={150}
+                  size='xs'
+                  w={130}
                 />
                 {appointments.length > 0 && (
                   <Menu>
                     <Menu.Target>
-                      <ActionIcon variant='light' size='sm'>
-                        <IconDownload size='1rem' />
+                      <ActionIcon variant='subtle' size='sm' style={{ color: `${currentPalette.text}50` }}>
+                        <IconDownload size={14} />
                       </ActionIcon>
                     </Menu.Target>
                     <Menu.Dropdown>
                       <Menu.Item
                         leftSection={<IconCheck size='1rem' />}
                         onClick={selectAllAppointments}
-                        disabled={
-                          selectedAppointments.length === appointments.length
-                        }
+                        disabled={selectedAppointments.length === appointments.length}
                       >
                         {t('calendar.patientProfile.appointments.selectAll')}
                       </Menu.Item>
@@ -372,25 +388,25 @@ export function PatientProfileTabs({ patient }: PatientProfileTabsProps) {
                     </Menu.Dropdown>
                   </Menu>
                 )}
-                <Button
+                <ActionIcon
                   size='sm'
-                  leftSection={<IconPlus size='1rem' />}
                   variant='light'
                   onClick={handleAddAppointment}
+                  color={currentPalette.primary}
                 >
-                  {t('calendar.patientProfile.appointments.addAppointment')}
-                </Button>
+                  <IconPlus size={14} />
+                </ActionIcon>
               </Group>
             </Group>
 
             {filteredAppointments.length === 0 ? (
-              <Text size='sm' c='dimmed'>
+              <Text size='sm' c='dimmed' ta='center' py='lg'>
                 {dateFilter
                   ? t('calendar.patientProfile.appointments.noAppointmentsOnDay')
                   : t('calendar.patientProfile.appointments.noAppointmentsForPatient')}
               </Text>
             ) : (
-              <Stack gap='md'>
+              <Stack gap={8}>
                 {filteredAppointments.map(appointment => {
                   const sessionNotes = appointment.id
                     ? getNotesBySession(appointment.id)
@@ -399,13 +415,18 @@ export function PatientProfileTabs({ patient }: PatientProfileTabsProps) {
                   return (
                     <Card
                       key={appointment.id}
-                      withBorder
-                      p='md'
-                      style={{ cursor: 'pointer' }}
+                      p='sm'
+                      radius='md'
+                      style={{
+                        cursor: 'pointer',
+                        backgroundColor: `${currentPalette.text}04`,
+                        border: `1px solid ${currentPalette.text}08`,
+                        transition: 'all 150ms ease',
+                      }}
                       onClick={() => handleEditAppointment(appointment)}
                     >
                       <Group justify='space-between' align='flex-start'>
-                        <Group align='flex-start' gap='md'>
+                        <Group align='flex-start' gap='sm'>
                           <Checkbox
                             checked={selectedAppointments.includes(appointment.id!)}
                             onChange={e => {
@@ -417,40 +438,34 @@ export function PatientProfileTabs({ patient }: PatientProfileTabsProps) {
                             }}
                             onClick={e => e.stopPropagation()}
                             mt='2px'
+                            size='xs'
                           />
                           <div style={{ flex: 1 }}>
-                            <Group gap='xs' mb='xs'>
-                              <Text fw={500}>
+                            <Group gap='xs' mb={4}>
+                              <Text fw={600} size='sm'>
                                 {formatDateTime(appointment.date)}
                               </Text>
                               <Badge
                                 color={getStatusBadgeColor(appointment.status)}
                                 variant='light'
-                                size='sm'
+                                size='xs'
                               >
                                 {appointment.status === AppointmentStatus.COMPLETED
                                   ? t('status.appointment.completed')
-                                  : appointment.status ===
-                                    AppointmentStatus.CANCELLED
+                                  : appointment.status === AppointmentStatus.CANCELLED
                                     ? t('status.appointment.cancelled')
-                                    : appointment.status ===
-                                      AppointmentStatus.NO_SHOW
+                                    : appointment.status === AppointmentStatus.NO_SHOW
                                       ? t('status.appointment.no_show')
-                                      : appointment.status ===
-                                        AppointmentStatus.SCHEDULED
+                                      : appointment.status === AppointmentStatus.SCHEDULED
                                         ? t('status.appointment.scheduled')
                                         : t('status.appointment.rescheduled')}
                               </Badge>
                             </Group>
 
-                            <Text size='sm' c='dimmed'>
-                              {t('calendar.patientProfile.appointments.duration')} {appointment.duration} min
-                            </Text>
-
-                            {appointment.type && (
-                              <Text size='sm' c='dimmed'>
-                                {t('calendar.patientProfile.appointments.type')}{' '}
-                                {appointment.type === 'therapy'
+                            <Text size='xs' style={{ color: `${currentPalette.text}50` }}>
+                              {appointment.duration} min
+                              {appointment.type && ` · ${
+                                appointment.type === 'therapy'
                                   ? t('calendar.patientProfile.appointments.appointmentTypes.therapy')
                                   : appointment.type === 'initial'
                                     ? t('calendar.patientProfile.appointments.appointmentTypes.initial')
@@ -458,37 +473,29 @@ export function PatientProfileTabs({ patient }: PatientProfileTabsProps) {
                                       ? t('calendar.patientProfile.appointments.appointmentTypes.follow_up')
                                       : appointment.type === 'consultation'
                                         ? t('calendar.patientProfile.appointments.appointmentTypes.consultation')
-                                        : t('calendar.patientProfile.appointments.appointmentTypes.assessment')}
-                              </Text>
-                            )}
+                                        : t('calendar.patientProfile.appointments.appointmentTypes.assessment')
+                              }`}
+                            </Text>
 
                             {appointment.notes && (
-                              <Text size='sm' mt='xs'>
-                                <strong>{t('calendar.patientProfile.appointments.notes')}</strong> {appointment.notes}
+                              <Text size='xs' mt={4} style={{ color: `${currentPalette.text}60` }}>
+                                {appointment.notes}
                               </Text>
                             )}
 
-                            {/* Session notes inline */}
                             {sessionNotes.length > 0 && (
-                              <Stack gap={4} mt='xs'>
+                              <Stack gap={2} mt={4}>
                                 {sessionNotes.map(sNote => (
                                   <Group
                                     key={sNote.id}
-                                    gap='xs'
+                                    gap={4}
                                     onClick={e => {
                                       e.stopPropagation();
                                       handleEditNote(sNote);
                                     }}
                                     style={{ cursor: 'pointer' }}
                                   >
-                                    <IconNote size='0.75rem' color='var(--mantine-color-violet-5)' />
-                                    <Badge size='xs' variant='light' color='violet'>
-                                      {sNote.type === 'soap'
-                                        ? t('notes.typeLabels.soap')
-                                        : sNote.type === 'assessment'
-                                          ? t('notes.typeLabels.assessment')
-                                          : t('notes.typeLabels.general')}
-                                    </Badge>
+                                    <IconNote size={11} color='var(--mantine-color-violet-5)' />
                                     <Text size='xs' c='dimmed' lineClamp={1}>
                                       {sNote.title || getNotePreviewShort(sNote)}
                                     </Text>
@@ -499,22 +506,23 @@ export function PatientProfileTabs({ patient }: PatientProfileTabsProps) {
                           </div>
                         </Group>
 
-                        <Stack align='flex-end' gap='xs'>
+                        <Stack align='flex-end' gap={4}>
                           {appointment.price && (
-                            <Text size='sm' fw={500} c='green'>
+                            <Badge size='xs' variant='light' color='green'>
                               {appointment.price} zł
-                            </Text>
+                            </Badge>
                           )}
                           <ActionIcon
                             variant='subtle'
-                            size='sm'
+                            size='xs'
                             onClick={e => {
                               e.stopPropagation();
                               handleAddNote(appointment.id);
                             }}
                             aria-label={t('calendar.patientProfile.notes.addSessionNote')}
+                            style={{ color: `${currentPalette.text}40` }}
                           >
-                            <IconNote size='1rem' />
+                            <IconNote size={13} />
                           </ActionIcon>
                         </Stack>
                       </Group>
@@ -523,21 +531,21 @@ export function PatientProfileTabs({ patient }: PatientProfileTabsProps) {
                 })}
               </Stack>
             )}
-          </Paper>
-        </Tabs.Panel>
+          </Stack>
+        )}
 
-        <Tabs.Panel value='notes' pt='md'>
-          <Paper p='md' withBorder>
-            <Group justify='space-between' mb='md'>
-              <Title order={4}>{t('calendar.patientProfile.notes.title', { count: notes.length })}</Title>
-              <Button
+        {activeTab === 'notes' && (
+          <Stack gap='md'>
+            <Group justify='space-between'>
+              <Title order={5}>{t('calendar.patientProfile.notes.title', { count: notes.length })}</Title>
+              <ActionIcon
                 size='sm'
-                leftSection={<IconPlus size='1rem' />}
                 variant='light'
                 onClick={() => handleAddNote()}
+                color={currentPalette.primary}
               >
-                {t('calendar.patientProfile.notes.addNote')}
-              </Button>
+                <IconPlus size={14} />
+              </ActionIcon>
             </Group>
 
             <NoteList
@@ -547,23 +555,23 @@ export function PatientProfileTabs({ patient }: PatientProfileTabsProps) {
               onDelete={id => setDeleteNoteId(id)}
               onTogglePin={id => togglePin(id)}
             />
-          </Paper>
-        </Tabs.Panel>
+          </Stack>
+        )}
 
-        <Tabs.Panel value='documents' pt='md'>
-          <Paper p='md' withBorder>
-            <Group justify='space-between' mb='md'>
-              <Title order={4}>
+        {activeTab === 'documents' && (
+          <Stack gap='md'>
+            <Group justify='space-between'>
+              <Title order={5}>
                 {t('calendar.patientProfile.documents.title', { count: getFilteredDocuments().length })}
               </Title>
-              <Button
+              <ActionIcon
                 size='sm'
-                leftSection={<IconPlus size='1rem' />}
                 variant='light'
                 onClick={handleAddDocument}
+                color={currentPalette.primary}
               >
-                {t('calendar.patientProfile.documents.addDocument')}
-              </Button>
+                <IconPlus size={14} />
+              </ActionIcon>
             </Group>
             <DocumentList
               documents={documents}
@@ -573,9 +581,9 @@ export function PatientProfileTabs({ patient }: PatientProfileTabsProps) {
               onDelete={id => setDeleteDocumentId(id)}
               onTogglePin={id => toggleDocumentPin(id)}
             />
-          </Paper>
-        </Tabs.Panel>
-      </Tabs>
+          </Stack>
+        )}
+      </div>
 
       {/* Appointment Form Bottom Sheet */}
       <BottomSheet
