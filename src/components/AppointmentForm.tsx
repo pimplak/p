@@ -351,8 +351,10 @@ export function AppointmentForm({
             placeholder={t('appointmentForm.timePlaceholder')}
             required
             data={appointmentHours}
-            value={dayjs(form.values.date).format('HH:mm')}
+            value={appointmentHours.includes(dayjs(form.values.date).format('HH:mm')) ? dayjs(form.values.date).format('HH:mm') : null}
             onChange={(value) => value && handleTimeChange(value)}
+            searchable
+            allowDeselect={false}
           />
         </Group>
 

@@ -1,11 +1,22 @@
 import { Avatar, Group, Stack, Text, ActionIcon } from '@mantine/core';
-import { IconClock, IconInfoCircle, IconPlayerPlay, IconBrain } from '@tabler/icons-react';
+import { IconClock, IconInfoCircle, IconPlayerPlay, IconBrain, IconHourglass } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from '../../hooks/useTheme';
 import { useSettingsStore } from '../../stores/useSettingsStore';
 import { Button } from '../ui/Button';
 import type { AppointmentWithPatient } from '../../types/Appointment';
+
+function getTimeUntil(date: Date, t: (key: string, opts?: Record<string, unknown>) => string): string {
+  const diffMs = date.getTime() - Date.now();
+  if (diffMs <= 0) return '';
+  const totalMins = Math.round(diffMs / 60000);
+  if (totalMins < 60) return t('dashboard.timeline.inMinutes', { count: totalMins });
+  const hours = Math.floor(totalMins / 60);
+  const mins = totalMins % 60;
+  if (mins === 0) return t('dashboard.timeline.inHours', { count: hours });
+  return t('dashboard.timeline.inHoursMinutes', { hours, minutes: mins });
+}
 
 function getInitials(patient?: { firstName?: string; lastName?: string }): string {
   if (!patient) return '?';
@@ -41,8 +52,8 @@ export function NextAppointmentCard({ appointment, isNow }: NextAppointmentCardP
     <div
       style={{
         backgroundColor: `${currentPalette.primary}08`,
-        borderTop: `1px solid ${currentPalette.text}10`,
-        borderBottom: `1px solid ${currentPalette.text}10`,
+        border: `1px solid ${currentPalette.text}10`,
+        borderRadius: 16,
         padding: '24px 16px',
       }}
     >
@@ -116,6 +127,19 @@ export function NextAppointmentCard({ appointment, isNow }: NextAppointmentCardP
                 </Text>
               </div>
             </div>
+
+            {/* Time left */}
+            {!isNow && (() => {
+              const timeLeft = getTimeUntil(start, t);
+              return timeLeft ? (
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                  <IconHourglass size={14} style={{ color: currentPalette.primary, flexShrink: 0 }} />
+                  <Text size="sm" fw={600} style={{ color: currentPalette.primary }}>
+                    {timeLeft}
+                  </Text>
+                </div>
+              ) : null;
+            })()}
           </Stack>
         </Group>
 

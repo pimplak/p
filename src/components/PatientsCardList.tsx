@@ -18,7 +18,7 @@ import { format } from 'date-fns';
 import { pl } from 'date-fns/locale';
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { PATIENT_STATUS, PATIENT_STATUS_LABELS } from '../constants/status';
+import { PATIENT_STATUS } from '../constants/status';
 import { useTheme } from '../hooks/useTheme';
 import { getPatientDisplayName } from '../utils/dates';
 import type { PatientWithAppointments, Patient } from '../types/Patient';
@@ -88,7 +88,7 @@ export function PatientsCardList({
   const hasMore = visibleCount < patients.length;
 
   return (
-    <Stack gap={8} hiddenFrom='md'>
+    <Stack gap={12} hiddenFrom='md'>
       {visiblePatients.map(patient => {
         const isArchived = patient.status === PATIENT_STATUS.ARCHIVED;
         const statusColor =
@@ -147,6 +147,30 @@ export function PatientsCardList({
             </Avatar>
 
             <div style={{ flex: 1, minWidth: 0 }}>
+              <Group gap={6} mb={4}>
+                <Badge
+                  size='xs'
+                  color={statusColor}
+                  variant='light'
+                  styles={{
+                    root: { textTransform: 'capitalize', fontWeight: 600 },
+                  }}
+                >
+                  {t(`status.patient.${patient.status}`)}
+                </Badge>
+                {patient.tags?.slice(0, 2).map(tag => (
+                  <Badge
+                    key={tag}
+                    size='xs'
+                    variant='dot'
+                    style={{
+                      color: `${currentPalette.text}70`,
+                    }}
+                  >
+                    {tag}
+                  </Badge>
+                ))}
+              </Group>
               <Text
                 fw={600}
                 size='sm'
@@ -164,30 +188,6 @@ export function PatientsCardList({
                   {lastVisitLabel}
                 </Text>
               )}
-              <Group gap={6} mt={4}>
-                <Badge
-                  size='xs'
-                  color={statusColor}
-                  variant='light'
-                  styles={{
-                    root: { textTransform: 'capitalize', fontWeight: 600 },
-                  }}
-                >
-                  {PATIENT_STATUS_LABELS[patient.status]}
-                </Badge>
-                {patient.tags?.slice(0, 2).map(tag => (
-                  <Badge
-                    key={tag}
-                    size='xs'
-                    variant='dot'
-                    style={{
-                      color: `${currentPalette.text}70`,
-                    }}
-                  >
-                    {tag}
-                  </Badge>
-                ))}
-              </Group>
             </div>
 
             <Menu shadow='md' width={180}>

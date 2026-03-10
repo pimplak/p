@@ -1,7 +1,8 @@
-import { Drawer } from '@mantine/core';
+import { Drawer, Text } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import { useEffect } from 'react';
 import { useBottomSheetState } from '../../hooks/useBottomSheetState';
+import { useTheme } from '../../hooks/useTheme';
 import type { DrawerProps } from '@mantine/core';
 
 interface BottomSheetProps extends Omit<DrawerProps, 'position'> {
@@ -20,6 +21,7 @@ export function BottomSheet({
 }: BottomSheetProps) {
   const isMobile = useMediaQuery('(max-width: 768px)');
   const { openBottomSheet, closeBottomSheet } = useBottomSheetState();
+  const { currentPalette } = useTheme();
 
   // Synchronizuj stan z globalnym store
   useEffect(() => {
@@ -35,7 +37,11 @@ export function BottomSheet({
       opened={opened}
       onClose={onClose}
       position={isMobile ? "bottom" : "right"}
-      title={title}
+      title={title ? (
+        <Text fw={700} size="lg" style={{ color: currentPalette.text }}>
+          {title}
+        </Text>
+      ) : undefined}
       size={isMobile ? '90%' : '40%'}
       overlayProps={{ opacity: 0.5, blur: 4 }}
       closeOnClickOutside={true}
@@ -46,22 +52,27 @@ export function BottomSheet({
           zIndex: 3000,
         },
         content: {
+          backgroundColor: currentPalette.background,
           borderTopLeftRadius: isMobile ? '16px' : '0',
           borderTopRightRadius: isMobile ? '16px' : '0',
           borderBottomLeftRadius: isMobile ? '0' : '16px',
           borderBottomRightRadius: isMobile ? '0' : '16px',
         },
         header: {
-          borderBottom: '1px solid var(--mantine-color-gray-3)',
+          backgroundColor: currentPalette.background,
+          borderBottom: `1px solid ${currentPalette.text}15`,
           paddingBottom: 'var(--mantine-spacing-md)',
         },
         body: {
           paddingTop: 'var(--mantine-spacing-md)',
-          paddingBottom: isMobile 
-            ? 'calc(100px + env(safe-area-inset-bottom))' 
+          paddingBottom: isMobile
+            ? 'calc(100px + env(safe-area-inset-bottom))'
             : 'var(--mantine-spacing-md)',
           display: 'flex',
           flexDirection: 'column',
+        },
+        close: {
+          color: currentPalette.text,
         },
       }}
       {...props}

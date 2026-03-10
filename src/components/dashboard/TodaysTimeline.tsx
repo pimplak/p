@@ -25,16 +25,6 @@ interface TodaysTimelineProps {
   onSeeAll?: () => void;
 }
 
-function getTimeUntil(date: Date, t: (key: string, opts?: Record<string, unknown>) => string): string {
-  const diffMs = date.getTime() - Date.now();
-  if (diffMs <= 0) return '';
-  const totalMins = Math.round(diffMs / 60000);
-  if (totalMins < 60) return t('dashboard.timeline.inMinutes', { count: totalMins });
-  const hours = Math.floor(totalMins / 60);
-  const mins = totalMins % 60;
-  if (mins === 0) return t('dashboard.timeline.inHours', { count: hours });
-  return t('dashboard.timeline.inHoursMinutes', { hours, minutes: mins });
-}
 
 function formatTime(date: Date): string {
   return date.toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' });
@@ -53,12 +43,6 @@ export function TodaysTimeline({
   const navigate = useNavigate();
   const appointmentTypes = useSettingsStore(state => state.appointmentTypes);
   const { updateAppointment } = useAppointmentStore();
-  const now = Date.now();
-
-  const nextUpcomingId = appointments.find(apt => {
-    if (apt.status !== AppointmentStatus.SCHEDULED) return false;
-    return new Date(apt.date).getTime() > now;
-  })?.id;
 
   const handleMarkComplete = async (apt: AppointmentWithPatient) => {
     if (!apt.id) return;
@@ -175,7 +159,6 @@ export function TodaysTimeline({
             const endTimeStr = formatTime(end);
 
             const isNow = apt.id === currentAppointmentId;
-            const isNextUp = apt.id === nextUpcomingId;
             const isDone = apt.status === AppointmentStatus.COMPLETED;
             const isCancelled = apt.status === AppointmentStatus.CANCELLED;
             const isScheduled = apt.status === AppointmentStatus.SCHEDULED;
@@ -187,7 +170,6 @@ export function TodaysTimeline({
               (apt.type && appointmentTypes.find(tp => tp.id === apt.type)?.label) ||
               t('dashboard.nextAppointmentCard.defaultType');
 
-            const timeUntil = isNextUp ? getTimeUntil(start, t) : '';
 
             const isOnline = apt.type === APPOINTMENT_TYPES_TEMPLATE.ONLINE_SESSION;
             const isInPerson = apt.type === APPOINTMENT_TYPES_TEMPLATE.IN_PERSON_SESSION;
@@ -220,15 +202,6 @@ export function TodaysTimeline({
                   >
                     {timeStr}
                   </Text>
-                  {isNextUp && timeUntil && (
-                    <Text
-                      size="xs"
-                      mt={2}
-                      style={{ color: currentPalette.primary, fontWeight: 600, lineHeight: 1 }}
-                    >
-                      {timeUntil}
-                    </Text>
-                  )}
                 </Stack>
 
                 {/* Dot on the line */}

@@ -26,6 +26,7 @@ import {
   IconInfoCircle,
 } from '@tabler/icons-react';
 import { useState, useRef, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useTheme } from '../hooks/useTheme';
 import { useSettingsStore } from '../stores/useSettingsStore';
 import { DEFAULT_SMS_TEMPLATES, type SMSTemplate } from '../utils/sms';
@@ -50,6 +51,7 @@ interface SMSTemplateFormData {
 }
 
 export function SMSTemplateManager() {
+  const { t } = useTranslation();
   const {
     smsTemplates,
     addSMSTemplate,
@@ -104,8 +106,8 @@ export function SMSTemplateManager() {
   const handleSaveTemplate = () => {
     if (!formData.name.trim() || !formData.content.trim()) {
       notifications.show({
-        title: 'Błąd',
-        message: 'Nazwa i treść szablonu są wymagane',
+        title: t('common.error'),
+        message: t('settings.smsTemplates.nameAndContentRequired'),
         color: 'red',
       });
       return;
@@ -126,15 +128,15 @@ export function SMSTemplateManager() {
     if (editingTemplate) {
       updateSMSTemplate(editingTemplate.id, templateData);
       notifications.show({
-        title: 'Sukces!',
-        message: 'Szablon został zaktualizowany',
+        title: t('common.success'),
+        message: t('settings.smsTemplates.templateUpdated'),
         color: 'green',
       });
     } else {
       addSMSTemplate(templateData);
       notifications.show({
-        title: 'Sukces!',
-        message: 'Nowy szablon został dodany',
+        title: t('common.success'),
+        message: t('settings.smsTemplates.templateAdded'),
         color: 'green',
       });
     }
@@ -152,9 +154,8 @@ export function SMSTemplateManager() {
     );
     if (isDefaultTemplate) {
       notifications.show({
-        title: 'Informacja',
-        message:
-          'Domyślne szablony można zresetować, ale nie usuwać. Użyj przycisku "Resetuj".',
+        title: t('common.info'),
+        message: t('settings.smsTemplates.cannotDeleteDefault'),
         color: 'yellow',
       });
       return;
@@ -162,8 +163,8 @@ export function SMSTemplateManager() {
 
     deleteSMSTemplate(templateId);
     notifications.show({
-      title: 'Sukces!',
-      message: `Szablon "${template.name}" został usunięty`,
+      title: t('common.success'),
+      message: t('settings.smsTemplates.templateDeleted'),
       color: 'green',
     });
   };
@@ -171,8 +172,8 @@ export function SMSTemplateManager() {
   const handleResetTemplates = () => {
     resetSMSTemplates();
     notifications.show({
-      title: 'Sukces!',
-      message: 'Szablony zostały zresetowane do wartości domyślnych',
+      title: t('common.success'),
+      message: t('settings.smsTemplates.templatesReset'),
       color: 'green',
     });
   };
@@ -184,18 +185,17 @@ export function SMSTemplateManager() {
     const start = textarea.selectionStart;
     const end = textarea.selectionEnd;
     const currentValue = formData.content;
-    
-    const newValue = 
-      currentValue.substring(0, start) + 
-      `{${variable}}` + 
+
+    const newValue =
+      currentValue.substring(0, start) +
+      `{${variable}}` +
       currentValue.substring(end);
-    
+
     setFormData(prev => ({
       ...prev,
       content: newValue,
     }));
 
-    // Przywróć focus i cursor position
     setTimeout(() => {
       textarea.focus();
       const newCursorPos = start + `{${variable}}`.length;
@@ -208,7 +208,7 @@ export function SMSTemplateManager() {
       {/* Header and actions */}
       <Group justify='space-between' align='center'>
         <Text fw={600} size='md'>
-          Szablony wiadomości SMS
+          {t('settings.sms.templates.title')}
         </Text>
         <Group gap='xs'>
           <Button
@@ -217,7 +217,7 @@ export function SMSTemplateManager() {
             size='sm'
             onClick={() => handleOpenModal()}
           >
-            Dodaj szablon
+            {t('settings.smsTemplates.addTemplate')}
           </Button>
           <Button
             leftSection={<IconRefresh size={16} />}
@@ -226,7 +226,7 @@ export function SMSTemplateManager() {
             size='sm'
             onClick={handleResetTemplates}
           >
-            Resetuj
+            {t('settings.smsTemplates.reset')}
           </Button>
         </Group>
       </Group>
@@ -239,18 +239,17 @@ export function SMSTemplateManager() {
       >
         <Group justify='space-between' align='center'>
           <Text size='sm'>
-            W szablonach możesz używać zmiennych, które zostaną automatycznie
-            zastąpione danymi pacjenta.
+            {t('settings.smsTemplates.variablesInfo')}
           </Text>
           <Anchor size='sm' onClick={togglePreview}>
             {previewOpened ? <IconEyeOff size={16} /> : <IconEye size={16} />}
-            {previewOpened ? ' Ukryj' : ' Pokaż'} zmienne
+            {previewOpened ? ` ${t('settings.smsTemplates.hideVariables')}` : ` ${t('settings.smsTemplates.showVariables')}`}
           </Anchor>
         </Group>
         <Collapse in={previewOpened}>
           <Stack gap='xs' mt='sm'>
             <Text size='xs' fw={600}>
-              Dostępne zmienne:
+              {t('settings.smsTemplates.availableVariables')}:
             </Text>
             <Group gap='xs'>
               {availableVariables.map(variable => (
@@ -283,7 +282,7 @@ export function SMSTemplateManager() {
                           variant='light'
                           color={currentPalette.primary}
                         >
-                          Domyślny
+                          {t('settings.smsTemplates.default')}
                         </Badge>
                       )}
                     </Group>
@@ -332,7 +331,7 @@ export function SMSTemplateManager() {
                 {template.variables.length > 0 && (
                   <Group gap='xs'>
                     <Text size='xs' c='dimmed'>
-                      Zmienne:
+                      {t('settings.smsTemplates.variables')}:
                     </Text>
                     {template.variables.map(variable => (
                       <Code key={variable}>{`{${variable}}`}</Code>
@@ -349,12 +348,12 @@ export function SMSTemplateManager() {
       <BottomSheet
         opened={opened}
         onClose={handleCloseModal}
-        title={editingTemplate ? 'Edytuj szablon' : 'Nowy szablon SMS'}
+        title={editingTemplate ? t('settings.smsTemplates.editTemplate') : t('settings.smsTemplates.newTemplate')}
       >
         <Stack gap='md'>
           <TextInput
-            label='Nazwa szablonu'
-            placeholder='np. Przypomnienie o wizycie'
+            label={t('settings.smsTemplates.templateName')}
+            placeholder={t('settings.smsTemplates.templateNamePlaceholder')}
             value={formData.name}
             onChange={e =>
               setFormData(prev => ({ ...prev, name: e.target.value }))
@@ -363,8 +362,8 @@ export function SMSTemplateManager() {
           />
 
           <TextInput
-            label='Opis (opcjonalnie)'
-            placeholder='Krótki opis przeznaczenia szablonu'
+            label={t('settings.smsTemplates.descriptionOptional')}
+            placeholder={t('settings.smsTemplates.descriptionPlaceholder')}
             value={formData.description}
             onChange={e =>
               setFormData(prev => ({ ...prev, description: e.target.value }))
@@ -373,10 +372,10 @@ export function SMSTemplateManager() {
 
           <Stack gap='xs'>
             <Text size='sm' fw={500}>
-              Treść wiadomości
+              {t('settings.smsTemplates.messageContent')}
             </Text>
             <Textarea
-              placeholder='Treść wiadomości SMS...'
+              placeholder={t('settings.smsTemplates.messagePlaceholder')}
               value={formData.content}
               onChange={e =>
                 setFormData(prev => ({ ...prev, content: e.target.value }))
@@ -387,15 +386,15 @@ export function SMSTemplateManager() {
               ref={textareaRef}
             />
             <Text size='xs' c='dimmed'>
-              Maksymalnie 160 znaków dla pojedynczej wiadomości SMS
+              {t('settings.smsTemplates.maxLength')}
             </Text>
             <Text size='xs' c='dimmed'>
-              Aktualna długość: {formData.content.length} znaków
+              {t('settings.smsTemplates.currentLength', { length: formData.content.length })}
             </Text>
           </Stack>
 
           <Divider
-            label='Szybkie wstawianie zmiennych'
+            label={t('settings.smsTemplates.quickInsert')}
             labelPosition='center'
           />
 
@@ -414,10 +413,10 @@ export function SMSTemplateManager() {
 
           <Group justify='flex-end' gap='sm' mt='lg'>
             <Button variant='light' onClick={handleCloseModal}>
-              Anuluj
+              {t('common.cancel')}
             </Button>
             <Button onClick={handleSaveTemplate}>
-              {editingTemplate ? 'Zapisz zmiany' : 'Dodaj szablon'}
+              {editingTemplate ? t('common.save') : t('settings.smsTemplates.addTemplate')}
             </Button>
           </Group>
         </Stack>

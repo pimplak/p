@@ -52,73 +52,80 @@ export function PatientProfileHeader({
       : PATIENT_STATUS_LABELS[patient.status];
 
   return (
-    <Stack gap={0} align='center'>
-      {/* Avatar */}
-      <Avatar
-        size={88}
-        radius='xl'
-        style={{
-          backgroundColor: `${currentPalette.primary}18`,
-          color: currentPalette.primary,
-          fontWeight: 700,
-          fontSize: '1.6rem',
-          border: `3px solid ${currentPalette.primary}30`,
-        }}
-      >
-        {getInitials(patient)}
-      </Avatar>
-
-      {/* Name + status dot */}
-      <Group gap={6} mt={12} align='center'>
-        <Text fw={700} size='lg' style={{ color: currentPalette.text }}>
-          {getPatientDisplayName(patient)}
-        </Text>
-        <div
+    <Stack gap={16}>
+      {/* Top row: Avatar + Info side by side */}
+      <Group gap='lg' align='flex-start' wrap='nowrap'>
+        {/* Avatar */}
+        <Avatar
+          size={80}
+          radius={9999}
           style={{
-            width: 8,
-            height: 8,
-            borderRadius: '50%',
-            backgroundColor:
-              patient.status === PATIENT_STATUS.ACTIVE
-                ? utilityColors.success
-                : '#888',
+            backgroundColor: `${currentPalette.primary}18`,
+            color: currentPalette.primary,
+            fontWeight: 700,
+            fontSize: '1.5rem',
+            border: `3px solid ${currentPalette.primary}30`,
+            flexShrink: 0,
           }}
-        />
+        >
+          {getInitials(patient)}
+        </Avatar>
+
+        {/* Info column */}
+        <Stack gap={4} style={{ flex: 1, minWidth: 0 }}>
+          {/* Name + status dot */}
+          <Group gap={6} align='center'>
+            <Text fw={700} size='lg' style={{ color: currentPalette.text }}>
+              {getPatientDisplayName(patient)}
+            </Text>
+            <div
+              style={{
+                width: 8,
+                height: 8,
+                borderRadius: '50%',
+                backgroundColor:
+                  patient.status === PATIENT_STATUS.ACTIVE
+                    ? utilityColors.success
+                    : '#888',
+              }}
+            />
+          </Group>
+
+          {/* Real name under nickname */}
+          {patient.nazwa && (
+            <Text size='xs' style={{ color: `${currentPalette.text}50` }}>
+              {patient.firstName} {patient.lastName}
+            </Text>
+          )}
+
+          {/* Subtitle: age + status */}
+          <Text size='xs' style={{ color: `${currentPalette.text}60` }}>
+            {age ? `${age} ${t('patientForm.ageYears')}` : ''}{age ? ' · ' : ''}{statusLabel}
+          </Text>
+
+          {/* Tags */}
+          {patient.tags && patient.tags.length > 0 && (
+            <Group gap={6} mt={4}>
+              {patient.tags.map(tag => (
+                <Badge
+                  key={tag}
+                  variant='outline'
+                  size='xs'
+                  style={{
+                    borderColor: `${currentPalette.text}20`,
+                    color: `${currentPalette.text}70`,
+                  }}
+                >
+                  {tag}
+                </Badge>
+              ))}
+            </Group>
+          )}
+        </Stack>
       </Group>
 
-      {/* Real name under nickname */}
-      {patient.nazwa && (
-        <Text size='xs' mt={2} style={{ color: `${currentPalette.text}50` }}>
-          {patient.firstName} {patient.lastName}
-        </Text>
-      )}
-
-      {/* Subtitle: age + status */}
-      <Text size='xs' mt={2} style={{ color: `${currentPalette.text}60` }}>
-        {age ? `${age} ${t('patientForm.ageYears')}` : ''}{age ? ' · ' : ''}{statusLabel}
-      </Text>
-
-      {/* Tags */}
-      {patient.tags && patient.tags.length > 0 && (
-        <Group gap={6} mt={8} justify='center'>
-          {patient.tags.map(tag => (
-            <Badge
-              key={tag}
-              variant='outline'
-              size='xs'
-              style={{
-                borderColor: `${currentPalette.text}20`,
-                color: `${currentPalette.text}70`,
-              }}
-            >
-              {tag}
-            </Badge>
-          ))}
-        </Group>
-      )}
-
       {/* Action buttons: Call + Message + Edit menu */}
-      <Group gap='sm' mt={16}>
+      <Group gap='sm'>
         {patient.phone && (
           <UnstyledButton
             component='a'

@@ -19,9 +19,11 @@ import {
   IconSettings,
   IconLogout,
 } from '@tabler/icons-react';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
+import { format } from 'date-fns';
+import { pl, enUS } from 'date-fns/locale';
 import { Link, useLocation } from 'react-router-dom';
 import { useGestures } from '../../hooks/useGestures';
 import { useTheme } from '../../hooks/useTheme';
@@ -48,6 +50,12 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
   const { title, leftSlot, rightSlot } = useHeaderStore();
   const { practitionerName, practitionerTitle } = useSettingsStore();
   const { signOut } = useAuthStore();
+  const { i18n } = useTranslation();
+
+  const formattedDate = useMemo(() => {
+    const locale = i18n.language === 'pl' ? pl : enUS;
+    return format(new Date(), 'EEEE, d MMMM yyyy', { locale });
+  }, [i18n.language]);
 
   const navigationItems = [
     {
@@ -197,7 +205,18 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
 
             {/* Center slot: screen title / context */}
             <Group style={{ flex: 1, justifyContent: 'center', minWidth: 0 }}>
-              {title ?? null}
+              {title || (
+                <Text
+                  size='sm'
+                  fw={500}
+                  style={{
+                    color: `${currentPalette.text}B3`,
+                    textTransform: 'capitalize',
+                  }}
+                >
+                  {formattedDate}
+                </Text>
+              )}
             </Group>
 
             {/* Right slot: custom or default (practitioner) */}

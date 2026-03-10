@@ -288,6 +288,14 @@
       "notes": "Notes:",
       "reschedule": "Reschedule"
     },
+    "weekView": {
+      "sessions": "Sess.",
+      "dayCompleted": "Day completed"
+    },
+    "monthView": {
+      "appointments": "Appointments",
+      "details": "Details"
+    },
     "patientProfile": {
       "tabs": {
         "overview": "Overview",
@@ -479,6 +487,14 @@
       "title": "Appearance and Interface"
     },
 
+    "theme": {
+      "switchTo": "Switch to",
+      "darkMode": "Dark mode",
+      "lightMode": "Light mode",
+      "colorTheme": "Color theme",
+      "selectPalette": "Select palette"
+    },
+
     "language": {
       "title": "Language",
       "label": "Select Language",
@@ -503,6 +519,34 @@
       "templates": {
         "title": "SMS Message Templates"
       }
+    },
+
+    "smsTemplates": {
+      "addTemplate": "Add template",
+      "reset": "Reset",
+      "editTemplate": "Edit template",
+      "newTemplate": "New SMS template",
+      "templateName": "Template name",
+      "templateNamePlaceholder": "e.g. Appointment reminder",
+      "descriptionOptional": "Description (optional)",
+      "descriptionPlaceholder": "Short description of the template",
+      "messageContent": "Message content",
+      "messagePlaceholder": "SMS message content...",
+      "maxLength": "Maximum 160 characters for a single SMS message",
+      "currentLength": "Current length: {{length}} characters",
+      "quickInsert": "Quick variable insert",
+      "variablesInfo": "You can use variables in templates that will be automatically replaced with patient data.",
+      "showVariables": "Show variables",
+      "hideVariables": "Hide variables",
+      "availableVariables": "Available variables",
+      "variables": "Variables",
+      "default": "Default",
+      "nameAndContentRequired": "Template name and content are required",
+      "templateUpdated": "Template has been updated",
+      "templateAdded": "New template has been added",
+      "templateDeleted": "Template has been deleted",
+      "cannotDeleteDefault": "Default templates can be reset but not deleted. Use the \"Reset\" button.",
+      "templatesReset": "Templates have been reset to defaults"
     },
 
     "appointments": {
@@ -565,7 +609,7 @@
       "version": "App Version",
       "lastUpdate": "Last Update",
       "description": "P - Progressive Web App for Psychologists",
-      "tagline": "Built with ❤️ for the therapeutic community. 🙈 Monice"
+      "tagline": "Built with ❤️ for the therapeutic community. 🙈🙈🙈🙈🙈"
     }
   },
 

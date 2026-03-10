@@ -143,19 +143,19 @@ function Dashboard() {
 
   return (
     <Stack gap={40} py="lg" style={{ margin: 'calc(var(--mantine-spacing-md) * -1)', marginTop: 0 }}>
-      {/* Next Up — full-bleed, breaks out of AppShell padding */}
+      {/* Next Up */}
       {nextAppointment && (
-        <Stack gap={12}>
-          <div style={{ maxWidth: containerMaxWidth, margin: '0 auto', width: '100%', paddingLeft: 'clamp(16px, 4vw, 32px)', paddingRight: 'clamp(16px, 4vw, 32px)' }}>
+        <div style={{ maxWidth: containerMaxWidth, margin: '0 auto', width: '100%', paddingLeft: 'clamp(16px, 4vw, 32px)', paddingRight: 'clamp(16px, 4vw, 32px)' }}>
+          <Stack gap={12}>
             <Text size="xs" fw={800} style={sectionLabelStyle}>
               {t('dashboard.nextAppointment')}
             </Text>
-          </div>
-          <NextAppointmentCard
-            appointment={nextAppointment as AppointmentWithPatient}
-            isNow={nextAppointment.id === currentAppointmentId}
-          />
-        </Stack>
+            <NextAppointmentCard
+              appointment={nextAppointment as AppointmentWithPatient}
+              isNow={nextAppointment.id === currentAppointmentId}
+            />
+          </Stack>
+        </div>
       )}
 
       {/* Padded sections */}

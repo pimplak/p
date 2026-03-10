@@ -288,6 +288,14 @@
       "notes": "Notatki:",
       "reschedule": "Przełóż"
     },
+    "weekView": {
+      "sessions": "Sesje",
+      "dayCompleted": "Dzień zakończony"
+    },
+    "monthView": {
+      "appointments": "Wizyty",
+      "details": "Szczegóły"
+    },
     "patientProfile": {
       "tabs": {
         "overview": "Przegląd",
@@ -479,6 +487,14 @@
       "title": "Wygląd i interfejs"
     },
 
+    "theme": {
+      "switchTo": "Zmień na",
+      "darkMode": "Tryb ciemny",
+      "lightMode": "Tryb jasny",
+      "colorTheme": "Motyw kolorystyczny",
+      "selectPalette": "Wybierz paletę"
+    },
+
     "language": {
       "title": "Język",
       "label": "Wybierz język",
@@ -503,6 +519,34 @@
       "templates": {
         "title": "Szablony wiadomości SMS"
       }
+    },
+
+    "smsTemplates": {
+      "addTemplate": "Dodaj szablon",
+      "reset": "Resetuj",
+      "editTemplate": "Edytuj szablon",
+      "newTemplate": "Nowy szablon SMS",
+      "templateName": "Nazwa szablonu",
+      "templateNamePlaceholder": "np. Przypomnienie o wizycie",
+      "descriptionOptional": "Opis (opcjonalnie)",
+      "descriptionPlaceholder": "Krótki opis przeznaczenia szablonu",
+      "messageContent": "Treść wiadomości",
+      "messagePlaceholder": "Treść wiadomości SMS...",
+      "maxLength": "Maksymalnie 160 znaków dla pojedynczej wiadomości SMS",
+      "currentLength": "Aktualna długość: {{length}} znaków",
+      "quickInsert": "Szybkie wstawianie zmiennych",
+      "variablesInfo": "W szablonach możesz używać zmiennych, które zostaną automatycznie zastąpione danymi pacjenta.",
+      "showVariables": "Pokaż zmienne",
+      "hideVariables": "Ukryj zmienne",
+      "availableVariables": "Dostępne zmienne",
+      "variables": "Zmienne",
+      "default": "Domyślny",
+      "nameAndContentRequired": "Nazwa i treść szablonu są wymagane",
+      "templateUpdated": "Szablon został zaktualizowany",
+      "templateAdded": "Nowy szablon został dodany",
+      "templateDeleted": "Szablon został usunięty",
+      "cannotDeleteDefault": "Domyślne szablony można zresetować, ale nie usuwać. Użyj przycisku \"Resetuj\".",
+      "templatesReset": "Szablony zostały zresetowane do wartości domyślnych"
     },
 
     "appointments": {
@@ -565,7 +609,7 @@
       "version": "Wersja aplikacji",
       "lastUpdate": "Ostatnia aktualizacja",
       "description": "P - Progressive Web App dla psychologów",
-      "tagline": "Zbudowane z ❤️ dla społeczności terapeutycznej.🙈 Monice"
+      "tagline": "Zbudowane z ❤️ dla społeczności terapeutycznej.🙈🙈🙈🙈🙈"
     }
   },
 

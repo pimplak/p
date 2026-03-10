@@ -32,7 +32,7 @@ import {
   IconLanguage,
   IconUser,
 } from '@tabler/icons-react';
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AppointmentTypesManager } from '../components/AppointmentTypesManager';
 import { SMSTemplateManager } from '../components/SMSTemplateManager';
@@ -43,6 +43,41 @@ import { useAuthStore } from '../stores/useAuthStore';
 import { usePatientStore } from '../stores/usePatientStore';
 import { useSettingsStore } from '../stores/useSettingsStore';
 import { insertSampleData, clearAllData } from '../utils/sampleData';
+
+function CollapsibleSection({ icon, title, children, defaultOpen = true }: { icon: ReactNode; title: string; children: ReactNode; defaultOpen?: boolean }) {
+  const [opened, { toggle }] = useDisclosure(defaultOpen);
+  const { currentPalette } = useTheme();
+
+  return (
+    <Card shadow='sm' padding='lg' radius='md' withBorder>
+      <Stack gap='md'>
+        <Group
+          align='center'
+          gap='sm'
+          onClick={toggle}
+          style={{ cursor: 'pointer', userSelect: 'none' }}
+        >
+          {icon}
+          <Text fw={600} size='lg' style={{ flex: 1 }}>
+            {title}
+          </Text>
+          {opened ? (
+            <IconChevronDown size={18} style={{ color: `${currentPalette.text}50` }} />
+          ) : (
+            <IconChevronRight size={18} style={{ color: `${currentPalette.text}50` }} />
+          )}
+        </Group>
+
+        <Collapse in={opened}>
+          <Stack gap='md'>
+            <Divider />
+            {children}
+          </Stack>
+        </Collapse>
+      </Stack>
+    </Card>
+  );
+}
 
 function Settings() {
   const { t, i18n } = useTranslation();
@@ -179,17 +214,10 @@ function Settings() {
         {/* Settings Sections */}
         <Stack gap='lg'>
           {/* Account */}
-          <Card shadow='sm' padding='lg' radius='md' withBorder>
-            <Stack gap='md'>
-              <Group align='center' gap='sm'>
-                <IconUser size={20} color={currentPalette.primary} />
-                <Text fw={600} size='lg'>
-                  {t('auth.account.title')}
-                </Text>
-              </Group>
-
-              <Divider />
-
+          <CollapsibleSection
+            icon={<IconUser size={20} color={currentPalette.primary} />}
+            title={t('auth.account.title')}
+          >
               {/* Account info */}
               <Stack gap={4}>
                 <Text size='sm' c='dimmed'>
@@ -232,6 +260,9 @@ function Settings() {
                   autoComplete='new-password'
                   value={newPassword}
                   onChange={(e) => { setNewPassword(e.target.value); setPasswordError(null); }}
+                  styles={{
+                    input: { color: 'var(--mantine-color-text)' },
+                  }}
                 />
                 <PasswordInput
                   label={t('auth.account.confirmPasswordLabel')}
@@ -239,6 +270,9 @@ function Settings() {
                   value={confirmPassword}
                   onChange={(e) => { setConfirmPassword(e.target.value); setPasswordError(null); }}
                   error={passwordError}
+                  styles={{
+                    input: { color: 'var(--mantine-color-text)' },
+                  }}
                 />
                 <Button
                   style={{ alignSelf: 'flex-start' }}
@@ -248,21 +282,13 @@ function Settings() {
                   {t('auth.account.changePasswordSubmit')}
                 </Button>
               </Stack>
-            </Stack>
-          </Card>
+          </CollapsibleSection>
 
           {/* Wygląd i interfejs */}
-          <Card shadow='sm' padding='lg' radius='md' withBorder>
-            <Stack gap='md'>
-              <Group align='center' gap='sm'>
-                <IconPalette size={20} color={currentPalette.primary} />
-                <Text fw={600} size='lg'>
-                  {t('settings.appearance.title')}
-                </Text>
-              </Group>
-
-              <Divider />
-
+          <CollapsibleSection
+            icon={<IconPalette size={20} color={currentPalette.primary} />}
+            title={t('settings.appearance.title')}
+          >
               <ThemeSelector />
 
               <Divider variant='dashed' />
@@ -286,21 +312,13 @@ function Settings() {
                   ]}
                 />
               </Stack>
-            </Stack>
-          </Card>
+          </CollapsibleSection>
 
           {/* SMS Settings */}
-          <Card shadow='sm' padding='lg' radius='md' withBorder>
-            <Stack gap='md'>
-              <Group align='center' gap='sm'>
-                <IconMessage size={20} color={currentPalette.accent} />
-                <Text fw={600} size='lg'>
-                  {t('settings.sms.title')}
-                </Text>
-              </Group>
-
-              <Divider />
-
+          <CollapsibleSection
+            icon={<IconMessage size={20} color={currentPalette.accent} />}
+            title={t('settings.sms.title')}
+          >
               <Stack gap='md'>
                 <TextInput
                   label={t('settings.sms.practiceName.label')}
@@ -333,8 +351,9 @@ function Settings() {
                     variant='subtle'
                     leftSection={templatesOpened ? <IconChevronDown size={16} /> : <IconChevronRight size={16} />}
                     onClick={toggleTemplates}
-                    style={{ alignSelf: 'flex-start', padding: 0 }}
+                    style={{ alignSelf: 'flex-start' }}
                     color={currentPalette.primary}
+                    px='sm'
                   >
                     <Text size='sm' fw={500}>
                       {t('settings.sms.templates.title')}
@@ -346,21 +365,13 @@ function Settings() {
                   </Collapse>
                 </Stack>
               </Stack>
-            </Stack>
-          </Card>
-          
+          </CollapsibleSection>
+
           {/* Ustawienia wizyt */}
-          <Card shadow='sm' padding='lg' radius='md' withBorder>
-            <Stack gap='md'>
-              <Group align='center' gap='sm'>
-                <IconClock size={20} color={currentPalette.primary} />
-                <Text fw={600} size='lg'>
-                  {t('settings.appointments.title')}
-                </Text>
-              </Group>
-
-              <Divider />
-
+          <CollapsibleSection
+            icon={<IconClock size={20} color={currentPalette.primary} />}
+            title={t('settings.appointments.title')}
+          >
               <Stack gap='md'>
                 <NumberInput
                   label={t('settings.appointments.duration.label')}
@@ -389,21 +400,14 @@ function Settings() {
               <Divider variant='dashed' />
 
               <AppointmentTypesManager />
-            </Stack>
-          </Card>
+          </CollapsibleSection>
 
           {/* Aplikacja i dane */}
-          <Card shadow='sm' padding='lg' radius='md' withBorder>
-            <Stack gap='md'>
-              <Group align='center' gap='sm'>
-                <IconDatabase size={20} color={currentPalette.primary} />
-                <Text fw={600} size='lg'>
-                  {t('settings.data.title')}
-                </Text>
-              </Group>
-
-              <Divider />
-
+          <CollapsibleSection
+            icon={<IconDatabase size={20} color={currentPalette.primary} />}
+            title={t('settings.data.title')}
+            defaultOpen={false}
+          >
               {/* Demo Data Section */}
               <Group justify='space-between' align='flex-start'>
                 <Stack gap='xs' style={{ flex: 1 }}>
@@ -469,21 +473,14 @@ function Settings() {
                   {t('settings.data.clear.button')}
                 </Button>
               </Group>
-            </Stack>
-          </Card>
+          </CollapsibleSection>
 
           {/* Prywatność i bezpieczeństwo */}
-          <Card shadow='sm' padding='lg' radius='md' withBorder>
-            <Stack gap='md'>
-              <Group align='center' gap='sm'>
-                <IconShield size={20} color={currentPalette.accent} />
-                <Text fw={600} size='lg'>
-                  {t('settings.privacy.title')}
-                </Text>
-              </Group>
-
-              <Divider />
-
+          <CollapsibleSection
+            icon={<IconShield size={20} color={currentPalette.accent} />}
+            title={t('settings.privacy.title')}
+            defaultOpen={false}
+          >
               <Stack gap='sm'>
                 <Group align='flex-start' gap='sm'>
                   <Text fw={500} size='sm'>
@@ -512,21 +509,14 @@ function Settings() {
                   </Text>
                 </Group>
               </Stack>
-            </Stack>
-          </Card>
+          </CollapsibleSection>
 
           {/* Informacje o aplikacji */}
-          <Card shadow='sm' padding='lg' radius='md' withBorder>
-            <Stack gap='md'>
-              <Group align='center' gap='sm'>
-                <IconInfoCircle size={20} color={currentPalette.text} />
-                <Text fw={600} size='lg'>
-                  {t('settings.about.title')}
-                </Text>
-              </Group>
-
-              <Divider />
-
+          <CollapsibleSection
+            icon={<IconInfoCircle size={20} color={currentPalette.text} />}
+            title={t('settings.about.title')}
+            defaultOpen={false}
+          >
               <Stack gap='sm'>
                 <Group justify='space-between' align='center'>
                   <Text fw={500} size='sm'>
@@ -542,7 +532,7 @@ function Settings() {
                     {t('settings.about.lastUpdate')}
                   </Text>
                   <Text size='sm' c='dimmed'>
-                    17.07.2025 01:51:59 AM
+                    11.03.2026 03:51:59 AM
                   </Text>
                 </Group>
               </Stack>
@@ -554,8 +544,7 @@ function Settings() {
                 <br />
                 {t('settings.about.tagline')}
               </Text>
-            </Stack>
-          </Card>
+          </CollapsibleSection>
         </Stack>
       </Stack>
     </Container>

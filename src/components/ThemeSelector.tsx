@@ -14,6 +14,7 @@ import {
   IconMoon,
   IconMoonStars,
 } from '@tabler/icons-react';
+import { useTranslation } from 'react-i18next';
 import { useTheme } from '../hooks/useTheme';
 import {
   isDarkPalette,
@@ -22,6 +23,7 @@ import {
 } from '../types/theme';
 
 export function ThemeSelector() {
+  const { t } = useTranslation();
   const {
     currentPaletteId,
     setPalette,
@@ -121,7 +123,7 @@ export function ThemeSelector() {
     );
     const nextIndex = (currentIndex + 1) % palettes.length;
     const nextPalette = palettes[nextIndex];
-    return `Zmień na: ${nextPalette.name}`;
+    return `${t('settings.theme.switchTo')}: ${nextPalette.name}`;
   };
 
   return (
@@ -167,17 +169,17 @@ export function ThemeSelector() {
           />
         </Group>
         <Text size='sm' fw={500} c='dimmed'>
-          {isDark ? 'Tryb ciemny' : 'Tryb jasny'}
+          {isDark ? t('settings.theme.darkMode') : t('settings.theme.lightMode')}
         </Text>
       </Group>
 
       {/* Full Theme Selector */}
       <Stack gap='xs'>
         <Text size='sm' fw={500}>
-          Motyw kolorystyczny
+          {t('settings.theme.colorTheme')}
         </Text>
         <Select
-          placeholder='Wybierz paletę'
+          placeholder={t('settings.theme.selectPalette')}
           leftSection={<IconPalette size={16} />}
           value={currentPaletteId}
           onChange={handlePaletteChange}
